@@ -1,9 +1,8 @@
 require "rubygems"
 
-desc "Run the tests."
-task :test do
-  begin; require "redgreen"; rescue LoadError; end
-  Dir.new("test").each do |filename|
-    require File.join("test", filename) if filename =~ /_test.rb$/
+desc "Run the specs."
+task :spec do
+  Dir.new("spec").each do |filename|
+    require File.join("spec", filename) if filename =~ /_spec.rb$/
   end
 end
