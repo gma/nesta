@@ -1,6 +1,11 @@
 require "rubygems"
 require "dm-core"
-require "rdiscount"
+begin
+  require "rdiscount"
+rescue LoadError
+  require "bluecloth"
+  Markdown = BlueCloth
+end
 
 db_path = File.join(File.dirname(__FILE__), "..", "db", "#{Sinatra.env}.db")
 DataMapper.setup(:default, "sqlite3://#{File.expand_path(db_path)}")
