@@ -1,7 +1,33 @@
 require File.join(File.dirname(__FILE__), "spec_helper")
 
+module ModelMatchers
+  class HaveCategory
+    def initialize(permalink)
+      @category = permalink
+    end
+
+    def matches?(article)
+      @article = article
+      article.categories.map { |c| c.permalink }.include?(@category)
+    end
+
+    def failure_message
+      "expected '#{@article.permalink}' to be assigned to #{@category}"
+    end
+
+    def negative_failure_message
+      "'#{@article.permalink}' should not be assigned to #{@category}"
+    end
+  end
+
+  def be_assigned_to(permalink)
+    HaveCategory.new(permalink)
+  end
+end
+
 describe "Article" do
-  include ArticleFactory
+  include ModelFactory
+  include ModelMatchers
   
   before(:each) do
     Nesta::Configuration.stub!(:configuration).and_return({
@@ -27,6 +53,32 @@ describe "Article" do
   
     it "should be possible to find an article by permalink" do
       Article.find_by_permalink("article-2").heading.should == "Article 2"
+    end
+  end
+  
+  describe "when assigned to categories" do
+    before(:each) do
+      create_pages(:category, "Category 1", "Category 2")
+      create_article(:metadata => "Categories: category-1, category-2")
+      @article = Article.find_by_permalink("my-article")
+    end
+    
+    it "should be possible to list the categories" do
+      @article.categories.should have(2).items
+      @article.should be_assigned_to("category-1")
+      @article.should be_assigned_to("category-2")
+    end
+    
+    it "should not be assigned to non-existant category" do
+      delete_page(:category, "category-1")
+      @article.should_not be_assigned_to("category-1")
+    end
+  end
+  
+  describe "when not assigned to categories" do
+    it "should be possible to list categories" do
+      create_article
+      Article.find_by_permalink("my-article").categories.should be_empty
     end
   end
   
@@ -71,6 +123,49 @@ describe "Article" do
     it "should parse heading correctly" do
       @article.to_html.should have_tag("h1", "My article")
       @article.date.should be_nil
+    end
+  end
+end
+
+describe "Category" do
+  include ModelFactory
+  
+  before(:each) do
+    Nesta::Configuration.stub!(:configuration).and_return({
+      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
+    })
+  end
+  
+  after(:each) do
+    remove_fixtures
+  end
+  
+  describe "when finding categories" do
+    before(:each) do
+      create_pages(:category, "Category 1", "Category 2")
+    end
+    
+    it "should be possible to find all articles" do
+      Category.find_all.should have(2).categories
+    end
+  
+    it "should be possible to find a category by permalink" do
+      Category.find_by_permalink("category-2").heading.should == "Category 2"
+    end
+  end
+  
+  describe "when finding articles" do
+    before(:each) do
+      create_category
+      create_article(:metadata => { "categories" => "my-category" })
+      create_article(:permalink => "second-article")
+      @article = Article.find_by_permalink("my-article")
+      @category = Category.find_by_permalink("my-category")
+    end
+
+    it "should find articles assigned to category" do
+      @category.articles.should have(1).item
+      @category.articles.first.permalink.should == "my-article"
     end
   end
 end

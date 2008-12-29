@@ -13,7 +13,7 @@ set_options :views => File.join(File.dirname(__FILE__), "..", "views"),
 
 require File.join(File.dirname(__FILE__), "..", "nesta")
 
-module ArticleFactory
+module ModelFactory
 
   FIXTURE_DIR = File.join(File.dirname(__FILE__), "fixtures")
 
@@ -25,25 +25,33 @@ module ArticleFactory
   end
 
   def create_article(options = {})
-    create_fixtures_directory
-    metadata = { "Date" => "29 December 2008" }
     o = {
       :permalink => "my-article",
       :title => "My article",
-      :metadata => metadata,
       :content => "Content goes here"
     }.merge(options)
-    metatext = o[:metadata].map { |key, value| "#{key}: #{value}" }.join("\n")
-    metatext += "\n\n" unless metatext.empty?
-    contents =<<-EOF
-#{metatext}# #{o[:title]}
-
-#{o[:content]}
-    EOF
-
-    File.open(File.join(FIXTURE_DIR, "#{o[:permalink]}.mdown"), "w") do |f|
-      f.write(contents)
+    create_file(Nesta::Configuration.article_path, o)
+  end
+  
+  def create_category(options = {})
+    o = {
+      :permalink => "my-category",
+      :title => "My category",
+      :content => "Content goes here"
+    }.merge(options)
+    create_file(Nesta::Configuration.category_path, o)
+  end
+  
+  def create_pages(type, *titles)
+    titles.each do |title|
+      permalink = title.gsub(" ", "-").downcase
+      send "create_#{type}", { :title => title, :permalink => permalink }
     end
+  end
+  
+  def delete_page(type, permalink)
+    path = Nesta::Configuration.send "#{type}_path"
+    FileUtils.rm(File.join(path, "#{permalink}.mdown"))
   end
   
   def remove_fixtures
@@ -51,7 +59,25 @@ module ArticleFactory
   end
   
   private
-    def create_fixtures_directory
-      FileUtils.mkdir_p(FIXTURE_DIR)
+    def create_file(path, options = {})
+      create_content_directories
+      o = { :metadata => { "Date" => "29 December 2008" } }.merge(options)
+      metatext = o[:metadata].map { |key, value| "#{key}: #{value}" }.join("\n")
+      metatext += "\n\n" unless metatext.empty?
+      contents =<<-EOF
+#{metatext}# #{o[:title]}
+
+#{o[:content]}
+      EOF
+
+      File.open(File.join(path, "#{o[:permalink]}.mdown"), "w") do |file|
+        file.write(contents)
+      end
+    end
+
+    def create_content_directories
+      FileUtils.mkdir_p(Nesta::Configuration.article_path)
+      FileUtils.mkdir_p(Nesta::Configuration.category_path)
     end
 end
+

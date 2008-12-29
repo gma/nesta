@@ -9,8 +9,12 @@ module Nesta
       configuration["blog"]["subheading"]
     end
     
-    def self.content_path
-      configuration["content"]
+    def self.article_path
+      configuration["content"] + "/articles"
+    end
+    
+    def self.category_path
+      configuration["content"] + "/categories"
     end
     
     private

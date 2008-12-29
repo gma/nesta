@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 describe "home page" do
-  include ArticleFactory
+  include ModelFactory
   
   before(:each) do
     stub_configuration
@@ -41,7 +41,7 @@ describe "home page" do
 end
 
 describe "article" do
-  include ArticleFactory
+  include ModelFactory
   
   before(:each) do
     stub_configuration
@@ -67,5 +67,39 @@ describe "article" do
   
   it "should display the content" do
     body.should have_tag("p", "Content goes here")
+  end
+end
+
+describe "category" do
+  include ModelFactory
+  
+  before(:each) do
+    stub_configuration
+    create_category
+    create_article(
+        :title => "Categorised", :metadata => { :categories => "my-category" })
+    create_article(:title => "Second article", :permalink => "second-article")
+    get_it "/my-category"
+  end
+  
+  after(:each) do
+    remove_fixtures
+  end
+
+  it "should render successfully" do
+    @response.should be_ok
+  end
+  
+  it "should display the heading" do
+    body.should have_tag("h1", "My category")
+  end
+
+  it "should display the content" do
+    body.should have_tag("p", "Content goes here")
+  end
+  
+  it "should display links to relevant articles" do
+    body.should have_tag("h2 a[@href=/articles/my-article]", "Categorised")
+    body.should_not have_tag("h2", "Second article")
   end
 end

@@ -31,9 +31,16 @@ get "/" do
   haml :index
 end
 
+get "/:permalink" do
+  @home_link = Nesta::Configuration.title
+  @category = Category.find_by_permalink(params[:permalink])
+  @title = "#{@category.heading} - #{Nesta::Configuration.title}"
+  haml :category
+end
+
 get "/articles/:permalink" do
+  @home_link = Nesta::Configuration.title
   @article = Article.find_by_permalink(params[:permalink])
   @title = "#{@article.heading} - #{Nesta::Configuration.title}"
-  @home_link = Nesta::Configuration.title
   haml :article
 end

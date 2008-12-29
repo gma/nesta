@@ -10,17 +10,16 @@ end
 db_path = File.join(File.dirname(__FILE__), "..", "db", "#{Sinatra.env}.db")
 DataMapper.setup(:default, "sqlite3://#{File.expand_path(db_path)}")
 
-class Article
+class FileModel
   def self.find_all
-    file_pattern = File.join(Nesta::Configuration.content_path, "*.mdown")
-    Dir.glob(file_pattern).map { |path| Article.new(path) }
+    file_pattern = File.join(self.path, "*.mdown")
+    Dir.glob(file_pattern).map { |path| new(path) }
   end
   
   def self.find_by_permalink(permalink)
-    filename = File.join(Nesta::Configuration.content_path, "#{permalink}.mdown")
-    Article.new(filename)
+    new(File.join(self.path, "#{permalink}.mdown"))
   end
-  
+
   def initialize(filename)
     @filename = filename
   end
@@ -28,7 +27,7 @@ class Article
   def permalink
     File.basename(@filename, ".*")
   end
-  
+
   def date
     metadata("date")
   end
@@ -71,6 +70,42 @@ class Article
         @metadata = {}
       end
     end
+end
+
+class Article < FileModel
+  def self.path
+    Nesta::Configuration.article_path
+  end
+    
+  def categories
+    categories = metadata("categories")
+    permalinks = if categories.nil?
+      []
+    else
+      categories.split(",").map { |p| p.strip }
+    end
+    permalinks = permalinks.select do |permalink|
+      file = File.join(Nesta::Configuration.category_path, "#{permalink}.mdown")
+      File.exist?(file)
+    end
+    permalinks.map { |permalink| Category.find_by_permalink(permalink) }
+  end
+end
+
+class Category < FileModel
+  def self.path
+    Nesta::Configuration.category_path
+  end
+  
+  def ==(other)
+    self.permalink == other.permalink
+  end
+  
+  def articles
+    Article.find_all.select do |article|
+      article.categories.include? self
+    end
+  end
 end
 
 class Comment

@@ -3,5 +3,4 @@
   %small= @subheading
 
 - @articles.each do |article|
-  %h2
-    %a{ :href => article_path(article) }= article.heading
+  = haml :summary, :layout => false, :locals => { :article => article }
