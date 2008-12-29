@@ -17,11 +17,15 @@ module ModelFactory
 
   FIXTURE_DIR = File.join(File.dirname(__FILE__), "fixtures")
 
+  def stub_config_key(key, value)
+    @config ||= {}
+    @config[key] = value
+  end
+
   def stub_configuration
-    Nesta::Configuration.stub!(:configuration).and_return({
-      "blog" => { "title" => "My blog", "subheading" => "about stuff" },
-      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
-    })
+    stub_config_key("blog", { "title" => "My blog", "subheading" => "about stuff" })
+    stub_config_key("content", File.join(File.dirname(__FILE__), ["fixtures"]))
+    Nesta::Configuration.stub!(:configuration).and_return(@config)
   end
 
   def create_article(options = {})

@@ -6,6 +6,17 @@ describe "page with category links", :shared => true do
   end
 end
 
+describe "layout" do
+  include ModelFactory
+  
+  it "should include GA JavaScript" do
+    stub_config_key("google_analytics_code", "UA-1234")
+    stub_configuration
+    get_it "/"
+    body.should have_tag("script", /_getTracker\("UA-1234"\)/)
+  end
+end
+
 describe "home page" do
   include ModelFactory
   
