@@ -1,4 +1,5 @@
 !base_color = #555
+!pale_color = #777
 !pre_color = #141
 !pre_background = #dfd
 
@@ -14,10 +15,35 @@
   min-width: 54em
 
 #wrapper
-  width: 54em
+  width: 52em
   position: relative
   left: 50%
-  margin-left: -27em  
+  margin-left: -26em
+
+#content
+  margin-right: 13em
+  border-right: 1px solid #ccc
+  padding-right: 1em
+
+#sidebar
+  width: 12em
+  float: right
+  
+  h2
+    margin-top: 0
+  
+  h2, ol, p, ul
+    color = !pale_color
+    font-family = !sans_serif
+    font-size: 90%
+
+  ol, ul
+    padding: 0
+    
+    list-style: none
+    
+    li
+      margin: 0.8em 0
 
 h1, h2, p, div.breadcrumb
   color: #333
@@ -104,3 +130,17 @@ a
     color: #82d
   &:hover
     color: #66c
+
+#footer
+  clear: both
+  
+  margin-top: 2em
+  border-top: 1px solid #ccc
+  padding-top: 0.5em
+
+  p
+    text-align: right
+    font-family = !sans_serif
+    font-size: 70%
+
+    color = !pale_color

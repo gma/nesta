@@ -16,6 +16,10 @@ helpers do
   def article_path(article)
     "/articles/#{article.permalink}"
   end
+  
+  def category_path(category)
+    "/#{category.permalink}"
+  end
 end
 
 get "/css/master.css" do
@@ -27,12 +31,14 @@ get "/" do
   @body_class = "home"
   @title = Nesta::Configuration.title
   @subheading = Nesta::Configuration.subheading
+  @categories = Category.find_all
   @articles = Article.find_all
   haml :index
 end
 
 get "/:permalink" do
   @home_link = Nesta::Configuration.title
+  @categories = Category.find_all
   @category = Category.find_by_permalink(params[:permalink])
   @title = "#{@category.heading} - #{Nesta::Configuration.title}"
   haml :category
@@ -40,6 +46,7 @@ end
 
 get "/articles/:permalink" do
   @home_link = Nesta::Configuration.title
+  @categories = Category.find_all
   @article = Article.find_by_permalink(params[:permalink])
   @title = "#{@article.heading} - #{Nesta::Configuration.title}"
   haml :article

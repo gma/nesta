@@ -3,7 +3,11 @@
   &gt;
   = @category.heading
 
-~ @category.to_html
+#sidebar
+  = haml :categories, :layout => false
 
-- @category.articles.each do |article|
-  = haml :summary, :layout => false, :locals => { :article => article }
+#content
+  ~ @category.to_html
+
+  - @category.articles.each do |article|
+    = haml :summary, :layout => false, :locals => { :article => article }

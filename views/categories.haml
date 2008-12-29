@@ -1,0 +1,5 @@
+%h2 Categories
+%ul
+  - @categories.each do |category|
+    %li
+      %a{ :href => category_path(category) }= category.heading

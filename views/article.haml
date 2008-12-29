@@ -3,5 +3,9 @@
   &gt;
   = @article.heading
 
-#date= @article.date
-~ @article.to_html
+#sidebar
+  = haml :categories, :layout => false
+
+#content
+  #date= @article.date
+  ~ @article.to_html

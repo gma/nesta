@@ -2,5 +2,9 @@
   %a{ :href => "/" }= @title
   %small= @subheading
 
-- @articles.each do |article|
-  = haml :summary, :layout => false, :locals => { :article => article }
+#sidebar
+  = haml :categories, :layout => false
+
+#content
+  - @articles.each do |article|
+    = haml :summary, :layout => false, :locals => { :article => article }

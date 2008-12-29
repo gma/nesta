@@ -1,10 +1,19 @@
 require File.join(File.dirname(__FILE__), "spec_helper")
 
+describe "page with category links", :shared => true do
+  it "should link to each category" do
+    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
+  end
+end
+
 describe "home page" do
   include ModelFactory
   
+  it_should_behave_like "page with category links"
+  
   before(:each) do
     stub_configuration
+    create_category
     get_it "/"
   end
   
@@ -43,8 +52,11 @@ end
 describe "article" do
   include ModelFactory
   
+  it_should_behave_like "page with category links"
+  
   before(:each) do
     stub_configuration
+    create_category
     create_article
     get_it "/articles/my-article"
   end
@@ -72,6 +84,8 @@ end
 
 describe "category" do
   include ModelFactory
+  
+  it_should_behave_like "page with category links"
   
   before(:each) do
     stub_configuration

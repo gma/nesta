@@ -7,4 +7,9 @@
     #container
       #wrapper
         = yield
-  
+
+        #footer
+          %p
+            Powered by nesta, a
+            = succeed "." do
+              %a{ :href => "http://github.com/gma/nesta/wikis" } Sinatra powered blogging system
