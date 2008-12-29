@@ -11,7 +11,7 @@ end
 set_options :views => File.join(File.dirname(__FILE__), "..", "views"),
             :public => File.join(File.dirname(__FILE__), "..", "public")
 
-require File.join(File.dirname(__FILE__), "..", "nesta")
+require File.join(File.dirname(__FILE__), "..", "app")
 
 module ModelFactory
 
