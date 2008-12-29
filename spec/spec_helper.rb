@@ -17,6 +17,13 @@ module ArticleFactory
 
   FIXTURE_DIR = File.join(File.dirname(__FILE__), "fixtures")
 
+  def stub_configuration
+    Nesta::Configuration.stub!(:configuration).and_return({
+      "blog" => { "title" => "My blog", "subheading" => "about stuff" },
+      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
+    })
+  end
+
   def create_article(options = {})
     create_fixtures_directory
     o = { :permalink => "my-article", :title => "My article" }.merge(options)

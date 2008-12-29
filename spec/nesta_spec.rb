@@ -4,10 +4,7 @@ describe "home page" do
   include ArticleFactory
   
   before(:each) do
-    Nesta::Configuration.stub!(:configuration).and_return({
-      "blog" => { "title" => "My blog", "subheading" => "about stuff" },
-      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
-    })
+    stub_configuration
     get_it "/"
   end
   
@@ -40,5 +37,31 @@ describe "home page" do
     it "should display link to article in h2 tag" do
       body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
     end
+  end
+end
+
+describe "article" do
+  include ArticleFactory
+  
+  before(:each) do
+    stub_configuration
+    create_article
+    get_it "/articles/my-article"
+  end
+  
+  after(:each) do
+    remove_fixtures
+  end
+  
+  it "should render successfully" do
+    @response.should be_ok
+  end
+  
+  it "should contain the article heading" do
+    body.should have_tag("h1", "My article")
+  end
+  
+  it "should contain the article content" do
+    body.should have_tag("p", "Content goes here")
   end
 end

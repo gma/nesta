@@ -24,8 +24,16 @@ get "/css/master.css" do
 end
 
 get "/" do
+  @body_class = "home"
   @title = Nesta::Configuration.title
   @subheading = Nesta::Configuration.subheading
   @articles = Article.find_all
   haml :index
+end
+
+get "/articles/:permalink" do
+  @article = Article.find_by_permalink(params[:permalink])
+  @title = "#{@article.heading} - #{Nesta::Configuration.title}"
+  @home_link = Nesta::Configuration.title
+  haml :article
 end

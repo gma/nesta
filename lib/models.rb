@@ -11,6 +11,11 @@ class Article
     Dir.glob(file_pattern).map { |path| Article.new(path) }
   end
   
+  def self.find_by_permalink(permalink)
+    filename = File.join(Nesta::Configuration.content_path, "#{permalink}.mdown")
+    Article.new(filename)
+  end
+  
   def initialize(filename)
     @filename = filename
   end
@@ -22,6 +27,10 @@ class Article
   def heading
     file_contents =~ /^#\s*(.*)/
     Regexp.last_match(1)
+  end
+  
+  def to_html
+    Markdown.new(file_contents).to_html
   end
   
   private

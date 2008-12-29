@@ -5,24 +5,32 @@
 #wrapper
   margin: 2em 5%
 
-h1, h2
-  color: #555
+h1, h2, p, div.breadcrumb
+  color: #333
 
   font-family: "Trebuchet MS"
-  
+
+h1, h2
   a
     text-decoration: none
   a:hover
     text-decoration: underline
 
-h1
-  padding-bottom: 0.5em
-  border-bottom: #aaa 1px solid
-  
-  font-size: 300%
-  letter-spacing: -1px
+body.home
+  h1
+    padding-bottom: 0.5em
+    border-bottom: #aaa 1px solid
 
-  text-align: center
+    color: #555
+
+    text-align: center
+    font-size: 300%
+
+h1
+  margin: 0.25em 0 0.5em 0
+  
+  font-size: 220%
+  letter-spacing: -1px
 
   small
     display: block
@@ -30,15 +38,43 @@ h1
     font-size: 40%
     letter-spacing: 0
 
-  a
+  a, a:visited
     color: #555
   a:hover
     color: #777
 
 h2
-  margin: 1em 0
+  margin: 1em 0 0.5em 0
   
-  a
-    color: #66f
-  a:hover
-    color: #66c
+  font-size: 160%
+
+div.breadcrumb
+  font-size: 80%
+  
+ol, ol li, p, pre, ul, ul li
+  margin-bottom: 0.75em
+
+ol, p, ul
+  font-family: Georgia
+  color: black
+
+ul, ol
+  padding-left: 1.5em
+  li
+    margin-bottom: 0.75em
+
+pre
+  border: 2px solid #bfb
+  padding: 0.7em
+  
+  background-color: #dfd
+  color: #141
+  
+  overflow: auto
+
+a
+  color: #66f
+a:visited
+  color: #82d
+a:hover
+  color: #66c

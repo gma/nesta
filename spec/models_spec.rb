@@ -14,7 +14,15 @@ describe "Article" do
   after(:each) do
     remove_fixtures
   end
-
+  
+  it "should be possible to find all articles" do
+    Article.find_all.should have(1).article
+  end
+  
+  it "should be possible to find an article by permalink" do
+    Article.find_by_permalink("my-article").heading.should == "My article"
+  end
+  
   describe "when reading Markdown" do
     it "should set permalink from filename" do
       @article.permalink.should == "my-article"
@@ -22,6 +30,10 @@ describe "Article" do
     
     it "should retrieve heading" do
       @article.heading.should == "My article"
+    end
+
+    it "should be possible to convert an article to HTML" do
+      @article.to_html.should include("<h1>My article</h1>")
     end
   end
 end

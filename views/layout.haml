@@ -3,7 +3,7 @@
   %head
     %title= @title
     %link{ :href => "/css/master.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
-  %body
+  %body{ :class => @body_class }
     #wrapper
       = yield
   

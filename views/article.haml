@@ -1,0 +1,6 @@
+.breadcrumb
+  %a{ :href => "/" }= @home_link
+  &gt;
+  = @article.heading
+
+~ @article.to_html
