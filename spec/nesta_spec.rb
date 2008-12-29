@@ -57,11 +57,15 @@ describe "article" do
     @response.should be_ok
   end
   
-  it "should contain the article heading" do
+  it "should display the heading" do
     body.should have_tag("h1", "My article")
   end
+
+  it "should display the date" do
+    body.should have_tag("div.date", "29 December 2008")
+  end
   
-  it "should contain the article content" do
+  it "should display the content" do
     body.should have_tag("p", "Content goes here")
   end
 end

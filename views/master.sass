@@ -1,3 +1,7 @@
+!base_colour = #555
+!sans_serif = "Trebuchet MS"
+!serif = Georgia
+
 *
   margin: 0
   padding: 0
@@ -8,26 +12,38 @@
 h1, h2, p, div.breadcrumb
   color: #333
 
-  font-family: "Trebuchet MS"
+  font-family = !sans_serif
 
 h1, h2
   a
     text-decoration: none
-  a:hover
-    text-decoration: underline
+    &:hover
+      text-decoration: underline
 
 body.home
   h1
     padding-bottom: 0.5em
     border-bottom: #aaa 1px solid
 
-    color: #555
+    color = !base_colour
 
     text-align: center
     font-size: 300%
 
+div.breadcrumb
+  font-size: 80%
+  font-family = !sans_serif
+
+div.date
+  margin-top: 1.5em
+  
+  font-family = !sans_serif
+  font-size: 75%
+  
+  color = !base_colour
+
 h1
-  margin: 0.25em 0 0.5em 0
+  margin: 0 0 0.5em 0
   
   font-size: 220%
   letter-spacing: -1px
@@ -38,24 +54,22 @@ h1
     font-size: 40%
     letter-spacing: 0
 
-  a, a:visited
-    color: #555
-  a:hover
-    color: #777
+  a
+    &:visited
+      color = !base_colour
+    &:hover
+      color: #777
 
 h2
   margin: 1em 0 0.5em 0
   
   font-size: 160%
 
-div.breadcrumb
-  font-size: 80%
-  
 ol, ol li, p, pre, ul, ul li
   margin-bottom: 0.75em
 
 ol, p, ul
-  font-family: Georgia
+  font-family = !serif
   color: black
 
 ul, ol
@@ -74,7 +88,7 @@ pre
 
 a
   color: #66f
-a:visited
-  color: #82d
-a:hover
-  color: #66c
+  &:visited
+    color: #82d
+  &:hover
+    color: #66c

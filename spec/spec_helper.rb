@@ -26,11 +26,19 @@ module ArticleFactory
 
   def create_article(options = {})
     create_fixtures_directory
-    o = { :permalink => "my-article", :title => "My article" }.merge(options)
+    metadata = { "Date" => "29 December 2008" }
+    o = {
+      :permalink => "my-article",
+      :title => "My article",
+      :metadata => metadata,
+      :content => "Content goes here"
+    }.merge(options)
+    metatext = o[:metadata].map { |key, value| "#{key}: #{value}" }.join("\n")
+    metatext += "\n\n" unless metatext.empty?
     contents =<<-EOF
-# #{o[:title]}
+#{metatext}# #{o[:title]}
 
-Content goes here
+#{o[:content]}
     EOF
 
     File.open(File.join(FIXTURE_DIR, "#{o[:permalink]}.mdown"), "w") do |f|

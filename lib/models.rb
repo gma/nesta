@@ -29,18 +29,47 @@ class Article
     File.basename(@filename, ".*")
   end
   
+  def date
+    metadata("date")
+  end
+  
   def heading
-    file_contents =~ /^#\s*(.*)/
+    markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
   end
   
   def to_html
-    Markdown.new(file_contents).to_html
+    Markdown.new(markup).to_html
   end
   
   private
-    def file_contents
-      @file_contents ||= File.open(@filename).read
+    def markup
+      parse_file if @markup.nil?
+      @markup
+    end
+    
+    def metadata(key)
+      parse_file if @metadata.nil?
+      @metadata[key]
+    end
+    
+    def paragraph_is_metadata(text)
+      text.split("\n").first =~ /^\w+\s*:/
+    end
+    
+    def parse_file
+      first_para, remaining = File.open(@filename).read.split("\n\n", 2)
+      if paragraph_is_metadata(first_para)
+        @markup = remaining
+        @metadata = {}
+        for line in first_para.split("\n") do
+          key, value = line.split(/\s*:\s*/)
+          @metadata[key.downcase] = value
+        end
+      else
+        @markup = [first_para, remaining].join("\n\n")
+        @metadata = {}
+      end
     end
 end
 
