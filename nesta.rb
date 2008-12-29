@@ -10,6 +10,13 @@ def require_or_load(file)
 end
 
 require_or_load "lib/configuration"
+require_or_load "lib/models"
+
+helpers do
+  def article_path(article)
+    "/articles/#{article.permalink}"
+  end
+end
 
 get "/css/master.css" do
   content_type "text/css", :charset => "utf-8"
@@ -19,5 +26,6 @@ end
 get "/" do
   @title = Nesta::Configuration.title
   @subheading = Nesta::Configuration.subheading
+  @articles = Article.find_all
   haml :index
 end

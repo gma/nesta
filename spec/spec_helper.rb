@@ -1,15 +1,42 @@
 require "rubygems"
+require "spec"
 require "sinatra"
-require "sinatra/test/spec"
+require "sinatra/test/rspec"
+require "rspec_hpricot_matchers"
 
-begin
-  require "redgreen"
-rescue LoadError
+Spec::Runner.configure do |config|
+  config.include(RspecHpricotMatchers)
 end
 
-NESTA_ROOT = File.join(File.dirname(__FILE__), "..")
+set_options :views => File.join(File.dirname(__FILE__), "..", "views"),
+            :public => File.join(File.dirname(__FILE__), "..", "public")
 
-set_options :views => File.join(NESTA_ROOT, "views"),
-            :public => File.join(NESTA_ROOT, "public")
+require File.join(File.dirname(__FILE__), "..", "nesta")
 
-require File.join(NESTA_ROOT, "nesta")
+module ArticleFactory
+
+  FIXTURE_DIR = File.join(File.dirname(__FILE__), "fixtures")
+
+  def create_article(options = {})
+    create_fixtures_directory
+    o = { :permalink => "my-article", :title => "My article" }.merge(options)
+    contents =<<-EOF
+# #{o[:title]}
+
+Content goes here
+    EOF
+
+    File.open(File.join(FIXTURE_DIR, "#{o[:permalink]}.mdown"), "w") do |f|
+      f.write(contents)
+    end
+  end
+  
+  def remove_fixtures
+    FileUtils.rm_r(FIXTURE_DIR, :force => true)
+  end
+  
+  private
+    def create_fixtures_directory
+      FileUtils.mkdir_p(FIXTURE_DIR)
+    end
+end

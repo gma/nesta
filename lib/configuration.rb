@@ -9,6 +9,10 @@ module Nesta
       configuration["blog"]["subheading"]
     end
     
+    def self.content_path
+      configuration["content"]
+    end
+    
     private
       def self.configuration
         file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
