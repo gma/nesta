@@ -1,4 +1,7 @@
-!base_colour = #555
+!base_color = #555
+!pre_color = #141
+!pre_background = #dfd
+
 !sans_serif = "Trebuchet MS"
 !serif = Georgia
 
@@ -7,7 +10,7 @@
   padding: 0
 
 #wrapper
-  margin: 2em 5%
+  margin: 1em 5% 2em 5%
 
 h1, h2, p, div.breadcrumb
   color: #333
@@ -25,22 +28,24 @@ body.home
     padding-bottom: 0.5em
     border-bottom: #aaa 1px solid
 
-    color = !base_colour
+    color = !base_color
 
     text-align: center
     font-size: 300%
 
 div.breadcrumb
+  margin-bottom: 2em
+  
   font-size: 80%
   font-family = !sans_serif
 
-div.date
+#date
   margin-top: 1.5em
   
   font-family = !sans_serif
   font-size: 75%
   
-  color = !base_colour
+  color = !base_color
 
 h1
   margin: 0 0 0.5em 0
@@ -56,7 +61,7 @@ h1
 
   a
     &:visited
-      color = !base_colour
+      color = !base_color
     &:hover
       color: #777
 
@@ -81,8 +86,8 @@ pre
   border: 2px solid #bfb
   padding: 0.7em
   
-  background-color: #dfd
-  color: #141
+  background-color = !pre_background
+  color = !pre_color
   
   overflow: auto
 
