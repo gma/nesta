@@ -4,6 +4,7 @@
     %title= @title
     %link{ :href => "/css/master.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
   %body{ :class => @body_class }
-    #wrapper
-      = yield
+    #container
+      #wrapper
+        = yield
   
