@@ -96,6 +96,10 @@ class Category < FileModel
   def self.path
     Nesta::Configuration.category_path
   end
+
+  def self.find_all
+    super.sort { |x, y| x.heading <=> y.heading }
+  end
   
   def ==(other)
     self.permalink == other.permalink

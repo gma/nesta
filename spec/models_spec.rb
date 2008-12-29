@@ -142,15 +142,18 @@ describe "Category" do
   
   describe "when finding categories" do
     before(:each) do
-      create_pages(:category, "Category 1", "Category 2")
+      create_category(:title => "Apple", :permalink => "the-apple")
+      create_category(:title => "Banana", :permalink => "banana")
     end
     
-    it "should be possible to find all articles" do
-      Category.find_all.should have(2).categories
+    it "should be possible to find all categories" do
+      all_categories = Category.find_all
+      all_categories.should have(2).categories
+      all_categories.first.heading.should == "Apple"
     end
   
     it "should be possible to find a category by permalink" do
-      Category.find_by_permalink("category-2").heading.should == "Category 2"
+      Category.find_by_permalink("banana").heading.should == "Banana"
     end
   end
   
