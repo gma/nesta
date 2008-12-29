@@ -29,13 +29,20 @@
   width: 12em
   float: right
   
+  margin-bottom: 1em
+  
   h2
-    margin-top: 0
+    margin-top: 2em
+    &:first-child
+      margin-top: 0
   
   h2, ol, p, ul
     color = !pale_color
     font-family = !sans_serif
     font-size: 90%
+
+  h2
+    color = !base_color
 
   ol, ul
     padding: 0
