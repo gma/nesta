@@ -49,7 +49,7 @@ class ArticleImporter
   end
   
   def summary
-    "Summary: #{@article.excerpt}"
+    "Summary: #{@article.excerpt.strip}"
   end
   
   def metadata
@@ -57,7 +57,7 @@ class ArticleImporter
   end
   
   def content
-    ["# #{@article.title}", @article.body].join("\n\n")
+    ["# #{@article.title}", @article.body.gsub("\r\n", "\n")].join("\n\n")
   end
 end
 

@@ -53,7 +53,7 @@ class FileModel
     end
     
     def parse_file
-      first_para, remaining = File.open(@filename).read.split("\n\n", 2)
+      first_para, remaining = File.open(@filename).read.split(/\r?\n\r?\n/, 2)
       if paragraph_is_metadata(first_para)
         @markup = remaining
         @metadata = {}
