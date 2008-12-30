@@ -38,8 +38,8 @@ describe "home page" do
     body.should have_tag("title", "My blog")
   end
   
-  it "should link to site title in h1 tag" do
-    body.should have_tag("h1 a[@href=/]", "My blog")
+  it "should display site title in h1 tag" do
+    body.should have_tag("h1", /My blog/)
   end
   
   it "should display site subheading in h1 tag" do
