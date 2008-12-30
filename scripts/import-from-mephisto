@@ -13,6 +13,9 @@ require "active_record"
 require File.join(File.dirname(__FILE__), *%w[.. lib configuration])
 
 class Content < ActiveRecord::Base
+  has_many :taggings, :as => :taggable
+  has_many :tags, :through => :taggings
+  
   def self.inheritance_column
     @inheritance_column = "none"
   end
@@ -22,7 +25,14 @@ class Content < ActiveRecord::Base
   end
 end
 
+class Tagging < ActiveRecord::Base
+  belongs_to :content
+  belongs_to :tag
+end
+
 class Tag < ActiveRecord::Base
+  has_many :taggings
+  has_many :contents, :through => :taggings
 end
 
 class ArticleImporter
@@ -35,7 +45,7 @@ class ArticleImporter
   end
   
   def categories
-    "Categories: "
+    "Categories: #{@article.tags.map { |t| t.name }.sort.join(', ')}"
   end
   
   def summary
