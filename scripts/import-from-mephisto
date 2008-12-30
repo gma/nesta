@@ -1,0 +1,159 @@
+#!/usr/bin/env ruby
+
+# Assumptions:
+#
+# - It's okay to ignore mephisto's sections and sites.
+# - Each mephisto tag should be converted to a Nesta category.
+
+require "getoptlong"
+
+require "rubygems"
+require "active_record"
+
+require File.join(File.dirname(__FILE__), *%w[.. lib configuration])
+
+class Content < ActiveRecord::Base
+  def self.inheritance_column
+    @inheritance_column = "none"
+  end
+  
+  def self.articles
+    find(:all, :conditions => "article_id is NULL and published_at is not NULL")
+  end
+end
+
+class Tag < ActiveRecord::Base
+end
+
+class ArticleImporter
+  def initialize(article)
+    @article = article
+  end
+  
+  def date
+    "Date: #{@article.published_at}"
+  end
+  
+  def categories
+    "Categories: "
+  end
+  
+  def summary
+    "Summary: #{@article.excerpt}"
+  end
+  
+  def metadata
+    [date, categories, summary].join("\n")
+  end
+  
+  def content
+    ["# #{@article.title}", @article.body].join("\n\n")
+  end
+end
+
+class App
+  def usage
+    $stderr.write <<-EOF
+Usage: #{File.basename $0} [OPTIONS] -u <username> -p <password>
+
+OPTIONS (defaults shown in brackets)
+
+    -a, --adapter     Database adapter (mysql)
+    -c, --clobber     Overwrite existing files
+    -d, --database    Database name (mephisto_production)
+    -h, --host        Database hostname (localhost)
+    -p, --password    Database password
+    -u, --username    Database username
+    EOF
+    exit 1
+  end
+  
+  def parse_command_line
+    parser = GetoptLong.new
+    parser.set_options(
+        ["-a", "--adapter", GetoptLong::REQUIRED_ARGUMENT],
+        ["-c", "--clobber", GetoptLong::NO_ARGUMENT],
+        ["-d", "--database", GetoptLong::REQUIRED_ARGUMENT],
+        ["-h", "--host", GetoptLong::REQUIRED_ARGUMENT],
+        ["-u", "--username", GetoptLong::REQUIRED_ARGUMENT],
+        ["-p", "--password", GetoptLong::REQUIRED_ARGUMENT])
+    loop do
+      opt, arg = parser.get
+      break if not opt
+      case opt
+        when "-a"
+          @adapter = arg
+        when "-c"
+          @clobber = true
+        when "-d"
+          @database = arg
+        when "-h"
+          @host = arg
+        when "-p"
+          @password = arg
+        when "-u"
+          @username = arg
+      end
+    end
+    @adapter ||= "mysql"
+    @clobber.nil? && @clobber = false
+    @host ||= "localhost"
+    @database ||= "mephisto_production"
+    usage if @username.nil? || @password.nil?
+  end
+  
+  def connect_to_database
+    ActiveRecord::Base.establish_connection( 
+      :adapter => @adapter,
+      :host => @host,
+      :username => @username,
+      :password => @password,
+      :database => @database
+    ) 
+  end
+  
+  def import_articles
+    Content.articles.each do |article|
+      puts "Importing article: #{article.permalink}"
+      if File.exist?(article_filename(article)) && (! @clobber)
+        puts "skipping (specify --clobber to overwrite)"
+        next
+      end
+      importer = ArticleImporter.new(article)
+      File.open(article_filename(article), "w") do |file|
+        file.write [importer.metadata, importer.content].join("\n\n")
+      end
+    end
+  end
+  
+  def import_tags
+    Tag.find(:all).each do |tag|
+      puts "Importing tag: #{tag.name}"
+      if File.exist?(category_filename(tag)) && (! @clobber)
+        puts "skipping (specify --clobber to overwrite)"
+        next
+      end
+      File.open(category_filename(tag), "w") do |file|
+        file.write("# #{tag.name.capitalize}\n")
+      end
+    end
+  end
+  
+  def article_filename(article)
+    File.join(Nesta::Configuration.article_path, "#{article.permalink}.mdown")
+  end
+  
+  def category_filename(tag)
+    File.join(Nesta::Configuration.category_path, "#{tag.name}.mdown")
+  end
+  
+  def main
+    parse_command_line
+    connect_to_database
+    import_articles
+    import_tags
+  end
+end
+
+app = App.new
+app.main
