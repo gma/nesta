@@ -58,20 +58,25 @@ describe "Article" do
   
   describe "when assigned to categories" do
     before(:each) do
-      create_pages(:category, "Category 1", "Category 2")
-      create_article(:metadata => { "categories" => "category-1, category-2" })
+      create_category(:title => "Apple", :permalink => "the-apple")
+      create_category(:title => "Banana", :permalink => "banana")
+      create_article(:metadata => { "categories" => "banana, the-apple" })
       @article = Article.find_by_permalink("my-article")
     end
     
     it "should be possible to list the categories" do
       @article.categories.should have(2).items
-      @article.should be_assigned_to("category-1")
-      @article.should be_assigned_to("category-2")
+      @article.should be_assigned_to("the-apple")
+      @article.should be_assigned_to("banana")
+    end
+    
+    it "should sort categories by heading" do
+      @article.categories.first.heading.should == "Apple"
     end
     
     it "should not be assigned to non-existant category" do
-      delete_page(:category, "category-1")
-      @article.should_not be_assigned_to("category-1")
+      delete_page(:category, "banana")
+      @article.should_not be_assigned_to("banana")
     end
   end
   

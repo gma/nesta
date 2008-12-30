@@ -92,7 +92,9 @@ class Article < FileModel
       file = File.join(Nesta::Configuration.category_path, "#{permalink}.mdown")
       File.exist?(file)
     end
-    permalinks.map { |permalink| Category.find_by_permalink(permalink) }
+    permalinks.map do |permalink|
+      Category.find_by_permalink(permalink)
+    end.sort { |x, y| x.heading <=> y.heading }
   end
 end
 

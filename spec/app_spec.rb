@@ -1,11 +1,5 @@
 require File.join(File.dirname(__FILE__), "spec_helper")
 
-describe "page with category links", :shared => true do
-  it "should link to each category" do
-    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
-  end
-end
-
 describe "layout" do
   include ModelFactory
   
@@ -19,8 +13,6 @@ end
 
 describe "home page" do
   include ModelFactory
-  
-  it_should_behave_like "page with category links"
   
   before(:each) do
     stub_configuration
@@ -47,6 +39,10 @@ describe "home page" do
   it "should display site subheading in h1 tag" do
     body.should have_tag("h1 small", /about stuff/)
   end
+  
+  it "should link to each category" do
+    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
+  end
 
   describe "when articles exist" do
     before(:each) do
@@ -67,15 +63,12 @@ end
 describe "article" do
   include ModelFactory
   
-  it_should_behave_like "page with category links"
-  
   before(:each) do
     stub_configuration
-    create_category
     @date, @summary = create_article_with_metadata
     get_it "/articles/my-article"
   end
-  
+
   after(:each) do
     remove_fixtures
   end
@@ -83,24 +76,47 @@ describe "article" do
   it "should render successfully" do
     @response.should be_ok
   end
-  
+
   it "should display the heading" do
     body.should have_tag("h1", "My article")
+  end
+
+  it "should not display category links" do
+    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
   end
 
   it "should display the date" do
     body.should have_tag("#date", @date)
   end
-  
+
   it "should display the content" do
     body.should have_tag("p", "Content goes here")
+  end
+  
+  describe "when assigned to categories" do
+    before(:each) do
+      create_category(:title => "Apple", :permalink => "the-apple")
+      create_category(:title => "Banana", :permalink => "banana")
+      create_article(:metadata => { "categories" => "banana, the-apple" })
+      get_it "/articles/my-article"
+    end
+    
+    it "should render successfully" do
+      @response.should be_ok
+    end
+    
+    it "should link to each category" do
+      body.should have_tag("div.breadcrumb div.categories", /filed in/)
+      body.should have_tag("div.breadcrumb div.categories") do |categories|
+        categories.should have_tag("a[@href=/banana]", "Banana")
+        categories.should have_tag("a[@href=/the-apple]", "Apple")
+      end
+    end
   end
 end
 
 describe "category" do
   include ModelFactory
-  
-  it_should_behave_like "page with category links"
   
   before(:each) do
     stub_configuration
@@ -130,5 +146,9 @@ describe "category" do
   it "should display links to relevant articles" do
     body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
     body.should_not have_tag("h3", "Second article")
+  end
+  
+  it "should link to each category" do
+    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
 end
