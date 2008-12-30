@@ -60,10 +60,8 @@ h1, h2, h3, p, div.breadcrumb
   font-family = !sans_serif
 
 h1, h2, h3
-  a
+  a:hover
     text-decoration: none
-    &:hover
-      text-decoration: underline
 
 h2.articles
   margin-bottom: -0.2em
@@ -109,6 +107,12 @@ div.breadcrumb
   
   color = !base_color
 
+#sidebar
+  a:hover
+    color: white
+    background: #77d
+    text-decoration: none
+
 h1
   margin: 0 0 0.5em 0
   
@@ -120,12 +124,6 @@ h1
 
     font-size: 40%
     letter-spacing: 0
-
-  a
-    &:visited
-      color = !base_color
-    &:hover
-      color: #777
 
 h2, h3
   margin: 1em 0 0.5em 0
@@ -160,7 +158,7 @@ pre
 a
   color: #66f
   &:visited
-    color: #82d
+    color: #44a
   &:hover
     color: #66c
 
