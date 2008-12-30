@@ -9,5 +9,8 @@
 #content
   ~ @category.to_html
 
+  - unless @category.articles.empty?
+    %h2.articles= "#{@category.heading} Articles"
+  
   - @category.articles.each do |article|
-    = haml :summary, :layout => false, :locals => { :article => article }
+    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h3 }

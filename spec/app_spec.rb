@@ -128,7 +128,7 @@ describe "category" do
   end
   
   it "should display links to relevant articles" do
-    body.should have_tag("h2 a[@href=/articles/my-article]", "Categorised")
-    body.should_not have_tag("h2", "Second article")
+    body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
+    body.should_not have_tag("h3", "Second article")
   end
 end

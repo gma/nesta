@@ -7,4 +7,4 @@
 
 #content
   - @articles.each do |article|
-    = haml :summary, :layout => false, :locals => { :article => article }
+    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h2 }

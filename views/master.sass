@@ -3,6 +3,8 @@
 !pre_color = #141
 !pre_background = #dfd
 
+!border = 1px solid #ccc
+
 !sans_serif = "Trebuchet MS"
 !serif = Georgia
 
@@ -52,16 +54,23 @@
     li
       margin: 0.8em 0
 
-h1, h2, p, div.breadcrumb
+h1, h2, h3, p, div.breadcrumb
   color: #333
 
   font-family = !sans_serif
 
-h1, h2
+h1, h2, h3
   a
     text-decoration: none
     &:hover
       text-decoration: underline
+
+h2.articles
+  margin-bottom: -0.2em
+  border-top = !border
+  padding-top: 0.3em
+  
+  font-size: 120%
 
 body.home
   h1
@@ -105,10 +114,14 @@ h1
     &:hover
       color: #777
 
-h2
+h2, h3
   margin: 1em 0 0.5em 0
   
+h2
   font-size: 160%
+  
+h3
+  font-size: 140%
 
 ol, ol li, p, pre, ul, ul li
   margin-bottom: 0.75em
@@ -142,7 +155,7 @@ a
   clear: both
   
   margin-top: 2em
-  border-top: 1px solid #ccc
+  border-top = !border
   padding-top: 0.5em
 
   p
