@@ -78,7 +78,7 @@ class Article < FileModel
   end
   
   def summary
-    metadata("summary")
+    metadata("summary") && metadata("summary").gsub('\n', "\n")
   end
   
   def categories

@@ -61,7 +61,7 @@ describe "home page" do
     end
     
     it "should display article summary if available" do
-      body.should have_tag("p", @summary)
+      body.should have_tag("p", @summary.split('\n\n').first)
     end
   end
 end

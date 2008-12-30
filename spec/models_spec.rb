@@ -119,7 +119,11 @@ describe "Article" do
     end
     
     it "should retrieve summary text from metadata" do
-      @article.summary.should == @summary
+      @article.summary.should match(/Summary text/)
+    end
+    
+    it "should treat double newline chars as paragraph break in summary" do
+      @article.summary.should match(/two paragraphs/)
     end
   end
   
