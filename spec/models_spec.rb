@@ -107,11 +107,15 @@ describe "Article" do
     end
 
     it "should be possible to convert an article to HTML" do
-      @article.to_html.should include("<h1>My article</h1>")
+      @article.to_html.should have_tag("h1", "My article")
     end
     
     it "should not include metadata in the HTML" do
       @article.to_html.should_not have_tag("p", /^Date/)
+    end
+    
+    it "should not include heading in body" do
+      @article.body.should_not have_tag("h1", "My article")
     end
     
     it "should retrieve date published from metadata" do

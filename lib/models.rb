@@ -33,6 +33,10 @@ class FileModel
     Regexp.last_match(1)
   end
   
+  def body
+    Markdown.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
+  end
+  
   def to_html
     Markdown.new(markup).to_html
   end

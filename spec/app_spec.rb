@@ -49,6 +49,22 @@ describe "home page" do
   it "should link to each category" do
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
+  
+  describe "when articles exist" do
+    before(:each) do
+      create_article
+      @article = Article.find_by_permalink("my-article")
+      get_it "/"
+    end
+    
+    it "should display article heading in h2" do
+      body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
+    end
+    
+    it "should display article content if article has no summary" do
+      body.should have_tag("p", "Content goes here")
+    end
+  end
 
   describe "when articles exist" do
     before(:each) do
@@ -126,9 +142,11 @@ describe "category" do
   
   before(:each) do
     stub_configuration
-    create_category
+    create_category(:content => "# My category\n\nCategory content")
     create_article(
-        :title => "Categorised", :metadata => { :categories => "my-category" })
+        :title => "Categorised",
+        :metadata => { :categories => "my-category" },
+        :content => "Article content")
     create_article(:title => "Second article", :permalink => "second-article")
     get_it "/my-category"
   end
@@ -146,7 +164,7 @@ describe "category" do
   end
 
   it "should display the content" do
-    body.should have_tag("p", "Content goes here")
+    body.should have_tag("p", "Category content")
   end
   
   it "should display links to relevant articles" do
