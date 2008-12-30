@@ -11,8 +11,10 @@
 
         #footer
           %p
-            Powered by nesta, a
+            This site runs
+            %a{ :href => "http://github.com/gma/nesta/wikis" } nesta
+            &ndash;
             = succeed "." do
-              %a{ :href => "http://github.com/gma/nesta/wikis" } Sinatra powered blogging system
+              %a{ :href => "http://github.com/gma/nesta/wikis" } blog software written in Sinatra
 
     = haml :analytics, :layout => false
