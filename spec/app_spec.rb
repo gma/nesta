@@ -50,12 +50,16 @@ describe "home page" do
 
   describe "when articles exist" do
     before(:each) do
-      create_article
+      @date, @summary = create_article_with_metadata
       get_it "/"
     end
 
     it "should display link to article in h2 tag" do
       body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
+    end
+    
+    it "should display article summary if available" do
+      body.should have_tag("p", @summary)
     end
   end
 end
@@ -68,7 +72,7 @@ describe "article" do
   before(:each) do
     stub_configuration
     create_category
-    create_article
+    @date, @summary = create_article_with_metadata
     get_it "/articles/my-article"
   end
   
@@ -85,7 +89,7 @@ describe "article" do
   end
 
   it "should display the date" do
-    body.should have_tag("#date", "29 December 2008")
+    body.should have_tag("#date", @date)
   end
   
   it "should display the content" do

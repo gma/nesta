@@ -28,10 +28,6 @@ class FileModel
     File.basename(@filename, ".*")
   end
 
-  def date
-    metadata("date")
-  end
-  
   def heading
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
@@ -53,7 +49,7 @@ class FileModel
     end
     
     def paragraph_is_metadata(text)
-      text.split("\n").first =~ /^\w+\s*:/
+      text.split("\n").first =~ /^[\w ]+:/
     end
     
     def parse_file
@@ -62,7 +58,7 @@ class FileModel
         @markup = remaining
         @metadata = {}
         for line in first_para.split("\n") do
-          key, value = line.split(/\s*:\s*/)
+          key, value = line.split(/\s*:\s*/, 2)
           @metadata[key.downcase] = value
         end
       else
@@ -77,6 +73,14 @@ class Article < FileModel
     Nesta::Configuration.article_path
   end
     
+  def date
+    metadata("date")
+  end
+  
+  def summary
+    metadata("summary")
+  end
+  
   def categories
     categories = metadata("categories")
     permalinks = if categories.nil?

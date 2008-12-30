@@ -59,7 +59,7 @@ describe "Article" do
   describe "when assigned to categories" do
     before(:each) do
       create_pages(:category, "Category 1", "Category 2")
-      create_article(:metadata => "Categories: category-1, category-2")
+      create_article(:metadata => { "categories" => "category-1, category-2" })
       @article = Article.find_by_permalink("my-article")
     end
     
@@ -82,10 +82,10 @@ describe "Article" do
     end
   end
   
-  describe "when Markdown" do
+  describe "with metadata" do
     before(:each) do
-      create_article
-      @article = Article.find_all.first
+      @date, @summary = create_article_with_metadata
+      @article = Article.find_by_permalink("my-article")
     end
     
     it "should set permalink from filename" do
@@ -105,16 +105,20 @@ describe "Article" do
       @article.to_html.should include("<h1>My article</h1>")
     end
     
-    it "should retrieve load date published from metadata" do
-      @article.date.should == "29 December 2008"
-    end
-    
     it "should not include metadata in the HTML" do
       @article.to_html.should_not have_tag("p", /^Date/)
     end
+    
+    it "should retrieve date published from metadata" do
+      @article.date.should == @date
+    end
+    
+    it "should retrieve summary text from metadata" do
+      @article.summary.should == @summary
+    end
   end
   
-  describe "when Markdown article has no metadata" do
+  describe "without metadata" do
     before(:each) do
       create_article(:metadata => {})
       @article = Article.find_all.first

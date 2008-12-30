@@ -28,6 +28,13 @@ module ModelFactory
     Nesta::Configuration.stub!(:configuration).and_return(@config)
   end
 
+  def create_article_with_metadata
+    date = "29 December 2008"
+    summary = "Summary text"
+    create_article(:metadata =>  { "date" => date, "summary" => summary })
+    [date, summary]
+  end
+
   def create_article(options = {})
     o = {
       :permalink => "my-article",
@@ -65,16 +72,16 @@ module ModelFactory
   private
     def create_file(path, options = {})
       create_content_directories
-      o = { :metadata => { "Date" => "29 December 2008" } }.merge(options)
-      metatext = o[:metadata].map { |key, value| "#{key}: #{value}" }.join("\n")
+      metadata = options[:metadata] || {}
+      metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
       metatext += "\n\n" unless metatext.empty?
       contents =<<-EOF
-#{metatext}# #{o[:title]}
+#{metatext}# #{options[:title]}
 
-#{o[:content]}
+#{options[:content]}
       EOF
 
-      File.open(File.join(path, "#{o[:permalink]}.mdown"), "w") do |file|
+      File.open(File.join(path, "#{options[:permalink]}.mdown"), "w") do |file|
         file.write(contents)
       end
     end
