@@ -3,7 +3,13 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "layout" do
   include ModelFactory
   
-  it "should include GA JavaScript" do
+  it "should not include GA JavaScript by default" do
+    stub_configuration
+    get_it "/"
+    body.should_not have_tag("script", /_getTracker\("UA-1234"\)/)
+  end
+  
+  it "should include GA JavaScript if configured" do
     stub_config_key("google_analytics_code", "UA-1234")
     stub_configuration
     get_it "/"
