@@ -14,5 +14,6 @@
   = haml :categories, :layout => false
 
 #content
-  #date= @article.date
+  - if @article.date
+    #date= format_date(@article.date)
   ~ @article.to_html

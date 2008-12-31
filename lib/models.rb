@@ -69,12 +69,24 @@ class FileModel
 end
 
 class Article < FileModel
+  def self.find_all
+    super.sort do |x, y|
+      if y.date.nil?
+        -1
+      elsif x.date.nil?
+        1
+      else
+        y.date <=> x.date
+      end
+    end
+  end
+  
   def self.path
     Nesta::Configuration.article_path
   end
     
   def date
-    metadata("date")
+    metadata("date") && DateTime.parse(metadata("date"))
   end
   
   def read_more

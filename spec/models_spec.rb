@@ -41,14 +41,26 @@ describe "Article" do
   
   describe "when finding articles" do
     before(:each) do
-      ["Article 1", "Article 2"].each do |title|
-        permalink = title.gsub(" ", "-").downcase
-        create_article(:title => title, :permalink => permalink)
-      end
+      create_article(:title => "Article 1", :permalink => "article-1")
+      create_article(:title => "Article 2",
+                     :permalink => "article-2",
+                     :metadata => { "date" => "31 December 2008" })
+      create_article(:title => "Article 3",
+                     :permalink => "article-3",
+                     :metadata => { "date" => "30 December 2008" })
     end
     
     it "should be possible to find all articles" do
-      Article.find_all.should have(2).articles
+      Article.find_all.should have(3).articles
+    end
+    
+    it "should return articles in reverse chronological order" do
+      article1, article2 = Article.find_all[0..1]
+      article1.date.should > article2.date
+    end
+    
+    it "should return articles with no date last" do
+      Article.find_all.last.date.should be_nil
     end
   
     it "should be possible to find an article by permalink" do
@@ -122,7 +134,7 @@ describe "Article" do
     end
     
     it "should retrieve date published from metadata" do
-      @article.date.should == @date
+      @article.date.strftime("%d %B %Y").should == @date
     end
     
     it "should retrieve read more link from metadata" do
@@ -188,15 +200,29 @@ describe "Category" do
   describe "when finding articles" do
     before(:each) do
       create_category
-      create_article(:metadata => { "categories" => "my-category" })
-      create_article(:permalink => "second-article")
+      create_article(:titile => "Article 1", :permalink => "article-1")
+      create_article(:title => "Article 2",
+                     :permalink => "article-2",
+                     :metadata => {
+                       "date" => "30 December 2008",
+                       "categories" => "my-category"
+                      })
+      create_article(:title => "Article 3",
+                     :permalink => "article-3",
+                     :metadata => {
+                       "date" => "31 December 2008",
+                       "categories" => "my-category"
+                      })
       @article = Article.find_by_permalink("my-article")
       @category = Category.find_by_permalink("my-category")
     end
 
     it "should find articles assigned to category" do
-      @category.articles.should have(1).item
-      @category.articles.first.permalink.should == "my-article"
+      @category.articles.should have(2).items
+    end
+    
+    it "should return articles in reverse chronological order" do
+      @category.articles.first.permalink.should == "article-3"
     end
   end
 end

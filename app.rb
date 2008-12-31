@@ -14,6 +14,7 @@ require_or_load "lib/models"
 
 helpers do
   def set_common_variables
+    @categories = Category.find_all
     @home_link = Nesta::Configuration.title
     @google_analytics_code = Nesta::Configuration.google_analytics_code
   end
@@ -24,6 +25,10 @@ helpers do
   
   def category_path(category)
     "/#{category.permalink}"
+  end
+  
+  def format_date(date)
+    date.strftime("%d %B %Y")
   end
 end
 
@@ -37,14 +42,12 @@ get "/" do
   @body_class = "home"
   @title = Nesta::Configuration.title
   @subheading = Nesta::Configuration.subheading
-  @categories = Category.find_all
   @articles = Article.find_all
   haml :index
 end
 
 get "/:permalink" do
   set_common_variables
-  @categories = Category.find_all
   @category = Category.find_by_permalink(params[:permalink])
   @title = "#{@category.heading} - #{Nesta::Configuration.title}"
   haml :category
@@ -52,7 +55,6 @@ end
 
 get "/articles/:permalink" do
   set_common_variables
-  @categories = Category.find_all
   @article = Article.find_by_permalink(params[:permalink])
   @title = "#{@article.heading} - #{Nesta::Configuration.title}"
   haml :article
