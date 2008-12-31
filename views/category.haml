@@ -10,7 +10,7 @@
   ~ @category.to_html
 
   - unless @category.articles.empty?
-    %h2.articles= "#{@category.heading} Articles"
+    %h2.articles= "Articles on #{@category.heading}"
   
   - @category.articles.each do |article|
     = haml :summary, :layout => false, :locals => { :article => article, :heading => :h3 }
