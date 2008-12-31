@@ -42,7 +42,7 @@ get "/" do
   @body_class = "home"
   @title = Nesta::Configuration.title
   @subheading = Nesta::Configuration.subheading
-  @articles = Article.find_all
+  @articles = Article.find_all[0..7]
   haml :index
 end
 
