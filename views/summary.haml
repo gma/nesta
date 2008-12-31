@@ -6,3 +6,5 @@
 - else
   :markdown
     #{article.summary}
+  %p.read_more
+    %a{ :href => article_path(article) }= article.read_more

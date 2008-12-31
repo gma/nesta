@@ -54,6 +54,11 @@
     li
       margin: 0.8em 0
 
+  a:hover
+    color: white
+    background: #77d
+    text-decoration: none
+
 h1, h2, h3, p, div.breadcrumb
   color: #333
 
@@ -62,13 +67,6 @@ h1, h2, h3, p, div.breadcrumb
 h1, h2, h3
   a:hover
     text-decoration: none
-
-h2.articles
-  margin-bottom: -0.2em
-  border-top = !border
-  padding-top: 0.3em
-  
-  font-size: 120%
 
 body.home
   h1
@@ -79,6 +77,13 @@ body.home
 
     text-align: center
     font-size: 300%
+
+h2.articles
+  margin-bottom: -0.2em
+  border-top = !border
+  padding-top: 0.3em
+  
+  font-size: 120%
 
 div.breadcrumb
   margin-bottom: 2em
@@ -107,11 +112,11 @@ div.breadcrumb
   
   color = !base_color
 
-#sidebar
-  a:hover
-    color: white
-    background: #77d
-    text-decoration: none
+#content
+  p.read_more
+    text-align: right
+    font-family = !sans_serif
+    font-size: 90%
 
 h1
   margin: 0 0 0.5em 0

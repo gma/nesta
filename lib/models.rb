@@ -33,10 +33,6 @@ class FileModel
     Regexp.last_match(1)
   end
   
-  def body
-    Markdown.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
-  end
-  
   def to_html
     Markdown.new(markup).to_html
   end
@@ -81,8 +77,16 @@ class Article < FileModel
     metadata("date")
   end
   
+  def read_more
+    metadata("read more") || "Continue reading"
+  end
+  
   def summary
     metadata("summary") && metadata("summary").gsub('\n', "\n")
+  end
+  
+  def body
+    Markdown.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
   end
   
   def categories

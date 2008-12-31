@@ -89,7 +89,10 @@ describe "Article" do
   
   describe "with metadata" do
     before(:each) do
-      @date, @summary = create_article_with_metadata
+      metadata = create_article_with_metadata
+      @date = metadata["date"]
+      @summary = metadata["summary"]
+      @read_more = metadata["read more"]
       @article = Article.find_by_permalink("my-article")
     end
     
@@ -122,6 +125,10 @@ describe "Article" do
       @article.date.should == @date
     end
     
+    it "should retrieve read more link from metadata" do
+      @article.read_more.should == @read_more
+    end
+    
     it "should retrieve summary text from metadata" do
       @article.summary.should match(/Summary text/)
     end
@@ -140,6 +147,10 @@ describe "Article" do
     it "should parse heading correctly" do
       @article.to_html.should have_tag("h1", "My article")
       @article.date.should be_nil
+    end
+    
+    it "should have default read more link text" do
+      @article.read_more.should == "Continue reading"
     end
   end
 end

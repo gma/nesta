@@ -50,7 +50,7 @@ describe "home page" do
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
   
-  describe "when articles exist" do
+  describe "when articles have no metadata" do
     before(:each) do
       create_article
       @article = Article.find_by_permalink("my-article")
@@ -64,11 +64,18 @@ describe "home page" do
     it "should display article content if article has no summary" do
       body.should have_tag("p", "Content goes here")
     end
+    
+    it "should not display read more link if article has no summary" do
+      body.should_not have_tag("a", /continue/i)
+    end
   end
 
-  describe "when articles exist" do
+  describe "when articles have metadata" do
     before(:each) do
-      @date, @summary = create_article_with_metadata
+      metadata = create_article_with_metadata
+      @date = metadata["date"]
+      @summary = metadata["summary"]
+      @read_more = metadata["read more"]
       get_it "/"
     end
 
@@ -79,6 +86,10 @@ describe "home page" do
     it "should display article summary if available" do
       body.should have_tag("p", @summary.split('\n\n').first)
     end
+    
+    it "should display read more link if set" do
+      body.should have_tag("a[@href=/articles/my-article]", "Continue please")
+    end
   end
 end
 
@@ -87,7 +98,9 @@ describe "article" do
   
   before(:each) do
     stub_configuration
-    @date, @summary = create_article_with_metadata
+    metadata = create_article_with_metadata
+    @date = metadata["date"]
+    @summary = metadata["summary"]
     get_it "/articles/my-article"
   end
 

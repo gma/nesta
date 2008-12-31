@@ -29,10 +29,13 @@ module ModelFactory
   end
 
   def create_article_with_metadata
-    date = "29 December 2008"
-    summary = 'Summary text\n\nwith two paragraphs'
-    create_article(:metadata =>  { "date" => date, "summary" => summary })
-    [date, summary]
+    metadata = {
+      "date" => "29 December 2008",
+      "summary" => 'Summary text\n\nwith two paragraphs',
+      "read more" => "Continue please"
+    }
+    create_article(:metadata => metadata)
+    metadata
   end
 
   def create_article(options = {})
