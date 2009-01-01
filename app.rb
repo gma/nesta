@@ -35,11 +35,15 @@ helpers do
   def article_url(article)
     base_url + "/articles/#{article.permalink}"
   end
+
+  def nesta_atom_id_for_article(article)
+    published = article.date ? article.date.strftime('%Y-%m-%d') : "no-date"
+    "tag:#{request.host},#{published}:/articles/#{article.permalink}"
+  end
   
   def atom_id(article = nil)
     if article
-      published = article.date ? article.date.strftime('%Y-%m-%d') : "no-date"
-      "tag:#{request.host},#{published}:/articles/#{article.permalink}"
+      article.atom_id || nesta_atom_id_for_article(article)
     else
       "tag:#{request.host},2009:/articles"
     end

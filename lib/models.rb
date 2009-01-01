@@ -95,6 +95,10 @@ class Article < FileModel
     end
   end
   
+  def atom_id
+    metadata("atom id")
+  end
+  
   def read_more
     metadata("read more") || "Continue reading"
   end

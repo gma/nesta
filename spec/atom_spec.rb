@@ -113,4 +113,15 @@ describe "atom feed" do
       body.should_not have_tag("entry/id", /tag.*no-date/)
     end
   end
+  
+  describe "article with atom ID" do
+    it "should use pre-defined ID" do
+      create_article(:metadata => {
+        "date" => "1 January 2009",
+        "atom id" => "use-this-id"
+      })
+      get_it "/articles.xml"
+      body.should have_tag("entry/id", "use-this-id")
+    end
+  end
 end
