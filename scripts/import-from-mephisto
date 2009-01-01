@@ -49,15 +49,22 @@ class ArticleImporter
   end
   
   def summary
-    "Summary: #{@article.excerpt.strip}"
+    %Q{Summary: #{@article.excerpt.strip.gsub(/\r?\n/, '\n')}}
   end
   
-  def metadata
-    [date, categories, summary].join("\n")
+  def metadata(domain)
+    data = [date, categories, summary]
+    data << atom_id(domain) if domain
+    data.join("\n")
   end
   
   def content
     ["# #{@article.title}", @article.body.gsub("\r\n", "\n")].join("\n\n")
+  end
+  
+  def atom_id(domain)
+    published = "#{@article.created_at.strftime('%Y-%m-%d')}"
+    "Atom ID: tag:#{domain},#{published}:#{@article.id}"
   end
 end
 
@@ -69,6 +76,7 @@ Usage: #{File.basename $0} [OPTIONS] -u <username> -p <password>
 OPTIONS (defaults shown in brackets)
 
     -a, --adapter     Database adapter (mysql)
+    --domain          Site's domain name (for preserving <id/> tags in feed)
     -c, --clobber     Overwrite existing files
     -d, --database    Database name (mephisto_production)
     -h, --host        Database hostname (localhost)
@@ -82,6 +90,7 @@ OPTIONS (defaults shown in brackets)
     parser = GetoptLong.new
     parser.set_options(
         ["-a", "--adapter", GetoptLong::REQUIRED_ARGUMENT],
+        ["--domain", GetoptLong::REQUIRED_ARGUMENT],
         ["-c", "--clobber", GetoptLong::NO_ARGUMENT],
         ["-d", "--database", GetoptLong::REQUIRED_ARGUMENT],
         ["-h", "--host", GetoptLong::REQUIRED_ARGUMENT],
@@ -93,6 +102,8 @@ OPTIONS (defaults shown in brackets)
       case opt
         when "-a"
           @adapter = arg
+        when "--domain"
+          @domain = arg
         when "-c"
           @clobber = true
         when "-d"
@@ -131,7 +142,7 @@ OPTIONS (defaults shown in brackets)
       end
       importer = ArticleImporter.new(article)
       File.open(article_filename(article), "w") do |file|
-        file.write [importer.metadata, importer.content].join("\n\n")
+        file.write [importer.metadata(@domain), importer.content].join("\n\n")
       end
     end
   end
@@ -162,6 +173,8 @@ OPTIONS (defaults shown in brackets)
     connect_to_database
     import_articles
     import_tags
+  rescue GetoptLong::Error
+    exit 1
   end
 end
 
