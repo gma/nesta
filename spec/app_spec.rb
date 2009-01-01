@@ -141,8 +141,8 @@ describe "article" do
     end
     
     it "should link to each category" do
-      body.should have_tag("div.breadcrumb div.categories", /filed in/)
-      body.should have_tag("div.breadcrumb div.categories") do |categories|
+      body.should have_tag("div.categories", /Filed under/)
+      body.should have_tag("div.categories") do |categories|
         categories.should have_tag("a[@href=/banana]", "Banana")
         categories.should have_tag("a[@href=/the-apple]", "Apple")
       end

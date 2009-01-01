@@ -1,14 +1,7 @@
 .breadcrumb
   %a{ :href => "/" }= @home_link
   &gt;
-  .article
-    = @article.heading
-    - unless @article.categories.empty?
-      .categories
-        (filed in
-        = succeed ")" do
-          - @article.categories.each do |category|
-            %a{ :href => category_path(category) }= category.heading
+  = @article.heading
 
 #sidebar
   = haml :categories, :layout => false
@@ -18,3 +11,9 @@
   - if @article.date
     #date= format_date(@article.date)
   ~ @article.to_html
+
+  - unless @article.categories.empty?
+    .categories
+      Filed under
+      - @article.categories.each do |category|
+        %a{ :href => category_path(category) }= category.heading
