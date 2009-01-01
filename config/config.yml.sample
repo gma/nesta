@@ -1,5 +1,22 @@
-blog:
-  title: "My Site"
-  subheading: "witterings about stuff"
+# Title and subheading for your site. Used on the home page and in page
+# titles.
+#
+title: "My Site"
+subtitle: "(change this text in config/config.yml)"
 
+# The root directory where nesta will look for your article files.
+# Should contain /articles and /categories subdirectories that contain your
+# actual content.
+#
 content: /tmp/nesta
+
+# You should really specify the author of all the content when generating an
+# Atom feed. Specify at least one of name, uri or email, and nesta will
+# include it in your feed. See the Atom spec for more info:
+#
+# http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.feed
+#
+# author:
+#   name: Your Name
+#   uri: http://yourhomepage.com
+#   email: you@yourdomain.com

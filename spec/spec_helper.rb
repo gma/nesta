@@ -23,7 +23,8 @@ module ModelFactory
   end
 
   def stub_configuration
-    stub_config_key("blog", { "title" => "My blog", "subheading" => "about stuff" })
+    stub_config_key("title", "My blog")
+    stub_config_key("subtitle", "about stuff")
     stub_config_key("content", File.join(File.dirname(__FILE__), ["fixtures"]))
     Nesta::Configuration.stub!(:configuration).and_return(@config)
   end

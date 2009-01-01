@@ -2,11 +2,15 @@ module Nesta
   class Configuration
 
     def self.title
-      configuration["blog"]["title"]
+      configuration["title"]
     end
     
-    def self.subheading
-      configuration["blog"]["subheading"]
+    def self.subtitle
+      configuration["subtitle"]
+    end
+    
+    def self.author
+      configuration["author"]
     end
     
     def self.article_path

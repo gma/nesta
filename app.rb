@@ -22,9 +22,27 @@ helpers do
   def article_path(article)
     "/articles/#{article.permalink}"
   end
-  
+
   def category_path(category)
     "/#{category.permalink}"
+  end
+  
+  def base_url
+    url = "http://#{request.host}"
+    request.port == 80 ? url : url + ":#{request.port}"
+  end  
+  
+  def article_url(article)
+    base_url + "/articles/#{article.permalink}"
+  end
+  
+  def atom_id(article = nil)
+    if article
+      published = article.date ? article.date.strftime('%Y-%m-%d') : "no-date"
+      "tag:#{request.host},#{published}:/articles/#{article.permalink}"
+    else
+      "tag:#{request.host},2009:/articles"
+    end
   end
   
   def format_date(date)
@@ -41,7 +59,7 @@ get "/" do
   set_common_variables
   @body_class = "home"
   @title = Nesta::Configuration.title
-  @subheading = Nesta::Configuration.subheading
+  @subtitle = Nesta::Configuration.subtitle
   @articles = Article.find_all[0..7]
   haml :index
 end
@@ -58,4 +76,12 @@ get "/articles/:permalink" do
   @article = Article.find_by_permalink(params[:permalink])
   @title = "#{@article.heading} - #{Nesta::Configuration.title}"
   haml :article
+end
+
+get "/articles.xml" do
+  @title = Nesta::Configuration.title
+  @subtitle = Nesta::Configuration.subtitle
+  @author = Nesta::Configuration.author
+  @articles = Article.find_all.select { |a| a.date }[0..9]
+  builder :atom
 end

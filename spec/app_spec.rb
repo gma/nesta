@@ -42,7 +42,7 @@ describe "home page" do
     body.should have_tag("h1", /My blog/)
   end
   
-  it "should display site subheading in h1 tag" do
+  it "should display site subtitle in h1 tag" do
     body.should have_tag("h1 small", /about stuff/)
   end
   

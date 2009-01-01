@@ -85,8 +85,14 @@ class Article < FileModel
     Nesta::Configuration.article_path
   end
     
-  def date
-    metadata("date") && DateTime.parse(metadata("date"))
+  def date(format = nil)
+    if metadata("date")
+       if format == :xmlschema
+         Time.parse(metadata("date")).xmlschema
+       else
+         DateTime.parse(metadata("date"))
+       end
+    end
   end
   
   def read_more
