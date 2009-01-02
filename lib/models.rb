@@ -60,6 +60,8 @@ class FileModel
         @markup = [first_para, remaining].join("\n\n")
         @metadata = {}
       end
+    rescue Errno::ENOENT  # file not found
+      raise Sinatra::NotFound      
     end
 end
 

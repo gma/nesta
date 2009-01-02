@@ -95,3 +95,17 @@ get "/articles.xml" do
   @articles = Article.find_all.select { |a| a.date }[0..9]
   builder :atom
 end
+
+configure :production do
+  not_found do
+    @home_link = Nesta::Configuration.title
+    @google_analytics_code = Nesta::Configuration.google_analytics_code
+    haml :not_found
+  end
+
+  error do
+    @home_link = Nesta::Configuration.title
+    @google_analytics_code = Nesta::Configuration.google_analytics_code
+    haml :error
+  end
+end
