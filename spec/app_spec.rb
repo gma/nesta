@@ -189,3 +189,31 @@ describe "category" do
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
 end
+
+describe "attachments" do
+  include ModelFactory
+
+  def create_attachment
+    stub_configuration
+    create_content_directories
+    path = File.join(Nesta::Configuration.attachment_path, "test.txt")
+    File.open(path, "w") { |file| file.write("I'm a test attachment") }
+  end
+  
+  before(:each) do
+    create_attachment
+    get_it "/attachments/test.txt"
+  end
+  
+  it "should be served successfully" do
+    @response.should be_ok
+  end
+  
+  it "should be sent to the client" do
+    body.should include("I'm a test attachment")
+  end
+  
+  it "should set the appropriate MIME type" do
+    @response.headers["Content-Type"].should == "text/plain"
+  end
+end

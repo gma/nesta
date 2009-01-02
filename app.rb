@@ -82,6 +82,12 @@ get "/articles/:permalink" do
   haml :article
 end
 
+get "/attachments/:filename.:ext" do
+  file = File.join(
+      Nesta::Configuration.attachment_path, "#{params[:filename]}.#{params[:ext]}")
+  send_file(file, :disposition => nil)
+end
+
 get "/articles.xml" do
   @title = Nesta::Configuration.title
   @subtitle = Nesta::Configuration.subtitle

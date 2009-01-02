@@ -21,6 +21,10 @@ module Nesta
       configuration["content"] + "/categories"
     end
     
+    def self.attachment_path
+      configuration["content"] + "/attachments"
+    end
+    
     def self.google_analytics_code
       configuration["google_analytics_code"]
     end

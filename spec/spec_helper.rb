@@ -73,6 +73,12 @@ module ModelFactory
     FileUtils.rm_r(FIXTURE_DIR, :force => true)
   end
   
+  def create_content_directories
+    FileUtils.mkdir_p(Nesta::Configuration.article_path)
+    FileUtils.mkdir_p(Nesta::Configuration.category_path)
+    FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
+  end
+
   private
     def create_file(path, options = {})
       create_content_directories
@@ -88,11 +94,6 @@ module ModelFactory
       File.open(File.join(path, "#{options[:permalink]}.mdown"), "w") do |file|
         file.write(contents)
       end
-    end
-
-    def create_content_directories
-      FileUtils.mkdir_p(Nesta::Configuration.article_path)
-      FileUtils.mkdir_p(Nesta::Configuration.category_path)
     end
 end
 
