@@ -90,7 +90,7 @@ describe "atom feed" do
     end
 
     it "should have article content" do
-      body.should have_tag("entry/content[@type=html]", /<h2>Heading<\/h2>/)
+      body.should have_tag("entry/content[@type=html]", /<h2[^>]*>Heading<\/h2>/)
     end
     
     it "should not include article heading in content" do

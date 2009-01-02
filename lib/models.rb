@@ -1,11 +1,6 @@
 require "rubygems"
 require "dm-core"
-begin
-  require "rdiscount"
-rescue LoadError
-  require "bluecloth"
-  Markdown = BlueCloth
-end
+require "maruku"
 
 db_path = File.join(File.dirname(__FILE__), "..", "db", "#{Sinatra.env}.db")
 DataMapper.setup(:default, "sqlite3://#{File.expand_path(db_path)}")
@@ -34,7 +29,7 @@ class FileModel
   end
   
   def to_html
-    Markdown.new(markup).to_html
+    Maruku.new(markup).to_html
   end
   
   private
@@ -108,7 +103,7 @@ class Article < FileModel
   end
   
   def body
-    Markdown.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
+    Maruku.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
   end
   
   def categories
