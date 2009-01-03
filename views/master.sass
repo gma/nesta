@@ -146,6 +146,23 @@ div.breadcrumb
     
     a
       margin-left: 0.5em
+  
+  code, pre
+    border: 1px solid #B8DCC1
+
+    background-color = !pre_background
+    color = !pre_color
+
+  code
+    padding: 0 0.2em
+    
+  pre
+    margin: 1.5em 0
+    padding: 0.7em
+    overflow: auto
+    code
+      border: none
+      padding: 0
 
 h1
   margin: 0 0 0.5em 0
@@ -179,15 +196,6 @@ ul, ol
   padding-left: 1.5em
   li
     margin-bottom: 0.75em
-
-pre
-  border: 1px solid #B8DCC1
-  padding: 0.7em
-  
-  background-color = !pre_background
-  color = !pre_color
-  
-  overflow: auto
 
 a
   color: #66f
