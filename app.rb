@@ -104,6 +104,7 @@ get "/attachments/:filename.:ext" do
 end
 
 get "/articles.xml" do
+  content_type :xml, :charset => "utf-8"
   @title = Nesta::Configuration.title
   @subtitle = Nesta::Configuration.subtitle
   @author = Nesta::Configuration.author
@@ -112,6 +113,7 @@ get "/articles.xml" do
 end
 
 get "/sitemap.xml" do
+  content_type :xml, :charset => "utf-8"
   @pages = Category.find_all + Article.find_all
   @last = @pages.map { |page| page.last_modified }.inject do |latest, this|
     this > latest ? this : latest
