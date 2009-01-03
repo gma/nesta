@@ -165,6 +165,18 @@ describe "Article" do
       @article.read_more.should == "Continue reading"
     end
   end
+  
+  describe "when checking last modification time" do
+    before(:each) do
+      create_article
+      @article = Article.find_all.first
+    end
+    
+    it "should check filesystem" do
+      mock_file_stat(:should_receive, @article.filename, "3 January 2009")
+      @article.last_modified.should == Time.parse("3 January 2009")
+    end
+  end
 end
 
 describe "Category" do

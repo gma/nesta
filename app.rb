@@ -18,7 +18,7 @@ helpers do
     @home_link = Nesta::Configuration.title
     @google_analytics_code = Nesta::Configuration.google_analytics_code
   end
-  
+
   def article_path(article)
     "/articles/#{article.permalink}"
   end
@@ -27,15 +27,16 @@ helpers do
     "/#{category.permalink}"
   end
   
+  def url_for(page)
+    base = page.is_a?(Article) ? base_url + "/articles" : base_url
+    [base, page.permalink].join("/")
+  end
+  
   def base_url
     url = "http://#{request.host}"
     request.port == 80 ? url : url + ":#{request.port}"
   end  
   
-  def article_url(article)
-    base_url + "/articles/#{article.permalink}"
-  end
-
   def nesta_atom_id_for_article(article)
     published = article.date ? article.date.strftime('%Y-%m-%d') : "no-date"
     "tag:#{request.host},#{published}:/articles/#{article.permalink}"
@@ -51,6 +52,20 @@ helpers do
   
   def format_date(date)
     date.strftime("%d %B %Y")
+  end
+end
+
+configure :production do
+  not_found do
+    @home_link = Nesta::Configuration.title
+    @google_analytics_code = Nesta::Configuration.google_analytics_code
+    haml :not_found
+  end
+
+  error do
+    @home_link = Nesta::Configuration.title
+    @google_analytics_code = Nesta::Configuration.google_analytics_code
+    haml :error
   end
 end
 
@@ -96,16 +111,10 @@ get "/articles.xml" do
   builder :atom
 end
 
-configure :production do
-  not_found do
-    @home_link = Nesta::Configuration.title
-    @google_analytics_code = Nesta::Configuration.google_analytics_code
-    haml :not_found
+get "/sitemap.xml" do
+  @pages = Category.find_all + Article.find_all
+  @last = @pages.map { |page| page.last_modified }.inject do |latest, this|
+    this > latest ? this : latest
   end
-
-  error do
-    @home_link = Nesta::Configuration.title
-    @google_analytics_code = Nesta::Configuration.google_analytics_code
-    haml :error
-  end
+  builder :sitemap
 end

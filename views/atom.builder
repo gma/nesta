@@ -15,7 +15,7 @@ xml.feed :xmlns => "http://www.w3.org/2005/Atom" do
   @articles.each do |article|
     xml.entry do
       xml.title article.heading
-      xml.link :href => article_url(article),
+      xml.link :href => url_for(article),
                :type => "text/html",
                :rel => "alternate"
       xml.id atom_id(article)

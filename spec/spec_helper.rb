@@ -45,7 +45,9 @@ module ModelFactory
       :title => "My article",
       :content => "Content goes here"
     }.merge(options)
-    create_file(Nesta::Configuration.article_path, o)
+    path = filename(Nesta::Configuration.article_path, o[:permalink])
+    create_file(path, o)
+    yield(path) if block_given?
   end
   
   def create_category(options = {})
@@ -54,7 +56,9 @@ module ModelFactory
       :title => "My category",
       :content => "Content goes here"
     }.merge(options)
-    create_file(Nesta::Configuration.category_path, o)
+    path = filename(Nesta::Configuration.category_path, o[:permalink])
+    create_file(path, o)
+    yield(path) if block_given?
   end
   
   def create_pages(type, *titles)
@@ -78,9 +82,19 @@ module ModelFactory
     FileUtils.mkdir_p(Nesta::Configuration.category_path)
     FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
   end
+  
+  def mock_file_stat(method, filename, time)
+    stat = mock(:stat)
+    stat.stub!(:mtime).and_return(Time.parse(time))
+    File.send(method, :stat).with(filename).and_return(stat)
+  end
 
   private
-    def create_file(path, options = {})
+    def filename(directory, permalink)
+      File.join(directory, "#{permalink}.mdown")
+    end
+    
+    def create_file(filename, options = {})
       create_content_directories
       metadata = options[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
@@ -90,10 +104,8 @@ module ModelFactory
 
 #{options[:content]}
       EOF
-
-      File.open(File.join(path, "#{options[:permalink]}.mdown"), "w") do |file|
-        file.write(contents)
-      end
+      
+      File.open(filename, "w") { |file| file.write(contents) }
     end
 end
 

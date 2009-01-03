@@ -1,3 +1,5 @@
+require "time"
+
 require "rubygems"
 require "dm-core"
 require "maruku"
@@ -6,6 +8,9 @@ db_path = File.join(File.dirname(__FILE__), "..", "db", "#{Sinatra.env}.db")
 DataMapper.setup(:default, "sqlite3://#{File.expand_path(db_path)}")
 
 class FileModel
+  
+  attr_reader :filename
+  
   def self.find_all
     file_pattern = File.join(self.path, "*.mdown")
     Dir.glob(file_pattern).map { |path| new(path) }
@@ -22,7 +27,7 @@ class FileModel
   def permalink
     File.basename(@filename, ".*")
   end
-
+  
   def heading
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
@@ -32,6 +37,10 @@ class FileModel
     Maruku.new(markup).to_html
   end
   
+  def last_modified
+    @last_modified ||= File.stat(@filename).mtime
+  end
+
   private
     def markup
       parse_file if @markup.nil?
