@@ -1,0 +1,17 @@
+set :application, "nesta"
+set :repository, "git://github.com/gma/nesta.git"
+
+# Set :user if you want to connect (via ssh) to your server using a
+# different username. You will also need to include the user in :domain
+# (see below).
+#
+#set :user, "deploy"
+
+# Set :domain to the hostname of your web server.
+#
+set :domain, "example.com"
+#set :domain, "#{user}@example.com"
+
+# Set :deploy_to to the directory that you want to install Nesta into.
+#
+set :deploy_to, "/var/apps/#{application}"

@@ -1,5 +1,10 @@
 require "rubygems"
 require "spec/rake/spectask"
+begin
+  require "vlad"
+  Vlad.load(:scm => :git, :app => nil, :web => nil)
+rescue LoadError
+end
 
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
 require File.join(File.dirname(__FILE__), *%w[lib configuration])
