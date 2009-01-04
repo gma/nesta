@@ -38,7 +38,7 @@ helpers do
   end  
   
   def nesta_atom_id_for_article(article)
-    published = article.date ? article.date.strftime('%Y-%m-%d') : "no-date"
+    published = article.date.strftime('%Y-%m-%d')
     "tag:#{request.host},#{published}:/articles/#{article.permalink}"
   end
   
