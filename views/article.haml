@@ -1,6 +1,9 @@
 .breadcrumb
   %a{ :href => "/" }= @home_link
   &gt;
+  - if @article.parent
+    %a{ :href => category_path(@article.parent) }= @article.parent.heading
+    &gt;
   = @article.heading
 
 #sidebar

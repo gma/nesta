@@ -93,7 +93,11 @@ end
 get "/articles/:permalink" do
   set_common_variables
   @article = Article.find_by_permalink(params[:permalink])
-  @title = "#{@article.heading} - #{Nesta::Configuration.title}"
+  @title = if @article.parent
+    "#{@article.heading} - #{@article.parent.heading}"
+  else
+    "#{@article.heading} - #{Nesta::Configuration.title}"
+  end
   haml :article
 end
 
