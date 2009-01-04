@@ -1,11 +1,7 @@
 require "time"
 
 require "rubygems"
-require "dm-core"
 require "maruku"
-
-db_path = File.join(File.dirname(__FILE__), "..", "db", "#{Sinatra.env}.db")
-DataMapper.setup(:default, "sqlite3://#{File.expand_path(db_path)}")
 
 class FileModel
   
@@ -158,10 +154,3 @@ class Category < FileModel
     end
   end
 end
-
-class Comment
-  include DataMapper::Resource
-  property :id, Serial
-end
-
-DataMapper.auto_upgrade!
