@@ -36,7 +36,8 @@ Have a look at the files that define the articles that follow, and you should fi
       summary = <<-EOF
 This would be an article on #{fruit} if I'd bothered to research it.
 EOF
-      file = File.join(Nesta::Configuration.category_path, 'fruit.mdown')
+      file = File.join(
+              Nesta::Configuration.category_path, "#{fruit.downcase}.mdown")
       location = "You can change this article by editing `#{file}`."
       factory.create_article(
         :title => "The benefits of #{fruit}",
@@ -68,7 +69,7 @@ You can edit this article by opening `#{File.join(Nesta::Configuration.article_p
 
 Checkout the [Markdown Cheat Sheet](http://effectif.com/articles/markdown-cheat-sheet) to find out how to format your text to maximum effect.
 
-If you want to add attachments to your pages you can drop them in the `#{Nesta::Configuration.attachment_path}` directory and refer to them using a URL such as [/attachments/my-file.png](/attachments/my-file.png). You can obviously refer to inline images using the same URL structure.
+If you want to add attachments to your pages you can drop them in the `#{Nesta::Configuration.attachment_path}` directory and refer to them using a URL such as [/attachments/my-file.png](/attachments/my-file.png) (`my-file.png` doesn't exist, but you get the idea). You can obviously refer to inline images using the same URL structure.
       EOF
     )
   end
