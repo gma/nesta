@@ -92,6 +92,18 @@ describe "Article" do
     end
   end
   
+  describe "when has parent category" do
+    before(:each) do
+      create_category
+      create_article(:metadata => { "parent" => "my-category" })
+      @article = Article.find_by_permalink("my-article")
+    end
+    
+    it "should be possible to retrieve the parent" do
+      @article.parent.should == Category.find_by_permalink("my-category")
+    end
+  end
+  
   describe "when not assigned to categories" do
     it "should be possible to list categories" do
       create_article
@@ -206,6 +218,10 @@ describe "Category" do
   
     it "should be possible to find a category by permalink" do
       Category.find_by_permalink("banana").heading.should == "Banana"
+    end
+    
+    it "should not be possible to find non existant category" do
+      Category.find_by_permalink("no-such-category").should be_nil
     end
   end
   

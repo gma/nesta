@@ -17,7 +17,8 @@ class FileModel
   end
   
   def self.find_by_permalink(permalink)
-    new(File.join(self.path, "#{permalink}.mdown"))
+    file = File.join(self.path, "#{permalink}.mdown")
+    File.exist?(file) ? new(file) : nil
   end
 
   def initialize(filename)
@@ -90,7 +91,7 @@ class Article < FileModel
   def self.path
     Nesta::Configuration.article_path
   end
-    
+  
   def date(format = nil)
     if metadata("date")
        if format == :xmlschema
@@ -131,6 +132,10 @@ class Article < FileModel
     permalinks.map do |permalink|
       Category.find_by_permalink(permalink)
     end.sort { |x, y| x.heading <=> y.heading }
+  end
+  
+  def parent
+    Category.find_by_permalink(metadata("parent"))
   end
 end
 

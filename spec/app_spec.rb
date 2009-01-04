@@ -148,6 +148,24 @@ describe "article" do
       end
     end
   end
+  
+  describe "when has parent" do
+    before(:each) do
+      create_category
+      create_article(:metadata => { "parent" => "my-category" })
+      get_it "/articles/my-article"
+    end
+    
+    it "should link to parent in breadcrumb" do
+      body.should have_tag(
+          "div.breadcrumb/a[@href=/my-category]", "My category")
+    end
+    
+    it "should contain parent name in page title" do
+      body.should_not have_tag("title", /My blog/)
+      body.should have_tag("title", /- My category$/)
+    end
+  end
 end
 
 describe "category" do
@@ -203,6 +221,10 @@ describe "attachments" do
   before(:each) do
     create_attachment
     get_it "/attachments/test.txt"
+  end
+  
+  after(:each) do
+    remove_fixtures
   end
   
   it "should be served successfully" do
