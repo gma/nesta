@@ -67,7 +67,7 @@ class FileModel
         @metadata = {}
       end
     rescue Errno::ENOENT  # file not found
-      raise Sinatra::NotFound      
+      raise Sinatra::NotFound
     end
 end
 

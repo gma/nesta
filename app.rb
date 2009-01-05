@@ -55,19 +55,15 @@ helpers do
   end
 end
 
-configure :production do
-  not_found do
-    @home_link = Nesta::Configuration.title
-    @google_analytics_code = Nesta::Configuration.google_analytics_code
-    haml :not_found
-  end
-
-  error do
-    @home_link = Nesta::Configuration.title
-    @google_analytics_code = Nesta::Configuration.google_analytics_code
-    haml :error
-  end
+not_found do
+  set_common_variables
+  haml :not_found
 end
+
+error do
+  set_common_variables
+  haml :error
+end unless Sinatra.application.options.env == :development
 
 get "/css/master.css" do
   content_type "text/css", :charset => "utf-8"
@@ -86,6 +82,7 @@ end
 get "/:permalink" do
   set_common_variables
   @category = Category.find_by_permalink(params[:permalink])
+  raise Sinatra::NotFound if @category.nil?
   @title = "#{@category.heading} - #{Nesta::Configuration.title}"
   haml :category
 end
@@ -93,6 +90,7 @@ end
 get "/articles/:permalink" do
   set_common_variables
   @article = Article.find_by_permalink(params[:permalink])
+  raise Sinatra::NotFound if @article.nil?
   @title = if @article.parent
     "#{@article.heading} - #{@article.parent.heading}"
   else

@@ -166,6 +166,13 @@ describe "article" do
       body.should have_tag("title", /- My category$/)
     end
   end
+  
+  describe "when page doesn't exist" do
+    it "should return 404 if page not found" do
+      get_it "/articles/no-such-article"
+      @response.should_not be_ok
+    end
+  end
 end
 
 describe "category" do
@@ -173,38 +180,50 @@ describe "category" do
   
   before(:each) do
     stub_configuration
-    create_category(:content => "# My category\n\nCategory content")
-    create_article(
-        :title => "Categorised",
-        :metadata => { :categories => "my-category" },
-        :content => "Article content")
-    create_article(:title => "Second article", :permalink => "second-article")
-    get_it "/my-category"
   end
-  
+
   after(:each) do
     remove_fixtures
   end
 
-  it "should render successfully" do
-    @response.should be_ok
-  end
-  
-  it "should display the heading" do
-    body.should have_tag("h1", "My category")
+  describe "when category exists" do
+    before(:each) do
+      create_category(:content => "# My category\n\nCategory content")
+      create_article(
+          :title => "Categorised",
+          :metadata => { :categories => "my-category" },
+          :content => "Article content")
+      create_article(:title => "Second article", :permalink => "second-article")
+      get_it "/my-category"
+    end
+
+    it "should render successfully" do
+      @response.should be_ok
+    end
+
+    it "should display the heading" do
+      body.should have_tag("h1", "My category")
+    end
+
+    it "should display the content" do
+      body.should have_tag("p", "Category content")
+    end
+
+    it "should display links to relevant articles" do
+      body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
+      body.should_not have_tag("h3", "Second article")
+    end
+
+    it "should link to each category" do
+      body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
+    end
   end
 
-  it "should display the content" do
-    body.should have_tag("p", "Category content")
-  end
-  
-  it "should display links to relevant articles" do
-    body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
-    body.should_not have_tag("h3", "Second article")
-  end
-  
-  it "should link to each category" do
-    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
+  describe "when page doesn't exist" do
+    it "should return 404 if page not found" do
+      get_it "/my-category"
+      @response.should_not be_ok
+    end
   end
 end
 
