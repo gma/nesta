@@ -34,8 +34,8 @@ describe "home page" do
     @response.should be_ok
   end
   
-  it "should display title in title tag" do
-    body.should have_tag("title", "My blog")
+  it "should display title and subtitle in title tag" do
+    body.should have_tag("title", "My blog - about stuff")
   end
   
   it "should display site title in h1 tag" do

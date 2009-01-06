@@ -73,8 +73,9 @@ end
 get "/" do
   set_common_variables
   @body_class = "home"
-  @title = Nesta::Configuration.title
+  @heading = Nesta::Configuration.title
   @subtitle = Nesta::Configuration.subtitle
+  @title = "#{@heading} - #{@subtitle}"
   @articles = Article.find_all[0..7]
   haml :index
 end
