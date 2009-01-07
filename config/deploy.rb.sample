@@ -6,12 +6,21 @@ set :repository, "git://github.com/gma/nesta.git"
 # (see below).
 #
 #set :user, "deploy"
-
-# Set :domain to the hostname of your web server.
-#
-set :domain, "example.com"
 #set :domain, "#{user}@example.com"
+set :domain, "example.com"
 
-# Set :deploy_to to the directory that you want to install Nesta into.
-#
 set :deploy_to, "/var/apps/#{application}"
+set :thin_socket, "/tmp/thin.sock"
+
+require "tempfile"
+require "vlad"
+
+namespace :vlad do
+  remote_task :config do
+    put "#{shared_path}/config/config.yml", "vlad.config.yml" do
+      File.open(File.join(File.dirname(__FILE__), "config.yml")).read
+    end
+  end
+end
+
+
