@@ -17,6 +17,10 @@ module Nesta
       configuration["content"] + "/articles"
     end
     
+    def self.comment_path
+      configuration["content"] + "/comments"
+    end
+    
     def self.category_path
       configuration["content"] + "/categories"
     end

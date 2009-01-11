@@ -20,8 +20,31 @@ module ModelMatchers
     end
   end
 
-  def be_assigned_to(permalink)
+  def be_in_category(permalink)
     HaveCategory.new(permalink)
+  end
+  
+  class HaveComment
+    def initialize(basename)
+      @comment = Comment.find_by_basename(basename)
+    end
+    
+    def matches?(article)
+      @article = article
+      article.comments.map { |c| c.basename }.include?(@comment.basename)
+    end
+    
+    def failure_message
+      "expected '#{@article.permalink}' to have comment '#{@comment.basename}'"
+    end
+    
+    def negative_failure_message
+      "'#{@article.permalink}' should not have comment '#{@comment.basename}'"
+    end
+  end
+  
+  def have_comment(basename)
+    HaveComment.new(basename)
   end
 end
 
@@ -78,8 +101,8 @@ describe "Article" do
     
     it "should be possible to list the categories" do
       @article.categories.should have(2).items
-      @article.should be_assigned_to("the-apple")
-      @article.should be_assigned_to("banana")
+      @article.should be_in_category("the-apple")
+      @article.should be_in_category("banana")
     end
     
     it "should sort categories by heading" do
@@ -88,7 +111,7 @@ describe "Article" do
     
     it "should not be assigned to non-existant category" do
       delete_page(:category, "banana")
-      @article.should_not be_assigned_to("banana")
+      @article.should_not be_in_category("banana")
     end
   end
   
@@ -188,6 +211,70 @@ describe "Article" do
       mock_file_stat(:should_receive, @article.filename, "3 January 2009")
       @article.last_modified.should == Time.parse("3 January 2009")
     end
+  end
+  
+  describe "when has comments" do
+    before(:each) do
+      create_article
+      [12, 13].each do |day|
+        create_comment(:metadata => {
+          "author" => "Fred Bloggs",
+          "date" => "#{day} Jan 2009",
+          "article" => "my-article"
+        })
+      end
+      @article = Article.find_by_permalink("my-article")
+    end
+    
+    it "should list comments in chronological order" do
+      @article.comments.should have(2).items
+      @article.comments[0].date.should < @article.comments[1].date
+    end
+    
+    it "should only find comments made on this article" do
+      comment = create_comment(:metadata => {
+        "author" => "Fred Dibnah",
+        "date" => "12 Jan 2009",
+        "article" => "other-article"
+      })
+      @article.should_not have_comment("20090112-000000-fred-dibnah")
+    end
+  end
+end
+
+describe "Comment" do
+  include ModelFactory
+  
+  before(:each) do
+    Nesta::Configuration.stub!(:configuration).and_return({
+      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
+    })
+    create_comment
+    @comment = Comment.find_all.first
+  end
+  
+  after(:each) do
+    remove_fixtures
+  end
+  
+  it "should have author name" do
+    @comment.author.should == "Fred Bloggs"
+  end
+  
+  it "should have author URL" do
+    @comment.author_url.should == "http://bloggs.com/~fred"
+  end
+  
+  it "should have author email" do
+    @comment.author_email.should == "fred@bloggs.com"
+  end
+  
+  it "should have a creation date" do
+    @comment.date.should_not be_nil
+  end
+  
+  it "should have body text" do
+    @comment.body.should == "Great article.\n"
   end
 end
 

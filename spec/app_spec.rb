@@ -167,12 +167,35 @@ describe "article" do
     end
   end
   
+  describe "when has comments" do
+    before(:each) do
+      create_comment
+      @comment = Comment.find_all.first
+      get_it "/articles/my-article"
+    end
+    
+    it "should display comments heading" do
+      body.should have_tag("h2", "Comments")
+    end
+    
+    it "should display link to comment author's site" do
+      body.should have_tag(
+          "ol//a[@href=#{@comment.author_url}][@rel=nofollow]",
+          @comment.author)
+    end
+    
+    it "should display comment copy" do
+      body.should have_tag("ol//p", "Great article.")
+    end
+  end
+
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
       get_it "/articles/no-such-article"
       @response.should_not be_ok
     end
   end
+  
 end
 
 describe "category" do

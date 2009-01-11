@@ -97,6 +97,7 @@ get "/articles/:permalink" do
   else
     "#{@article.heading} - #{Nesta::Configuration.title}"
   end
+  @comments = @article.comments
   haml :article
 end
 

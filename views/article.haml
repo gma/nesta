@@ -20,3 +20,21 @@
       Filed under
       - @article.categories.each do |category|
         %a{ :href => category_path(category) }= category.heading
+
+  - unless @comments.empty?
+    .old-comments
+      %h2 Comments
+      %ol.comments
+        - @comments.each do |comment|
+          %li
+            %p.meta
+              %span
+                - if comment.author_url.empty?
+                  = comment.author
+                - else
+                  %a{ :href => comment.author_url, :rel => "nofollow" }= comment.author
+              = "(#{comment.date.strftime('%d %B %Y, %H:%M')})"
+            :markdown
+              #{comment.body}
+      %p
+        Comments are no longer allowed on articles.

@@ -3,24 +3,14 @@ require "time"
 require "rubygems"
 require "maruku"
 
-class FileModel
-  
-  attr_reader :filename
-  
-  def self.find_all
-    file_pattern = File.join(self.path, "*.mdown")
-    Dir.glob(file_pattern).map { |path| new(path) }
+module PageModel
+  module ClassMethods
+    def find_by_permalink(permalink)
+      file = File.join(self.path, "#{permalink}.mdown")
+      File.exist?(file) ? new(file) : nil
+    end
   end
   
-  def self.find_by_permalink(permalink)
-    file = File.join(self.path, "#{permalink}.mdown")
-    File.exist?(file) ? new(file) : nil
-  end
-
-  def initialize(filename)
-    @filename = filename
-  end
-
   def permalink
     File.basename(@filename, ".*")
   end
@@ -28,8 +18,21 @@ class FileModel
   def heading
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
+  end  
+end
+
+class FileModel
+  attr_reader :filename
+  
+  def self.find_all
+    file_pattern = File.join(self.path, "*.mdown")
+    Dir.glob(file_pattern).map { |path| new(path) }
   end
   
+  def initialize(filename)
+    @filename = filename
+  end
+
   def to_html
     Maruku.new(markup).to_html
   end
@@ -72,6 +75,9 @@ class FileModel
 end
 
 class Article < FileModel
+  include PageModel
+  extend PageModel::ClassMethods
+  
   def self.find_all
     super.sort do |x, y|
       if y.date.nil?
@@ -133,9 +139,68 @@ class Article < FileModel
   def parent
     Category.find_by_permalink(metadata("parent"))
   end
+  
+  def comments
+    Comment.find_by_article(self).sort do |x, y|
+      x.date <=> y.date
+    end
+  end
+end
+
+class Comment < FileModel
+  def self.basename(time, author)
+    "#{time.strftime('%Y%m%d-%H%M%S')}-#{author.gsub(" ", "-").downcase}"
+  end
+  
+  def self.find_by_basename(basename)
+    find_all.find { |c| c.basename == basename }
+  end
+  
+  def self.find_by_article(article)
+    find_all.select { |c| c.article == article.permalink }
+  end
+  
+  def self.path
+    Nesta::Configuration.comment_path
+  end
+  
+  def ==(other)
+    self.basename == other.basename
+  end
+  
+  def basename
+    Comment.basename(date, author)
+  end
+  
+  def author
+    metadata("author")
+  end
+  
+  def author_url
+    metadata("author url")
+  end
+  
+  def author_email
+    metadata("author email")
+  end
+  
+  def article
+    metadata("article")
+  end
+  
+  def date
+    DateTime.parse(metadata("date"))
+  end
+  
+  def body
+    markup
+  end
 end
 
 class Category < FileModel
+  include PageModel
+  extend PageModel::ClassMethods
+    
   def self.path
     Nesta::Configuration.category_path
   end
