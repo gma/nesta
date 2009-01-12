@@ -10,7 +10,7 @@ describe "layout" do
   end
   
   it "should include GA JavaScript if configured" do
-    stub_config_key("google_analytics_code", "UA-1234")
+    stub_env_config_key("google_analytics_code", "UA-1234")
     stub_configuration
     get_it "/"
     body.should have_tag("script", /_getTracker\("UA-1234"\)/)

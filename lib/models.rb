@@ -18,7 +18,7 @@ module PageModel
   def heading
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
-  end  
+  end
 end
 
 class FileModel

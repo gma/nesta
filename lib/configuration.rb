@@ -1,6 +1,8 @@
 module Nesta
   class Configuration
 
+    @@yaml = nil
+
     def self.title
       configuration["title"]
     end
@@ -14,29 +16,37 @@ module Nesta
     end
     
     def self.article_path
-      configuration["content"] + "/articles"
+      File.join(content_path, "articles")
     end
     
     def self.comment_path
-      configuration["content"] + "/comments"
+      File.join(content_path, "comments")
     end
     
     def self.category_path
-      configuration["content"] + "/categories"
+      File.join(content_path, "categories")
     end
     
     def self.attachment_path
-      configuration["content"] + "/attachments"
+      File.join(content_path, "attachments")
+    end
+    
+    def self.content_path
+      configuration[environment]["content"]
     end
     
     def self.google_analytics_code
-      configuration["google_analytics_code"]
+      configuration[environment]["google_analytics_code"]
     end
     
     private
+      def self.environment
+        ENV["RACK_ENV"] || "development"
+      end
+    
       def self.configuration
         file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
-        YAML::load(IO.read(file))
+        @@yaml ||= YAML::load(IO.read(file))
       end
   end
 end

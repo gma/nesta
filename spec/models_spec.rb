@@ -53,9 +53,7 @@ describe "Article" do
   include ModelMatchers
   
   before(:each) do
-    Nesta::Configuration.stub!(:configuration).and_return({
-      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
-    })
+    stub_configuration
   end
   
   after(:each) do
@@ -246,9 +244,7 @@ describe "Comment" do
   include ModelFactory
   
   before(:each) do
-    Nesta::Configuration.stub!(:configuration).and_return({
-      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
-    })
+    stub_configuration
     create_comment
     @comment = Comment.find_all.first
   end
@@ -282,9 +278,7 @@ describe "Category" do
   include ModelFactory
   
   before(:each) do
-    Nesta::Configuration.stub!(:configuration).and_return({
-      "content" => File.join(File.dirname(__FILE__), ["fixtures"])
-    })
+    stub_configuration
   end
   
   after(:each) do

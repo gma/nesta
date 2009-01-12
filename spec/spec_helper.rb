@@ -11,5 +11,7 @@ end
 set_options :views => File.join(File.dirname(__FILE__), "..", "views"),
             :public => File.join(File.dirname(__FILE__), "..", "public")
 
+ENV["RACK_ENV"] = "test"
+
 require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "..", "app")

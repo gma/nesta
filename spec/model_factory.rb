@@ -6,11 +6,18 @@ module ModelFactory
     @config ||= {}
     @config[key] = value
   end
+  
+  def stub_env_config_key(key, value)
+    @config ||= {}
+    @config["test"] ||= {}
+    @config["test"][key] = value
+  end
 
   def stub_configuration
     stub_config_key("title", "My blog")
     stub_config_key("subtitle", "about stuff")
-    stub_config_key("content", File.join(File.dirname(__FILE__), ["fixtures"]))
+    stub_env_config_key(
+        "content", File.join(File.dirname(__FILE__), ["fixtures"]))
     Nesta::Configuration.stub!(:configuration).and_return(@config)
   end
 
