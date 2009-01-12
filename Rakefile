@@ -1,12 +1,12 @@
 require "rubygems"
+require "spec/rake/spectask"
+
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
 require File.join(File.dirname(__FILE__), *%w[lib configuration])
 
-desc "Run the specs."
-task :spec do
-  Dir.new("spec").each do |filename|
-    require File.join("spec", filename) if filename =~ /_spec.rb$/
-  end
+desc "Run all specs in spec directory"
+Spec::Rake::SpecTask.new(:spec) do |t|
+  t.spec_files = FileList["spec/*_spec.rb"]
 end
 
 class Factory
