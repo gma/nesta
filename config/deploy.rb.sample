@@ -6,7 +6,7 @@ set :repository, "git://github.com/gma/nesta.git"
 # (see below).
 #
 #set :user, "deploy"
-#set :domain, "#{user}@example.com"
+#set :domain, "#{deploy}@example.com"
 set :domain, "example.com"
 
 set :deploy_to, "/var/apps/#{application}"
@@ -16,11 +16,21 @@ require "tempfile"
 require "vlad"
 
 namespace :vlad do
-  remote_task :config do
-    put "#{shared_path}/config/config.yml", "vlad.config.yml" do
+  remote_task :config_yml do
+    put "#{shared_path}/config.yml", "vlad.config.yml" do
       File.open(File.join(File.dirname(__FILE__), "config.yml")).read
     end
   end
+  
+  task :setup do
+    Rake::Task['vlad:config_yml'].invoke
+  end
+  
+  remote_task :symlink_config_yml do
+    run "ln -s #{shared_path}/config.yml #{current_path}/config/config.yml"
+  end
+  
+  task :update do
+    Rake::Task['vlad:symlink_config_yml'].invoke
+  end
 end
-
-
