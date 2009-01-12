@@ -252,9 +252,9 @@ OPTIONS (defaults shown in brackets)
   def main
     parse_command_line
     connect_to_database
-    # import_articles
+    import_articles
     import_comments
-    # import_tags
+    import_tags
   rescue GetoptLong::Error
     exit 1
   end
