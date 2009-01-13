@@ -10,7 +10,10 @@ set :repository, "git://github.com/gma/nesta.git"
 set :domain, "example.com"
 
 set :deploy_to, "/var/apps/#{application}"
-set :thin_socket, "/tmp/thin.sock"
+
+# ============================================================================
+# You don't need to worry about anything beneath this point...
+# ============================================================================
 
 require "tempfile"
 require "vlad"
