@@ -1,13 +1,15 @@
+require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 describe "sitemap XML" do
   include ModelFactory
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
     create_category { |f| mock_file_stat(:stub!, f, "3 Jan 2009, 15:07") }
     create_article { |f| mock_file_stat(:stub!, f, "3 Jan 2009, 15:10") }
-    get_it "/sitemap.xml"
+    get "/sitemap.xml"
   end
   
   after(:each) do
@@ -54,6 +56,7 @@ end
 
 describe "sitemap XML lastmod" do
   include ModelFactory
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
@@ -67,7 +70,7 @@ describe "sitemap XML lastmod" do
     create_article do |filename|
       mock_file_stat(:stub!, filename, "3 January 2009, 15:37:01")
     end
-    get_it "/sitemap.xml"
+    get "/sitemap.xml"
     body.should have_tag("url") do |url|
       url.should have_tag("loc", /my-article$/)
       url.should have_tag("lastmod", /^2009-01-03T15:37:01/)
@@ -81,7 +84,7 @@ describe "sitemap XML lastmod" do
     create_article(:permalink => "article-2") do |filename|
       mock_file_stat(:should_receive, filename, "3 January 2009")
     end
-    get_it "/sitemap.xml"
+    get "/sitemap.xml"
     body.should have_tag("url") do |url|
       url.should have_tag("loc", "http://example.org")
       url.should have_tag("lastmod", /^2009-01-04/)

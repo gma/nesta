@@ -1,3 +1,4 @@
+require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 module ModelMatchers
@@ -51,7 +52,7 @@ end
 describe "Article" do
   include ModelFactory
   include ModelMatchers
-  
+
   before(:each) do
     stub_configuration
   end

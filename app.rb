@@ -2,7 +2,7 @@ require "rubygems"
 require "sinatra"
 
 def require_or_load(file)
-  if Sinatra.env == :development
+  if Sinatra::Application.environment == :development
     load File.join(File.dirname(__FILE__), "#{file}.rb")
   else
     require file
@@ -63,7 +63,7 @@ end
 error do
   set_common_variables
   haml :error
-end unless Sinatra.application.options.env == :development
+end unless Sinatra::Application.environment == :development
 
 get "/css/master.css" do
   content_type "text/css", :charset => "utf-8"

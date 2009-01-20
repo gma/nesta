@@ -1,18 +1,20 @@
+require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 describe "layout" do
   include ModelFactory
+  include RequestSpecHelper
   
   it "should not include GA JavaScript by default" do
     stub_configuration
-    get_it "/"
+    get "/"
     body.should_not have_tag("script", /_getTracker\("UA-1234"\)/)
   end
   
   it "should include GA JavaScript if configured" do
     stub_env_config_key("google_analytics_code", "UA-1234")
     stub_configuration
-    get_it "/"
+    get "/"
     body.should have_tag("script", /_getTracker\("UA-1234"\)/)
   end
 end
@@ -23,7 +25,7 @@ describe "home page" do
   before(:each) do
     stub_configuration
     create_category
-    get_it "/"
+    get "/"
   end
   
   after(:each) do
@@ -54,7 +56,7 @@ describe "home page" do
     before(:each) do
       create_article
       @article = Article.find_by_permalink("my-article")
-      get_it "/"
+      get "/"
     end
     
     it "should display article heading in h2" do
@@ -76,7 +78,7 @@ describe "home page" do
       @date = metadata["date"]
       @summary = metadata["summary"]
       @read_more = metadata["read more"]
-      get_it "/"
+      get "/"
     end
 
     it "should display link to article in h2 tag" do
@@ -101,7 +103,7 @@ describe "article" do
     metadata = create_article_with_metadata
     @date = metadata["date"]
     @summary = metadata["summary"]
-    get_it "/articles/my-article"
+    get "/articles/my-article"
   end
 
   after(:each) do
@@ -133,7 +135,7 @@ describe "article" do
       create_category(:title => "Apple", :permalink => "the-apple")
       create_category(:title => "Banana", :permalink => "banana")
       create_article(:metadata => { "categories" => "banana, the-apple" })
-      get_it "/articles/my-article"
+      get "/articles/my-article"
     end
     
     it "should render successfully" do
@@ -153,7 +155,7 @@ describe "article" do
     before(:each) do
       create_category
       create_article(:metadata => { "parent" => "my-category" })
-      get_it "/articles/my-article"
+      get "/articles/my-article"
     end
     
     it "should link to parent in breadcrumb" do
@@ -171,7 +173,7 @@ describe "article" do
     before(:each) do
       create_comment
       @comment = Comment.find_all.first
-      get_it "/articles/my-article"
+      get "/articles/my-article"
     end
     
     it "should display comments heading" do
@@ -191,7 +193,7 @@ describe "article" do
 
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
-      get_it "/articles/no-such-article"
+      get "/articles/no-such-article"
       @response.should_not be_ok
     end
   end
@@ -217,7 +219,7 @@ describe "category" do
           :metadata => { :categories => "my-category" },
           :content => "Article content")
       create_article(:title => "Second article", :permalink => "second-article")
-      get_it "/my-category"
+      get "/my-category"
     end
 
     it "should render successfully" do
@@ -244,7 +246,7 @@ describe "category" do
 
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
-      get_it "/my-category"
+      get "/my-category"
       @response.should_not be_ok
     end
   end
@@ -262,7 +264,7 @@ describe "attachments" do
   
   before(:each) do
     create_attachment
-    get_it "/attachments/test.txt"
+    get "/attachments/test.txt"
   end
   
   after(:each) do

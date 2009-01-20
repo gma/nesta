@@ -1,7 +1,9 @@
+require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 describe "atom feed" do
   include ModelFactory
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
@@ -10,7 +12,7 @@ describe "atom feed" do
       "uri" => "http://fredbloggs.com",
       "email" => "fred@fredbloggs.com"
     })
-    get_it "/articles.xml"
+    get "/articles.xml"
   end
   
   after(:each) do
@@ -63,7 +65,7 @@ describe "atom feed" do
         )
       end
       create_category
-      get_it "/articles.xml"
+      get "/articles.xml"
     end
     
     it "should set title" do
@@ -106,7 +108,7 @@ describe "atom feed" do
   describe "article with no date" do
     before(:each) do
       create_article(:permalink => "no-date")
-      get_it "/articles.xml"
+      get "/articles.xml"
     end
 
     it "should not appear in feed" do
@@ -120,7 +122,7 @@ describe "atom feed" do
         "date" => "1 January 2009",
         "atom id" => "use-this-id"
       })
-      get_it "/articles.xml"
+      get "/articles.xml"
       body.should have_tag("entry/id", "use-this-id")
     end
   end
