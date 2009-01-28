@@ -33,7 +33,12 @@ namespace :vlad do
     run "ln -s #{shared_path}/config.yml #{current_path}/config/config.yml"
   end
   
+  remote_task :symlink_attachments do
+    run "ln -s #{shared_path}/content/attachments #{current_path}/public/attachments"
+  end
+  
   task :update do
     Rake::Task['vlad:symlink_config_yml'].invoke
+    Rake::Task['vlad:symlink_attachments'].invoke
   end
 end
