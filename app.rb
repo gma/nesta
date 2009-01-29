@@ -75,6 +75,8 @@ get "/" do
   @body_class = "home"
   @heading = Nesta::Configuration.title
   @subtitle = Nesta::Configuration.subtitle
+  @description = Nesta::Configuration.description
+  @keywords = Nesta::Configuration.keywords
   @title = "#{@heading} - #{@subtitle}"
   @articles = Article.find_all[0..7]
   haml :index
@@ -85,6 +87,8 @@ get "/:permalink" do
   @category = Category.find_by_permalink(params[:permalink])
   raise Sinatra::NotFound if @category.nil?
   @title = "#{@category.heading} - #{Nesta::Configuration.title}"
+  @description = @category.description
+  @keywords = @category.keywords
   haml :category
 end
 
@@ -97,6 +101,8 @@ get "/articles/:permalink" do
   else
     "#{@article.heading} - #{Nesta::Configuration.title}"
   end
+  @description = @article.description
+  @keywords = @article.keywords
   @comments = @article.comments
   haml :article
 end

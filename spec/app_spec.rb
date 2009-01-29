@@ -48,6 +48,14 @@ describe "home page" do
     body.should have_tag("h1 small", /about stuff/)
   end
   
+  it "should set description meta tag" do
+    body.should have_tag("meta[@name=description][@content=great web site]")
+  end
+  
+  it "should set keywords meta tag" do
+    body.should have_tag("meta[@name=keywords][@content=home, page]")
+  end
+  
   it "should link to each category" do
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
@@ -80,7 +88,7 @@ describe "home page" do
       @read_more = metadata["read more"]
       get "/"
     end
-
+    
     it "should display link to article in h2 tag" do
       body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
     end
@@ -95,12 +103,24 @@ describe "home page" do
   end
 end
 
+describe "page with meta tags", :shared => true do
+  it "should set description meta tag" do
+    body.should have_tag("meta[@name=description][@content=#{@description}]")
+  end
+  
+  it "should set the keywords meta tag" do
+    body.should have_tag("meta[@name=keywords][@content=#{@keywords}]")
+  end
+end
+
 describe "article" do
   include ModelFactory
   
   before(:each) do
     stub_configuration
     metadata = create_article_with_metadata
+    @description = metadata["description"]
+    @keywords = metadata["keywords"]
     @date = metadata["date"]
     @summary = metadata["summary"]
     get "/articles/my-article"
@@ -109,6 +129,8 @@ describe "article" do
   after(:each) do
     remove_fixtures
   end
+  
+  it_should_behave_like "page with meta tags"
   
   it "should render successfully" do
     @response.should be_ok
@@ -213,7 +235,13 @@ describe "category" do
 
   describe "when category exists" do
     before(:each) do
-      create_category(:content => "# My category\n\nCategory content")
+      @description = "Page about stuff"
+      @keywords = "things, stuff"
+      create_category(:content => "# My category\n\nCategory content",
+                      :metadata => {
+                        "description" => @description,
+                        "keywords" => @keywords
+                      })
       create_article(
           :title => "Categorised",
           :metadata => { :categories => "my-category" },
@@ -221,6 +249,8 @@ describe "category" do
       create_article(:title => "Second article", :permalink => "second-article")
       get "/my-category"
     end
+
+    it_should_behave_like "page with meta tags"
 
     it "should render successfully" do
       @response.should be_ok

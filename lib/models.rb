@@ -40,6 +40,14 @@ class FileModel
   def last_modified
     @last_modified ||= File.stat(@filename).mtime
   end
+  
+  def description
+    metadata("description")
+  end
+  
+  def keywords
+    metadata("keywords")
+  end
 
   private
     def markup

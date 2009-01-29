@@ -11,6 +11,14 @@ module Nesta
       configuration["subtitle"]
     end
     
+    def self.description
+      configuration["description"]
+    end
+    
+    def self.keywords
+      configuration["keywords"]
+    end
+    
     def self.author
       configuration["author"]
     end

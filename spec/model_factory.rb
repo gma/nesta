@@ -16,6 +16,8 @@ module ModelFactory
   def stub_configuration
     stub_config_key("title", "My blog")
     stub_config_key("subtitle", "about stuff")
+    stub_config_key("description", "great web site")
+    stub_config_key("keywords", "home, page")
     stub_env_config_key(
         "content", File.join(File.dirname(__FILE__), ["fixtures"]))
     Nesta::Configuration.stub!(:configuration).and_return(@config)
@@ -23,6 +25,8 @@ module ModelFactory
 
   def create_article_with_metadata
     metadata = {
+      "description" => "Page about stuff",
+      "keywords" => "things, stuff",
       "date" => "29 December 2008",
       "summary" => 'Summary text\n\nwith two paragraphs',
       "read more" => "Continue please"

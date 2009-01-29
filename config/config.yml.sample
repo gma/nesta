@@ -3,6 +3,8 @@
 #
 title: "My Site"
 subtitle: "(change this text in config/config.yml)"
+# description: "Set this to something that describes your home page"
+# keywords: "enter 3 or 4, comma separated, keywords"
 
 # You should really specify the author of all the content when generating an
 # Atom feed. Specify at least one of name, uri or email, and nesta will

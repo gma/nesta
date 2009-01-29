@@ -166,6 +166,14 @@ describe "Article" do
     it "should not include heading in body" do
       @article.body.should_not have_tag("h1", "My article")
     end
+
+    it "should retrieve description from metadata" do
+      @article.description.should == "Page about stuff"
+    end
+    
+    it "should retrieve keywords from metadata" do
+      @article.keywords.should == "things, stuff"
+    end
     
     it "should retrieve date published from metadata" do
       @article.date.strftime("%d %B %Y").should == @date
@@ -197,6 +205,14 @@ describe "Article" do
     
     it "should have default read more link text" do
       @article.read_more.should == "Continue reading"
+    end
+    
+    it "should not have description" do
+      @article.description.should be_nil
+    end
+    
+    it "should not have keywords" do
+      @article.keywords.should be_nil
     end
   end
   
