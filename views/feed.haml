@@ -1,3 +1,5 @@
+- title ||= "our feed"
 .feed
-  %a{ :href => "/articles.xml", :title => "Subscribe to our feed", :rel => "nofollow" }
-    Subscribe to our feed
+  %a{ :href => "/articles.xml", :title => "Subscribe to #{title}", :rel => "nofollow" }
+    Subscribe to
+    = title

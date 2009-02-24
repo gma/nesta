@@ -38,7 +38,7 @@
     &:first-child
       margin-top: 0
   
-  h2, ol, p, ul, div.feed
+  h2, ol, p, ul
     color = !pale_color
     font-family = !sans_serif
     font-size: 90%
@@ -63,11 +63,19 @@
   div.feed
     margin: 1.5em 0
     border-top = !border
-    padding-top: 1.5em
-    
-    a
-      padding: 6px 0 6px 36px
-      background: url(/feed-icon.png) no-repeat left center
+    border-bottom = !border
+  
+div.feed
+  margin: 0.5em 0
+  padding-top: 1.5em
+  padding-bottom: 1.5em
+  
+  color = !pale_color
+  font-family = !sans_serif
+  font-size: 90%
+  a
+    padding: 6px 0 6px 36px
+    background: url(/feed-icon.png) no-repeat left center
 
 h1, h2, h3, p, div.breadcrumb
   color: #333

@@ -1,5 +1,5 @@
 .breadcrumb
-  %a{ :href => "/" }= @home_link
+  %a{ :href => "/" }= @site_title
   &gt;
   - if @article.parent
     %a{ :href => category_path(@article.parent) }= @article.parent.heading
@@ -20,6 +20,8 @@
       Filed under
       - @article.categories.each do |category|
         %a{ :href => category_path(category) }= category.heading
+
+  = haml :feed, :locals => { :title => @site_title }, :layout => false
 
   - unless @comments.empty?
     .old-comments

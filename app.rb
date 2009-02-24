@@ -15,7 +15,7 @@ require_or_load "lib/models"
 helpers do
   def set_common_variables
     @categories = Category.find_all
-    @home_link = Nesta::Configuration.title
+    @site_title = Nesta::Configuration.title
     @google_analytics_code = Nesta::Configuration.google_analytics_code
   end
 
