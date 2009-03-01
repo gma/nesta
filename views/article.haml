@@ -21,6 +21,7 @@
       - @article.categories.each do |category|
         %a{ :href => category_path(category) }= category.heading
 
+  = haml :social, :layout => false
   = haml :feed, :locals => { :title => @site_title }, :layout => false
 
   - unless @comments.empty?

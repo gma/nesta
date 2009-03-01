@@ -64,15 +64,18 @@
     margin: 1.5em 0
     border-top = !border
     border-bottom = !border
-  
+
+p.social,
+div.feed
+  color = !pale_color
+  font-family = !sans_serif
+  font-size: 90%
+
 div.feed
   margin: 0.5em 0
   padding-top: 1.5em
   padding-bottom: 1.5em
   
-  color = !pale_color
-  font-family = !sans_serif
-  font-size: 90%
   a
     padding: 6px 0 6px 36px
     background: url(/feed-icon.png) no-repeat left center
@@ -154,6 +157,20 @@ div.breadcrumb
     
     a
       margin-left: 0.5em
+  
+  .social
+    float: right
+    width: auto
+    
+    margin: 0
+    padding-top: 1.2em
+    padding-bottom: 1.5em
+  
+    vertical-align: middle
+  
+    img
+      margin: 0 0 0 5px
+      border: none
   
   code, pre
     border: 1px solid #B8DCC1
