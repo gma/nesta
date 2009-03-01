@@ -29,7 +29,7 @@ subtitle: "(change this text in config/config.yml)"
 # traffic on your site. Probably best not to set it in development mode.
 #
 development:
-  content: /tmp/nesta
+  content: content
 
 production:
   content: /var/apps/nesta/shared/content
