@@ -49,7 +49,7 @@ module Nesta
     
     private
       def self.environment
-        ENV["RACK_ENV"] || "development"
+        Sinatra::Application.environment.to_s
       end
     
       def self.configuration
