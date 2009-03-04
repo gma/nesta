@@ -4,6 +4,7 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "atom feed" do
   include ModelFactory
   include RequestSpecHelper
+  include Sinatra::Test
   
   before(:each) do
     stub_configuration

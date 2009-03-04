@@ -4,6 +4,7 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "layout" do
   include ModelFactory
   include RequestSpecHelper
+  include Sinatra::Test
   
   it "should not include GA JavaScript by default" do
     stub_configuration
@@ -21,6 +22,7 @@ end
 
 describe "home page" do
   include ModelFactory
+  include Sinatra::Test
   
   before(:each) do
     stub_configuration
@@ -104,6 +106,8 @@ describe "home page" do
 end
 
 describe "page with meta tags", :shared => true do
+  include Sinatra::Test
+
   it "should set description meta tag" do
     body.should have_tag("meta[@name=description][@content=#{@description}]")
   end
@@ -115,6 +119,7 @@ end
 
 describe "article" do
   include ModelFactory
+  include Sinatra::Test
   
   before(:each) do
     stub_configuration
@@ -224,6 +229,7 @@ end
 
 describe "category" do
   include ModelFactory
+  include Sinatra::Test
   
   before(:each) do
     stub_configuration
@@ -284,6 +290,7 @@ end
 
 describe "attachments" do
   include ModelFactory
+  include Sinatra::Test
 
   def create_attachment
     stub_configuration

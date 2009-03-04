@@ -1,7 +1,8 @@
 require "rubygems"
 require "spec"
 require "sinatra"
-require "sinatra/test/rspec"
+require "spec/interop/test"
+require "sinatra/test"
 require "rspec_hpricot_matchers"
 
 Spec::Runner.configure do |config|
@@ -11,7 +12,7 @@ end
 set :views => File.join(File.dirname(__FILE__), "..", "views"),
     :public => File.join(File.dirname(__FILE__), "..", "public")
 
-ENV["RACK_ENV"] = "test"
+set :environment, :test
 
 require File.join(File.dirname(__FILE__), "..", "app")
 

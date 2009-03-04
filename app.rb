@@ -82,16 +82,6 @@ get "/" do
   haml :index
 end
 
-get "/:permalink" do
-  set_common_variables
-  @category = Category.find_by_permalink(params[:permalink])
-  raise Sinatra::NotFound if @category.nil?
-  @title = "#{@category.heading} - #{Nesta::Configuration.title}"
-  @description = @category.description
-  @keywords = @category.keywords
-  haml :category
-end
-
 get "/articles/:permalink" do
   set_common_variables
   @article = Article.find_by_permalink(params[:permalink])
@@ -129,4 +119,14 @@ get "/sitemap.xml" do
     this > latest ? this : latest
   end
   builder :sitemap
+end
+
+get "/:permalink" do
+  set_common_variables
+  @category = Category.find_by_permalink(params[:permalink])
+  raise Sinatra::NotFound if @category.nil?
+  @title = "#{@category.heading} - #{Nesta::Configuration.title}"
+  @description = @category.description
+  @keywords = @category.keywords
+  haml :category
 end
