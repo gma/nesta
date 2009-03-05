@@ -104,11 +104,11 @@ class Article < FileModel
   
   def date(format = nil)
     @date ||= if metadata("date")
-       if format == :xmlschema
-         Time.parse(metadata("date")).xmlschema
-       else
-         DateTime.parse(metadata("date"))
-       end
+      if format == :xmlschema
+        Time.parse(metadata("date")).xmlschema
+      else
+        DateTime.parse(metadata("date"))
+      end
     end
   end
   
