@@ -24,11 +24,11 @@ helpers do
   end
 
   def article_path(article)
-    "/articles/#{article.permalink}"
+    "#{Nesta::Configuration.article_prefix}/#{article.permalink}"
   end
 
   def category_path(category)
-    "/#{category.permalink}"
+    "#{Nesta::Configuration.category_prefix}/#{category.permalink}"
   end
   
   def url_for(page)
@@ -86,7 +86,7 @@ get "/" do
   cache haml(:index)
 end
 
-get "/articles/:permalink" do
+get "#{Nesta::Configuration.article_prefix}/:permalink" do
   set_common_variables
   @article = Article.find_by_permalink(params[:permalink])
   raise Sinatra::NotFound if @article.nil?
@@ -125,7 +125,7 @@ get "/sitemap.xml" do
   builder :sitemap
 end
 
-get "/:permalink" do
+get "#{Nesta::Configuration.category_prefix}/:permalink" do
   set_common_variables
   @category = Category.find_by_permalink(params[:permalink])
   raise Sinatra::NotFound if @category.nil?
