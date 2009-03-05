@@ -9,8 +9,12 @@ def require_or_load(file)
   end
 end
 
+require_or_load "lib/cache"
 require_or_load "lib/configuration"
 require_or_load "lib/models"
+
+set :cache_dir, "cache"
+set :cache_enabled, Nesta::Configuration.cache
 
 helpers do
   def set_common_variables
@@ -57,17 +61,17 @@ end
 
 not_found do
   set_common_variables
-  haml :not_found
+  cache haml(:not_found)
 end
 
 error do
   set_common_variables
-  haml :error
+  cache haml(:error)
 end unless Sinatra::Application.environment == :development
 
 get "/css/master.css" do
   content_type "text/css", :charset => "utf-8"
-  sass :master
+  cache sass(:master)
 end
 
 get "/" do
@@ -79,7 +83,7 @@ get "/" do
   @keywords = Nesta::Configuration.keywords
   @title = "#{@heading} - #{@subtitle}"
   @articles = Article.find_all[0..7]
-  haml :index
+  cache haml(:index)
 end
 
 get "/articles/:permalink" do
@@ -94,7 +98,7 @@ get "/articles/:permalink" do
   @description = @article.description
   @keywords = @article.keywords
   @comments = @article.comments
-  haml :article
+  cache haml(:article)
 end
 
 get "/attachments/:filename.:ext" do
@@ -128,5 +132,5 @@ get "/:permalink" do
   @title = "#{@category.heading} - #{Nesta::Configuration.title}"
   @description = @category.description
   @keywords = @category.keywords
-  haml :category
+  cache haml(:category)
 end

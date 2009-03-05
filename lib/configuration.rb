@@ -3,6 +3,10 @@ module Nesta
 
     @@yaml = nil
 
+    def self.cache
+      environment_config["cache"] || false
+    end
+
     def self.title
       configuration["title"]
     end
@@ -40,11 +44,15 @@ module Nesta
     end
     
     def self.content_path
-      configuration[environment]["content"]
+      environment_config["content"]
     end
     
     def self.google_analytics_code
-      configuration[environment]["google_analytics_code"]
+      environment_config["google_analytics_code"]
+    end
+    
+    def self.environment_config
+      configuration[environment] || {}
     end
     
     private
