@@ -1,4 +1,5 @@
 require "rubygems"
+require "sinatra"
 require "spec/rake/spectask"
 begin
   require "vlad"
