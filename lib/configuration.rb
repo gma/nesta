@@ -4,7 +4,7 @@ module Nesta
     @@yaml = nil
 
     def self.cache
-      environment_config["cache"] || false
+      get(environment)["cache"] || false
     end
 
     def self.title
@@ -44,15 +44,19 @@ module Nesta
     end
     
     def self.content_path
-      environment_config["content"]
+      get(environment)["content"]
     end
     
     def self.google_analytics_code
-      environment_config["google_analytics_code"]
+      get(environment)["google_analytics_code"]
     end
     
-    def self.environment_config
-      configuration[environment] || {}
+    def self.article_prefix
+      get("prefixes")["article"] || "/articles"
+    end
+    
+    def self.category_prefix
+      get("prefixes")["category"] || ""
     end
     
     private
@@ -63,6 +67,10 @@ module Nesta
       def self.configuration
         file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
         @@yaml ||= YAML::load(IO.read(file))
+      end
+      
+      def self.get(key, default = {})
+        configuration[key].nil? ? default : configuration[key]
       end
   end
 end
