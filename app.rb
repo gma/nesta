@@ -32,7 +32,11 @@ helpers do
   end
   
   def url_for(page)
-    base = page.is_a?(Article) ? base_url + "/articles" : base_url
+    base = if page.is_a?(Article)
+      base_url + Nesta::Configuration.article_prefix
+    else
+      base_url + Nesta::Configuration.category_prefix
+    end
     [base, page.permalink].join("/")
   end
   
@@ -43,14 +47,14 @@ helpers do
   
   def nesta_atom_id_for_article(article)
     published = article.date.strftime('%Y-%m-%d')
-    "tag:#{request.host},#{published}:/articles/#{article.permalink}"
+    "tag:#{request.host},#{published}:#{article_path(article)}"
   end
   
   def atom_id(article = nil)
     if article
       article.atom_id || nesta_atom_id_for_article(article)
     else
-      "tag:#{request.host},2009:/articles"
+      "tag:#{request.host},2009:#{Nesta::Configuration.article_prefix}"
     end
   end
   
@@ -107,13 +111,13 @@ get "/attachments/:filename.:ext" do
   send_file(file, :disposition => nil)
 end
 
-get "/articles.xml" do
+get "#{Nesta::Configuration.article_prefix}.xml" do
   content_type :xml, :charset => "utf-8"
   @title = Nesta::Configuration.title
   @subtitle = Nesta::Configuration.subtitle
   @author = Nesta::Configuration.author
   @articles = Article.find_all.select { |a| a.date }[0..9]
-  builder :atom
+  cache builder(:atom)
 end
 
 get "/sitemap.xml" do
@@ -122,7 +126,7 @@ get "/sitemap.xml" do
   @last = @pages.map { |page| page.last_modified }.inject do |latest, this|
     this > latest ? this : latest
   end
-  builder :sitemap
+  cache builder(:sitemap)
 end
 
 get "#{Nesta::Configuration.category_prefix}/:permalink" do

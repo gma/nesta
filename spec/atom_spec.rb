@@ -128,3 +128,29 @@ describe "atom feed" do
     end
   end
 end
+
+describe "atom feed with article prefix" do
+  include ModelFactory
+  include RequestSpecHelper
+  include Sinatra::Test
+
+  before(:each) do
+    stub_configuration
+    stub_config_key("prefixes", { "article" => "/foo" })
+  end
+
+  after(:each) do
+    remove_fixtures
+  end
+  
+  it "should incldue article prefix in feed" do
+    create_article(
+      :permalink => "article-1",
+      :metadata => {
+        "date" => "1 January 2009"
+      }
+    )
+    get "/articles.xml"
+    body.should have_tag("link[@href=http://example.org/foo/article-1]")
+  end
+end

@@ -23,6 +23,9 @@ subtitle: "(change this text in config/config.yml)"
 # to override these paths, but beware that you CANNOT set them to the same
 # path.
 #
+# Note that the XML feed will be served from /foo.xml if you set the article
+# prefix to "foo".
+#
 # prefixes:
 #   category: 
 #   article: /articles

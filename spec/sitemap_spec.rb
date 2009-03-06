@@ -55,6 +55,34 @@ describe "sitemap XML" do
   end
 end
 
+describe "sitemap XML with path prefixes" do
+  include ModelFactory
+  include RequestSpecHelper
+  include Sinatra::Test
+
+  before(:each) do
+    stub_configuration
+    stub_config_key("prefixes", { "category" => "/cat", "article" => "/foo" })
+    create_category { |f| mock_file_stat(:stub!, f, "3 Jan 2009, 15:07") }
+    create_article { |f| mock_file_stat(:stub!, f, "3 Jan 2009, 15:10") }
+    get "/sitemap.xml"
+  end
+  
+  after(:each) do
+    remove_fixtures
+  end
+  
+  it "should use prefix for category pages" do
+    body.should have_tag(
+        "/urlset/url/loc", "http://example.org/cat/my-category")
+  end
+  
+  it "should use prefix for article pages" do
+    body.should have_tag(
+        "/urlset/url/loc", "http://example.org/foo/my-article")
+  end
+end
+
 describe "sitemap XML lastmod" do
   include ModelFactory
   include RequestSpecHelper
