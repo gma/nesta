@@ -150,7 +150,7 @@ describe "article" do
   end
 
   it "should display the date" do
-    body.should have_tag("#date", @date)
+    body.should have_tag("div.date", @date)
   end
 
   it "should display the content" do

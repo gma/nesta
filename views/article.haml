@@ -12,7 +12,7 @@
 
 #content
   - if @article.date
-    #date= format_date(@article.date)
+    .date= format_date(@article.date)
   ~ @article.to_html
 
   - unless @article.categories.empty?
