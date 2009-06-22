@@ -1,5 +1,7 @@
 require "rubygems"
 require "sinatra"
+require "Builder"
+require "Haml"
 
 def require_or_load(file)
   if Sinatra::Application.environment == :development
@@ -17,10 +19,16 @@ set :cache_dir, "cache"
 set :cache_enabled, Nesta::Configuration.cache
 
 helpers do
+  def set_from_config(*variables)
+    variables.each do |var|
+      instance_variable_set("@#{var}", Nesta::Configuration.send(var))
+    end
+  end
+  
   def set_common_variables
     @categories = Category.find_all
     @site_title = Nesta::Configuration.title
-    @google_analytics_code = Nesta::Configuration.google_analytics_code
+    set_from_config(:google_analytics_code)
   end
 
   def article_path(article)
@@ -80,13 +88,11 @@ end
 
 get "/" do
   set_common_variables
-  @body_class = "home"
-  @heading = Nesta::Configuration.title
-  @subtitle = Nesta::Configuration.subtitle
-  @description = Nesta::Configuration.description
-  @keywords = Nesta::Configuration.keywords
-  @title = "#{@heading} - #{@subtitle}"
+  set_from_config(:title, :subtitle, :description, :keywords)
+  @heading = @title
+  @title << " - #{@subtitle}"
   @articles = Article.find_all[0..7]
+  @body_class = "home"
   cache haml(:index)
 end
 
@@ -113,9 +119,7 @@ end
 
 get "#{Nesta::Configuration.article_prefix}.xml" do
   content_type :xml, :charset => "utf-8"
-  @title = Nesta::Configuration.title
-  @subtitle = Nesta::Configuration.subtitle
-  @author = Nesta::Configuration.author
+  set_from_config(:title, :subtitle, :author)
   @articles = Article.find_all.select { |a| a.date }[0..9]
   cache builder(:atom)
 end
