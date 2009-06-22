@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "atom feed" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
   
   before(:each) do
     stub_configuration
@@ -21,7 +20,7 @@ describe "atom feed" do
   end
   
   it "should render successfully" do
-    @response.should be_ok
+    last_response.should be_ok
   end
   
   it "should use Atom's XML namespace" do
@@ -132,7 +131,6 @@ end
 describe "atom feed with article prefix" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
 
   before(:each) do
     stub_configuration

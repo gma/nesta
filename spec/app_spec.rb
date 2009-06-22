@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "layout" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
   
   it "should not include GA JavaScript by default" do
     stub_configuration
@@ -22,7 +21,7 @@ end
 
 describe "home page" do
   include ModelFactory
-  include Sinatra::Test
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
@@ -35,7 +34,7 @@ describe "home page" do
   end
 
   it "should render successfully" do
-    @response.should be_ok
+    last_response.should be_ok
   end
   
   it "should display title and subtitle in title tag" do
@@ -106,8 +105,6 @@ describe "home page" do
 end
 
 describe "page with meta tags", :shared => true do
-  include Sinatra::Test
-
   it "should set description meta tag" do
     body.should have_tag("meta[@name=description][@content=#{@description}]")
   end
@@ -119,7 +116,7 @@ end
 
 describe "article" do
   include ModelFactory
-  include Sinatra::Test
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
@@ -138,7 +135,7 @@ describe "article" do
   it_should_behave_like "page with meta tags"
   
   it "should render successfully" do
-    @response.should be_ok
+    last_response.should be_ok
   end
 
   it "should display the heading" do
@@ -166,7 +163,7 @@ describe "article" do
     end
     
     it "should render successfully" do
-      @response.should be_ok
+      last_response.should be_ok
     end
     
     it "should link to each category" do
@@ -221,7 +218,7 @@ describe "article" do
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
       get "/articles/no-such-article"
-      @response.should_not be_ok
+      last_response.should_not be_ok
     end
   end
   
@@ -229,7 +226,7 @@ end
 
 describe "category" do
   include ModelFactory
-  include Sinatra::Test
+  include RequestSpecHelper
   
   before(:each) do
     stub_configuration
@@ -259,7 +256,7 @@ describe "category" do
     it_should_behave_like "page with meta tags"
 
     it "should render successfully" do
-      @response.should be_ok
+      last_response.should be_ok
     end
 
     it "should display the heading" do
@@ -283,14 +280,14 @@ describe "category" do
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
       get "/my-category"
-      @response.should_not be_ok
+      last_response.should_not be_ok
     end
   end
 end
 
 describe "attachments" do
   include ModelFactory
-  include Sinatra::Test
+  include RequestSpecHelper
 
   def create_attachment
     stub_configuration
@@ -309,7 +306,7 @@ describe "attachments" do
   end
   
   it "should be served successfully" do
-    @response.should be_ok
+    last_response.should be_ok
   end
   
   it "should be sent to the client" do
@@ -317,6 +314,6 @@ describe "attachments" do
   end
   
   it "should set the appropriate MIME type" do
-    @response.headers["Content-Type"].should == "text/plain"
+    last_response.headers["Content-Type"].should == "text/plain"
   end
 end

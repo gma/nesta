@@ -4,7 +4,6 @@ require File.join(File.dirname(__FILE__), "spec_helper")
 describe "sitemap XML" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
   
   before(:each) do
     stub_configuration
@@ -18,7 +17,7 @@ describe "sitemap XML" do
   end
   
   it "should render successfully" do
-    @response.should be_ok
+    last_response.should be_ok
   end
   
   it "should have a urlset tag" do
@@ -58,7 +57,6 @@ end
 describe "sitemap XML with path prefixes" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
 
   before(:each) do
     stub_configuration
@@ -86,7 +84,6 @@ end
 describe "sitemap XML lastmod" do
   include ModelFactory
   include RequestSpecHelper
-  include Sinatra::Test
   
   before(:each) do
     stub_configuration
