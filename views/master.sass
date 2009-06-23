@@ -1,7 +1,8 @@
 !base_color = #555
 !pale_color = #777
-!pre_color = #141
-!pre_background = #ECFAF0
+!pre_background = #DFF6FB
+!code_color = !pre_background - 140
+!pre_border = !pre_background - 24
 
 !border = 1px solid #ccc
 
@@ -177,18 +178,17 @@ div.date
       border: none
   
   code, pre
-    border: 1px solid #B8DCC1
-
-    background-color = !pre_background
-    color = !pre_color
-
-  code
-    padding: 0 0.2em
-    
+    color = !code_color
+  
   pre
     margin: 1.5em 0
+    border-left = 3px solid !pre_border
     padding: 0.7em
+
+    background-color = !pre_background
+
     overflow: auto
+
     code
       border: none
       padding: 0
@@ -240,16 +240,18 @@ h4
   font-size: 110%
 
 ol, ol li, p, pre, ul, ul li
+  margin-bottom: 1em
+
+ol li, ul li
   margin-bottom: 0.75em
 
 ol, p, ul
   font-family = !serif
+  line-height: 135%
   color: black
 
 ul, ol
   padding-left: 2.5em
-  li
-    margin-bottom: 0.5em
 
 a
   color: #66f
