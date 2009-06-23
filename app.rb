@@ -1,7 +1,7 @@
 require "rubygems"
 require "sinatra"
-require "Builder"
-require "Haml"
+require "builder"
+require "haml"
 
 def require_or_load(file)
   if Sinatra::Application.environment == :development
