@@ -17,6 +17,19 @@ helpers do
     end
   end
   
+  def set_from_page(*variables)
+    page = @article || @category
+    variables.each { |var| instance_variable_set("@#{var}", page.send(var)) }
+  end
+  
+  def set_title(page)
+    if page.respond_to?(:parent) && page.parent
+      @title = "#{page.heading} - #{page.parent.heading}"
+    else
+      @title = "#{page.heading} - #{Nesta::Configuration.title}"
+    end
+  end
+  
   def set_common_variables
     @categories = Category.find_all
     @site_title = Nesta::Configuration.title
@@ -92,14 +105,8 @@ get "#{Nesta::Configuration.article_prefix}/:permalink" do
   set_common_variables
   @article = Article.find_by_permalink(params[:permalink])
   raise Sinatra::NotFound if @article.nil?
-  @title = if @article.parent
-    "#{@article.heading} - #{@article.parent.heading}"
-  else
-    "#{@article.heading} - #{Nesta::Configuration.title}"
-  end
-  @description = @article.description
-  @keywords = @article.keywords
-  @comments = @article.comments
+  set_title(@article)
+  set_from_page(:description, :keywords, :comments)
   cache haml(:article)
 end
 
@@ -129,8 +136,7 @@ get "#{Nesta::Configuration.category_prefix}/:permalink" do
   set_common_variables
   @category = Category.find_by_permalink(params[:permalink])
   raise Sinatra::NotFound if @category.nil?
-  @title = "#{@category.heading} - #{Nesta::Configuration.title}"
-  @description = @category.description
-  @keywords = @category.keywords
+  set_title(@category)
+  set_from_page(:description, :keywords)
   cache haml(:category)
 end
