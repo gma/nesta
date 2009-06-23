@@ -90,7 +90,7 @@ get "/" do
   set_common_variables
   set_from_config(:title, :subtitle, :description, :keywords)
   @heading = @title
-  @title << " - #{@subtitle}"
+  @title = "#{@title} - #{@subtitle}"
   @articles = Article.find_all[0..7]
   @body_class = "home"
   cache haml(:index)
