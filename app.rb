@@ -3,17 +3,9 @@ require "sinatra"
 require "builder"
 require "haml"
 
-def require_or_load(file)
-  if Sinatra::Application.environment == :development
-    load File.join(File.dirname(__FILE__), "#{file}.rb")
-  else
-    require file
-  end
-end
-
-require_or_load "lib/cache"
-require_or_load "lib/configuration"
-require_or_load "lib/models"
+require "lib/cache"
+require "lib/configuration"
+require "lib/models"
 
 set :cache_dir, "cache"
 set :cache_enabled, Nesta::Configuration.cache
