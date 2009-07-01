@@ -66,16 +66,15 @@ class FileModel
     
     def parse_file
       first_para, remaining = File.open(@filename).read.split(/\r?\n\r?\n/, 2)
+      @metadata = {}
       if paragraph_is_metadata(first_para)
         @markup = remaining
-        @metadata = {}
         for line in first_para.split("\n") do
           key, value = line.split(/\s*:\s*/, 2)
           @metadata[key.downcase] = value
         end
       else
         @markup = [first_para, remaining].join("\n\n")
-        @metadata = {}
       end
     rescue Errno::ENOENT  # file not found
       raise Sinatra::NotFound
