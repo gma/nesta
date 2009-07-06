@@ -1,7 +1,7 @@
 require "rubygems"
 require "sinatra"
 
-APP_ROOT = File.dirname(File.dirname(__FILE__))
+APP_ROOT = File.dirname(__FILE__)
 
 set :run         => false,
     :environment => :production,
@@ -9,6 +9,6 @@ set :run         => false,
     :views       => APP_ROOT + "/views",
     :public      => APP_ROOT + "/public"
  
-require File.join(APP_ROOT, "app.rb")
+require "app"
  
-run Sinatra.application
+run Sinatra::Application
