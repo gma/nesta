@@ -7,7 +7,6 @@ require "lib/cache"
 require "lib/configuration"
 require "lib/models"
 
-set :cache_dir, "cache"
 set :cache_enabled, Nesta::Configuration.cache
 
 helpers do
@@ -78,12 +77,12 @@ end
 
 not_found do
   set_common_variables
-  cache haml(:not_found)
+  haml(:not_found)
 end
 
 error do
   set_common_variables
-  cache haml(:error)
+  haml(:error)
 end unless Sinatra::Application.environment == :development
 
 get "/css/master.css" do
