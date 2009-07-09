@@ -2,6 +2,7 @@ require "rubygems"
 require "sinatra"
 require "builder"
 require "haml"
+require "sass"
 
 require "lib/cache"
 require "lib/configuration"
