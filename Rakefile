@@ -54,7 +54,7 @@ EOF
           "read more" => "Read more about #{fruit}",
           "summary" => summary.chomp
         },
-        :content => "#{fruit} are good because… blah blah.\n\n#{location}"
+        :content => "#{fruit} are good because... blah blah.\n\n#{location}"
       )
     end
     
