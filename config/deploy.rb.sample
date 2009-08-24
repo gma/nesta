@@ -6,7 +6,7 @@ set :repository, "git://github.com/gma/nesta.git"
 # (see below).
 #
 #set :user, "deploy"
-#set :domain, "#{deploy}@example.com"
+#set :domain, "#{user}@example.com"
 set :domain, "example.com"
 
 set :deploy_to, "/var/apps/#{application}"
