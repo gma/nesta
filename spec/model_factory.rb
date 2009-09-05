@@ -18,11 +18,27 @@ module ModelFactory
     stub_config_key("subtitle", "about stuff")
     stub_config_key("description", "great web site")
     stub_config_key("keywords", "home, page")
-    stub_env_config_key(
-        "content", File.join(File.dirname(__FILE__), ["fixtures"]))
+    stub_env_config_key("content", FIXTURE_DIR)
     Nesta::Configuration.stub!(:configuration).and_return(@config)
   end
 
+  def create_page(options)
+    path = filename(Nesta::Configuration.page_path, options[:permalink])
+    create_file(path, options)
+    yield(path) if block_given?
+  end
+  
+  def create_article(options = {})
+    o = {
+      :permalink => "my-article",
+      :title => "My article",
+      :content => "Content goes here"
+    }.merge(options)
+    path = filename(Nesta::Configuration.article_path, o[:permalink])
+    create_file(path, o)
+    yield(path) if block_given?
+  end
+  
   def create_article_with_metadata
     metadata = {
       "description" => "Page about stuff",
@@ -35,15 +51,13 @@ module ModelFactory
     metadata
   end
 
-  def create_article(options = {})
+  def create_category(options = {}, &block)
     o = {
-      :permalink => "my-article",
-      :title => "My article",
+      :permalink => "my-category",
+      :title => "My category",
       :content => "Content goes here"
     }.merge(options)
-    path = filename(Nesta::Configuration.article_path, o[:permalink])
-    create_file(path, o)
-    yield(path) if block_given?
+    create_page(o, &block)
   end
   
   def create_comment(options = {})
@@ -64,20 +78,8 @@ module ModelFactory
     yield(path) if block_given?
   end
   
-  def create_category(options = {})
-    o = {
-      :permalink => "my-category",
-      :title => "My category",
-      :content => "Content goes here"
-    }.merge(options)
-    path = filename(Nesta::Configuration.category_path, o[:permalink])
-    create_file(path, o)
-    yield(path) if block_given?
-  end
-  
   def delete_page(type, permalink)
-    path = Nesta::Configuration.send "#{type}_path"
-    FileUtils.rm(filename(path, permalink))
+    FileUtils.rm(filename(Nesta::Configuration.page_path, permalink))
   end
   
   def remove_fixtures
@@ -85,9 +87,9 @@ module ModelFactory
   end
   
   def create_content_directories
+    FileUtils.mkdir_p(Nesta::Configuration.page_path)
     FileUtils.mkdir_p(Nesta::Configuration.article_path)
     FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
-    FileUtils.mkdir_p(Nesta::Configuration.category_path)
     FileUtils.mkdir_p(Nesta::Configuration.comment_path)
   end
   

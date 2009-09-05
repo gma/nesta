@@ -5,6 +5,10 @@ require "maruku"
 
 module PageModel
   module ClassMethods
+    def path
+      Nesta::Configuration.page_path
+    end
+
     def find_by_permalink(permalink)
       file = File.join(self.path, "#{permalink}.mdown")
       File.exist?(file) ? new(file) : nil
@@ -135,7 +139,7 @@ class Article < FileModel
       categories.split(",").map { |p| p.strip }
     end
     permalinks = permalinks.select do |permalink|
-      file = File.join(Nesta::Configuration.category_path, "#{permalink}.mdown")
+      file = File.join(Nesta::Configuration.page_path, "#{permalink}.mdown")
       File.exist?(file)
     end
     permalinks.map do |permalink|
@@ -208,10 +212,6 @@ class Category < FileModel
   include PageModel
   extend PageModel::ClassMethods
     
-  def self.path
-    Nesta::Configuration.category_path
-  end
-  
   def self.find_all
     super.sort { |x, y| x.heading <=> y.heading }
   end

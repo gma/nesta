@@ -58,6 +58,7 @@ describe "home page" do
   end
   
   it "should link to each category" do
+    pending
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
   

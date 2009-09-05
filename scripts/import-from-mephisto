@@ -43,7 +43,7 @@ class Tag < ActiveRecord::Base
   has_many :contents, :through => :taggings
 
   def filename
-    File.join(Nesta::Configuration.category_path, "#{name}.mdown")
+    File.join(Nesta::Configuration.page_path, "#{name}.mdown")
   end
 end
 

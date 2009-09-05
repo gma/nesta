@@ -29,16 +29,16 @@ module Nesta
       configuration["author"]
     end
     
+    def self.page_path
+      File.join(content_path, "pages")
+    end
+    
     def self.article_path
       File.join(content_path, "articles")
     end
     
     def self.comment_path
       File.join(content_path, "comments")
-    end
-    
-    def self.category_path
-      File.join(content_path, "categories")
     end
     
     def self.attachment_path

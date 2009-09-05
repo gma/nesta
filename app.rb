@@ -40,8 +40,8 @@ helpers do
     "#{Nesta::Configuration.article_prefix}/#{article.permalink}"
   end
 
-  def category_path(category)
-    "#{Nesta::Configuration.category_prefix}/#{category.permalink}"
+  def page_path(page)
+    "/" + page.permalink
   end
   
   def url_for(page)

@@ -2,4 +2,4 @@
 %ul
   - @categories.each do |category|
     %li
-      %a{ :href => category_path(category) }= category.heading
+      %a{ :href => page_path(category) }= category.heading

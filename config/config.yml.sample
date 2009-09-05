@@ -17,19 +17,6 @@ subtitle: "(change this text in config/config.yml)"
 #   uri: http://yourhomepage.com
 #   email: you@yourdomain.com
 
-# By default category pages will be served under the root directory
-# (e.g. /my-cagtegory), and articles will be served from with /articles
-# (e.g. /articles/my-article). Uncomment the prefixes section if you wish
-# to override these paths, but beware that you CANNOT set them to the same
-# path.
-#
-# Note that the XML feed will be served from /foo.xml if you set the article
-# prefix to "foo".
-#
-# prefixes:
-#   category: 
-#   article: /articles
-
 # The remaining configuration settings are set separately in development
 # (i.e. when running on your local workstation) and production (when running
 # on your live server).

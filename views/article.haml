@@ -2,7 +2,7 @@
   %a{ :href => "/" }= @site_title
   &gt;
   - if @article.parent
-    %a{ :href => category_path(@article.parent) }= @article.parent.heading
+    %a{ :href => page_path(@article.parent) }= @article.parent.heading
     &gt;
   = @article.heading
 
@@ -19,7 +19,7 @@
     .categories
       Filed under
       - @article.categories.each do |category|
-        %a{ :href => category_path(category) }= category.heading
+        %a{ :href => page_path(category) }= category.heading
 
   = haml :social, :layout => false
   = haml :feed, :locals => { :title => @site_title }, :layout => false

@@ -28,7 +28,7 @@ namespace :setup do
       :title => "Fruit",
       :permalink => "fruit",
       :content => <<-EOF
-This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.category_path, 'fruit.mdown')}`.
+This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.page_path, 'fruit.mdown')}`.
 
 The general idea of category pages is that you assign articles to categories (in a similar way that many CMS or blog systems allow you to tag your articles), and then write some text introductory text on the topic. So this paragraph really ought to have some introductory material about fruit in it. Why bother? Well it's a great way to structure your site and introduce a collection of articles. It can also help you to [get more traffic](http://www.wordtracker.com/academy/website-structure).
 
@@ -42,8 +42,7 @@ Have a look at the files that define the articles that follow, and you should fi
       summary = <<-EOF
 This would be an article on #{fruit} if I'd bothered to research it.
 EOF
-      file = File.join(
-              Nesta::Configuration.category_path, "#{fruit.downcase}.mdown")
+      file = File.join(Nesta::Configuration.page_path, "#{fruit.downcase}.mdown")
       location = "You can change this article by editing `#{file}`."
       factory.create_article(
         :title => "The benefits of #{fruit}",
