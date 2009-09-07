@@ -7,7 +7,7 @@ class FileModel
   attr_reader :filename
   
   def self.find_all
-    file_pattern = File.join(self.path, "**", "*.mdown")
+    file_pattern = File.join(Nesta::Configuration.page_path, "**", "*.mdown")
     Dir.glob(file_pattern).map { |path| new(path) }
   end
   
@@ -72,23 +72,32 @@ class FileModel
         @markup = [first_para, remaining].join("\n\n")
       end
     rescue Errno::ENOENT  # file not found
+      raise
       raise Sinatra::NotFound
     end
 end
 
 module PageModel
   module ClassMethods
-    def path
-      Nesta::Configuration.page_path
-    end
-    
     def find_by_path(path)
-      file = File.join(self.path, "#{path}.mdown")
+      file = Nesta::Configuration.page_path("#{path}.mdown")
       File.exist?(file) ? new(file) : nil
     end
 
     def find_articles
       find_all.select { |page| page.date }.sort { |x, y| y.date <=> x.date }
+    end
+    
+    def menu_items
+      menu = Nesta::Configuration.content_path("menu.txt")
+      pages = []
+      if File.exist?(menu)
+        File.open(menu).each do |line|
+          file = Nesta::Configuration.page_path(line.chomp) + ".mdown"
+          pages << Page.new(file)
+        end
+      end
+      pages
     end
   end
 end
@@ -104,7 +113,7 @@ class Page < FileModel
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
   end
-
+  
   def date(format = nil)
     @date ||= if metadata("date")
       if format == :xmlschema
@@ -165,16 +174,17 @@ class Comment < FileModel
     "#{time.strftime('%Y%m%d-%H%M%S')}-#{author.gsub(" ", "-").downcase}"
   end
   
+  def self.find_all
+    file_pattern = File.join(Nesta::Configuration.comment_path, "*.mdown")
+    Dir.glob(file_pattern).map { |path| new(path) }
+  end
+  
   def self.find_by_basename(basename)
     find_all.find { |c| c.basename == basename }
   end
   
   def self.find_by_article(article)
     find_all.select { |c| c.article == article.path }
-  end
-  
-  def self.path
-    Nesta::Configuration.comment_path
   end
   
   def ==(other)

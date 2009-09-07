@@ -19,6 +19,24 @@ describe "layout" do
   end
 end
 
+describe "page with menus", :shared => true do
+  setup do
+    @category = create_category
+  end
+  
+  it "should link to menu items" do
+    create_menu(@category.path)
+    get @category.abspath
+    body.should have_tag(
+        "#sidebar ul.menu a[@href=#{@category.abspath}]", @category.heading)
+  end
+  
+  it "should not be display menu if not configured" do
+    get @category.abspath
+    body.should_not have_tag("#sidebar ul.menu")
+  end
+end
+
 describe "home page" do
   include ModelFactory
   include RequestSpecHelper
@@ -32,7 +50,9 @@ describe "home page" do
   after(:each) do
     remove_fixtures
   end
-
+  
+  it_should_behave_like "page with menus"
+  
   it "should render successfully" do
     last_response.should be_ok
   end
@@ -55,11 +75,6 @@ describe "home page" do
   
   it "should set keywords meta tag" do
     body.should have_tag("meta[@name=keywords][@content=home, page]")
-  end
-  
-  it "should link to each category" do
-    pending
-    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
   
   describe "when articles have no summary" do
@@ -136,6 +151,7 @@ describe "article" do
   end
   
   it_should_behave_like "page with meta tags"
+  it_should_behave_like "page with menus"  
   
   it "should render successfully" do
     last_response.should be_ok
@@ -197,7 +213,7 @@ describe "article" do
     end
   end
   
-  describe "when has comments" do
+  describe "with comments" do
     before(:each) do
       create_comment
       @comment = Comment.find_all.first
@@ -218,17 +234,9 @@ describe "article" do
       body.should have_tag("ol//p", "Great article.")
     end
   end
-
-  describe "when page doesn't exist" do
-    it "should return 404 if page not found" do
-      get "/no-such-page"
-      last_response.should_not be_ok
-    end
-  end
-  
 end
 
-describe "category" do
+describe "page" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -239,7 +247,16 @@ describe "category" do
   after(:each) do
     remove_fixtures
   end
-
+  
+  it_should_behave_like "page with menus"
+  
+  describe "that doesn't exist" do
+    it "should return 404 if page not found" do
+      get "/no-such-page"
+      last_response.should_not be_ok
+    end
+  end
+  
   describe "that exists" do
     before(:each) do
       @description = "Page about stuff"
@@ -265,7 +282,7 @@ describe "category" do
     it "should render successfully" do
       last_response.should be_ok
     end
-
+    
     it "should display the heading" do
       body.should have_tag("h1", @category.heading)
     end

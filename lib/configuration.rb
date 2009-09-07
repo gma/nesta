@@ -29,8 +29,8 @@ module Nesta
       configuration["author"]
     end
     
-    def self.page_path
-      File.join(content_path, "pages")
+    def self.page_path(basename = nil)
+      get_path(File.join(content_path, "pages"), basename)
     end
     
     def self.comment_path
@@ -41,8 +41,8 @@ module Nesta
       File.join(content_path, "attachments")
     end
     
-    def self.content_path
-      get(environment)["content"]
+    def self.content_path(basename = nil)
+      get_path(get(environment)["content"], basename)
     end
     
     def self.google_analytics_code
@@ -61,6 +61,10 @@ module Nesta
       
       def self.get(key, default = {})
         configuration[key].nil? ? default : configuration[key]
+      end
+      
+      def self.get_path(dirname, basename)
+        basename.nil? ? dirname : File.join(dirname, basename)
       end
   end
 end

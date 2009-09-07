@@ -68,6 +68,13 @@ module ModelFactory
     yield(path) if block_given?
   end
   
+  def create_menu(*paths)
+    menu_file = filename(Nesta::Configuration.content_path, "menu", :txt)
+    File.open(menu_file, "w") do |file|
+      paths.each { |p| file.write("#{p}\n") }
+    end
+  end
+  
   def delete_page(type, permalink)
     FileUtils.rm(filename(Nesta::Configuration.page_path, permalink))
   end
@@ -89,8 +96,8 @@ module ModelFactory
   end
 
   private
-    def filename(directory, basename)
-      File.join(directory, "#{basename}.mdown")
+    def filename(directory, basename, extension = :mdown)
+      File.join(directory, "#{basename}.#{extension}")
     end
     
     def create_file(path, options = {})
