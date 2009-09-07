@@ -33,10 +33,6 @@ module Nesta
       File.join(content_path, "pages")
     end
     
-    def self.article_path
-      File.join(content_path, "articles")
-    end
-    
     def self.comment_path
       File.join(content_path, "comments")
     end

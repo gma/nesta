@@ -15,10 +15,6 @@ module PageModel
     end
   end
   
-  def permalink
-    File.basename(@filename, ".*")
-  end
-  
   def heading
     markup =~ /^#\s*(.*)/
     Regexp.last_match(1)
@@ -37,6 +33,14 @@ class FileModel
     @filename = filename
   end
 
+  def permalink
+    File.basename(@filename, ".*")
+  end
+
+  def path
+    "/" + permalink
+  end
+  
   def to_html
     Maruku.new(markup).to_html
   end
@@ -90,19 +94,7 @@ class Article < FileModel
   extend PageModel::ClassMethods
   
   def self.find_all
-    super.sort do |x, y|
-      if y.date.nil?
-        -1
-      elsif x.date.nil?
-        1
-      else
-        y.date <=> x.date
-      end
-    end
-  end
-  
-  def self.path
-    Nesta::Configuration.article_path
+    super.find_all { |page| page.date }.sort { |x, y| y.date <=> x.date }
   end
   
   def date(format = nil)
@@ -157,6 +149,8 @@ class Article < FileModel
     end
   end
 end
+
+class Page < Article; end
 
 class Comment < FileModel
   def self.basename(time, author)

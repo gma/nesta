@@ -62,45 +62,42 @@ describe "home page" do
     body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
   end
   
-  describe "when articles have no metadata" do
+  describe "when articles have no summary" do
     before(:each) do
       create_article
-      @article = Article.find_by_permalink("my-article")
       get "/"
     end
     
-    it "should display article heading in h2" do
-      body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
-    end
-    
-    it "should display article content if article has no summary" do
+    it "should display full content of article" do
       body.should have_tag("p", "Content goes here")
     end
     
-    it "should not display read more link if article has no summary" do
+    it "should not display read more link" do
       body.should_not have_tag("a", /continue/i)
     end
   end
 
   describe "when articles have metadata" do
     before(:each) do
-      metadata = create_article_with_metadata
-      @date = metadata["date"]
-      @summary = metadata["summary"]
-      @read_more = metadata["read more"]
+      @summary = 'Multiline\n\nsummary'
+      @read_more = "Continue at your leisure"
+      @article = create_article(:metadata => {
+        "summary" => @summary,
+        "read more" => @read_more
+      })
       get "/"
     end
     
     it "should display link to article in h2 tag" do
-      body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
+      body.should have_tag("h2 a[@href=#{@article.path}]", @article.heading)
     end
     
     it "should display article summary if available" do
       body.should have_tag("p", @summary.split('\n\n').first)
     end
     
-    it "should display read more link if set" do
-      body.should have_tag("a[@href=/articles/my-article]", "Continue please")
+    it "should display read more link" do
+      body.should have_tag("a[@href=#{@article.path}]", @read_more)
     end
   end
 end
@@ -121,11 +118,16 @@ describe "article" do
   
   before(:each) do
     stub_configuration
-    metadata = create_article_with_metadata
-    @description = metadata["description"]
-    @keywords = metadata["keywords"]
-    @date = metadata["date"]
-    @summary = metadata["summary"]
+    @date = "07 September 2009"
+    @keywords = "things, stuff"
+    @description = "Page about stuff"
+    @summary = 'Multiline\n\nsummary'
+    create_article(:metadata => {
+      "date" => @date.gsub("September", "Sep"),
+      "description" => @description,
+      "keywords" => @keywords,
+      "summary" => @summary,
+    })
     get "/articles/my-article"
   end
 
@@ -241,12 +243,12 @@ describe "category" do
     before(:each) do
       @description = "Page about stuff"
       @keywords = "things, stuff"
-      create_category(:content => "# My category\n\nCategory content",
+      @category = create_category(:content => "# My category\n\nCategory content",
                       :metadata => {
                         "description" => @description,
                         "keywords" => @keywords
                       })
-      create_article(
+      @article = create_article(
           :title => "Categorised",
           :metadata => { :categories => "my-category" },
           :content => "Article content")
@@ -269,12 +271,13 @@ describe "category" do
     end
 
     it "should display links to relevant articles" do
-      body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
+      body.should have_tag("h3 a[@href=#{@article.path}]", @article.heading)
       body.should_not have_tag("h3", "Second article")
     end
 
     it "should link to each category" do
-      body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
+      body.should have_tag(
+          "#sidebar li a[@href=#{@category.path}]", @category.heading)
     end
   end
 

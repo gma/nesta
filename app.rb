@@ -36,21 +36,12 @@ helpers do
     set_from_config(:google_analytics_code)
   end
 
-  def article_path(article)
-    "#{Nesta::Configuration.article_prefix}/#{article.permalink}"
-  end
-
   def page_path(page)
-    "/" + page.permalink
+    page.path
   end
   
   def url_for(page)
-    base = if page.is_a?(Article)
-      base_url + Nesta::Configuration.article_prefix
-    else
-      base_url + Nesta::Configuration.category_prefix
-    end
-    [base, page.permalink].join("/")
+    base_url + page.path
   end
   
   def base_url
@@ -58,16 +49,16 @@ helpers do
     request.port == 80 ? url : url + ":#{request.port}"
   end  
   
-  def nesta_atom_id_for_article(article)
-    published = article.date.strftime('%Y-%m-%d')
-    "tag:#{request.host},#{published}:#{article_path(article)}"
+  def nesta_atom_id_for_page(page)
+    published = page.date.strftime('%Y-%m-%d')
+    "tag:#{request.host},#{published}:#{page_path(page)}"
   end
   
-  def atom_id(article = nil)
-    if article
-      article.atom_id || nesta_atom_id_for_article(article)
+  def atom_id(page = nil)
+    if page
+      page.atom_id || nesta_atom_id_for_page(page)
     else
-      "tag:#{request.host},2009:#{Nesta::Configuration.article_prefix}"
+      "tag:#{request.host},2009:/"
     end
   end
   

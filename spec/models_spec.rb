@@ -68,12 +68,12 @@ describe "Article" do
                      :permalink => "article-2",
                      :metadata => { "date" => "31 December 2008" })
       create_article(:title => "Article 3",
-                     :permalink => "article-3",
+                     :permalink => "foo/article-3",
                      :metadata => { "date" => "30 December 2008" })
     end
     
-    it "should be possible to find all articles" do
-      Article.find_all.should have(3).articles
+    it "should be possible to find all pages with dates" do
+      Article.find_all.should have(2).articles
     end
     
     it "should return articles in reverse chronological order" do
@@ -81,10 +81,6 @@ describe "Article" do
       article1.date.should > article2.date
     end
     
-    it "should return articles with no date last" do
-      Article.find_all.last.date.should be_nil
-    end
-  
     it "should be possible to find an article by permalink" do
       Article.find_by_permalink("article-2").heading.should == "Article 2"
     end
@@ -135,10 +131,18 @@ describe "Article" do
   
   describe "with metadata" do
     before(:each) do
-      metadata = create_article_with_metadata
-      @date = metadata["date"]
-      @summary = metadata["summary"]
-      @read_more = metadata["read more"]
+      @date = "07 September 2009"
+      @keywords = "things, stuff"
+      @description = "Page about stuff"
+      @summary = 'Multiline\n\nsummary'
+      @read_more = "Continue at your leisure"
+      create_article(:metadata => {
+        "date" => @date.gsub("September", "Sep"),
+        "description" => @description,
+        "keywords" => @keywords,
+        "summary" => @summary,
+        "read more" => @read_more
+      })
       @article = Article.find_by_permalink("my-article")
     end
     
@@ -168,11 +172,11 @@ describe "Article" do
     end
 
     it "should retrieve description from metadata" do
-      @article.description.should == "Page about stuff"
+      @article.description.should == @description
     end
     
     it "should retrieve keywords from metadata" do
-      @article.keywords.should == "things, stuff"
+      @article.keywords.should == @keywords
     end
     
     it "should retrieve date published from metadata" do
@@ -184,23 +188,22 @@ describe "Article" do
     end
     
     it "should retrieve summary text from metadata" do
-      @article.summary.should match(/Summary text/)
+      @article.summary.should match(/#{@summary.split('\n\n').first}/)
     end
     
     it "should treat double newline chars as paragraph break in summary" do
-      @article.summary.should match(/two paragraphs/)
+      @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
   end
   
   describe "without metadata" do
     before(:each) do
-      create_article(:metadata => {})
+      create_article
       @article = Article.find_all.first
     end
     
     it "should parse heading correctly" do
       @article.to_html.should have_tag("h1", "My article")
-      @article.date.should be_nil
     end
     
     it "should have default read more link text" do

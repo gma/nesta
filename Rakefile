@@ -58,7 +58,7 @@ EOF
     end
     
     summary = <<-EOF
-You can edit this article by opening `#{File.join(Nesta::Configuration.article_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
+You can edit this article by opening `#{File.join(Nesta::Configuration.page_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
     EOF
 
     factory.create_article(

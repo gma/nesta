@@ -26,31 +26,21 @@ module ModelFactory
     path = filename(Nesta::Configuration.page_path, options[:permalink])
     create_file(path, options)
     yield(path) if block_given?
+    Page.new(path)
   end
   
-  def create_article(options = {})
+  def create_article(options = {}, &block)
     o = {
       :permalink => "my-article",
       :title => "My article",
-      :content => "Content goes here"
+      :content => "Content goes here",
+      :metadata => {
+        "date" => "29 December 2008"
+      }.merge(options.delete(:metadata) || {})
     }.merge(options)
-    path = filename(Nesta::Configuration.article_path, o[:permalink])
-    create_file(path, o)
-    yield(path) if block_given?
+    create_page(o, &block)
   end
   
-  def create_article_with_metadata
-    metadata = {
-      "description" => "Page about stuff",
-      "keywords" => "things, stuff",
-      "date" => "29 December 2008",
-      "summary" => 'Summary text\n\nwith two paragraphs',
-      "read more" => "Continue please"
-    }
-    create_article(:metadata => metadata)
-    metadata
-  end
-
   def create_category(options = {}, &block)
     o = {
       :permalink => "my-category",
@@ -88,7 +78,6 @@ module ModelFactory
   
   def create_content_directories
     FileUtils.mkdir_p(Nesta::Configuration.page_path)
-    FileUtils.mkdir_p(Nesta::Configuration.article_path)
     FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
     FileUtils.mkdir_p(Nesta::Configuration.comment_path)
   end
@@ -115,6 +104,7 @@ module ModelFactory
 #{title}#{options[:content]}
       EOF
 
+      FileUtils.mkdir_p(File.dirname(path))
       File.open(path, "w") { |file| file.write(contents) }
     end
 end
