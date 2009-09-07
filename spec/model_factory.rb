@@ -23,7 +23,7 @@ module ModelFactory
   end
 
   def create_page(options)
-    path = filename(Nesta::Configuration.page_path, options[:permalink])
+    path = filename(Nesta::Configuration.page_path, options[:path])
     create_file(path, options)
     yield(path) if block_given?
     Page.new(path)
@@ -31,7 +31,7 @@ module ModelFactory
   
   def create_article(options = {}, &block)
     o = {
-      :permalink => "my-article",
+      :path => "article-prefix/my-article",
       :title => "My article",
       :content => "Content goes here",
       :metadata => {
@@ -43,7 +43,7 @@ module ModelFactory
   
   def create_category(options = {}, &block)
     o = {
-      :permalink => "my-category",
+      :path => "category-prefix/my-category",
       :title => "My category",
       :content => "Content goes here"
     }.merge(options)
@@ -53,12 +53,12 @@ module ModelFactory
   def create_comment(options = {})
     o = {
       :metadata => {
-        "article" => "my-article",
+        "article" => "article-prefix/my-article",
         "date" => "Sun Nov 23 13:15:47 +0000 2008",
         "author" => "Fred Bloggs",
         "author email" => "fred@bloggs.com",
         "author url" => "http://bloggs.com/~fred"
-      },
+      }.merge(options.delete(:metadata) || {}),
       :content => "Great article."
     }.merge(options)
     basename = Comment.basename(

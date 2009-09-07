@@ -49,14 +49,6 @@ module Nesta
       get(environment)["google_analytics_code"]
     end
     
-    def self.article_prefix
-      get("prefixes")["article"] || "/articles"
-    end
-    
-    def self.category_prefix
-      get("prefixes")["category"] || ""
-    end
-    
     private
       def self.environment
         Sinatra::Application.environment.to_s

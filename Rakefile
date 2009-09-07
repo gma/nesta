@@ -26,7 +26,7 @@ namespace :setup do
     
     factory.create_category(
       :title => "Fruit",
-      :permalink => "fruit",
+      :path => "fruit",
       :content => <<-EOF
 This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.page_path, 'fruit.mdown')}`.
 
@@ -46,7 +46,7 @@ EOF
       location = "You can change this article by editing `#{file}`."
       factory.create_article(
         :title => "The benefits of #{fruit}",
-        :permalink => fruit.downcase,
+        :path => fruit.downcase,
         :metadata => {
           "date" => (Time.new - 10).to_s,
           "categories" => "fruit",
@@ -63,7 +63,7 @@ You can edit this article by opening `#{File.join(Nesta::Configuration.page_path
 
     factory.create_article(
       :title => "Getting started",
-      :permalink => "getting-started",
+      :path => "getting-started",
       :metadata => {
         "date" => Time.new.to_s,
         "read more" => "Read more tips on getting started",

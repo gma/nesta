@@ -3,29 +3,11 @@ require "time"
 require "rubygems"
 require "maruku"
 
-module PageModel
-  module ClassMethods
-    def path
-      Nesta::Configuration.page_path
-    end
-
-    def find_by_permalink(permalink)
-      file = File.join(self.path, "#{permalink}.mdown")
-      File.exist?(file) ? new(file) : nil
-    end
-  end
-  
-  def heading
-    markup =~ /^#\s*(.*)/
-    Regexp.last_match(1)
-  end
-end
-
 class FileModel
   attr_reader :filename
   
   def self.find_all
-    file_pattern = File.join(self.path, "*.mdown")
+    file_pattern = File.join(self.path, "**", "*.mdown")
     Dir.glob(file_pattern).map { |path| new(path) }
   end
   
@@ -38,7 +20,12 @@ class FileModel
   end
 
   def path
-    "/" + permalink
+    abspath.sub(/^\//, "")
+  end
+  
+  def abspath
+    prefix = File.dirname(@filename).sub(Nesta::Configuration.page_path, "")
+    File.join(prefix, permalink)
   end
   
   def to_html
@@ -89,14 +76,35 @@ class FileModel
     end
 end
 
-class Article < FileModel
-  include PageModel
+module PageModel
+  module ClassMethods
+    def path
+      Nesta::Configuration.page_path
+    end
+    
+    def find_by_path(path)
+      file = File.join(self.path, "#{path}.mdown")
+      File.exist?(file) ? new(file) : nil
+    end
+
+    def find_articles
+      find_all.select { |page| page.date }.sort { |x, y| y.date <=> x.date }
+    end
+  end
+end
+
+class Page < FileModel
   extend PageModel::ClassMethods
   
-  def self.find_all
-    super.find_all { |page| page.date }.sort { |x, y| y.date <=> x.date }
+  def ==(other)
+    self.path == other.path
   end
   
+  def heading
+    markup =~ /^#\s*(.*)/
+    Regexp.last_match(1)
+  end
+
   def date(format = nil)
     @date ||= if metadata("date")
       if format == :xmlschema
@@ -125,22 +133,24 @@ class Article < FileModel
   
   def categories
     categories = metadata("categories")
-    permalinks = if categories.nil?
+    paths = if categories.nil?
       []
     else
       categories.split(",").map { |p| p.strip }
     end
-    permalinks = permalinks.select do |permalink|
-      file = File.join(Nesta::Configuration.page_path, "#{permalink}.mdown")
-      File.exist?(file)
+    paths = paths.select do |path|
+      filename = File.join(Nesta::Configuration.page_path, "#{path}.mdown")
+      File.exist?(filename)
     end
-    permalinks.map do |permalink|
-      Category.find_by_permalink(permalink)
-    end.sort { |x, y| x.heading <=> y.heading }
+    paths.map { |p| Page.find_by_path(p) }.sort { |x, y| x.heading <=> y.heading }
   end
   
   def parent
-    Category.find_by_permalink(metadata("parent"))
+    Page.find_by_path(metadata("parent"))
+  end
+  
+  def articles
+    Page.find_articles.select { |article| article.categories.include?(self) }
   end
   
   def comments
@@ -149,8 +159,6 @@ class Article < FileModel
     end
   end
 end
-
-class Page < Article; end
 
 class Comment < FileModel
   def self.basename(time, author)
@@ -162,7 +170,7 @@ class Comment < FileModel
   end
   
   def self.find_by_article(article)
-    find_all.select { |c| c.article == article.permalink }
+    find_all.select { |c| c.article == article.path }
   end
   
   def self.path
@@ -199,24 +207,5 @@ class Comment < FileModel
   
   def body
     markup
-  end
-end
-
-class Category < FileModel
-  include PageModel
-  extend PageModel::ClassMethods
-    
-  def self.find_all
-    super.sort { |x, y| x.heading <=> y.heading }
-  end
-  
-  def ==(other)
-    self.permalink == other.permalink
-  end
-  
-  def articles
-    Article.find_all.select do |article|
-      article.categories.include? self
-    end
   end
 end

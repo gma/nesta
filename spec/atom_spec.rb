@@ -55,19 +55,19 @@ describe "atom feed" do
     before(:each) do
       @heading = "Heading"
       @articles = []
+      @category = create_category
       11.times do |i|
         @articles << create_article(
           :title => "Article #{i + 1}",
-          :permalink => "article-#{i + 1}",
+          :path => "article-#{i + 1}",
           :metadata => {
-            "categories" => "my-category",
+            "categories" => @category.path,
             "date" => "#{i + 1} January 2009"
           },
           :content => "Blah blah\n\n## #{@heading}\n\n"
         )
       end
       @article = @articles.last
-      @page = create_category
       get "/articles.xml"
     end
     
@@ -76,14 +76,14 @@ describe "atom feed" do
     end
     
     it "should link to the HTML version" do
-      url = "http://example.org/#{@article.permalink}"
+      url = "http://example.org/#{@article.path}"
       body.should have_tag(
           "entry/link[@href=#{url}][@rel=alternate][@type=text/html]")
     end
     
     it "should define unique ID" do
       body.should have_tag(
-          "entry/id", "tag:example.org,2009-01-11:#{@article.path}")
+          "entry/id", "tag:example.org,2009-01-11:#{@article.abspath}")
     end
     
     it "should specify date published" do
@@ -91,7 +91,7 @@ describe "atom feed" do
     end
 
     it "should specify article categories" do
-      body.should have_tag("category[@term=#{@page.permalink}]")
+      body.should have_tag("category[@term=#{@category.permalink}]")
     end
 
     it "should have article content" do
@@ -111,7 +111,7 @@ describe "atom feed" do
   
   describe "page with no date" do
     before(:each) do
-      create_category(:permalink => "no-date")
+      create_category(:path => "no-date")
       get "/articles.xml"
     end
 

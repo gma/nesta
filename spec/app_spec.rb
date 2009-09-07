@@ -89,7 +89,7 @@ describe "home page" do
     end
     
     it "should display link to article in h2 tag" do
-      body.should have_tag("h2 a[@href=#{@article.path}]", @article.heading)
+      body.should have_tag("h2 a[@href=#{@article.abspath}]", @article.heading)
     end
     
     it "should display article summary if available" do
@@ -97,7 +97,7 @@ describe "home page" do
     end
     
     it "should display read more link" do
-      body.should have_tag("a[@href=#{@article.path}]", @read_more)
+      body.should have_tag("a[@href=#{@article.abspath}]", @read_more)
     end
   end
 end
@@ -122,13 +122,13 @@ describe "article" do
     @keywords = "things, stuff"
     @description = "Page about stuff"
     @summary = 'Multiline\n\nsummary'
-    create_article(:metadata => {
+    @article = create_article(:metadata => {
       "date" => @date.gsub("September", "Sep"),
       "description" => @description,
       "keywords" => @keywords,
       "summary" => @summary,
     })
-    get "/articles/my-article"
+    get @article.abspath
   end
 
   after(:each) do
@@ -157,12 +157,13 @@ describe "article" do
     body.should have_tag("p", "Content goes here")
   end
   
-  describe "when assigned to categories" do
+  describe "assigned to categories" do
     before(:each) do
-      create_category(:title => "Apple", :permalink => "the-apple")
-      create_category(:title => "Banana", :permalink => "banana")
-      create_article(:metadata => { "categories" => "banana, the-apple" })
-      get "/articles/my-article"
+      create_category(:title => "Apple", :path => "the-apple")
+      create_category(:title => "Banana", :path => "banana")
+      article = create_article(
+          :metadata => { "categories" => "banana, the-apple" })
+      get article.abspath
     end
     
     it "should render successfully" do
@@ -178,16 +179,16 @@ describe "article" do
     end
   end
   
-  describe "when has parent" do
+  describe "with parent" do
     before(:each) do
-      create_category
-      create_article(:metadata => { "parent" => "my-category" })
-      get "/articles/my-article"
+      @category = create_category
+      article = create_article(:metadata => { "parent" => @category.path })
+      get article.abspath
     end
     
     it "should link to parent in breadcrumb" do
       body.should have_tag(
-          "div.breadcrumb/a[@href=/my-category]", "My category")
+          "div.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
     end
     
     it "should contain parent name in page title" do
@@ -200,7 +201,7 @@ describe "article" do
     before(:each) do
       create_comment
       @comment = Comment.find_all.first
-      get "/articles/my-article"
+      get @article.abspath
     end
     
     it "should display comments heading" do
@@ -220,7 +221,7 @@ describe "article" do
 
   describe "when page doesn't exist" do
     it "should return 404 if page not found" do
-      get "/articles/no-such-article"
+      get "/no-such-page"
       last_response.should_not be_ok
     end
   end
@@ -239,21 +240,24 @@ describe "category" do
     remove_fixtures
   end
 
-  describe "when category exists" do
+  describe "that exists" do
     before(:each) do
       @description = "Page about stuff"
       @keywords = "things, stuff"
-      @category = create_category(:content => "# My category\n\nCategory content",
-                      :metadata => {
-                        "description" => @description,
-                        "keywords" => @keywords
-                      })
+      @content = "Page content"
+      @category = create_category(
+          :content => "# My category\n\n#{@content}",
+          :metadata => {
+            "description" => @description,
+            "keywords" => @keywords
+          })
       @article = create_article(
           :title => "Categorised",
-          :metadata => { :categories => "my-category" },
+          :metadata => { :categories => @category.path },
           :content => "Article content")
-      create_article(:title => "Second article", :permalink => "second-article")
-      get "/my-category"
+      @article2 = create_article(
+          :title => "Second article", :path => "second-article")
+      get @category.abspath
     end
 
     it_should_behave_like "page with meta tags"
@@ -263,28 +267,16 @@ describe "category" do
     end
 
     it "should display the heading" do
-      body.should have_tag("h1", "My category")
+      body.should have_tag("h1", @category.heading)
     end
 
     it "should display the content" do
-      body.should have_tag("p", "Category content")
+      body.should have_tag("p", @content)
     end
 
     it "should display links to relevant articles" do
-      body.should have_tag("h3 a[@href=#{@article.path}]", @article.heading)
-      body.should_not have_tag("h3", "Second article")
-    end
-
-    it "should link to each category" do
-      body.should have_tag(
-          "#sidebar li a[@href=#{@category.path}]", @category.heading)
-    end
-  end
-
-  describe "when page doesn't exist" do
-    it "should return 404 if page not found" do
-      get "/my-category"
-      last_response.should_not be_ok
+      body.should have_tag("h3 a[@href=#{@article.abspath}]", @article.heading)
+      body.should_not have_tag("h3", @article2.heading)
     end
   end
 end

@@ -18,8 +18,7 @@ helpers do
   end
   
   def set_from_page(*variables)
-    page = @article || @category
-    variables.each { |var| instance_variable_set("@#{var}", page.send(var)) }
+    variables.each { |var| instance_variable_set("@#{var}", @page.send(var)) }
   end
   
   def set_title(page)
@@ -31,17 +30,13 @@ helpers do
   end
   
   def set_common_variables
-    @categories = Category.find_all
+    @categories = Page.find_all
     @site_title = Nesta::Configuration.title
     set_from_config(:google_analytics_code)
   end
 
-  def page_path(page)
-    page.path
-  end
-  
   def url_for(page)
-    base_url + page.path
+    File.join(base_url, page.path)
   end
   
   def base_url
@@ -51,7 +46,7 @@ helpers do
   
   def nesta_atom_id_for_page(page)
     published = page.date.strftime('%Y-%m-%d')
-    "tag:#{request.host},#{published}:#{page_path(page)}"
+    "tag:#{request.host},#{published}:#{page.abspath}"
   end
   
   def atom_id(page = nil)
@@ -87,18 +82,9 @@ get "/" do
   set_from_config(:title, :subtitle, :description, :keywords)
   @heading = @title
   @title = "#{@title} - #{@subtitle}"
-  @articles = Article.find_all[0..7]
+  @articles = Page.find_articles[0..7]
   @body_class = "home"
   cache haml(:index)
-end
-
-get "#{Nesta::Configuration.article_prefix}/:permalink" do
-  set_common_variables
-  @article = Article.find_by_permalink(params[:permalink])
-  raise Sinatra::NotFound if @article.nil?
-  set_title(@article)
-  set_from_page(:description, :keywords, :comments)
-  cache haml(:article)
 end
 
 get "/attachments/:filename.:ext" do
@@ -107,27 +93,27 @@ get "/attachments/:filename.:ext" do
   send_file(file, :disposition => nil)
 end
 
-get "#{Nesta::Configuration.article_prefix}.xml" do
+get "/articles.xml" do
   content_type :xml, :charset => "utf-8"
   set_from_config(:title, :subtitle, :author)
-  @articles = Article.find_all.select { |a| a.date }[0..9]
+  @articles = Page.find_articles.select { |a| a.date }[0..9]
   cache builder(:atom)
 end
 
 get "/sitemap.xml" do
   content_type :xml, :charset => "utf-8"
-  @pages = Category.find_all + Article.find_all
+  @pages = Page.find_all
   @last = @pages.map { |page| page.last_modified }.inject do |latest, this|
     this > latest ? this : latest
   end
   cache builder(:sitemap)
 end
 
-get "#{Nesta::Configuration.category_prefix}/:permalink" do
+get "*" do
   set_common_variables
-  @category = Category.find_by_permalink(params[:permalink])
-  raise Sinatra::NotFound if @category.nil?
-  set_title(@category)
-  set_from_page(:description, :keywords)
-  cache haml(:category)
+  @page = Page.find_by_path(File.join(params[:splat]))
+  raise Sinatra::NotFound if @page.nil?
+  set_title(@page)
+  set_from_page(:description, :keywords, :comments)
+  cache haml(:page)
 end

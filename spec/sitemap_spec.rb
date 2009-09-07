@@ -50,12 +50,12 @@ describe "sitemap XML" do
   
   it "should reference category pages" do
     body.should have_tag(
-        "/urlset/url/loc", "http://example.org#{@category.path}")
+        "/urlset/url/loc", "http://example.org/#{@category.path}")
   end
   
   it "should reference article pages" do
     body.should have_tag(
-        "/urlset/url/loc", "http://example.org#{@article.path}")
+        "/urlset/url/loc", "http://example.org/#{@article.path}")
   end
 end
 
@@ -83,10 +83,10 @@ describe "sitemap XML lastmod" do
   end
   
   it "should be set to latest page for home page" do
-    create_article(:permalink => "article-1") do |path|
+    create_article(:path => "article-1") do |path|
       mock_file_stat(:stub!, path, "4 January 2009")
     end
-    create_article(:permalink => "article-2") do |path|
+    create_article(:path => "article-2") do |path|
       mock_file_stat(:stub!, path, "3 January 2009")
     end
     get "/sitemap.xml"
