@@ -12,6 +12,7 @@ class FileModel
   end
   
   def initialize(filename)
+    raise Errno::ENOENT unless File.file?(filename)
     @filename = filename
   end
 
@@ -72,7 +73,6 @@ class FileModel
         @markup = [first_para, remaining].join("\n\n")
       end
     rescue Errno::ENOENT  # file not found
-      raise
       raise Sinatra::NotFound
     end
 end
@@ -155,7 +155,9 @@ class Page < FileModel
   end
   
   def parent
-    Page.find_by_path(metadata("parent"))
+    filename = Nesta::Configuration.page_path(
+        File.basename(File.dirname(path)) + ".mdown")
+    File.file?(filename) ? Page.new(filename) : nil
   end
   
   def articles

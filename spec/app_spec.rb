@@ -197,8 +197,8 @@ describe "article" do
   
   describe "with parent" do
     before(:each) do
-      @category = create_category
-      article = create_article(:metadata => { "parent" => @category.path })
+      @category = create_category(:path => "topic")
+      article = create_article(:path => "topic/article")
       get article.abspath
     end
     

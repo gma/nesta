@@ -76,6 +76,10 @@ describe "Page" do
     Page.find_by_path("no-such-page").should be_nil
   end
   
+  it "should ensure file exists on instantiation" do
+    lambda { Page.new("no-such-file") }.should raise_error(Errno::ENOENT)
+  end
+  
   describe "with articles" do
     before(:each) do
       @category = create_category
@@ -152,10 +156,14 @@ describe "Page" do
     end
   end
   
-  it "should be possible to retrieve the parent" do
-    category = create_category
-    article = create_article(:metadata => { "parent" => category.path })
-    article.parent.should == Page.find_by_path(category.path)
+  it "should be able to find parent page" do
+    category = create_category(:path => "parent")
+    article = create_article(:path => "parent/child")
+    article.parent.should == category
+  end
+  
+  it "should set parent to nil when at root" do
+    create_category(:path => "top-level").parent.should be_nil
   end
   
   describe "when not assigned to category" do
