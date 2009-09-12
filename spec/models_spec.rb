@@ -80,7 +80,7 @@ describe "Page" do
     lambda { Page.new("no-such-file") }.should raise_error(Errno::ENOENT)
   end
   
-  describe "with articles" do
+  describe "with assigned pages" do
     before(:each) do
       @category = create_category
       create_article(:title => "Article 1", :path => "article-1")
@@ -98,6 +98,9 @@ describe "Page" do
           "date" => "31 December 2008",
           "categories" => @category.path
         })
+      create_category(:path => "category-2", :metadata => {
+        "categories" => @category.path
+      })
     end
 
     it "should find articles" do
@@ -106,6 +109,10 @@ describe "Page" do
     
     it "should list most recent articles first" do
       @category.articles.first.path.should == @article.path
+    end
+    
+    it "should find pages" do
+      @category.pages.should have(1).item
     end
   end
   

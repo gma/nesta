@@ -268,7 +268,8 @@ describe "page" do
             "description" => @description,
             "keywords" => @keywords
           })
-      @article = create_article(
+      @article = create_category(
+          :path => "another-page",
           :title => "Categorised",
           :metadata => { :categories => @category.path },
           :content => "Article content")
@@ -291,7 +292,7 @@ describe "page" do
       body.should have_tag("p", @content)
     end
 
-    it "should display links to relevant articles" do
+    it "should display links to relevant pages" do
       body.should have_tag("h3 a[@href=#{@article.abspath}]", @article.heading)
       body.should_not have_tag("h3", @article2.heading)
     end

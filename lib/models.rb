@@ -160,6 +160,12 @@ class Page < FileModel
     File.file?(filename) ? Page.new(filename) : nil
   end
   
+  def pages
+    Page.find_all.select do |page|
+      page.date.nil? && page.categories.include?(self)
+    end.sort { |x, y| x.heading <=> y.heading }
+  end
+  
   def articles
     Page.find_articles.select { |article| article.categories.include?(self) }
   end
