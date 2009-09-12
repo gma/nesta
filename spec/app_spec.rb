@@ -49,6 +49,7 @@ describe "home page" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it_should_behave_like "page with menus"
@@ -143,38 +144,45 @@ describe "article" do
       "keywords" => @keywords,
       "summary" => @summary,
     })
-    get @article.abspath
   end
-
+  
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
-  it_should_behave_like "page with meta tags"
-  it_should_behave_like "page with menus"  
+  describe "that's not assigned to a category" do
+    setup do
+      get @article.abspath
+    end
+
+    it_should_behave_like "page with meta tags"
+    it_should_behave_like "page with menus"  
+
+    it "should render successfully" do
+      last_response.should be_ok
+    end
+
+    it "should display the heading" do
+      body.should have_tag("h1", "My article")
+    end
+
+    it "should not display category links" do
+      body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
+    end
+
+    it "should display the date" do
+      body.should have_tag("div.date", @date)
+    end
+
+    it "should display the content" do
+      body.should have_tag("p", "Content goes here")
+    end
+  end
   
-  it "should render successfully" do
-    last_response.should be_ok
-  end
-
-  it "should display the heading" do
-    body.should have_tag("h1", "My article")
-  end
-
-  it "should not display category links" do
-    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
-  end
-
-  it "should display the date" do
-    body.should have_tag("div.date", @date)
-  end
-
-  it "should display the content" do
-    body.should have_tag("p", "Content goes here")
-  end
-  
-  describe "assigned to categories" do
+  describe "that's assigned to categories" do
     before(:each) do
+      # FileModel.purge_cache
       create_category(:title => "Apple", :path => "the-apple")
       create_category(:title => "Banana", :path => "banana")
       article = create_article(
@@ -246,6 +254,7 @@ describe "page" do
 
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it_should_behave_like "page with menus"
@@ -317,6 +326,7 @@ describe "attachments" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it "should be served successfully" do

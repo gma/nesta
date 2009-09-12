@@ -6,14 +6,31 @@ require "maruku"
 class FileModel
   attr_reader :filename
   
+  @@cache = {}
+  
+  def self.model_path(basename = nil)
+    Nesta::Configuration.content_path(basename)
+  end
+  
   def self.find_all
-    file_pattern = File.join(Nesta::Configuration.page_path, "**", "*.mdown")
-    Dir.glob(file_pattern).map { |path| new(path) }
+    file_pattern = File.join(model_path, "**", "*.mdown")
+    Dir.glob(file_pattern).map do |path|
+      load(path.sub(model_path + "/", "").sub(".mdown", ""))
+    end
+  end
+  
+  def self.load(path)
+    filename = model_path("#{path}.mdown")
+    @@cache[path] ||= File.exist?(filename) ? self.new(filename) : nil
+  end
+  
+  def self.purge_cache
+    @@cache = {}
   end
   
   def initialize(filename)
-    raise Errno::ENOENT unless File.file?(filename)
     @filename = filename
+    parse_file
   end
 
   def permalink
@@ -47,12 +64,10 @@ class FileModel
 
   private
     def markup
-      parse_file if @markup.nil?
       @markup
     end
     
     def metadata(key)
-      parse_file if @metadata.nil?
       @metadata[key]
     end
     
@@ -77,11 +92,14 @@ class FileModel
     end
 end
 
-module PageModel
+class Page < FileModel
   module ClassMethods
+    def model_path(basename = nil)
+      Nesta::Configuration.page_path(basename)
+    end
+    
     def find_by_path(path)
-      file = Nesta::Configuration.page_path("#{path}.mdown")
-      File.exist?(file) ? new(file) : nil
+      load(path)
     end
 
     def find_articles
@@ -92,18 +110,13 @@ module PageModel
       menu = Nesta::Configuration.content_path("menu.txt")
       pages = []
       if File.exist?(menu)
-        File.open(menu).each do |line|
-          file = Nesta::Configuration.page_path(line.chomp) + ".mdown"
-          pages << Page.new(file)
-        end
+        File.open(menu).each { |line| pages << Page.load(line.chomp) }
       end
       pages
     end
   end
-end
 
-class Page < FileModel
-  extend PageModel::ClassMethods
+  extend ClassMethods
   
   def ==(other)
     self.path == other.path
@@ -155,9 +168,7 @@ class Page < FileModel
   end
   
   def parent
-    filename = Nesta::Configuration.page_path(
-        File.basename(File.dirname(path)) + ".mdown")
-    File.file?(filename) ? Page.new(filename) : nil
+    Page.load(File.dirname(path))
   end
   
   def pages
@@ -178,22 +189,25 @@ class Page < FileModel
 end
 
 class Comment < FileModel
-  def self.basename(time, author)
-    "#{time.strftime('%Y%m%d-%H%M%S')}-#{author.gsub(" ", "-").downcase}"
+  module ClassMethods
+    def model_path(basename = nil)
+      Nesta::Configuration.comment_path(basename)
+    end
+  
+    def basename(time, author)
+      "#{time.strftime('%Y%m%d-%H%M%S')}-#{author.gsub(" ", "-").downcase}"
+    end
+  
+    def find_by_basename(basename)
+      find_all.find { |c| c.basename == basename }
+    end
+  
+    def find_by_article(article)
+      find_all.select { |c| c.article == article.path }
+    end
   end
   
-  def self.find_all
-    file_pattern = File.join(Nesta::Configuration.comment_path, "*.mdown")
-    Dir.glob(file_pattern).map { |path| new(path) }
-  end
-  
-  def self.find_by_basename(basename)
-    find_all.find { |c| c.basename == basename }
-  end
-  
-  def self.find_by_article(article)
-    find_all.select { |c| c.article == article.path }
-  end
+  extend ClassMethods
   
   def ==(other)
     self.basename == other.basename

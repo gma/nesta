@@ -59,6 +59,7 @@ describe "Page" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it "should be findable" do
@@ -77,7 +78,7 @@ describe "Page" do
   end
   
   it "should ensure file exists on instantiation" do
-    lambda { Page.new("no-such-file") }.should raise_error(Errno::ENOENT)
+    lambda { Page.new("no-such-file") }.should raise_error(Sinatra::NotFound)
   end
   
   describe "with assigned pages" do
@@ -325,6 +326,7 @@ describe "Comment" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it "should have author name" do
