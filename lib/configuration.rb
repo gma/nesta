@@ -1,5 +1,8 @@
 require "yaml"
 
+require "rubygems"
+require "sinatra"
+
 module Nesta
   class Configuration
 

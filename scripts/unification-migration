@@ -1,0 +1,115 @@
+#!/usr/bin/env ruby
+
+# Use this script to convert a content directory containing separate
+# articles/ and categories/ directories into the new and improved way of
+# doing things, where everything is a page...
+#
+# If you're using git it'll add your changes to your git repository
+# for you (but you'll need to commit them yourself).
+
+require "fileutils"
+require "tempfile"
+
+require File.join(File.dirname(__FILE__), *%w[.. lib configuration])
+
+module Nesta
+  class Configuration
+    def self.article_path
+      content_path("articles")
+    end
+    
+    def self.category_path
+      content_path("categories")
+    end
+
+    def self.article_prefix
+      get("prefixes")["article"] || "/articles"
+    end
+    
+    def self.category_prefix
+      get("prefixes")["category"] || ""
+    end
+  end
+end
+
+def content_in_git?
+  File.exist?(File.join(Nesta::Configuration.content_path, ".git"))
+end
+
+def git(&block)
+  FileUtils.cd(Nesta::Configuration.content_path) { system("git #{yield}") }
+end
+
+def create_menu
+  menu = Nesta::Configuration.content_path("menu.txt")
+  if ! File.exist?(menu)
+    File.open(menu, "w") do |file|
+      Dir["#{Nesta::Configuration.category_path}/*.mdown"].each do |category|
+        puts "Adding #{File.basename(category, ".mdown")} to #{menu}"
+        file.puts "#{File.basename(category, ".mdown")}"
+      end
+    end
+    content_in_git? && git { "add #{relative_path(menu)}" }
+  end
+end
+
+def relative_path(path)
+  path.sub(Nesta::Configuration.content_path, "").sub(/\//, "")
+end
+
+def move_page(source, destination)
+  puts "Moving #{File.basename(source)} -> #{destination}"
+  if content_in_git?
+    git { "mv #{relative_path(source)} #{relative_path(destination)}" }
+  else
+    FileUtils.mv(source, destination)
+  end
+end
+
+def move_pages(options = {})
+  destination = Nesta::Configuration.page_path(options[:prefix])
+  FileUtils.mkdir_p(destination)
+  Dir["#{options[:source]}/*"].each { |page| move_page(page, destination) }
+  FileUtils.rmdir(options[:source]) if File.exist?(options[:source])
+end
+
+def move_categories
+  move_pages(
+    :source => Nesta::Configuration.category_path,
+    :prefix => Nesta::Configuration.category_prefix
+  )
+end
+
+def move_articles
+  move_pages(
+    :source => Nesta::Configuration.article_path,
+    :prefix => Nesta::Configuration.article_prefix
+  )
+end
+
+def remove_parent_metadata
+  Dir["#{Nesta::Configuration.page_path}/**/*.mdown"].each do |page|
+    temp = Tempfile.new("nesta")
+    File.open(temp.path, "w") do |out|
+      File.open(page).each do |line|
+        if line =~ /^Parent:\s/
+          puts "Removing '#{line.chomp}' from #{relative_path(page)}"
+        else
+          out.puts line unless line =~ /^Parent:\s/
+        end
+      end
+    end
+    FileUtils.mv(temp.path, page)
+    content_in_git? && git { "add #{relative_path(page)}" }
+  end
+end
+
+def main
+  FileUtils.cd(File.join(File.dirname(__FILE__), ".."))
+  create_menu
+  move_categories
+  move_articles
+  remove_parent_metadata
+end
+
+main
