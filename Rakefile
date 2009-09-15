@@ -8,6 +8,7 @@ rescue LoadError
 end
 
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
+require File.join(File.dirname(__FILE__), *%w[lib models])
 require File.join(File.dirname(__FILE__), *%w[lib configuration])
 
 desc "Run all specs in spec directory"
@@ -23,6 +24,10 @@ namespace :setup do
   desc "Create some sample pages"
   task :sample_content do
     factory = Factory.new
+    
+    File.open(Nesta::Configuration.content_path("menu.txt"), "w") do |file|
+      file.puts("fruit")
+    end
     
     factory.create_category(
       :title => "Fruit",
