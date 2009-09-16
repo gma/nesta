@@ -71,7 +71,7 @@ class FileModel
         @markup = remaining
         for line in first_para.split("\n") do
           key, value = line.split(/\s*:\s*/, 2)
-          @metadata[key.downcase] = value
+          @metadata[key.downcase] = value.chomp
         end
       else
         @markup = [first_para, remaining].join("\n\n")
