@@ -1,5 +1,5 @@
 .social
-  %a{ :href => "http://delicious.com/post?url=#{@page.path}&title=#{@page.heading}", :title => "Bookmark on delicious.com" }
+  %a{ :href => "http://delicious.com/post?url=#{url_for(@page)}&title=#{@page.heading}", :title => "Bookmark on delicious.com" }
     %img{ :src => "/delicious.png", :alt => "Bookmark on delicous.com" }
-  %a{ :href => "http://digg.com/submit?phase=2&url=#{@page.path}&title=#{@page.heading}", :title => "Digg it!" }
+  %a{ :href => "http://digg.com/submit?phase=2&url=#{url_for(@page)}&title=#{@page.heading}", :title => "Digg it!" }
     %img{ :src => "/digg.png", :alt => "Digg it!" }
