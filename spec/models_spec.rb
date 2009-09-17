@@ -81,6 +81,15 @@ describe "Page" do
     lambda { Page.new("no-such-file") }.should raise_error(Sinatra::NotFound)
   end
   
+  it "should reload cached files when modified" do
+    create_page(:path => "a-page", :title => "Version 1")
+    File.stub!(:mtime).and_return(Time.new - 1)
+    Page.find_by_path("a-page")
+    create_page(:path => "a-page", :title => "Version 2")
+    File.stub!(:mtime).and_return(Time.new)
+    Page.find_by_path("a-page").heading.should == "Version 2"
+  end
+  
   describe "with assigned pages" do
     before(:each) do
       @category = create_category

@@ -4,7 +4,7 @@ require "rubygems"
 require "maruku"
 
 class FileModel
-  attr_reader :filename
+  attr_reader :filename, :mtime
   
   @@cache = {}
   
@@ -19,9 +19,16 @@ class FileModel
     end
   end
   
+  def self.needs_loading?(path, filename)
+    @@cache[path].nil? || File.mtime(filename) > @@cache[path].mtime
+  end
+  
   def self.load(path)
     filename = model_path("#{path}.mdown")
-    @@cache[path] ||= File.exist?(filename) ? self.new(filename) : nil
+    if File.exist?(filename) && needs_loading?(path, filename)
+      @@cache[path] = self.new(filename)
+    end
+    @@cache[path]
   end
   
   def self.purge_cache
@@ -31,6 +38,7 @@ class FileModel
   def initialize(filename)
     @filename = filename
     parse_file
+    @mtime = File.mtime(filename)
   end
 
   def permalink
