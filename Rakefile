@@ -21,8 +21,13 @@ class Factory
 end
 
 namespace :setup do
+  desc "Create the content directory"
+  task :content_dir do
+    FileUtils.mkdir_p(Nesta::Configuration.content_path)
+  end
+  
   desc "Create some sample pages"
-  task :sample_content do
+  task :sample_content => :content_dir do
     factory = Factory.new
     
     File.open(Nesta::Configuration.content_path("menu.txt"), "w") do |file|
