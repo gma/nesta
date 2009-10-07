@@ -19,6 +19,24 @@ describe "layout" do
   end
 end
 
+describe "page with menus", :shared => true do
+  setup do
+    @category = create_category
+  end
+  
+  it "should link to menu items" do
+    create_menu(@category.path)
+    get @category.abspath
+    body.should have_tag(
+        "#sidebar ul.menu a[@href=#{@category.abspath}]", @category.heading)
+  end
+  
+  it "should not be display menu if not configured" do
+    get @category.abspath
+    body.should_not have_tag("#sidebar ul.menu")
+  end
+end
+
 describe "home page" do
   include ModelFactory
   include RequestSpecHelper
@@ -31,8 +49,11 @@ describe "home page" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
-
+  
+  it_should_behave_like "page with menus"
+  
   it "should render successfully" do
     last_response.should be_ok
   end
@@ -57,49 +78,42 @@ describe "home page" do
     body.should have_tag("meta[@name=keywords][@content=home, page]")
   end
   
-  it "should link to each category" do
-    body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
-  end
-  
-  describe "when articles have no metadata" do
+  describe "when articles have no summary" do
     before(:each) do
       create_article
-      @article = Article.find_by_permalink("my-article")
       get "/"
     end
     
-    it "should display article heading in h2" do
-      body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
-    end
-    
-    it "should display article content if article has no summary" do
+    it "should display full content of article" do
       body.should have_tag("p", "Content goes here")
     end
     
-    it "should not display read more link if article has no summary" do
+    it "should not display read more link" do
       body.should_not have_tag("a", /continue/i)
     end
   end
 
   describe "when articles have metadata" do
     before(:each) do
-      metadata = create_article_with_metadata
-      @date = metadata["date"]
-      @summary = metadata["summary"]
-      @read_more = metadata["read more"]
+      @summary = 'Multiline\n\nsummary'
+      @read_more = "Continue at your leisure"
+      @article = create_article(:metadata => {
+        "summary" => @summary,
+        "read more" => @read_more
+      })
       get "/"
     end
     
     it "should display link to article in h2 tag" do
-      body.should have_tag("h2 a[@href=/articles/my-article]", "My article")
+      body.should have_tag("h2 a[@href=#{@article.abspath}]", @article.heading)
     end
     
     it "should display article summary if available" do
       body.should have_tag("p", @summary.split('\n\n').first)
     end
     
-    it "should display read more link if set" do
-      body.should have_tag("a[@href=/articles/my-article]", "Continue please")
+    it "should display read more link" do
+      body.should have_tag("a[@href=#{@article.abspath}]", @read_more)
     end
   end
 end
@@ -120,46 +134,60 @@ describe "article" do
   
   before(:each) do
     stub_configuration
-    metadata = create_article_with_metadata
-    @description = metadata["description"]
-    @keywords = metadata["keywords"]
-    @date = metadata["date"]
-    @summary = metadata["summary"]
-    get "/articles/my-article"
+    @date = "07 September 2009"
+    @keywords = "things, stuff"
+    @description = "Page about stuff"
+    @summary = 'Multiline\n\nsummary'
+    @article = create_article(:metadata => {
+      "date" => @date.gsub("September", "Sep"),
+      "description" => @description,
+      "keywords" => @keywords,
+      "summary" => @summary,
+    })
   end
-
+  
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
-  it_should_behave_like "page with meta tags"
+  describe "that's not assigned to a category" do
+    setup do
+      get @article.abspath
+    end
+
+    it_should_behave_like "page with meta tags"
+    it_should_behave_like "page with menus"  
+
+    it "should render successfully" do
+      last_response.should be_ok
+    end
+
+    it "should display the heading" do
+      body.should have_tag("h1", "My article")
+    end
+
+    it "should not display category links" do
+      body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
+    end
+
+    it "should display the date" do
+      body.should have_tag("div.date", @date)
+    end
+
+    it "should display the content" do
+      body.should have_tag("p", "Content goes here")
+    end
+  end
   
-  it "should render successfully" do
-    last_response.should be_ok
-  end
-
-  it "should display the heading" do
-    body.should have_tag("h1", "My article")
-  end
-
-  it "should not display category links" do
-    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
-  end
-
-  it "should display the date" do
-    body.should have_tag("div.date", @date)
-  end
-
-  it "should display the content" do
-    body.should have_tag("p", "Content goes here")
-  end
-  
-  describe "when assigned to categories" do
+  describe "that's assigned to categories" do
     before(:each) do
-      create_category(:title => "Apple", :permalink => "the-apple")
-      create_category(:title => "Banana", :permalink => "banana")
-      create_article(:metadata => { "categories" => "banana, the-apple" })
-      get "/articles/my-article"
+      # FileModel.purge_cache
+      create_category(:title => "Apple", :path => "the-apple")
+      create_category(:title => "Banana", :path => "banana")
+      article = create_article(
+          :metadata => { "categories" => "banana, the-apple" })
+      get article.abspath
     end
     
     it "should render successfully" do
@@ -175,16 +203,16 @@ describe "article" do
     end
   end
   
-  describe "when has parent" do
+  describe "with parent" do
     before(:each) do
-      create_category
-      create_article(:metadata => { "parent" => "my-category" })
-      get "/articles/my-article"
+      @category = create_category(:path => "topic")
+      article = create_article(:path => "topic/article")
+      get article.abspath
     end
     
     it "should link to parent in breadcrumb" do
       body.should have_tag(
-          "div.breadcrumb/a[@href=/my-category]", "My category")
+          "div.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
     end
     
     it "should contain parent name in page title" do
@@ -193,11 +221,11 @@ describe "article" do
     end
   end
   
-  describe "when has comments" do
+  describe "with comments" do
     before(:each) do
       create_comment
       @comment = Comment.find_all.first
-      get "/articles/my-article"
+      get @article.abspath
     end
     
     it "should display comments heading" do
@@ -214,17 +242,9 @@ describe "article" do
       body.should have_tag("ol//p", "Great article.")
     end
   end
-
-  describe "when page doesn't exist" do
-    it "should return 404 if page not found" do
-      get "/articles/no-such-article"
-      last_response.should_not be_ok
-    end
-  end
-  
 end
 
-describe "category" do
+describe "page" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -234,23 +254,37 @@ describe "category" do
 
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
-
-  describe "when category exists" do
+  
+  it_should_behave_like "page with menus"
+  
+  describe "that doesn't exist" do
+    it "should return 404 if page not found" do
+      get "/no-such-page"
+      last_response.should_not be_ok
+    end
+  end
+  
+  describe "that exists" do
     before(:each) do
       @description = "Page about stuff"
       @keywords = "things, stuff"
-      create_category(:content => "# My category\n\nCategory content",
-                      :metadata => {
-                        "description" => @description,
-                        "keywords" => @keywords
-                      })
-      create_article(
+      @content = "Page content"
+      @category = create_category(
+          :content => "# My category\n\n#{@content}",
+          :metadata => {
+            "description" => @description,
+            "keywords" => @keywords
+          })
+      @article = create_category(
+          :path => "another-page",
           :title => "Categorised",
-          :metadata => { :categories => "my-category" },
+          :metadata => { :categories => @category.path },
           :content => "Article content")
-      create_article(:title => "Second article", :permalink => "second-article")
-      get "/my-category"
+      @article2 = create_article(
+          :title => "Second article", :path => "second-article")
+      get @category.abspath
     end
 
     it_should_behave_like "page with meta tags"
@@ -258,29 +292,18 @@ describe "category" do
     it "should render successfully" do
       last_response.should be_ok
     end
-
+    
     it "should display the heading" do
-      body.should have_tag("h1", "My category")
+      body.should have_tag("h1", @category.heading)
     end
 
     it "should display the content" do
-      body.should have_tag("p", "Category content")
+      body.should have_tag("p", @content)
     end
 
-    it "should display links to relevant articles" do
-      body.should have_tag("h3 a[@href=/articles/my-article]", "Categorised")
-      body.should_not have_tag("h3", "Second article")
-    end
-
-    it "should link to each category" do
-      body.should have_tag('#sidebar li a[@href=/my-category]', "My category")
-    end
-  end
-
-  describe "when page doesn't exist" do
-    it "should return 404 if page not found" do
-      get "/my-category"
-      last_response.should_not be_ok
+    it "should display links to relevant pages" do
+      body.should have_tag("h3 a[@href=#{@article.abspath}]", @article.heading)
+      body.should_not have_tag("h3", @article2.heading)
     end
   end
 end
@@ -303,6 +326,7 @@ describe "attachments" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it "should be served successfully" do

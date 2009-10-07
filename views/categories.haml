@@ -1,5 +1,6 @@
-%h2 Articles by category
-%ul
-  - @categories.each do |category|
-    %li
-      %a{ :href => category_path(category) }= category.heading
+- if ! @menu_items.empty?
+  %h2 Articles by category
+  %ul.menu
+    - @menu_items.each do |page|
+      %li
+        %a{ :href => page.abspath }= page.heading

@@ -18,43 +18,47 @@ module ModelFactory
     stub_config_key("subtitle", "about stuff")
     stub_config_key("description", "great web site")
     stub_config_key("keywords", "home, page")
-    stub_env_config_key(
-        "content", File.join(File.dirname(__FILE__), ["fixtures"]))
+    stub_env_config_key("content", FIXTURE_DIR)
     Nesta::Configuration.stub!(:configuration).and_return(@config)
   end
 
-  def create_article_with_metadata
-    metadata = {
-      "description" => "Page about stuff",
-      "keywords" => "things, stuff",
-      "date" => "29 December 2008",
-      "summary" => 'Summary text\n\nwith two paragraphs',
-      "read more" => "Continue please"
-    }
-    create_article(:metadata => metadata)
-    metadata
+  def create_page(options)
+    path = filename(Nesta::Configuration.page_path, options[:path])
+    create_file(path, options)
+    yield(path) if block_given?
+    Page.new(path)
   end
-
-  def create_article(options = {})
+  
+  def create_article(options = {}, &block)
     o = {
-      :permalink => "my-article",
+      :path => "article-prefix/my-article",
       :title => "My article",
+      :content => "Content goes here",
+      :metadata => {
+        "date" => "29 December 2008"
+      }.merge(options.delete(:metadata) || {})
+    }.merge(options)
+    create_page(o, &block)
+  end
+  
+  def create_category(options = {}, &block)
+    o = {
+      :path => "category-prefix/my-category",
+      :title => "My category",
       :content => "Content goes here"
     }.merge(options)
-    path = filename(Nesta::Configuration.article_path, o[:permalink])
-    create_file(path, o)
-    yield(path) if block_given?
+    create_page(o, &block)
   end
   
   def create_comment(options = {})
     o = {
       :metadata => {
-        "article" => "my-article",
+        "article" => "article-prefix/my-article",
         "date" => "Sun Nov 23 13:15:47 +0000 2008",
         "author" => "Fred Bloggs",
         "author email" => "fred@bloggs.com",
         "author url" => "http://bloggs.com/~fred"
-      },
+      }.merge(options.delete(:metadata) || {}),
       :content => "Great article."
     }.merge(options)
     basename = Comment.basename(
@@ -64,20 +68,15 @@ module ModelFactory
     yield(path) if block_given?
   end
   
-  def create_category(options = {})
-    o = {
-      :permalink => "my-category",
-      :title => "My category",
-      :content => "Content goes here"
-    }.merge(options)
-    path = filename(Nesta::Configuration.category_path, o[:permalink])
-    create_file(path, o)
-    yield(path) if block_given?
+  def create_menu(*paths)
+    menu_file = filename(Nesta::Configuration.content_path, "menu", :txt)
+    File.open(menu_file, "w") do |file|
+      paths.each { |p| file.write("#{p}\n") }
+    end
   end
   
   def delete_page(type, permalink)
-    path = Nesta::Configuration.send "#{type}_path"
-    FileUtils.rm(filename(path, permalink))
+    FileUtils.rm(filename(Nesta::Configuration.page_path, permalink))
   end
   
   def remove_fixtures
@@ -85,9 +84,8 @@ module ModelFactory
   end
   
   def create_content_directories
-    FileUtils.mkdir_p(Nesta::Configuration.article_path)
+    FileUtils.mkdir_p(Nesta::Configuration.page_path)
     FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
-    FileUtils.mkdir_p(Nesta::Configuration.category_path)
     FileUtils.mkdir_p(Nesta::Configuration.comment_path)
   end
   
@@ -98,8 +96,8 @@ module ModelFactory
   end
 
   private
-    def filename(directory, basename)
-      File.join(directory, "#{basename}.mdown")
+    def filename(directory, basename, extension = :mdown)
+      File.join(directory, "#{basename}.#{extension}")
     end
     
     def create_file(path, options = {})
@@ -113,6 +111,7 @@ module ModelFactory
 #{title}#{options[:content]}
       EOF
 
+      FileUtils.mkdir_p(File.dirname(path))
       File.open(path, "w") { |file| file.write(contents) }
     end
 end

@@ -1,5 +1,5 @@
 - haml_tag heading do
-  %a{ :href => article_path(article) }= article.heading
+  %a{ :href => article.abspath }= article.heading
 - if article.summary.nil? || article.summary.empty?
   :maruku
     #{article.body}
@@ -7,4 +7,4 @@
   :maruku
     #{article.summary}
   %p.read_more
-    %a{ :href => article_path(article) }= article.read_more
+    %a{ :href => article.abspath }= article.read_more

@@ -8,6 +8,7 @@ rescue LoadError
 end
 
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
+require File.join(File.dirname(__FILE__), *%w[lib models])
 require File.join(File.dirname(__FILE__), *%w[lib configuration])
 
 desc "Run all specs in spec directory"
@@ -20,15 +21,24 @@ class Factory
 end
 
 namespace :setup do
+  desc "Create the content directory"
+  task :content_dir do
+    FileUtils.mkdir_p(Nesta::Configuration.content_path)
+  end
+  
   desc "Create some sample pages"
-  task :sample_content do
+  task :sample_content => :content_dir do
     factory = Factory.new
+    
+    File.open(Nesta::Configuration.content_path("menu.txt"), "w") do |file|
+      file.puts("fruit")
+    end
     
     factory.create_category(
       :title => "Fruit",
-      :permalink => "fruit",
+      :path => "fruit",
       :content => <<-EOF
-This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.category_path, 'fruit.mdown')}`.
+This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.page_path, 'fruit.mdown')}`.
 
 The general idea of category pages is that you assign articles to categories (in a similar way that many CMS or blog systems allow you to tag your articles), and then write some text introductory text on the topic. So this paragraph really ought to have some introductory material about fruit in it. Why bother? Well it's a great way to structure your site and introduce a collection of articles. It can also help you to [get more traffic](http://www.wordtracker.com/academy/website-structure).
 
@@ -42,12 +52,11 @@ Have a look at the files that define the articles that follow, and you should fi
       summary = <<-EOF
 This would be an article on #{fruit} if I'd bothered to research it.
 EOF
-      file = File.join(
-              Nesta::Configuration.category_path, "#{fruit.downcase}.mdown")
+      file = File.join(Nesta::Configuration.page_path, "#{fruit.downcase}.mdown")
       location = "You can change this article by editing `#{file}`."
       factory.create_article(
         :title => "The benefits of #{fruit}",
-        :permalink => fruit.downcase,
+        :path => fruit.downcase,
         :metadata => {
           "date" => (Time.new - 10).to_s,
           "categories" => "fruit",
@@ -59,12 +68,12 @@ EOF
     end
     
     summary = <<-EOF
-You can edit this article by opening `#{File.join(Nesta::Configuration.article_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
+You can edit this article by opening `#{File.join(Nesta::Configuration.page_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
     EOF
 
     factory.create_article(
       :title => "Getting started",
-      :permalink => "getting-started",
+      :path => "getting-started",
       :metadata => {
         "date" => Time.new.to_s,
         "read more" => "Read more tips on getting started",

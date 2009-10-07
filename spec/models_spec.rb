@@ -2,27 +2,27 @@ require File.join(File.dirname(__FILE__), "model_factory")
 require File.join(File.dirname(__FILE__), "spec_helper")
 
 module ModelMatchers
-  class HaveCategory
-    def initialize(permalink)
-      @category = permalink
+  class HavePage
+    def initialize(path)
+      @category = path
     end
 
     def matches?(article)
       @article = article
-      article.categories.map { |c| c.permalink }.include?(@category)
+      article.categories.map { |c| c.path }.include?(@category)
     end
 
     def failure_message
-      "expected '#{@article.permalink}' to be assigned to #{@category}"
+      "expected '#{@article.path}' to be assigned to #{@category}"
     end
 
     def negative_failure_message
-      "'#{@article.permalink}' should not be assigned to #{@category}"
+      "'#{@article.path}' should not be assigned to #{@category}"
     end
   end
 
-  def be_in_category(permalink)
-    HaveCategory.new(permalink)
+  def be_in_category(path)
+    HavePage.new(path)
   end
   
   class HaveComment
@@ -36,11 +36,11 @@ module ModelMatchers
     end
     
     def failure_message
-      "expected '#{@article.permalink}' to have comment '#{@comment.basename}'"
+      "expected '#{@article.path}' to have comment '#{@comment.basename}'"
     end
     
     def negative_failure_message
-      "'#{@article.permalink}' should not have comment '#{@comment.basename}'"
+      "'#{@article.path}' should not have comment '#{@comment.basename}'"
     end
   end
   
@@ -49,7 +49,7 @@ module ModelMatchers
   end
 end
 
-describe "Article" do
+describe "Page" do
   include ModelFactory
   include ModelMatchers
 
@@ -59,43 +59,102 @@ describe "Article" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
+  end
+  
+  it "should be findable" do
+    create_page(:title => "Apple", :path => "the-apple")
+    Page.find_all.should have(1).item
+    Page.find_all.first.heading.should == "Apple"
+  end
+
+  it "should find by path" do
+    create_page(:title => "Banana", :path => "banana")
+    Page.find_by_path("banana").heading.should == "Banana"
+  end
+  
+  it "should not find non existant page" do
+    Page.find_by_path("no-such-page").should be_nil
+  end
+  
+  it "should ensure file exists on instantiation" do
+    lambda { Page.new("no-such-file") }.should raise_error(Sinatra::NotFound)
+  end
+  
+  it "should reload cached files when modified" do
+    create_page(:path => "a-page", :title => "Version 1")
+    File.stub!(:mtime).and_return(Time.new - 1)
+    Page.find_by_path("a-page")
+    create_page(:path => "a-page", :title => "Version 2")
+    File.stub!(:mtime).and_return(Time.new)
+    Page.find_by_path("a-page").heading.should == "Version 2"
+  end
+  
+  describe "with assigned pages" do
+    before(:each) do
+      @category = create_category
+      create_article(:title => "Article 1", :path => "article-1")
+      create_article(
+        :title => "Article 2",
+        :path => "article-2",
+        :metadata => {
+          "date" => "30 December 2008",
+          "categories" => @category.path
+        })
+      @article = create_article(
+        :title => "Article 3",
+        :path => "article-3",
+        :metadata => {
+          "date" => "31 December 2008",
+          "categories" => @category.path
+        })
+      create_category(:path => "category-2", :metadata => {
+        "categories" => @category.path
+      })
+    end
+
+    it "should find articles" do
+      @category.articles.should have(2).items
+    end
+    
+    it "should list most recent articles first" do
+      @category.articles.first.path.should == @article.path
+    end
+    
+    it "should find pages" do
+      @category.pages.should have(1).item
+    end
   end
   
   describe "when finding articles" do
     before(:each) do
-      create_article(:title => "Article 1", :permalink => "article-1")
+      create_article(:title => "Article 1", :path => "article-1")
       create_article(:title => "Article 2",
-                     :permalink => "article-2",
+                     :path => "article-2",
                      :metadata => { "date" => "31 December 2008" })
       create_article(:title => "Article 3",
-                     :permalink => "article-3",
+                     :path => "foo/article-3",
                      :metadata => { "date" => "30 December 2008" })
     end
     
-    it "should be possible to find all articles" do
-      Article.find_all.should have(3).articles
+    it "should only find pages with dates" do
+      articles = Page.find_articles
+      articles.size.should > 0
+      Page.find_articles.each { |page| page.date.should_not be_nil }
     end
     
     it "should return articles in reverse chronological order" do
-      article1, article2 = Article.find_all[0..1]
+      article1, article2 = Page.find_articles[0..1]
       article1.date.should > article2.date
-    end
-    
-    it "should return articles with no date last" do
-      Article.find_all.last.date.should be_nil
-    end
-  
-    it "should be possible to find an article by permalink" do
-      Article.find_by_permalink("article-2").heading.should == "Article 2"
     end
   end
   
   describe "when assigned to categories" do
     before(:each) do
-      create_category(:title => "Apple", :permalink => "the-apple")
-      create_category(:title => "Banana", :permalink => "banana")
-      create_article(:metadata => { "categories" => "banana, the-apple" })
-      @article = Article.find_by_permalink("my-article")
+      create_category(:title => "Apple", :path => "the-apple")
+      create_category(:title => "Banana", :path => "banana")
+      @article = create_article(
+          :metadata => { "categories" => "banana, the-apple" })
     end
     
     it "should be possible to list the categories" do
@@ -114,36 +173,46 @@ describe "Article" do
     end
   end
   
-  describe "when has parent category" do
-    before(:each) do
-      create_category
-      create_article(:metadata => { "parent" => "my-category" })
-      @article = Article.find_by_permalink("my-article")
-    end
-    
-    it "should be possible to retrieve the parent" do
-      @article.parent.should == Category.find_by_permalink("my-category")
-    end
+  it "should be able to find parent page" do
+    category = create_category(:path => "parent")
+    article = create_article(:path => "parent/child")
+    article.parent.should == category
   end
   
-  describe "when not assigned to categories" do
-    it "should be possible to list categories" do
-      create_article
-      Article.find_by_permalink("my-article").categories.should be_empty
+  it "should set parent to nil when at root" do
+    create_category(:path => "top-level").parent.should be_nil
+  end
+  
+  describe "when not assigned to category" do
+    it "should have empty category list" do
+      article = create_article
+      Page.find_by_path(article.path).categories.should be_empty
     end
   end
   
   describe "with metadata" do
     before(:each) do
-      metadata = create_article_with_metadata
-      @date = metadata["date"]
-      @summary = metadata["summary"]
-      @read_more = metadata["read more"]
-      @article = Article.find_by_permalink("my-article")
+      @date = "07 September 2009"
+      @keywords = "things, stuff"
+      @description = "Page about stuff"
+      @summary = 'Multiline\n\nsummary'
+      @read_more = "Continue at your leisure"
+      create_article(:metadata => {
+        "date" => @date.gsub("September", "Sep"),
+        "description" => @description,
+        "keywords" => @keywords,
+        "summary" => @summary,
+        "read more" => @read_more
+      })
+      @article = Page.find_by_path("article-prefix/my-article")
     end
     
     it "should set permalink from filename" do
       @article.permalink.should == "my-article"
+    end
+    
+    it "should set path from filename" do
+      @article.path.should == "article-prefix/my-article"
     end
     
     it "should retrieve heading" do
@@ -151,8 +220,8 @@ describe "Article" do
     end
     
     it "should set heading from first h1 tag" do
-      create_article(:permalink => "headings", :content => '# Second heading')
-      Article.find_by_permalink("headings").heading.should == "My article"
+      create_article(:path => "headings", :content => '# Second heading')
+      Page.find_by_path("headings").heading.should == "My article"
     end
 
     it "should be possible to convert an article to HTML" do
@@ -168,11 +237,11 @@ describe "Article" do
     end
 
     it "should retrieve description from metadata" do
-      @article.description.should == "Page about stuff"
+      @article.description.should == @description
     end
     
     it "should retrieve keywords from metadata" do
-      @article.keywords.should == "things, stuff"
+      @article.keywords.should == @keywords
     end
     
     it "should retrieve date published from metadata" do
@@ -184,23 +253,22 @@ describe "Article" do
     end
     
     it "should retrieve summary text from metadata" do
-      @article.summary.should match(/Summary text/)
+      @article.summary.should match(/#{@summary.split('\n\n').first}/)
     end
     
     it "should treat double newline chars as paragraph break in summary" do
-      @article.summary.should match(/two paragraphs/)
+      @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
   end
   
   describe "without metadata" do
     before(:each) do
-      create_article(:metadata => {})
-      @article = Article.find_all.first
+      create_article
+      @article = Page.find_all.first
     end
     
     it "should parse heading correctly" do
       @article.to_html.should have_tag("h1", "My article")
-      @article.date.should be_nil
     end
     
     it "should have default read more link text" do
@@ -219,7 +287,7 @@ describe "Article" do
   describe "when checking last modification time" do
     before(:each) do
       create_article
-      @article = Article.find_all.first
+      @article = Page.find_all.first
     end
     
     it "should check filesystem" do
@@ -230,15 +298,14 @@ describe "Article" do
   
   describe "when has comments" do
     before(:each) do
-      create_article
+      @article = create_article
       [12, 13].each do |day|
         create_comment(:metadata => {
           "author" => "Fred Bloggs",
           "date" => "#{day} Jan 2009",
-          "article" => "my-article"
+          "article" => @article.path
         })
       end
-      @article = Article.find_by_permalink("my-article")
     end
     
     it "should list comments in chronological order" do
@@ -268,6 +335,7 @@ describe "Comment" do
   
   after(:each) do
     remove_fixtures
+    FileModel.purge_cache
   end
   
   it "should have author name" do
@@ -288,67 +356,5 @@ describe "Comment" do
   
   it "should have body text" do
     @comment.body.should == "Great article.\n"
-  end
-end
-
-describe "Category" do
-  include ModelFactory
-  
-  before(:each) do
-    stub_configuration
-  end
-  
-  after(:each) do
-    remove_fixtures
-  end
-  
-  describe "when finding categories" do
-    before(:each) do
-      create_category(:title => "Apple", :permalink => "the-apple")
-      create_category(:title => "Banana", :permalink => "banana")
-    end
-    
-    it "should be possible to find all categories" do
-      all_categories = Category.find_all
-      all_categories.should have(2).categories
-      all_categories.first.heading.should == "Apple"
-    end
-  
-    it "should be possible to find a category by permalink" do
-      Category.find_by_permalink("banana").heading.should == "Banana"
-    end
-    
-    it "should not be possible to find non existant category" do
-      Category.find_by_permalink("no-such-category").should be_nil
-    end
-  end
-  
-  describe "when finding articles" do
-    before(:each) do
-      create_category
-      create_article(:titile => "Article 1", :permalink => "article-1")
-      create_article(:title => "Article 2",
-                     :permalink => "article-2",
-                     :metadata => {
-                       "date" => "30 December 2008",
-                       "categories" => "my-category"
-                      })
-      create_article(:title => "Article 3",
-                     :permalink => "article-3",
-                     :metadata => {
-                       "date" => "31 December 2008",
-                       "categories" => "my-category"
-                      })
-      @article = Article.find_by_permalink("my-article")
-      @category = Category.find_by_permalink("my-category")
-    end
-
-    it "should find articles assigned to category" do
-      @category.articles.should have(2).items
-    end
-    
-    it "should return articles in reverse chronological order" do
-      @category.articles.first.permalink.should == "article-3"
-    end
   end
 end
