@@ -20,7 +20,7 @@ describe "layout" do
 end
 
 describe "page with menus", :shared => true do
-  setup do
+  before(:each) do
     @category = create_category
   end
   
@@ -71,11 +71,11 @@ describe "home page" do
   end
   
   it "should set description meta tag" do
-    body.should have_tag("meta[@name=description][@content=great web site]")
+    body.should have_tag("meta[@name=description][@content='great web site']")
   end
   
   it "should set keywords meta tag" do
-    body.should have_tag("meta[@name=keywords][@content=home, page]")
+    body.should have_tag("meta[@name=keywords][@content='home, page']")
   end
   
   describe "when articles have no summary" do
@@ -105,7 +105,8 @@ describe "home page" do
     end
     
     it "should display link to article in h2 tag" do
-      body.should have_tag("h2 a[@href=#{@article.abspath}]", @article.heading)
+      body.should have_tag(
+          "h2 a[@href=#{@article.abspath}]", /^\s*#{@article.heading}$/)
     end
     
     it "should display article summary if available" do
@@ -120,11 +121,11 @@ end
 
 describe "page with meta tags", :shared => true do
   it "should set description meta tag" do
-    body.should have_tag("meta[@name=description][@content=#{@description}]")
+    body.should have_tag("meta[@name=description][@content='#{@description}']")
   end
   
   it "should set the keywords meta tag" do
-    body.should have_tag("meta[@name=keywords][@content=#{@keywords}]")
+    body.should have_tag("meta[@name=keywords][@content='#{@keywords}']")
   end
 end
 
@@ -152,7 +153,7 @@ describe "article" do
   end
   
   describe "that's not assigned to a category" do
-    setup do
+    before(:each) do
       get @article.abspath
     end
 
@@ -234,7 +235,7 @@ describe "article" do
     
     it "should display link to comment author's site" do
       body.should have_tag(
-          "ol//a[@href=#{@comment.author_url}][@rel=nofollow]",
+          "ol//a[@href='#{@comment.author_url}'][@rel=nofollow]",
           @comment.author)
     end
     
@@ -302,7 +303,8 @@ describe "page" do
     end
 
     it "should display links to relevant pages" do
-      body.should have_tag("h3 a[@href=#{@article.abspath}]", @article.heading)
+      body.should have_tag(
+          "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
       body.should_not have_tag("h3", @article2.heading)
     end
   end

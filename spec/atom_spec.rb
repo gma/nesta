@@ -32,12 +32,12 @@ describe "atom feed" do
   end
   
   it "should have an alternate link element" do
-    body.should have_tag("/feed/link[@rel=alternate][@href=http://example.org]")
+    body.should have_tag("/feed/link[@rel=alternate][@href='http://example.org']")
   end
 
   it "should have a self link element" do
     body.should have_tag(
-        "/feed/link[@rel=self][@href=http://example.org/articles.xml]")
+        "/feed/link[@rel=self][@href='http://example.org/articles.xml']")
   end
   
   it "should have title and subtitle" do
@@ -78,7 +78,7 @@ describe "atom feed" do
     it "should link to the HTML version" do
       url = "http://example.org/#{@article.path}"
       body.should have_tag(
-          "entry/link[@href=#{url}][@rel=alternate][@type=text/html]")
+          "entry/link[@href='#{url}'][@rel=alternate][@type='text/html']")
     end
     
     it "should define unique ID" do
