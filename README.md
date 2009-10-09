@@ -13,15 +13,18 @@ You need a few gems:
 
     $ sudo gem install builder haml maruku rspec shotgun sinatra vlad
 
-Then run it straight from the git repo:
+Then clone the git repo and create some sample web pages:
 
     $ git clone git://github.com/gma/nesta.git
     $ cd nesta
     $ cp config/config.yml.sample config/config.yml
     $ rake setup:sample_content
+
+That's it - run a web server in development mode with shotgun...
+
     $ shotgun app.rb
 
-Point your web browser at [http://localhost:9393](http://localhost:9393),
-start editing the files in `nesta/content`, and you're off.
+...then point your web browser at http://localhost:9393. Start editing the
+files in `nesta/content`, and you're on your way.
 
 See [http://effectif.com/nesta](http://effectif.com/nesta) for documentation.
