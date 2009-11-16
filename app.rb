@@ -89,7 +89,9 @@ end unless Sinatra::Application.environment == :development
 # Neither way is necessarily *better* than the other; it's up to you to
 # choose the most appropriate course of action for your site. Merging future
 # changes in will typically be a straightforward task, but you may find
-# the local/ directory to be an easy way to 
+# the ./local directory to be an easy way to manage more significant
+# changes to Nesta's behaviour that are likely to conflict with future
+# changes to the main code base.
 #
 # Note that you can modify the behaviour of any of the default objects
 # in local/app.rb, or replace any of the default view templates by
@@ -100,8 +102,9 @@ rescue LoadError
 end
 
 def render_options(engine, template)
-  if File.exist?(File.join("local", "views", "#{template}.#{engine}"))
-    { :views => File.join("local", "views") }
+  local_views = File.join("local", "views")
+  if File.exist?(File.join(local_views, "#{template}.#{engine}"))
+    { :views => local_views }
   else
     {}
   end
