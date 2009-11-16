@@ -92,8 +92,8 @@ end unless Sinatra::Application.environment == :development
 # the local/ directory to be an easy way to 
 #
 # Note that you can modify the behaviour of any of the default objects
-# in overrides/app.rb, or replace any of the default view templates by
-# creating replacements of the same name in overrides/views.
+# in local/app.rb, or replace any of the default view templates by
+# creating replacements of the same name in local/views.
 begin
   require File.join(File.dirname(__FILE__), "local", "app")
 rescue LoadError
