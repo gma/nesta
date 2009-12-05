@@ -102,12 +102,12 @@ end unless Sinatra::Application.environment == :development
 # templates by creating replacements of the same name in local/views.
 #
 begin
-  require File.join(File.dirname(__FILE__), "local", "app")
+  require File.join(File.dirname(__FILE__), Nesta::Path.local, "app")
 rescue LoadError
 end
 
 def render_options(engine, template)
-  local_views = File.join("local", "views")
+  local_views = File.join(Nesta::Path.local, "views")
   if File.exist?(File.join(local_views, "#{template}.#{engine}"))
     { :views => local_views }
   else

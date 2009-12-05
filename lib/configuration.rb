@@ -4,6 +4,18 @@ require "rubygems"
 require "sinatra"
 
 module Nesta
+  class Path
+    @@local = "local"
+    
+    def Path.local
+      @@local
+    end
+    
+    def Path.local=(path)
+      @@local
+    end
+  end
+  
   class Configuration
 
     @@yaml = nil
