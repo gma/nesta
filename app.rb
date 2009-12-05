@@ -97,9 +97,10 @@ end unless Sinatra::Application.environment == :development
 # changes to Nesta's behaviour that are likely to conflict with future
 # changes to the main code base.
 #
-# Note that you can modify the behaviour of any of the default objects
-# in local/app.rb, or replace any of the default view templates by
-# creating replacements of the same name in local/views.
+# Note that you can modify the behaviour of any of the default actions
+# (defined below) in local/app.rb, or replace any of the default view
+# templates by creating replacements of the same name in local/views.
+#
 begin
   require File.join(File.dirname(__FILE__), "local", "app")
 rescue LoadError
