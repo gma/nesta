@@ -29,6 +29,10 @@ helpers do
     end
   end
   
+  def no_widow(text)
+    text.split[0...-1].join(" ") + "&nbsp;#{text.split[-1]}"
+  end
+  
   def set_common_variables
     @menu_items = Page.menu_items
     @site_title = Nesta::Configuration.title
