@@ -129,9 +129,9 @@ get "/" do
   cache haml(:index)
 end
 
-get "/attachments/:filename.:ext" do
+get %r{/attachments/([\w/.-]+)} do
   file = File.join(
-      Nesta::Configuration.attachment_path, "#{params[:filename]}.#{params[:ext]}")
+      Nesta::Configuration.attachment_path, params[:captures].first)
   send_file(file, :disposition => nil)
 end
 
