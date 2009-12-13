@@ -17,6 +17,13 @@ subtitle: "(change this text in config/config.yml)"
 #   uri: http://yourhomepage.com
 #   email: you@yourdomain.com
 
+# If you want to use the Disqus service (http://disqus.com) to display
+# comments on your site, register a Disqus account and then specify your
+# site's short name here. A comment form will automatically be added to
+# the bottom of your pages.
+#
+# disqus_short_name: mysite
+
 # The remaining configuration settings are set separately in development
 # (i.e. when running on your local workstation) and production (when running
 # on your live server).

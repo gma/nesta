@@ -32,7 +32,8 @@
 
   = haml :social, :layout => false
   = haml :feed, :locals => { :title => @site_title }, :layout => false
-
+  = haml :comments, :layout => false
+  
   - unless @comments.empty?
     .old-comments
       %h2 Comments

@@ -157,8 +157,8 @@ describe "article" do
       get @article.abspath
     end
 
-    it_should_behave_like "page with meta tags"
     it_should_behave_like "page with menus"  
+    it_should_behave_like "page with meta tags"
 
     it "should render successfully" do
       last_response.should be_ok
@@ -306,6 +306,23 @@ describe "page" do
       body.should have_tag(
           "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
       body.should_not have_tag("h3", @article2.heading)
+    end
+    
+    it "should not include Disqus comments by default" do
+      body.should_not have_tag('#disqus_thread')
+    end
+  end
+  
+  describe "that is configured to show Disqus comments" do
+    setup do
+      stub_config_key("disqus_short_name", "mysite")
+      @category = create_category
+      get @category.abspath
+    end
+    
+    it "should display Disqus comments" do
+      body.should have_tag('#disqus_thread')
+      body.should have_tag('script[@src*="mysite/embed.js"]')
     end
   end
 end

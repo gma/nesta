@@ -36,6 +36,10 @@ module Nesta
       get(environment)["google_analytics_code"]
     end
     
+    def self.disqus_short_name
+      configuration["disqus_short_name"]
+    end
+    
     def self.content_path(basename = nil)
       get_path(get(environment)["content"], basename)
     end
