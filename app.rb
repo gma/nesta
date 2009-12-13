@@ -156,6 +156,6 @@ get "*" do
   @page = Page.find_by_path(File.join(params[:splat]))
   raise Sinatra::NotFound if @page.nil?
   set_title(@page)
-  set_from_page(:description, :keywords, :comments)
+  set_from_page(:description, :keywords)
   cache haml(:page)
 end

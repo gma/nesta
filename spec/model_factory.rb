@@ -50,24 +50,6 @@ module ModelFactory
     create_page(o, &block)
   end
   
-  def create_comment(options = {})
-    o = {
-      :metadata => {
-        "article" => "article-prefix/my-article",
-        "date" => "Sun Nov 23 13:15:47 +0000 2008",
-        "author" => "Fred Bloggs",
-        "author email" => "fred@bloggs.com",
-        "author url" => "http://bloggs.com/~fred"
-      }.merge(options.delete(:metadata) || {}),
-      :content => "Great article."
-    }.merge(options)
-    basename = Comment.basename(
-        DateTime.parse(o[:metadata]["date"]), o[:metadata]["author"])
-    path = filename(Nesta::Configuration.comment_path, basename)
-    create_file(path, o)
-    yield(path) if block_given?
-  end
-  
   def create_menu(*paths)
     menu_file = filename(Nesta::Configuration.content_path, "menu", :txt)
     File.open(menu_file, "w") do |file|
@@ -86,7 +68,6 @@ module ModelFactory
   def create_content_directories
     FileUtils.mkdir_p(Nesta::Configuration.page_path)
     FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
-    FileUtils.mkdir_p(Nesta::Configuration.comment_path)
   end
   
   def mock_file_stat(method, filename, time)

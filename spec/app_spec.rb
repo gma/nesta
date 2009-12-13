@@ -221,28 +221,6 @@ describe "article" do
       body.should have_tag("title", /- My category$/)
     end
   end
-  
-  describe "with comments" do
-    before(:each) do
-      create_comment
-      @comment = Comment.find_all.first
-      get @article.abspath
-    end
-    
-    it "should display comments heading" do
-      body.should have_tag("h2", "Comments")
-    end
-    
-    it "should display link to comment author's site" do
-      body.should have_tag(
-          "ol//a[@href='#{@comment.author_url}'][@rel=nofollow]",
-          @comment.author)
-    end
-    
-    it "should display comment copy" do
-      body.should have_tag("ol//p", "Great article.")
-    end
-  end
 end
 
 describe "page" do

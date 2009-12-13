@@ -33,21 +33,3 @@
   = haml :social, :layout => false
   = haml :feed, :locals => { :title => @site_title }, :layout => false
   = haml :comments, :layout => false
-  
-  - unless @comments.empty?
-    .old-comments
-      %h2 Comments
-      %ol.comments
-        - @comments.each do |comment|
-          %li
-            %p.meta
-              %span
-                - if comment.author_url.empty?
-                  = comment.author
-                - else
-                  %a{ :href => comment.author_url, :rel => "nofollow" }= comment.author
-              = "(#{comment.date.strftime('%d %B %Y, %H:%M')})"
-            :markdown
-              #{comment.body}
-      %p
-        Comments are no longer allowed on articles.

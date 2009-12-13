@@ -48,10 +48,6 @@ module Nesta
       get_path(File.join(content_path, "pages"), basename)
     end
     
-    def self.comment_path(basename = nil)
-      get_path(File.join(content_path, "comments"), basename)
-    end
-    
     def self.attachment_path(basename = nil)
       get_path(File.join(content_path, "attachments"), basename)
     end

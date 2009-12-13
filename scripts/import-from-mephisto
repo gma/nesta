@@ -26,11 +26,6 @@ class Content < ActiveRecord::Base
     conditions = "type = 'Article' and published_at is not NULL"
     find(:all, :conditions => conditions).map { |c| ArticleLoader.new(c) }
   end
-  
-  def self.comments
-    conditions = "type = 'Comment' and approved = 1"
-    find(:all, :conditions => conditions).map { |c| CommentLoader.new(c) }
-  end
 end
 
 class Tagging < ActiveRecord::Base
@@ -98,46 +93,6 @@ class ArticleLoader
   
   def content
     ["# #{@content.title}", @content.body.gsub("\r\n", "\n")].join("\n\n")
-  end
-end
-
-class CommentLoader
-  include ContentWrapper
-
-  def basename
-    Comment.basename(@content.created_at, @content.author)
-  end
-  
-  def filename
-    File.join(Nesta::Configuration.comment_path, "#{basename}.mdown")
-  end
-
-  def date
-    @content.created_at
-  end
-  
-  def article
-    Content.find(@content.article_id).permalink
-  end
-  
-  [:author, :author_email, :author_url].each do |method|
-    define_method("#{method}") do
-      @content.send(method)
-    end
-  end
-
-  def content
-    @content.body
-  end
-
-  def metadata
-    metadata_string({
-      "Date" => date,
-      "Article" => article,
-      "Author" => author,
-      "Author email" => author_email,
-      "Author URL" => author_url
-    })
   end
 end
 
@@ -227,17 +182,6 @@ OPTIONS (defaults shown in brackets)
     end
   end
   
-  def import_comments
-    Content.comments.each do |comment|
-      puts "Importing comment: #{comment.basename}"
-      if should_import?(comment)
-        File.open(comment.filename, "w") do |file|
-          file.write [comment.metadata, comment.content].join("\n\n")
-        end
-      end
-    end
-  end
-  
   def import_tags
     Tag.find(:all).each do |tag|
       puts "Importing tag: #{tag.name}"
@@ -253,7 +197,6 @@ OPTIONS (defaults shown in brackets)
     parse_command_line
     connect_to_database
     import_articles
-    import_comments
     import_tags
   rescue GetoptLong::Error
     exit 1
