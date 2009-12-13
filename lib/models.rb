@@ -172,7 +172,9 @@ class Page < FileModel
       filename = File.join(Nesta::Configuration.page_path, "#{path}.mdown")
       File.exist?(filename)
     end
-    paths.map { |p| Page.find_by_path(p) }.sort { |x, y| x.heading <=> y.heading }
+    paths.map { |p| Page.find_by_path(p) }.sort do |x, y|
+      x.heading.downcase <=> y.heading.downcase
+    end
   end
   
   def parent
@@ -182,7 +184,7 @@ class Page < FileModel
   def pages
     Page.find_all.select do |page|
       page.date.nil? && page.categories.include?(self)
-    end.sort { |x, y| x.heading <=> y.heading }
+    end.sort { |x, y| x.heading.downcase <=> y.heading.downcase }
   end
   
   def articles
