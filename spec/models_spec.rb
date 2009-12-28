@@ -26,9 +26,13 @@ module ModelMatchers
   end
 end
 
-describe "Page" do
+describe "Page", :shared => true do
   include ModelFactory
   include ModelMatchers
+
+  def create_page(options)
+    super(options.merge(:ext => @extension))
+  end
 
   before(:each) do
     stub_configuration
@@ -40,13 +44,12 @@ describe "Page" do
   end
   
   it "should be findable" do
-    create_page(:title => "Apple", :path => "the-apple")
+    create_page(:heading => "Apple", :path => "the-apple")
     Page.find_all.should have(1).item
-    Page.find_all.first.heading.should == "Apple"
   end
 
   it "should find by path" do
-    create_page(:title => "Banana", :path => "banana")
+    create_page(:heading => "Banana", :path => "banana")
     Page.find_by_path("banana").heading.should == "Banana"
   end
   
@@ -59,10 +62,10 @@ describe "Page" do
   end
   
   it "should reload cached files when modified" do
-    create_page(:path => "a-page", :title => "Version 1")
+    create_page(:path => "a-page", :heading => "Version 1")
     File.stub!(:mtime).and_return(Time.new - 1)
     Page.find_by_path("a-page")
-    create_page(:path => "a-page", :title => "Version 2")
+    create_page(:path => "a-page", :heading => "Version 2")
     File.stub!(:mtime).and_return(Time.new)
     Page.find_by_path("a-page").heading.should == "Version 2"
   end
@@ -70,16 +73,16 @@ describe "Page" do
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
-      create_article(:title => "Article 1", :path => "article-1")
+      create_article(:heading => "Article 1", :path => "article-1")
       create_article(
-        :title => "Article 2",
+        :heading => "Article 2",
         :path => "article-2",
         :metadata => {
           "date" => "30 December 2008",
           "categories" => @category.path
         })
       @article = create_article(
-        :title => "Article 3",
+        :heading => "Article 3",
         :path => "article-3",
         :metadata => {
           "date" => "31 December 2008",
@@ -105,11 +108,11 @@ describe "Page" do
   
   describe "when finding articles" do
     before(:each) do
-      create_article(:title => "Article 1", :path => "article-1")
-      create_article(:title => "Article 2",
+      create_article(:heading => "Article 1", :path => "article-1")
+      create_article(:heading => "Article 2",
                      :path => "article-2",
                      :metadata => { "date" => "31 December 2008" })
-      create_article(:title => "Article 3",
+      create_article(:heading => "Article 3",
                      :path => "foo/article-3",
                      :metadata => { "date" => "30 December 2008" })
     end
@@ -128,8 +131,8 @@ describe "Page" do
   
   describe "when assigned to categories" do
     before(:each) do
-      create_category(:title => "Apple", :path => "the-apple")
-      create_category(:title => "Banana", :path => "banana")
+      create_category(:heading => "Apple", :path => "the-apple")
+      create_category(:heading => "Banana", :path => "banana")
       @article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
     end
@@ -145,7 +148,7 @@ describe "Page" do
     end
     
     it "should not be assigned to non-existant category" do
-      delete_page(:category, "banana")
+      delete_page(:category, "banana", @extension)
       @article.should_not be_in_category("banana")
     end
   end
@@ -196,11 +199,6 @@ describe "Page" do
       @article.heading.should == "My article"
     end
     
-    it "should set heading from first h1 tag" do
-      create_article(:path => "headings", :content => '# Second heading')
-      Page.find_by_path("headings").heading.should == "My article"
-    end
-
     it "should be possible to convert an article to HTML" do
       @article.to_html.should have_tag("h1", "My article")
     end
@@ -272,4 +270,30 @@ describe "Page" do
       @article.last_modified.should == Time.parse("3 January 2009")
     end
   end
+end
+
+describe "Markdown page" do
+  setup do
+    @extension = :mdown
+  end
+
+  it "should set heading from first h1 tag" do
+    create_article(:path => "headings", :content => '# Second heading')
+    Page.find_by_path("headings").heading.should == "My article"
+  end
+
+  it_should_behave_like "Page"
+end
+
+describe "Haml page" do
+  setup do
+    @extension = :haml
+  end
+
+  it "should set heading from first h1 tag" do
+    create_article(:path => "headings", :content => '%h1 Second heading')
+    Page.find_by_path("headings").heading.should == "My article"
+  end
+
+  it_should_behave_like "Page"
 end

@@ -58,7 +58,7 @@ describe "atom feed" do
       @category = create_category
       11.times do |i|
         @articles << create_article(
-          :title => "Article #{i + 1}",
+          :heading => "Article #{i + 1}",
           :path => "article-#{i + 1}",
           :metadata => {
             "categories" => @category.path,

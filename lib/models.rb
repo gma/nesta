@@ -4,18 +4,20 @@ require "rubygems"
 require "maruku"
 
 class FileModel
-  attr_reader :filename, :mtime
-  
+  FORMATS = [:mdown, :haml]
   @@cache = {}
   
+  attr_reader :filename, :mtime
+
   def self.model_path(basename = nil)
     Nesta::Configuration.content_path(basename)
   end
   
   def self.find_all
-    file_pattern = File.join(model_path, "**", "*.mdown")
+    file_pattern = File.join(model_path, "**", "*.{#{FORMATS.join(',')}}")
     Dir.glob(file_pattern).map do |path|
-      load(path.sub(model_path + "/", "").sub(".mdown", ""))
+      relative = path.sub("#{model_path}/", "")
+      load(relative.sub(/\.(#{FORMATS.join('|')})/, ""))
     end
   end
   
@@ -24,9 +26,12 @@ class FileModel
   end
   
   def self.load(path)
-    filename = model_path("#{path}.mdown")
-    if File.exist?(filename) && needs_loading?(path, filename)
-      @@cache[path] = self.new(filename)
+    FORMATS.each do |format|
+      filename = model_path("#{path}.#{format}")
+      if File.exist?(filename) && needs_loading?(path, filename)
+        @@cache[path] = self.new(filename)
+        break
+      end
     end
     @@cache[path]
   end
@@ -37,6 +42,7 @@ class FileModel
   
   def initialize(filename)
     @filename = filename
+    @format = filename.split(".").last.to_sym
     parse_file
     @mtime = File.mtime(filename)
   end
@@ -55,7 +61,12 @@ class FileModel
   end
   
   def to_html
-    Maruku.new(markup).to_html
+    case @format
+    when :mdown
+      Maruku.new(markup).to_html
+    when :haml
+      Haml::Engine.new(markup).to_html
+    end
   end
   
   def last_modified
@@ -74,7 +85,7 @@ class FileModel
     def markup
       @markup
     end
-    
+
     def metadata(key)
       @metadata[key]
     end
@@ -131,7 +142,13 @@ class Page < FileModel
   end
   
   def heading
-    markup =~ /^#\s*(.*)/
+    regex = case @format
+      when :mdown
+        /^#\s*(.*)/
+      when :haml
+        /^\s*%h1\s+(.*)/
+      end
+    markup =~ regex
     Regexp.last_match(1)
   end
   
@@ -158,21 +175,20 @@ class Page < FileModel
   end
   
   def body
-    Maruku.new(markup.sub(/^#\s.*$\r?\n(\r?\n)?/, "")).to_html
+    case @format
+    when :mdown
+      body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
+      Maruku.new(body_text).to_html
+    when :haml
+      body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
+      Haml::Engine.new(body_text).render
+    end
   end
   
   def categories
     categories = metadata("categories")
-    paths = if categories.nil?
-      []
-    else
-      categories.split(",").map { |p| p.strip }
-    end
-    paths = paths.select do |path|
-      filename = File.join(Nesta::Configuration.page_path, "#{path}.mdown")
-      File.exist?(filename)
-    end
-    paths.map { |p| Page.find_by_path(p) }.sort do |x, y|
+    paths = categories.nil? ? [] : categories.split(",").map { |p| p.strip }
+    valid_paths(paths).map { |p| Page.find_by_path(p) }.sort do |x, y|
       x.heading.downcase <=> y.heading.downcase
     end
   end
@@ -184,10 +200,22 @@ class Page < FileModel
   def pages
     Page.find_all.select do |page|
       page.date.nil? && page.categories.include?(self)
-    end.sort { |x, y| x.heading.downcase <=> y.heading.downcase }
+    end.sort do |x, y|
+      x.heading.downcase <=> y.heading.downcase
+    end
   end
   
   def articles
     Page.find_articles.select { |article| article.categories.include?(self) }
   end
+  
+  private
+    def valid_paths(paths)
+      paths.select do |path|
+        FORMATS.detect do |format|
+          File.exist?(
+              File.join(Nesta::Configuration.page_path, "#{path}.#{format}"))
+        end
+      end
+    end
 end

@@ -23,7 +23,8 @@ module ModelFactory
   end
 
   def create_page(options)
-    path = filename(Nesta::Configuration.page_path, options[:path])
+    extension = options[:ext] || :mdown
+    path = filename(Nesta::Configuration.page_path, options[:path], extension)
     create_file(path, options)
     yield(path) if block_given?
     Page.new(path)
@@ -32,7 +33,7 @@ module ModelFactory
   def create_article(options = {}, &block)
     o = {
       :path => "article-prefix/my-article",
-      :title => "My article",
+      :heading => "My article",
       :content => "Content goes here",
       :metadata => {
         "date" => "29 December 2008"
@@ -44,7 +45,7 @@ module ModelFactory
   def create_category(options = {}, &block)
     o = {
       :path => "category-prefix/my-category",
-      :title => "My category",
+      :heading => "My category",
       :content => "Content goes here"
     }.merge(options)
     create_page(o, &block)
@@ -57,8 +58,9 @@ module ModelFactory
     end
   end
   
-  def delete_page(type, permalink)
-    FileUtils.rm(filename(Nesta::Configuration.page_path, permalink))
+  def delete_page(type, permalink, extension)
+    file = filename(Nesta::Configuration.page_path, permalink, extension)
+    FileUtils.rm(file)
   end
   
   def remove_fixtures
@@ -85,11 +87,12 @@ module ModelFactory
       create_content_directories
       metadata = options[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
-      title = options[:title] ? "# #{options[:title]}\n\n" : ""
+      prefix = (options[:ext] == :haml) ? "%div\n  %h1" : '# '
+      heading = options[:heading] ? "#{prefix} #{options[:heading]}\n\n" : ""
       contents =<<-EOF
 #{metatext}
 
-#{title}#{options[:content]}
+#{heading}#{options[:content]}
       EOF
 
       FileUtils.mkdir_p(File.dirname(path))

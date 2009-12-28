@@ -184,8 +184,8 @@ describe "article" do
   describe "that's assigned to categories" do
     before(:each) do
       # FileModel.purge_cache
-      create_category(:title => "Apple", :path => "the-apple")
-      create_category(:title => "Banana", :path => "banana")
+      create_category(:heading => "Apple", :path => "the-apple")
+      create_category(:heading => "Banana", :path => "banana")
       article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
       get article.abspath
@@ -258,11 +258,11 @@ describe "page" do
           })
       @article = create_category(
           :path => "another-page",
-          :title => "Categorised",
+          :heading => "Categorised",
           :metadata => { :categories => @category.path },
           :content => "Article content")
       @article2 = create_article(
-          :title => "Second article", :path => "second-article")
+          :heading => "Second article", :path => "second-article")
       get @category.abspath
     end
 
