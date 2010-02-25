@@ -273,7 +273,7 @@ describe "Page", :shared => true do
 end
 
 describe "Markdown page" do
-  setup do
+  before(:each) do
     @extension = :mdown
   end
 
@@ -286,7 +286,7 @@ describe "Markdown page" do
 end
 
 describe "Haml page" do
-  setup do
+  before(:each) do
     @extension = :haml
   end
 
