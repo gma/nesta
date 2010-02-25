@@ -87,14 +87,19 @@ module ModelFactory
       create_content_directories
       metadata = options[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
-      prefix = (options[:ext] == :haml) ? "%div\n  %h1" : '# '
+      if options[:ext] == :haml
+        prefix = "%div\n  %h1"
+      elsif options[:ext] == :textile
+        prefix =  "<div>\nh1."
+      else
+        prefix = '# '
+      end
       heading = options[:heading] ? "#{prefix} #{options[:heading]}\n\n" : ""
       contents =<<-EOF
 #{metatext}
 
 #{heading}#{options[:content]}
       EOF
-
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, "w") { |file| file.write(contents) }
     end

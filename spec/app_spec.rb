@@ -292,7 +292,7 @@ describe "page" do
   end
   
   describe "that is configured to show Disqus comments" do
-    setup do
+    before(:each) do
       stub_config_key("disqus_short_name", "mysite")
       @category = create_category
       get @category.abspath

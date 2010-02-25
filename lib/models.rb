@@ -2,9 +2,10 @@ require "time"
 
 require "rubygems"
 require "maruku"
+require "redcloth"
 
 class FileModel
-  FORMATS = [:mdown, :haml]
+  FORMATS = [:mdown, :haml, :textile]
   @@cache = {}
   
   attr_reader :filename, :mtime
@@ -66,6 +67,8 @@ class FileModel
       Maruku.new(markup).to_html
     when :haml
       Haml::Engine.new(markup).to_html
+    when :textile
+      RedCloth.new(markup).to_html
     end
   end
   
@@ -147,6 +150,8 @@ class Page < FileModel
         /^#\s*(.*)/
       when :haml
         /^\s*%h1\s+(.*)/
+      when :textile
+        /^\s*h1\.\s+(.*)/
       end
     markup =~ regex
     Regexp.last_match(1)
@@ -182,6 +187,9 @@ class Page < FileModel
     when :haml
       body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
       Haml::Engine.new(body_text).render
+    when :textile
+      body_text = markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
+      RedCloth.new(body_text).to_html
     end
   end
   

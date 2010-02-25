@@ -297,3 +297,16 @@ describe "Haml page" do
 
   it_should_behave_like "Page"
 end
+
+describe "Textile page" do
+  before(:each) do
+    @extension = :textile
+  end
+
+  it "should set heading from first h1 tag" do
+    create_article(:path => "headings", :content => 'h1. Second heading')
+    Page.find_by_path("headings").heading.should == "My article"
+  end
+
+  it_should_behave_like "Page"
+end
