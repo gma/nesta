@@ -1,6 +1,6 @@
 - if short_name = Nesta::Configuration.disqus_short_name
   #disqus_thread
-    - if Sinatra::Application.environment == :developer
+    - if Sinatra::Application.environment == :development
       %script{ :type => "text/javascript" }
         var disqus_developer = true;
     %script{ :type => "text/javascript", :src => "http://disqus.com/forums/#{short_name}/embed.js" }
