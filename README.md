@@ -30,7 +30,7 @@ later:
 
 Create some sample web pages (optional):
 
-    $ rake setup:sample_content
+    $ bundle exec rake setup:sample_content
 
 That's it - you can launch a local web server in development mode using
 shotgun...
