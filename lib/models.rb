@@ -176,7 +176,15 @@ class Page < FileModel
   end
   
   def summary
-    metadata("summary") && metadata("summary").gsub('\n', "\n")
+    if summary_text = metadata("summary")
+      summary_text.gsub!('\n', "\n")
+      case @format
+      when :textile
+        RedCloth.new(summary_text).to_html
+      else
+        Maruku.new(summary_text).to_html
+      end
+    end
   end
   
   def body
