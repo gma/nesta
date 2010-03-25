@@ -36,7 +36,7 @@ helpers do
   def set_common_variables
     @menu_items = Page.menu_items
     @site_title = Nesta::Configuration.title
-    set_from_config(:google_analytics_code)
+    set_from_config(:title, :subtitle, :google_analytics_code)
   end
 
   def url_for(page)
