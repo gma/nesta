@@ -15,6 +15,7 @@ set :views => File.join(File.dirname(__FILE__), "..", "views"),
     :public => File.join(File.dirname(__FILE__), "..", "public")
 
 set :environment, :test
+set :reload_templates, true
 
 require File.join(File.dirname(__FILE__), "..", "app")
 

@@ -12,7 +12,7 @@ describe "Rendering" do
     @templates << template
   end
   
-  setup do
+  before(:each) do
     Nesta::Path.local = File.join(File.dirname(__FILE__), *%w[.. test-local])
     Nesta::Path.themes = File.join(File.dirname(__FILE__), *%w[.. test-themes])
     @theme = "my-theme"
@@ -24,12 +24,12 @@ describe "Rendering" do
     stub_configuration
   end
   
-  teardown do
+  after(:each) do
     @templates.each { |path| FileUtils.rm(path) if File.exist?(path) }
   end
   
   describe "when local template exists" do
-    setup do
+    before(:each) do
       create_template(:local, "page.haml", "%p Local template")
     end
   
@@ -40,7 +40,7 @@ describe "Rendering" do
   end
   
   describe "when template exists in theme" do
-    setup do
+    before(:each) do
       create_template(:theme, "page.haml", "%p Theme template")
     end
     
@@ -50,7 +50,7 @@ describe "Rendering" do
     end
     
     describe "and theme configured" do
-      setup do
+      before(:each) do
         stub_config_key("theme", @theme)
       end
       
@@ -60,10 +60,10 @@ describe "Rendering" do
       end
       
       context "and template also exists locally" do
-        setup do
+        before(:each) do
           create_template(:local, "page.haml", "%p Local template")
         end
-
+      
         it "should use local template" do
           get create_category.abspath
           body.should_not have_tag("p", "Theme template")
