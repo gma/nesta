@@ -11,7 +11,7 @@ require "lib/path"
 
 set :cache_enabled, Nesta::Configuration.cache
 
-class Renderer
+module TemplateFinder
   def self.local_views
     File.join(Nesta::Path.local, "views")
   end
@@ -24,34 +24,18 @@ class Renderer
     end
   end
   
-  def self.engine
-    raise "Not implemented"
-  end
-  
-  def self.template_exists?(views, template)
+  def self.template_exists?(engine, views, template)
     views && File.exist?(File.join(views, "#{template}.#{engine}"))
   end
 
-  def self.options(template)
-    if template_exists?(local_views, template)
+  def self.render_options(template, engine)
+    if template_exists?(engine, local_views, template)
       { :views => local_views }
-    elsif template_exists?(theme_views, template)
+    elsif template_exists?(engine, theme_views, template)
       { :views => theme_views }
     else
       {}
     end
-  end
-end
-
-class HamlRenderer < Renderer
-  def self.engine
-    :haml
-  end
-end
-
-class SassRenderer < Renderer
-  def self.engine
-    :sass
   end
 end
 
@@ -111,11 +95,13 @@ helpers do
   end
   
   def haml(template, options = {}, locals = {})
-    super(template, options.merge(HamlRenderer.options(template)), locals)
+    render_options = TemplateFinder.render_options(template, :haml)
+    super(template, render_options.merge(options), locals)
   end
   
   def sass(template, options = {}, locals = {})
-    super(template, options.merge(SassRenderer.options(template)), locals)
+    render_options = TemplateFinder.render_options(template, :sass)
+    super(template, render_options.merge(options), locals)
   end
 end
 
