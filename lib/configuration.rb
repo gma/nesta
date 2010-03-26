@@ -5,7 +5,11 @@ require "sinatra"
 
 module Nesta
   class Configuration
-    @@yaml = nil
+    @yaml = nil
+    
+    class << self
+      attr_accessor :yaml
+    end
 
     def self.cache
       get(environment)["cache"] || false
@@ -62,7 +66,7 @@ module Nesta
     
       def self.configuration
         file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
-        @@yaml ||= YAML::load(IO.read(file))
+        self.yaml ||= YAML::load(IO.read(file))
       end
       
       def self.get(key, default = {})
