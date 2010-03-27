@@ -1,0 +1,49 @@
+#!/bin/sh
+
+COMMAND=$1
+THEME_DIR=$(dirname $0)/../themes
+
+usage()
+{
+    echo "Usage: $(basename $0) install <url>" 1>&2
+    exit 1
+}
+
+log()
+{
+    local message="$1"
+    echo "## $message"
+}
+
+theme_name()
+{
+    local url=$1
+    echo $(basename $url) | sed 's,nesta-theme-,,' | sed 's,\.git$,,'
+}
+
+exclude_theme_from_git()
+{
+    local path="themes/$1"
+    local exclude="$(dirname $0)/../.git/info/exclude"
+    if [ -f $exclude ] && ! grep -qs $path $exclude; then
+        log "Appending $path to $exclude"
+        echo $path >> $exclude
+    fi
+}
+
+install()
+{
+    local url=$1
+    [ -z "$url" ] && usage
+    local name="$(theme_name $url)"
+    log "Cloning theme into themes/$name"
+    git clone $url $THEME_DIR/$name
+    exclude_theme_from_git $name
+}
+
+## Main program
+
+[ -z "$COMMAND" ] && usage
+
+shift
+$COMMAND $*

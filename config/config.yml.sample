@@ -22,7 +22,8 @@ subtitle: "(change this text in config/config.yml)"
 #   email: you@yourdomain.com
 
 # You can stick with the default look and feel, or use a theme. Themes are
-# easy to create or install, and live inside the themes directory.
+# easy to create or install, and live inside the themes directory. You
+# can also use scripts/theme to install them.
 #
 # theme: name-of-theme
 
