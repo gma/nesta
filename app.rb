@@ -8,36 +8,9 @@ require "lib/cache"
 require "lib/configuration"
 require "lib/models"
 require "lib/path"
+require "lib/template"
 
 set :cache_enabled, Nesta::Configuration.cache
-
-module TemplateFinder
-  def self.local_views
-    File.join(Nesta::Path.local, "views")
-  end
-  
-  def self.theme_views
-    if Nesta::Configuration.theme.nil?
-      nil
-    else
-      File.join(Nesta::Path.themes, Nesta::Configuration.theme, "views")
-    end
-  end
-  
-  def self.template_exists?(engine, views, template)
-    views && File.exist?(File.join(views, "#{template}.#{engine}"))
-  end
-
-  def self.render_options(template, engine)
-    if template_exists?(engine, local_views, template)
-      { :views => local_views }
-    elsif template_exists?(engine, theme_views, template)
-      { :views => theme_views }
-    else
-      {}
-    end
-  end
-end
 
 helpers do
   def set_from_config(*variables)
@@ -95,12 +68,12 @@ helpers do
   end
   
   def haml(template, options = {}, locals = {})
-    render_options = TemplateFinder.render_options(template, :haml)
+    render_options = Nesta::Template.render_options(template, :haml)
     super(template, render_options.merge(options), locals)
   end
   
   def sass(template, options = {}, locals = {})
-    render_options = TemplateFinder.render_options(template, :sass)
+    render_options = Nesta::Template.render_options(template, :sass)
     super(template, render_options.merge(options), locals)
   end
 end
