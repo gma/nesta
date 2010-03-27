@@ -10,10 +10,10 @@
 require "fileutils"
 require "tempfile"
 
-require File.join(File.dirname(__FILE__), *%w[.. lib configuration])
+require File.join(File.dirname(__FILE__), *%w[.. lib config])
 
 module Nesta
-  class Configuration
+  class Config
     def self.article_path
       content_path("articles")
     end
@@ -33,18 +33,18 @@ module Nesta
 end
 
 def content_in_git?
-  File.exist?(File.join(Nesta::Configuration.content_path, ".git"))
+  File.exist?(File.join(Nesta::Config.content_path, ".git"))
 end
 
 def git(&block)
-  FileUtils.cd(Nesta::Configuration.content_path) { system("git #{yield}") }
+  FileUtils.cd(Nesta::Config.content_path) { system("git #{yield}") }
 end
 
 def create_menu
-  menu = Nesta::Configuration.content_path("menu.txt")
+  menu = Nesta::Config.content_path("menu.txt")
   if ! File.exist?(menu)
     File.open(menu, "w") do |file|
-      Dir["#{Nesta::Configuration.category_path}/*.mdown"].each do |category|
+      Dir["#{Nesta::Config.category_path}/*.mdown"].each do |category|
         puts "Adding #{File.basename(category, ".mdown")} to #{menu}"
         file.puts "#{File.basename(category, ".mdown")}"
       end
@@ -54,7 +54,7 @@ def create_menu
 end
 
 def relative_path(path)
-  path.sub(Nesta::Configuration.content_path, "").sub(/\//, "")
+  path.sub(Nesta::Config.content_path, "").sub(/\//, "")
 end
 
 def move_page(source, destination)
@@ -67,7 +67,7 @@ def move_page(source, destination)
 end
 
 def move_pages(options = {})
-  destination = Nesta::Configuration.page_path(options[:prefix])
+  destination = Nesta::Config.page_path(options[:prefix])
   FileUtils.mkdir_p(destination)
   Dir["#{options[:source]}/*"].each { |page| move_page(page, destination) }
   FileUtils.rmdir(options[:source]) if File.exist?(options[:source])
@@ -75,20 +75,20 @@ end
 
 def move_categories
   move_pages(
-    :source => Nesta::Configuration.category_path,
-    :prefix => Nesta::Configuration.category_prefix
+    :source => Nesta::Config.category_path,
+    :prefix => Nesta::Config.category_prefix
   )
 end
 
 def move_articles
   move_pages(
-    :source => Nesta::Configuration.article_path,
-    :prefix => Nesta::Configuration.article_prefix
+    :source => Nesta::Config.article_path,
+    :prefix => Nesta::Config.article_prefix
   )
 end
 
 def remove_parent_metadata
-  Dir["#{Nesta::Configuration.page_path}/**/*.mdown"].each do |page|
+  Dir["#{Nesta::Config.page_path}/**/*.mdown"].each do |page|
     temp = Tempfile.new("nesta")
     File.open(temp.path, "w") do |out|
       File.open(page).each do |line|

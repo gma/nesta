@@ -5,10 +5,10 @@ module Nesta
     end
 
     def self.theme_view_path
-      if Nesta::Configuration.theme.nil?
+      if Nesta::Config.theme.nil?
         nil
       else
-        File.join(Nesta::Path.themes, Nesta::Configuration.theme, "views")
+        File.join(Nesta::Path.themes, Nesta::Config.theme, "views")
       end
     end
 

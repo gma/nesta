@@ -5,17 +5,17 @@ require "haml"
 require "sass"
 
 require "lib/cache"
-require "lib/configuration"
+require "lib/config"
 require "lib/models"
 require "lib/path"
 require "lib/template"
 
-set :cache_enabled, Nesta::Configuration.cache
+set :cache_enabled, Nesta::Config.cache
 
 helpers do
   def set_from_config(*variables)
     variables.each do |var|
-      instance_variable_set("@#{var}", Nesta::Configuration.send(var))
+      instance_variable_set("@#{var}", Nesta::Config.send(var))
     end
   end
   
@@ -27,7 +27,7 @@ helpers do
     if page.respond_to?(:parent) && page.parent
       @title = "#{page.heading} - #{page.parent.heading}"
     else
-      @title = "#{page.heading} - #{Nesta::Configuration.title}"
+      @title = "#{page.heading} - #{Nesta::Config.title}"
     end
   end
   
@@ -37,7 +37,7 @@ helpers do
   
   def set_common_variables
     @menu_items = Page.menu_items
-    @site_title = Nesta::Configuration.title
+    @site_title = Nesta::Config.title
     set_from_config(:title, :subtitle, :google_analytics_code)
   end
 
@@ -127,7 +127,7 @@ end
 
 get %r{/attachments/([\w/.-]+)} do
   file = File.join(
-      Nesta::Configuration.attachment_path, params[:captures].first)
+      Nesta::Config.attachment_path, params[:captures].first)
   send_file(file, :disposition => nil)
 end
 

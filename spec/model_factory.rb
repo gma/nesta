@@ -19,12 +19,12 @@ module ModelFactory
     stub_config_key("description", "great web site")
     stub_config_key("keywords", "home, page")
     stub_env_config_key("content", FIXTURE_DIR)
-    Nesta::Configuration.stub!(:configuration).and_return(@config)
+    Nesta::Config.stub!(:configuration).and_return(@config)
   end
 
   def create_page(options)
     extension = options[:ext] || :mdown
-    path = filename(Nesta::Configuration.page_path, options[:path], extension)
+    path = filename(Nesta::Config.page_path, options[:path], extension)
     create_file(path, options)
     yield(path) if block_given?
     Page.new(path)
@@ -52,14 +52,14 @@ module ModelFactory
   end
   
   def create_menu(*paths)
-    menu_file = filename(Nesta::Configuration.content_path, "menu", :txt)
+    menu_file = filename(Nesta::Config.content_path, "menu", :txt)
     File.open(menu_file, "w") do |file|
       paths.each { |p| file.write("#{p}\n") }
     end
   end
   
   def delete_page(type, permalink, extension)
-    file = filename(Nesta::Configuration.page_path, permalink, extension)
+    file = filename(Nesta::Config.page_path, permalink, extension)
     FileUtils.rm(file)
   end
   
@@ -68,8 +68,8 @@ module ModelFactory
   end
   
   def create_content_directories
-    FileUtils.mkdir_p(Nesta::Configuration.page_path)
-    FileUtils.mkdir_p(Nesta::Configuration.attachment_path)
+    FileUtils.mkdir_p(Nesta::Config.page_path)
+    FileUtils.mkdir_p(Nesta::Config.attachment_path)
   end
   
   def mock_file_stat(method, filename, time)

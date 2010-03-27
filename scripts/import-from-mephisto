@@ -11,7 +11,7 @@ require "time"
 require "rubygems"
 require "active_record"
 
-require File.join(File.dirname(__FILE__), *%w[.. lib configuration])
+require File.join(File.dirname(__FILE__), *%w[.. lib config])
 require File.join(File.dirname(__FILE__), *%w[.. lib models])
 
 class Content < ActiveRecord::Base
@@ -38,7 +38,7 @@ class Tag < ActiveRecord::Base
   has_many :contents, :through => :taggings
 
   def filename
-    File.join(Nesta::Configuration.page_path, "#{name}.mdown")
+    File.join(Nesta::Config.page_path, "#{name}.mdown")
   end
 end
 
@@ -61,7 +61,7 @@ class ArticleLoader
   include ContentWrapper
   
   def filename
-    File.join(Nesta::Configuration.page_path, "#{permalink}.mdown")
+    File.join(Nesta::Config.page_path, "#{permalink}.mdown")
   end
 
   def date

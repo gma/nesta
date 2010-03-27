@@ -4,7 +4,7 @@ require "rubygems"
 require "sinatra"
 
 module Nesta
-  class Configuration
+  class Config
     @yaml = nil
     
     class << self
