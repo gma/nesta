@@ -8,7 +8,7 @@ require "lib/cache"
 require "lib/config"
 require "lib/models"
 require "lib/path"
-require "lib/template"
+require "lib/overrides"
 
 set :cache_enabled, Nesta::Config.cache
 
@@ -68,12 +68,12 @@ helpers do
   end
   
   def haml(template, options = {}, locals = {})
-    render_options = Nesta::Template.render_options(template, :haml)
+    render_options = Nesta::Overrides.render_options(template, :haml)
     super(template, render_options.merge(options), locals)
   end
   
   def sass(template, options = {}, locals = {})
-    render_options = Nesta::Template.render_options(template, :sass)
+    render_options = Nesta::Overrides.render_options(template, :sass)
     super(template, render_options.merge(options), locals)
   end
 end
@@ -105,10 +105,9 @@ end unless Sinatra::Application.environment == :development
 # (defined below) in local/app.rb, or replace any of the default view
 # templates by creating replacements of the same name in local/views.
 #
-begin
-  require File.join(File.dirname(__FILE__), Nesta::Path.local, "app")
-rescue LoadError
-end
+
+Nesta::Overrides.load_theme_app
+Nesta::Overrides.load_local_app
 
 get "/css/:sheet.css" do
   content_type "text/css", :charset => "utf-8"

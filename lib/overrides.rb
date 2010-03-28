@@ -1,7 +1,17 @@
 module Nesta
-  module Template
+  module Overrides
+    def self.load_local_app
+      require File.join(Nesta::Path.local, "app")
+    rescue LoadError
+    end
+    
     def self.local_view_path
       File.join(Nesta::Path.local, "views")
+    end
+    
+    def self.load_theme_app
+      require File.join(Nesta::Path.themes, Nesta::Config.theme, "app")
+    rescue LoadError
     end
 
     def self.theme_view_path
