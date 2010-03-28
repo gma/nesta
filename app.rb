@@ -39,6 +39,7 @@ helpers do
     @menu_items = Page.menu_items
     @site_title = Nesta::Config.title
     set_from_config(:title, :subtitle, :google_analytics_code)
+    @heading = @title
   end
 
   def url_for(page)
