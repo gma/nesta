@@ -46,7 +46,12 @@ helpers do
   def base_url
     url = "http://#{request.host}"
     request.port == 80 ? url : url + ":#{request.port}"
-  end  
+  end
+  
+  def absolute_urls(text)
+    text.gsub!(/(<a href=['"])\//, '\1' + base_url + '/')
+    text
+  end
   
   def nesta_atom_id_for_page(page)
     published = page.date.strftime('%Y-%m-%d')
@@ -145,8 +150,8 @@ end
 get "/sitemap.xml" do
   content_type :xml, :charset => "utf-8"
   @pages = Page.find_all
-  @last = @pages.map { |page| page.last_modified }.inject do |latest, this|
-    this > latest ? this : latest
+  @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
+    (page > latest) ? page : latest
   end
   cache builder(:sitemap)
 end
