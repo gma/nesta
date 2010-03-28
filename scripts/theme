@@ -31,6 +31,16 @@ exclude_theme_from_git()
     fi
 }
 
+enable_theme()
+{
+    local name=$1
+    local config="config/config.yml"
+    if [ -f $config ]; then
+        log "Enabling $name theme in config/config.yml"
+        ruby -p -i -e "\$_.gsub!(/^#?\\s*theme:.*/, 'theme: $name')" $config
+    fi
+}
+
 install()
 {
     local url=$1
@@ -39,6 +49,7 @@ install()
     log "Cloning theme into themes/$name"
     git clone $url $THEME_DIR/$name
     exclude_theme_from_git $name
+    enable_theme $name
 }
 
 ## Main program
