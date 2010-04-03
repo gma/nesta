@@ -20,7 +20,7 @@ require File.join(File.dirname(__FILE__), "..", "app")
 
 module RequestSpecHelper
   def app
-    Sinatra::Application
+    Nesta::App
   end
   
   def body

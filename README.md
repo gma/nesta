@@ -35,7 +35,7 @@ Create some sample web pages (optional):
 That's it - you can launch a local web server in development mode using
 shotgun...
 
-    $ bundle exec shotgun app.rb
+    $ bundle exec shotgun config.ru
 
 ...then point your web browser at http://localhost:9393. Start editing the
 files in `nesta/content`, and you're on your way.

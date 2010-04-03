@@ -2,4 +2,4 @@ require "rubygems"
 require "sinatra"
 require "app"
 
-run Sinatra::Application
+run Nesta::App
