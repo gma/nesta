@@ -65,7 +65,7 @@ install()
     log "Cloning theme into themes/$name"
     git clone $url $THEME_DIR/$name
     exclude_theme_from_git $name
-    enable_theme $name
+    enable $name
 }
 
 create_readme()
