@@ -8,14 +8,14 @@ describe "layout" do
   it "should not include GA JavaScript by default" do
     stub_configuration
     get "/"
-    body.should_not have_tag("script", /_getTracker\("UA-1234"\)/)
+    body.should_not have_tag("script", /'_setAccount', 'UA-1234'/)
   end
   
   it "should include GA JavaScript if configured" do
     stub_env_config_key("google_analytics_code", "UA-1234")
     stub_configuration
     get "/"
-    body.should have_tag("script", /_getTracker\("UA-1234"\)/)
+    body.should have_tag("script", /'_setAccount', 'UA-1234'/)
   end
 end
 

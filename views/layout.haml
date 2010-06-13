@@ -9,6 +9,7 @@
     %title= @title
     %link{ :href => "/css/master.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
     %link{ :href => "/articles.xml", :rel => "alternate", :type => "application/atom+xml" }
+    = haml :analytics, :layout => false
   %body{ :class => @body_class }
     #container
       #wrapper
@@ -21,5 +22,3 @@
               %a{ :href => "http://effectif.com/nesta" } nesta
             designed by
             %a{ :href => "http://effectif.com" } Graham Ashton
-
-    = haml :analytics, :layout => false
