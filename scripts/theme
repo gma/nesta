@@ -1,6 +1,8 @@
 #!/bin/sh
 
-THEME_DIR="$(cd $(dirname $0)/../themes; pwd)"
+THEME_DIR="$(dirname $0)/../themes"
+mkdir -p "$THEME_DIR"
+THEME_DIR="$(cd $THEME_DIR; pwd)"
 
 usage()
 {
