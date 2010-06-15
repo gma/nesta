@@ -37,16 +37,6 @@ theme_name_from_url()
     echo $(basename $url) | sed 's,nesta-theme-,,' | sed 's,\.git$,,'
 }
 
-exclude_theme_from_git()
-{
-    local path="themes/$1"
-    local exclude="$(dirname $0)/../.git/info/exclude"
-    if [ -f $exclude ] && ! grep -qs $path $exclude; then
-        log "Appending $path to $exclude"
-        echo $path >> $exclude
-    fi
-}
-
 enable()
 {
     local name=$1
@@ -64,7 +54,8 @@ install()
     local name="$(theme_name_from_url $url)"
     log "Cloning theme into themes/$name"
     git clone $url $THEME_DIR/$name
-    exclude_theme_from_git $name
+    log "Removing theme's own .git directory"
+    rm -rf $THEME_DIR/$name/.git
     enable $name
 }
 
