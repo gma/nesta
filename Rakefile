@@ -9,7 +9,7 @@ end
 
 require File.join(File.dirname(__FILE__), *%w[spec model_factory])
 require File.join(File.dirname(__FILE__), *%w[lib models])
-require File.join(File.dirname(__FILE__), *%w[lib configuration])
+require File.join(File.dirname(__FILE__), *%w[lib config])
 
 desc "Run all specs in spec directory"
 Spec::Rake::SpecTask.new(:spec) do |t|
@@ -23,14 +23,14 @@ end
 namespace :setup do
   desc "Create the content directory"
   task :content_dir do
-    FileUtils.mkdir_p(Nesta::Configuration.content_path)
+    FileUtils.mkdir_p(Nesta::Config.content_path)
   end
   
   desc "Create some sample pages"
   task :sample_content => :content_dir do
     factory = Factory.new
     
-    File.open(Nesta::Configuration.content_path("menu.txt"), "w") do |file|
+    File.open(Nesta::Config.content_path("menu.txt"), "w") do |file|
       file.puts("fruit")
     end
     
@@ -38,7 +38,7 @@ namespace :setup do
       :heading => "Fruit",
       :path => "fruit",
       :content => <<-EOF
-This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Configuration.page_path, 'fruit.mdown')}`.
+This is a category page about Fruit. You can find it here: `#{File.join(Nesta::Config.page_path, 'fruit.mdown')}`.
 
 The general idea of category pages is that you assign articles to categories (in a similar way that many CMS or blog systems allow you to tag your articles), and then write some text introductory text on the topic. So this paragraph really ought to have some introductory material about fruit in it. Why bother? Well it's a great way to structure your site and introduce a collection of articles. It can also help you to [get more traffic](http://www.wordtracker.com/academy/website-structure).
 
@@ -52,7 +52,7 @@ Have a look at the files that define the articles that follow, and you should fi
       summary = <<-EOF
 This would be an article on #{fruit} if I'd bothered to research it.
 EOF
-      file = File.join(Nesta::Configuration.page_path, "#{fruit.downcase}.mdown")
+      file = File.join(Nesta::Config.page_path, "#{fruit.downcase}.mdown")
       location = "You can change this article by editing `#{file}`."
       factory.create_article(
         :heading => "The benefits of #{fruit}",
@@ -68,7 +68,7 @@ EOF
     end
     
     summary = <<-EOF
-You can edit this article by opening `#{File.join(Nesta::Configuration.page_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
+You can edit this article by opening `#{File.join(Nesta::Config.page_path, 'example.mdown')}` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
     EOF
 
     factory.create_article(
@@ -84,7 +84,7 @@ You can edit this article by opening `#{File.join(Nesta::Configuration.page_path
 
 Checkout the [Markdown Cheat Sheet](http://effectif.com/articles/markdown-cheat-sheet) to find out how to format your text to maximum effect.
 
-If you want to add attachments to your pages you can drop them in the `#{Nesta::Configuration.attachment_path}` directory and refer to them using a URL such as [/attachments/my-file.png](/attachments/my-file.png) (`my-file.png` doesn't exist, but you get the idea). You can obviously refer to inline images using the same URL structure.
+If you want to add attachments to your pages you can drop them in the `#{Nesta::Config.attachment_path}` directory and refer to them using a URL such as [/attachments/my-file.png](/attachments/my-file.png) (`my-file.png` doesn't exist, but you get the idea). You can obviously refer to inline images using the same URL structure.
       EOF
     )
   end

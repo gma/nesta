@@ -1,4 +1,4 @@
-- if short_name = Nesta::Configuration.disqus_short_name
+- if short_name = Nesta::Config.disqus_short_name
   #disqus_thread
     - if Sinatra::Application.environment == :development
       %script{ :type => "text/javascript" }

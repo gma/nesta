@@ -11,7 +11,7 @@ class FileModel
   attr_reader :filename, :mtime
 
   def self.model_path(basename = nil)
-    Nesta::Configuration.content_path(basename)
+    Nesta::Config.content_path(basename)
   end
   
   def self.find_all
@@ -57,7 +57,7 @@ class FileModel
   end
   
   def abspath
-    prefix = File.dirname(@filename).sub(Nesta::Configuration.page_path, "")
+    prefix = File.dirname(@filename).sub(Nesta::Config.page_path, "")
     File.join(prefix, permalink)
   end
   
@@ -117,7 +117,7 @@ end
 class Page < FileModel
   module ClassMethods
     def model_path(basename = nil)
-      Nesta::Configuration.page_path(basename)
+      Nesta::Config.page_path(basename)
     end
     
     def find_by_path(path)
@@ -129,7 +129,7 @@ class Page < FileModel
     end
     
     def menu_items
-      menu = Nesta::Configuration.content_path("menu.txt")
+      menu = Nesta::Config.content_path("menu.txt")
       pages = []
       if File.exist?(menu)
         File.open(menu).each { |line| pages << Page.load(line.chomp) }
@@ -230,7 +230,7 @@ class Page < FileModel
       paths.select do |path|
         FORMATS.detect do |format|
           File.exist?(
-              File.join(Nesta::Configuration.page_path, "#{path}.#{format}"))
+              File.join(Nesta::Config.page_path, "#{path}.#{format}"))
         end
       end
     end

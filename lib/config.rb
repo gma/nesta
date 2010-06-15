@@ -4,9 +4,12 @@ require "rubygems"
 require "sinatra"
 
 module Nesta
-  class Configuration
-
-    @@yaml = nil
+  class Config
+    @yaml = nil
+    
+    class << self
+      attr_accessor :yaml
+    end
 
     def self.cache
       if Sinatra::Application.environment == :test
@@ -36,6 +39,10 @@ module Nesta
       configuration["author"]
     end
     
+    def self.theme
+      configuration["theme"]
+    end
+    
     def self.google_analytics_code
       get(environment)["google_analytics_code"]
     end
@@ -63,7 +70,7 @@ module Nesta
     
       def self.configuration
         file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
-        @@yaml ||= YAML::load(IO.read(file))
+        self.yaml ||= YAML::load(IO.read(file))
       end
       
       def self.get(key, default = {})

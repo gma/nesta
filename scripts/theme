@@ -1,0 +1,116 @@
+#!/bin/sh
+
+THEME_DIR="$(dirname $0)/../themes"
+mkdir -p "$THEME_DIR"
+THEME_DIR="$(cd $THEME_DIR; pwd)"
+
+usage()
+{
+    cat <<EOF >&2
+Usage: $(basename $0) (install <url>|enable <name>|create <name>)
+
+COMMANDS
+    
+    install <url>   Installs a theme from a Git repository
+    enable <name>   Selects the specified theme in config.yml
+                    (the theme should already be installed)
+    create <name>   Creates a directory containing some templated files
+
+EOF
+    exit 1
+}
+
+log()
+{
+    local message="$1"
+    echo "$message"
+}
+
+error()
+{
+    local message="$1"
+    echo "ERROR: $message" 1>&2
+    exit 1
+}
+
+theme_name_from_url()
+{
+    local url=$1
+    echo $(basename $url) | sed 's,nesta-theme-,,' | sed 's,\.git$,,'
+}
+
+enable()
+{
+    local name=$1
+    local config="config/config.yml"
+    if [ -f $config ]; then
+        log "Enabling $name theme in config/config.yml"
+        ruby -p -i -e "\$_.gsub!(/^#?\\s*theme:.*/, 'theme: $name')" $config
+    fi
+}
+
+install()
+{
+    local url=$1
+    [ -z "$url" ] && usage
+    local name="$(theme_name_from_url $url)"
+    log "Cloning theme into themes/$name"
+    git clone $url $THEME_DIR/$name
+    log "Removing theme's own .git directory"
+    rm -rf $THEME_DIR/$name/.git
+    enable $name
+}
+
+create_readme()
+{
+    local name="$1"
+    local path="$2"
+    cat > "$path/README.md" <<EOF
+$name Nesta theme
+$(echo $name | sed 's,.,=,'g)============
+
+$name is a theme for the Nesta, a [Ruby CMS](nesta), designed by
+<insert your name here>.
+
+[nesta]: http://effectif.com/nesta
+EOF
+}
+
+create_app_file()
+{
+    local path="$1"
+    cat > "$path/app.rb" <<EOF
+# Use the app.rb file to load Ruby code, modify or extend the models, or
+# do whatever else you fancy when the theme is loaded.
+
+# This code tells Sinatra to look for assets in the theme's public folder,
+# instead of Nesta's default.
+#
+# module Nesta
+#   class App
+#     set :public, File.join(File.dirname(__FILE__), "public")
+#   end
+# end
+EOF
+}
+
+create()
+{
+    local name=$1
+    [ -z "$name" ] && usage
+    local path="${THEME_DIR#$(pwd)/}/$name"
+    [ -d "$path" ] && error "$path already exists"
+    mkdir "$path"
+    create_readme "$name" "$path"
+    create_app_file "$path"
+    for dir in public views; do mkdir -p "$path/$dir"; done
+}
+
+## Main program
+
+COMMAND=$1
+shift
+[ -z "$COMMAND" ] && usage
+
+mkdir -p $THEME_DIR
+$COMMAND $*
