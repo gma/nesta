@@ -10,7 +10,9 @@ module Nesta
     end
     
     def self.load_theme_app
-      require File.join(Nesta::Path.themes, Nesta::Config.theme, "app") unless Nesta::Config.theme.nil?
+      if Nesta::Config.theme
+        require File.join(Nesta::Path.themes, Nesta::Config.theme, "app")
+      end
     rescue LoadError
     end
 
