@@ -7,13 +7,13 @@ module Nesta
   class Config
     @yaml = nil
 
-    @per_environment_settings = %w[cache content google_analytics_code]
-    @simple_settings = %w[
+    @top_level_settings = %w[
           title subtitle description keywords theme disqus_short_name]
-    @all_settings = @per_environment_settings + @simple_settings
+    @per_environment_settings = %w[cache content google_analytics_code]
+    @settings = @per_environment_settings + @top_level_settings
         
     class << self
-      attr_accessor :all_settings, :per_environment_settings, :simple_settings
+      attr_accessor :top_level_settings, :per_environment_settings, :settings
       attr_accessor :yaml
       
       Nesta::Config.per_environment_settings.each do |setting|
@@ -22,7 +22,7 @@ module Nesta
         end
       end
       
-      Nesta::Config.simple_settings.each do |setting|
+      Nesta::Config.top_level_settings.each do |setting|
         define_method(setting) do
           ENV["NESTA_#{setting.upcase}"] || configuration[setting]
         end

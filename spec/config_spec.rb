@@ -10,7 +10,7 @@ describe "Config" do
   
   describe "when only defined in config.yml" do
     it "should read simple configuration from config.yml" do
-      Nesta::Config.simple_settings.each do |setting|
+      Nesta::Config.top_level_settings.each do |setting|
         stub_config_key(setting, "#{setting} in config.yml")
         Nesta::Config.send(setting).should == "#{setting} in config.yml"
       end
@@ -31,7 +31,7 @@ describe "Config" do
   
   describe "when simple settings defined in ENV" do
     before(:each) do
-      settings = Nesta::Config.simple_settings + \
+      settings = Nesta::Config.top_level_settings + \
           Nesta::Config.per_environment_settings
       settings.each do |setting|
         variable = "NESTA_#{setting.upcase}"
