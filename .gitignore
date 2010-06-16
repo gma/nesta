@@ -4,6 +4,6 @@
 .rvmrc
 config/config.yml
 config/deploy.rb
-content
+#content
 db/*.db
 public/cache
