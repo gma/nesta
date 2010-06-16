@@ -8,56 +8,56 @@ describe "Config" do
     ENV.keys.each { |variable| ENV.delete(variable) if variable =~ /NESTA_/ }
   end
   
-  describe "when only defined in config.yml" do
-    it "should read simple configuration from config.yml" do
-      Nesta::Config.top_level_settings.each do |setting|
-        stub_config_key(setting, "#{setting} in config.yml")
-        Nesta::Config.send(setting).should == "#{setting} in config.yml"
-      end
+  describe "when settings defined in ENV" do
+    before(:each) do
+      @title = "Title from ENV"
+      ENV["NESTA_TITLE"] = @title
+    end
+    
+    it "should never try and access config.yml" do
+      stub_config_key("subtitle", "Subtitle in YAML file")
+      Nesta::Config.subtitle.should be_nil
     end
 
-    it "should read author config from config.yml" do
-      @author_name = "Barry Chuckle"
-      stub_config_key("author", { "name" => @author_name })
-      Nesta::Config.author["name"].should == @author_name
-      Nesta::Config.author["email"].should be_nil
-    end
-    
-    it "should read environment specific config from config.yml" do
-      stub_env_config_key("cache", true)
-      Nesta::Config.cache.should be_true
-    end
-  end
-  
-  describe "when simple settings defined in ENV" do
-    before(:each) do
-      settings = Nesta::Config.top_level_settings + \
-          Nesta::Config.per_environment_settings
-      settings.each do |setting|
-        variable = "NESTA_#{setting.upcase}"
-        ENV[variable] = "#{setting} from ENV"
-      end
-    end
-    
     it "should override config.yml" do
-      assert ENV.keys.grep(/^NESTA_/).size > 0
-      ENV.keys.grep(/^NESTA_/).each do |variable|
-        method = variable.sub("NESTA_", "").downcase
-        Nesta::Config.send(method).should == ENV[variable]
-      end
+      stub_config_key("title", "Title in YAML file")
+      Nesta::Config.title.should == @title
+    end
+    
+    it "should set author hash from ENV" do
+      name = "Name from ENV"
+      uri = "URI from ENV"
+      ENV["NESTA_AUTHOR__NAME"] = name
+      ENV["NESTA_AUTHOR__URI"] = uri
+      Nesta::Config.author["name"].should == name
+      Nesta::Config.author["uri"].should == uri
+      Nesta::Config.author["email"].should be_nil
     end
   end
   
-  describe "when nested author settings defined in ENV" do
+  describe "when settings only defined in config.yml" do
     before(:each) do
-      @author_name = "Paul Chuckle"
-      ENV["NESTA_AUTHOR__NAME"] = @author_name
+      @title = "Title in YAML file"
+      stub_config_key("subtitle", @title)
     end
     
-    it "should override author in config.yml" do
-      Nesta::Config.author["name"].should == @author_name
+    it "should read configuration from YAML" do
+      Nesta::Config.subtitle.should == @title
+    end
+
+    it "should set author hash from YAML" do
+      name = "Name from YAML"
+      uri = "URI from YAML"
+      stub_config_key("author", { "name" => name, "uri" => uri })
+      Nesta::Config.author["name"].should == name
+      Nesta::Config.author["uri"].should == uri
       Nesta::Config.author["email"].should be_nil
-      Nesta::Config.author["uri"].should be_nil
+    end
+    
+    it "should override top level settings with RACK_ENV specific settings" do
+      stub_config_key("content", "general/path")
+      stub_env_config_key("content", "rack_env/path")
+      Nesta::Config.content.should == "rack_env/path"
     end
   end
 end

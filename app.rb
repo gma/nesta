@@ -10,7 +10,7 @@ require "lib/models"
 require "lib/path"
 require "lib/overrides"
 
-set :cache_enabled, Nesta::Config.cache
+set :cache_enabled, (Nesta::Config.cache == "true")
 
 helpers do
   def set_from_config(*variables)

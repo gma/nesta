@@ -4,7 +4,7 @@ module ConfigSpecHelper
 
   def initialise_config
     @config = {}
-    Nesta::Config.stub!(:configuration).and_return(@config)
+    Nesta::Config.stub!(:yaml_conf).and_return(@config)
   end
 
   def stub_config_key(key, value)

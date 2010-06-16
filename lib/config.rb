@@ -5,26 +5,22 @@ require "sinatra"
 
 module Nesta
   class Config
+    @settings = %w[
+      title subtitle description keywords theme disqus_short_name
+      cache content google_analytics_code
+    ]
     @yaml = nil
-
-    @top_level_settings = %w[
-          title subtitle description keywords theme disqus_short_name]
-    @per_environment_settings = %w[cache content google_analytics_code]
-    @settings = @per_environment_settings + @top_level_settings
-        
+    
     class << self
-      attr_accessor :top_level_settings, :per_environment_settings, :settings
-      attr_accessor :yaml
+      attr_accessor :settings
+      attr_accessor :yaml_conf
       
-      Nesta::Config.top_level_settings.each do |setting|
-        define_method(setting) do
-          ENV["NESTA_#{setting.upcase}"] || configuration[setting]
-        end
-      end
-      
-      Nesta::Config.per_environment_settings.each do |setting|
-        define_method(setting) do
-          ENV["NESTA_#{setting.upcase}"] || get(environment)[setting]
+      def method_missing(method, *args)
+        setting = method.to_s
+        if settings.include?(setting)
+          ENV["NESTA_#{setting.upcase}"] || from_yaml(setting)
+        else
+          super
         end
       end
     end
@@ -35,7 +31,7 @@ module Nesta
         variable = "NESTA_AUTHOR__#{setting.upcase}"
         ENV[variable] && environment_config[setting] = ENV[variable]
       end
-      environment_config.empty? ? configuration["author"] : environment_config
+      environment_config.empty? ? from_yaml("author") : environment_config
     end
     
     def self.content_path(basename = nil)
@@ -51,17 +47,19 @@ module Nesta
     end
     
     private
-      def self.environment
-        Sinatra::Application.environment.to_s
-      end
-    
-      def self.configuration
-        file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
-        self.yaml ||= YAML::load(IO.read(file))
+      def self.can_read_yaml?
+        ENV.keys.grep(/^NESTA/).empty?
       end
       
-      def self.get(key, default = {})
-        configuration[key].nil? ? default : configuration[key]
+      def self.from_yaml(setting)
+        return nil unless can_read_yaml?
+        if self.yaml_conf.nil?
+          file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
+          self.yaml_conf = YAML::load(IO.read(file))
+        else
+          rack_env_conf = self.yaml_conf[Sinatra::Application.environment.to_s]
+          (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
+        end
       end
       
       def self.get_path(dirname, basename)
