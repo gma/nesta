@@ -34,32 +34,40 @@ subtitle: "(change this text in config/config.yml)"
 #
 # disqus_short_name: mysite
 
-# The remaining configuration settings are set separately in development
-# (i.e. when running on your local workstation) and production (when running
-# on your live server).
-#
 # cache
 #     Set it to true if you'd like Nesta to cache your pages in ./public.
 #     Useful if you're deploying Nesta with a proxy server such as Nginx,
 #     but not in the least bit helpful if your pages are dynamic, or you're
 #     deploying Nesta to Heroku.
 #
+cache: false
+
 # content
 #     The root directory where nesta will look for your article files.
 #     Should contain "pages" and "attachments" subdirectories that contain
 #     your actual content and the (optional) menu.txt file that links to your
 #     main category pages.
 #
+content: content
+
 # google_analytics_code
 #     Set this if you want Google Analytics to track traffic on your site.
-#     Probably best not to set it in development mode.
+#     Probably best not to set a default value, but to set it in production.
 #
-development:
-  cache: false
-  content: content
+#     The production settings are used if you're deploying to Heroku, so
+#     scroll down a bit to set it in production even if you're not deploying
+#     to your own server.
+#
+# google_analytics_code: "UA-???????-?"
 
-production:
-  cache: false
-  # content: /var/apps/nesta/shared/content
-  content: content
-  # google_analytics_code: "UA-???????-?"
+# Overriding "cache" and "content" in production is recommended if you're
+# deploying Nesta to your own server (but see the deployment documentation
+# on the Nesta site). Setting google_analytics_code in production is
+# recommended regardless of how you're deploying (if you have a GA account!).
+#
+# Don't forget to uncomment the "production:" line too...
+
+# production:
+#   cache: true    
+#   content: /var/apps/nesta/shared/content
+#   google_analytics_code: "UA-???????-?"
