@@ -16,15 +16,15 @@ module Nesta
       attr_accessor :top_level_settings, :per_environment_settings, :settings
       attr_accessor :yaml
       
-      Nesta::Config.per_environment_settings.each do |setting|
-        define_method(setting) do
-          ENV["NESTA_#{setting.upcase}"] || get(environment)[setting]
-        end
-      end
-      
       Nesta::Config.top_level_settings.each do |setting|
         define_method(setting) do
           ENV["NESTA_#{setting.upcase}"] || configuration[setting]
+        end
+      end
+      
+      Nesta::Config.per_environment_settings.each do |setting|
+        define_method(setting) do
+          ENV["NESTA_#{setting.upcase}"] || get(environment)[setting]
         end
       end
     end
