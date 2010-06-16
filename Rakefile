@@ -23,13 +23,19 @@ end
 namespace :heroku do
   desc "Set Heroku config vars from config.yml"
   task :config do
-    settings = Nesta::Config.settings.map do |variable|
-      %Q{NESTA_#{variable.upcase}="#{Nesta::Config.send(variable)}"}
+    settings = {}
+    Nesta::Config.settings.map do |variable|
+      value = Nesta::Config.send(variable)
+      settings["NESTA_#{variable.upcase}"] = value unless value.nil?
     end
-    settings << %w[name uri email].map do |author_var|
-      %Q{NESTA_AUTHOR__#{author_var.upcase}="#{Nesta::Config.author[author_var]}"}
+    if Nesta::Config.author
+      %w[name uri email].map do |author_var|
+        value = Nesta::Config.author[author_var]
+        settings["NESTA_AUTHOR__#{author_var.upcase}"] = value unless value.nil?
+      end
     end
-    `heroku config:add #{settings.join(" ")}`
+    params = settings.map { |k, v| %Q{#{k}="#{v}"} }.join(" ")
+    system("heroku config:add #{params}")
   end
 end
 
