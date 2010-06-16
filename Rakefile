@@ -20,6 +20,19 @@ class Factory
   include ModelFactory
 end
 
+namespace :heroku do
+  desc "Set Heroku config vars from config.yml"
+  task :config do
+    settings = Nesta::Config.all_settings.map do |variable|
+      %Q{NESTA_#{variable.upcase}="#{Nesta::Config.send(variable)}"}
+    end
+    settings << %w[name uri email].map do |author_var|
+      %Q{NESTA_AUTHOR__#{author_var.upcase}="#{Nesta::Config.author[author_var]}"}
+    end
+    `heroku config:add #{settings.join(" ")}`
+  end
+end
+
 namespace :setup do
   desc "Create the content directory"
   task :content_dir do
