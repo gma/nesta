@@ -38,18 +38,28 @@ subtitle: "(change this text in config/config.yml)"
 # (i.e. when running on your local workstation) and production (when running
 # on your live server).
 #
-# content - the root directory where nesta will look for your article files.
-# Should contain "articles", "categories" and "attachments" subdirectories
-# that contain your actual content.
+# cache
+#     Set it to true if you'd like Nesta to cache your pages in ./public.
+#     Useful if you're deploying Nesta with a proxy server such as Nginx,
+#     but not in the least bit helpful if your pages are dynamic, or you're
+#     deploying Nesta to Heroku.
 #
-# google_analytics_code - set this if you want Google Analytics to track
-# traffic on your site. Probably best not to set it in development mode.
+# content
+#     The root directory where nesta will look for your article files.
+#     Should contain "pages" and "attachments" subdirectories that contain
+#     your actual content and the (optional) menu.txt file that links to your
+#     main category pages.
+#
+# google_analytics_code
+#     Set this if you want Google Analytics to track traffic on your site.
+#     Probably best not to set it in development mode.
 #
 development:
   cache: false
   content: content
 
 production:
-  cache: true
-  content: /var/apps/nesta/shared/content
+  cache: false
+  # content: /var/apps/nesta/shared/content
+  content: content
   # google_analytics_code: "UA-???????-?"
