@@ -6,53 +6,40 @@ require "sinatra"
 module Nesta
   class Config
     @yaml = nil
-    
+
+    @per_environment_settings = %w[cache content google_analytics_code]
+    @simple_settings = %w[
+          title subtitle description keywords theme disqus_short_name]
+    @all_settings = @per_environment_settings + @simple_settings
+        
     class << self
+      attr_accessor :all_settings, :per_environment_settings, :simple_settings
       attr_accessor :yaml
-    end
-
-    def self.cache
-      if Sinatra::Application.environment == :test
-        false
-      else
-        get(environment)["cache"] || false
+      
+      Nesta::Config.per_environment_settings.each do |setting|
+        define_method(setting) do
+          ENV["NESTA_#{setting.upcase}"] || get(environment)[setting]
+        end
       end
-    end
-
-    def self.title
-      configuration["title"]
-    end
-    
-    def self.subtitle
-      configuration["subtitle"]
-    end
-    
-    def self.description
-      configuration["description"]
-    end
-    
-    def self.keywords
-      configuration["keywords"]
+      
+      Nesta::Config.simple_settings.each do |setting|
+        define_method(setting) do
+          ENV["NESTA_#{setting.upcase}"] || configuration[setting]
+        end
+      end
     end
     
     def self.author
-      configuration["author"]
-    end
-    
-    def self.theme
-      configuration["theme"]
-    end
-    
-    def self.google_analytics_code
-      get(environment)["google_analytics_code"]
-    end
-    
-    def self.disqus_short_name
-      configuration["disqus_short_name"]
+      environment_config = {}
+      %w[name uri email].each do |setting|
+        variable = "NESTA_AUTHOR__#{setting.upcase}"
+        ENV[variable] && environment_config[setting] = ENV[variable]
+      end
+      environment_config.empty? ? configuration["author"] : environment_config
     end
     
     def self.content_path(basename = nil)
-      get_path(get(environment)["content"], basename)
+      get_path(content, basename)
     end
     
     def self.page_path(basename = nil)
