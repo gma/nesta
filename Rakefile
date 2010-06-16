@@ -23,6 +23,7 @@ end
 namespace :heroku do
   desc "Set Heroku config vars from config.yml"
   task :config do
+    Sinatra::Application.environment = ENV["RACK_ENV"] || "production"
     settings = {}
     Nesta::Config.settings.map do |variable|
       value = Nesta::Config.send(variable)
