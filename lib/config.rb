@@ -56,10 +56,9 @@ module Nesta
         if self.yaml_conf.nil?
           file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
           self.yaml_conf = YAML::load(IO.read(file))
-        else
-          rack_env_conf = self.yaml_conf[Sinatra::Application.environment.to_s]
-          (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
         end
+        rack_env_conf = self.yaml_conf[Sinatra::Application.environment.to_s]
+        (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
       end
       
       def self.get_path(dirname, basename)
