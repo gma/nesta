@@ -1,26 +1,7 @@
+require File.join(File.dirname(__FILE__), "config_spec_helpers")
+
 module ModelFactory
-
-  FIXTURE_DIR = File.join(File.dirname(__FILE__), "fixtures")
-
-  def stub_config_key(key, value)
-    @config ||= {}
-    @config[key] = value
-  end
-  
-  def stub_env_config_key(key, value)
-    @config ||= {}
-    @config["test"] ||= {}
-    @config["test"][key] = value
-  end
-
-  def stub_configuration
-    stub_config_key("title", "My blog")
-    stub_config_key("subtitle", "about stuff")
-    stub_config_key("description", "great web site")
-    stub_config_key("keywords", "home, page")
-    stub_env_config_key("content", FIXTURE_DIR)
-    Nesta::Config.stub!(:configuration).and_return(@config)
-  end
+  include ConfigSpecHelper
 
   def create_page(options)
     extension = options[:ext] || :mdown
@@ -64,7 +45,7 @@ module ModelFactory
   end
   
   def remove_fixtures
-    FileUtils.rm_r(FIXTURE_DIR, :force => true)
+    FileUtils.rm_r(ConfigSpecHelper::FIXTURE_DIR, :force => true)
   end
   
   def create_content_directories
