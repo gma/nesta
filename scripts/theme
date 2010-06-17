@@ -78,7 +78,8 @@ EOF
 
 create_app_file()
 {
-    local path="$1"
+    local name="$1"
+    local path="$2"
     cat > "$path/app.rb" <<EOF
 # Use the app.rb file to load Ruby code, modify or extend the models, or
 # do whatever else you fancy when the theme is loaded.
@@ -99,7 +100,7 @@ create()
     [ -d "$path" ] && error "$path already exists"
     mkdir "$path"
     create_readme "$name" "$path"
-    create_app_file "$path"
+    create_app_file "$name" "$path"
     for dir in public views; do mkdir -p "$path/$dir"; done
 }
 
