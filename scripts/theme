@@ -87,6 +87,8 @@ create_app_file()
 # This code tells Nesta to look for assets in the theme's public folder.
 # Highly recommended if your theme contains images or JavaScript.
 #
+# Put your assets in public/$name.
+#
 # use Rack::Static, :urls => ["/$name"], :root => "themes/$name/public"
 
 EOF
@@ -101,7 +103,7 @@ create()
     mkdir "$path"
     create_readme "$name" "$path"
     create_app_file "$name" "$path"
-    for dir in public views; do mkdir -p "$path/$dir"; done
+    for dir in "public/$name" views; do mkdir -p "$path/$dir"; done
 }
 
 ## Main program
