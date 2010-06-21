@@ -6,30 +6,27 @@
     &gt;
   = @page.heading
 
-#sidebar
-  = haml :categories, :layout => false
-  = haml :feed, :layout => false
-
 #content
   - if @page.date
     .date= format_date(@page.date)
+
   ~ @page.to_html
 
-  - @page.pages.each do |page|
-    = haml :summary, :layout => false, :locals => { :article => page, :heading => :h3 }
+  = haml :summaries, :layout => false, :locals => { :pages => @page.pages, :heading => :h3 }
 
   - unless @page.articles.empty?
-    %h2.articles= "Articles on #{@page.heading}"
-  
-  - @page.articles.each do |article|
-    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h3 }
+    %h2= "Articles on #{@page.heading}"
+    = haml :summaries, :layout => false, :locals => { :pages => @page.articles, :heading => :h3 }
 
   - unless @page.categories.empty?
     .categories
-      Filed under
+      %strong Categories:
       - @page.categories.each do |category|
         %a{ :href => category.abspath }= category.heading
 
-  = haml :social, :layout => false
-  = haml :feed, :locals => { :title => @site_title }, :layout => false
   = haml :comments, :layout => false
+
+#sidebar
+  = haml :categories, :layout => false
+  = haml :feed, :layout => false
+  = haml :social, :layout => false

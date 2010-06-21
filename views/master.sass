@@ -1,261 +1,236 @@
-!base_color = #555
-!pale_color = #777
-!pre_background = #DFF6FB
-!code_color = !pre_background - 140
-!pre_border = !pre_background - 24
+// Variables
 
-!border = 1px "solid" #ccc
+$content-width: 37em
 
-!sans_serif = "Trebuchet MS, Tahoma, Verdana, sans-serif"
-!serif = "Georgia, serif"
+$tint: #D3D4D8
+$base-color: $tint - #888
+$dark-tint: $tint - #333
+$background-tint: $tint + #222
+$border-color: $tint + #111
+
+$h1-scale: 2.18
+$h2-scale: 1.64
+$h3-scale: 1.45
+$h4-scale: 1.18
+
+// Reset
 
 *
   margin: 0
   padding: 0
 
-#container
-  margin: 1em 1em 2em 1em
-  min-width: 54em
+// Typography
 
-#wrapper
-  width: 52em
+$base-scale: 0.88
+$base-font: $base-scale * 1em
+$vertical-rhythm: 1.5em
+$base-vertical-margin: 1.5em
+
+@mixin adjust-font-size($scale, $top-weight: 1, $bottom-weight: 1)
+  $average-margin: $base-vertical-margin / $scale
+  margin-top: $average-margin * $top-weight
+  margin-bottom: $average-margin * $bottom-weight
+  
+  $line-height: $vertical-rhythm / $scale
+  @if $line-height < 1
+    line-height: $line-height * 2
+  @else
+    line-height: $line-height
+
+  font-size: 100% * $scale
+
+@mixin border-radius($radius)
+  -webkit-border-radius: $radius
+  -moz-border-radius: $radius
+  border-radius: $radius
+
+body
+  font: $base-font "Helvetica Nueue", Helvetica, sans-serif
+  line-height: $vertical-rhythm
+  color: $base-color
+
+h1, h2, h3, h4, h5, h6
+  font-family: "Helvetica Nueue", Helvetica, sans-serif
+h1
+  @include adjust-font-size($h1-scale, 0.6, 0.4)
+  font-weight: normal
+h2
+  @include adjust-font-size($h2-scale, 1.5, 0.5)
+  font-weight: normal
+h3
+  @include adjust-font-size($h3-scale, 1.5, 0.5)
+  font-weight: normal
+h4
+  @include adjust-font-size($h4-scale, 2, 0)
+
+ol,
+p,
+pre,
+ul
+  margin: 0
+  margin-bottom: $base-vertical-margin
+
+li
+  @include adjust-font-size(1, 0, 0)
+
+pre
+  padding: ($vertical-rhythm / 2) 1em
+  overflow: auto
+
+img
+  border: none
+
+// Layout
+
+div#container
+  width: 54em
+  margin: 0 auto
+
+  div#header
+    padding: 1em
+  
+  div.breadcrumb
+    padding: 0.5em 1.1em
+    
+    font-size: 0.909em
+  
+  div#content
+    width: $content-width
+    float: left
+    padding: 1px 1em
+
+  div#sidebar
+    width: 12em
+    margin-left: 40em
+    padding: 1px 1em
+  
+  div#footer
+    clear: both
+    padding: 0 1em
+    p
+      width: $content-width
+      margin: 0
+      padding: 1em 0
+      text-align: right
+
+// The visuals
+
+@mixin dark-tint-text
+  color: $dark-tint
+  text-shadow: -1px -1px 1px white
+
+body
+  background: $background-tint
+  
+  &.home h1
+    @include adjust-font-size($h1-scale, 1, -1)
+
+div#header
+  p.title,
+  p.subtitle
+    margin: 0
+    line-height: 1.2em
+    font-weight: normal
+  p.title
+    font-size: 327%
+    text-shadow: -1px 2px 1px $tint
+  p.subtitle
+    font-size: 1em
+    @include dark-tint-text
+
+div#content
   position: relative
-  left: 50%
-  margin-left: -26em
+  @include border-radius(0.5em)
+  background-color: white
 
-#content
-  margin-right: 13em
-  border-right: 1px solid #ccc
-  padding-right: 1em
-
-body.home #sidebar
-  margin-top: 0.8em
-
-#sidebar
-  width: 12em
-  float: right
-  
-  margin-top: 1.3em
-  margin-bottom: 1em
+  div.date
+    position: absolute
+    right: 40em
+    top: $vertical-rhythm * 3
+    text-align: right
+    @include dark-tint-text
   
   h2
-    margin-top: 2em
-    &:first-child
-      margin-top: 0
+    background-color: $background-tint - #111
+    background-color: rgba($background-tint - #222, 0.5)
+    margin-left: (-2em / $h2-scale) * $base-scale
+    margin-right: 0
+    padding-left: 1em
+    padding-right: 1em
   
-  h2, ol, p, ul
-    color = !pale_color
-    font-family = !sans_serif
-    font-size: 90%
+  ol,
+  ul
+    margin-left: 1.5em
 
-  h2
-    color = !base_color
+  img
+    max-width: 100%
 
-  ol, ul
-    margin: 1em 0
-    padding: 0
-    
-    list-style: none
-    
+  code,
+  pre
+    background-color: $background-tint
+  code
+    padding: 1px 3px
+  pre
+    border-left: 0.4em solid $border-color
+
+  // Pages/articles assigned to this page
+  ol.pages
+    margin-left: 0
     li
-      margin: 0.8em 0
+      position: relative
 
-    a:hover
-      color: white
-      background: #77d
-      text-decoration: none
+      margin-left: -1.5em
+      padding-left: 1.5em
+      background-color: rgba(255, 255, 255, 0.8)
+
+      list-style: none
+
+      h2
+        margin-left: 0
+        margin-right: 0
+        padding: 0
+        background: none
+
+      div.date
+        top: $vertical-rhythm * 2.5
+        right: 39em
+      h3 + div.date
+        top: $vertical-rhythm * 1.5
+
+  p.read_more
+    @include adjust-font-size(0.909, 0, 0)
   
-  div.feed
-    margin: 1.5em 0
-    border-top = !border
-    border-bottom = !border
-
-p.social,
-div.feed
-  color = !pale_color
-  font-family = !sans_serif
-  font-size: 90%
-
-div.feed
-  margin: 0.5em 0
-  padding-top: 1.5em
-  padding-bottom: 1.5em
+  div.categories
+    margin-left: -1em
+    margin-right: -1em
+    border-top: 1px solid $background-tint - #0a0a0a
+    padding: 0.5em 1em
+    background: $background-tint
+    a
+      margin-right: 0.25em
   
-  a
+div#sidebar
+  @include border-radius(0.5em)
+  background-color: rgba(255, 255, 255, 0.9)
+  
+  h2
+    @include adjust-font-size(1, 1.35, 0.6)
+    font-weight: bold
+  ul#menu
+    list-style: none
+
+  div.feed,
+  div.social
+    margin: $base-vertical-margin 0
+  
+  div.feed a
     padding: 6px 0 6px 36px
     background: url(/feed-icon.png) no-repeat left center
 
-h1, h2, h3, h4, h5, h6, p, div.breadcrumb
-  color: #333
-
-  font-family = !sans_serif
-
-h1, h2, h3, h4, h5, h6
-  a:hover
-    text-decoration: none
-
-body.home
-  h1
-    padding-bottom: 0.5em
-    border-bottom: #aaa 1px solid
-
-    color = !base_color
-
-    text-align: left
-    font-size: 300%
-
-h2.articles
-  margin-bottom: -0.2em
-  border-top = !border
-  padding-top: 0.3em
-  
-  font-size: 120%
-
-div.breadcrumb
-  margin-bottom: 2em
-  
-  font-size: 80%
-  font-family = !sans_serif
-  
-div.date
-  margin-top: 1.5em
-  
-  font-family = !sans_serif
-  font-size: 75%
-  
-  color = !base_color
-
-#content
-  p.read_more
-    text-align: right
-    font-family = !sans_serif
-    font-size: 90%
-
-  img
-    margin: 0.75em 0 1.5em 0
-    border: 1px solid #ccc
-    padding: 2px
-
-  blockquote
-    margin: 1.5em 5%
-    padding: 0.75em
-    
-    background = #eee
-    
-    p
-      margin: 0
-
-    cite
-      display: block
-      
-      text-align: right
-  
-  div.categories
-    margin-top: 2em
-    padding: 0.8em 8px 0.85em 38px
-    
-    background: #eee url(/category-icon.png) no-repeat 8px 51%
-    
-    color = !pale_color
-    font-family = !sans_serif
-    font-size: 80%
-    
-    a
-      margin-left: 0.5em
-  
-  .social
-    float: right
-    width: auto
-    
-    margin: 0
-    padding-top: 1.2em
-    padding-bottom: 1.5em
-  
-    vertical-align: middle
-  
+  div.social
     img
-      margin: 0 0 0 5px
-      border: none
-  
-  code, pre
-    color = !code_color
-  
-  pre
-    margin: 1.5em 0
-    border-left = 3px "solid" !pre_border
-    padding: 0.7em
-
-    background-color = !pre_background
-
-    overflow: auto
-
-    code
-      border: none
-      padding: 0
-  
-  #disqus_thread
-    margin-top: 0.5em
-    border-top = 3px "solid" #eee
-    padding-top: 0em
-
-    #dsq-content .dsq-options
-      background: none
-
-h1
-  margin: 0 0 0.5em 0
-  
-  font-size: 220%
-  letter-spacing: -1px
-
-  small
-    display: block
-
-    font-size: 40%
-    letter-spacing: 0
-
-h2, h3, h4, h5, h6
-  margin: 1em 0 0.5em 0
-  
-h2
-  font-size: 175%
-  
-h3
-  font-size: 130%
-
-h4
-  font-size: 110%
-
-ol, ol li, p, pre, ul, ul li
-  margin-bottom: 1em
-
-ol li, ul li
-  margin-bottom: 0.75em
-
-ol, p, ul
-  font-family = !serif
-  line-height: 135%
-  color: black
-
-ul, ol
-  padding-left: 2.5em
-
-a
-  color: #66f
-  &:visited
-    color: #44a
-  &:hover
-    color: #66c
-
-#footer
-  clear: both
-  
-  margin-top: 2em
-  border-top = !border
-  padding-top: 0.5em
-
-  p
-    text-align: right
-    font-family = !sans_serif
-    font-size: 70%
-
-    color = !pale_color
+      margin-right: 0.25em
+      padding: 2px
+      &:hover
+        padding: 1px
+        border: 1px solid $tint

@@ -1,11 +1,7 @@
-%h1
-  = @heading
-  %small= @subtitle
+#content
+  %h1 Recent articles
+  = haml :summaries, :layout => false, :locals => { :pages => @articles, :heading => :h2 }
 
 #sidebar
   = haml :categories, :layout => false
   = haml :feed, :layout => false
-
-#content
-  - @articles.each do |article|
-    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h2 }

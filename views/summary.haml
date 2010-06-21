@@ -1,8 +1,0 @@
-- haml_tag heading do
-  %a{ :href => article.abspath }= article.heading
-- if article.summary.nil? || article.summary.empty?
-  ~ article.body
-- else
-  ~ article.summary
-  %p.read_more
-    %a{ :href => article.abspath }= article.read_more

@@ -1,0 +1,14 @@
+- unless pages.empty?
+  %ol.pages
+    - pages.each do |page|
+      %li
+        - haml_tag heading do
+          %a{ :href => page.abspath }= page.heading
+        - if page.date
+          .date= format_date(page.date)
+        - if page.summary.nil? || page.summary.empty?
+          ~ page.body
+        - else
+          ~ page.summary
+          %p.read_more
+            %a{ :href => page.abspath }= page.read_more

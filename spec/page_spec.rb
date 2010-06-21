@@ -28,12 +28,12 @@ describe "page with menus", :shared => true do
     create_menu(@category.path)
     get @category.abspath
     body.should have_tag(
-        "#sidebar ul.menu a[@href=#{@category.abspath}]", @category.heading)
+        "#sidebar ul#menu a[@href=#{@category.abspath}]", @category.heading)
   end
   
   it "should not be display menu if not configured" do
     get @category.abspath
-    body.should_not have_tag("#sidebar ul.menu")
+    body.should_not have_tag("#sidebar ul#menu")
   end
 end
 
@@ -63,11 +63,11 @@ describe "home page" do
   end
   
   it "should display site title in h1 tag" do
-    body.should have_tag("h1", /My blog/)
+    body.should have_tag('#header p.title', /My blog/)
   end
   
   it "should display site subtitle in h1 tag" do
-    body.should have_tag("h1 small", /about stuff/)
+    body.should have_tag('#header p.subtitle', /about stuff/)
   end
   
   it "should set description meta tag" do
@@ -196,7 +196,7 @@ describe "article" do
     end
     
     it "should link to each category" do
-      body.should have_tag("div.categories", /Filed under/)
+      body.should have_tag("div.categories", /Categories/)
       body.should have_tag("div.categories") do |categories|
         categories.should have_tag("a[@href=/banana]", "Banana")
         categories.should have_tag("a[@href=/the-apple]", "Apple")

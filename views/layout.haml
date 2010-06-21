@@ -8,17 +8,20 @@
       %meta{ "name" => "keywords", "content" => @keywords }
     %title= @title
     %link{ :href => "/css/master.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
+    - if local_stylesheet?
+      %link{ :href => "/css/local.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
     %link{ :href => "/articles.xml", :rel => "alternate", :type => "application/atom+xml" }
     = haml :analytics, :layout => false
   %body{ :class => @body_class }
     #container
-      #wrapper
-        = yield
-
-        #footer
-          %p
-            Powered by
-            = succeed "," do
-              %a{ :href => "http://effectif.com/nesta" } nesta
-            designed by
-            %a{ :href => "http://effectif.com" } Graham Ashton
+      #header
+        %p.title= @heading
+        %p.subtitle= @subtitle
+      = yield
+      #footer
+        %p
+          Powered by
+          = succeed "," do
+            %a{ :href => "http://effectif.com/nesta" } nesta
+          designed by
+          %a{ :href => "http://effectif.com" } Graham Ashton
