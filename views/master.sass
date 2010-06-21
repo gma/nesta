@@ -164,9 +164,6 @@ div#content
 
   img
     max-width: 100%
-  div#disqus_thread
-    img
-      max-width: none
 
   code,
   pre
@@ -211,6 +208,12 @@ div#content
     background: $background-tint
     a
       margin-right: 0.25em
+  
+  div#disqus_thread
+    img
+      max-width: none
+    ul#dsq-comments
+      margin-left: 0
   
 div#sidebar
   @include border-radius(0.5em)
