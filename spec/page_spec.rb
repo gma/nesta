@@ -28,12 +28,12 @@ describe "page with menus", :shared => true do
     create_menu(@category.path)
     get @category.abspath
     body.should have_tag(
-        "#sidebar ul#menu a[@href=#{@category.abspath}]", @category.heading)
+        "#sidebar ul.menu a[@href=#{@category.abspath}]", @category.heading)
   end
   
   it "should not be display menu if not configured" do
     get @category.abspath
-    body.should_not have_tag("#sidebar ul#menu")
+    body.should_not have_tag("#sidebar ul.menu")
   end
 end
 
