@@ -14,14 +14,14 @@ module Nesta
     class << self
       attr_accessor :settings
       attr_accessor :yaml_conf
-      
-      def method_missing(method, *args)
-        setting = method.to_s
-        if settings.include?(setting)
-          ENV["NESTA_#{setting.upcase}"] || from_yaml(setting)
-        else
-          super
-        end
+    end
+    
+    def self.method_missing(method, *args)
+      setting = method.to_s
+      if settings.include?(setting)
+        ENV["NESTA_#{setting.upcase}"] || from_yaml(setting)
+      else
+        super
       end
     end
     
@@ -47,12 +47,12 @@ module Nesta
     end
     
     private
-      def self.can_read_yaml?
+      def self.can_use_yaml?
         ENV.keys.grep(/^NESTA/).empty?
       end
       
       def self.from_yaml(setting)
-        return nil unless can_read_yaml?
+        return nil unless can_use_yaml?
         if self.yaml_conf.nil?
           file = File.join(File.dirname(__FILE__), *%w[.. config config.yml])
           self.yaml_conf = YAML::load(IO.read(file))
