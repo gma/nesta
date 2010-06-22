@@ -117,7 +117,7 @@ div#container
 
 @mixin dark-tint-text
   color: $dark-tint
-  text-shadow: -1px -1px 1px white
+  text-shadow: 0 -1px 1px white
 
 body
   background: $background-tint
@@ -151,8 +151,8 @@ div#content
     @include dark-tint-text
   
   h2
-    background-color: $background-tint - #111
-    background-color: rgba($background-tint - #222, 0.5)
+    background: $background-tint - #111
+    background: rgba($background-tint - #222, 0.4) url(/lines.png) repeat
     margin-left: (-2em / $h2-scale) * $base-scale
     margin-right: 0
     padding-left: 1em
@@ -217,6 +217,7 @@ div#content
   
 div#sidebar
   @include border-radius(0.5em)
+  background-color: white
   background-color: rgba(255, 255, 255, 0.9)
   
   h2
