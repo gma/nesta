@@ -2,6 +2,4 @@
   %h1 Recent articles
   = haml :summaries, :layout => false, :locals => { :pages => @articles, :heading => :h2 }
 
-#sidebar
-  = haml :categories, :layout => false
-  = haml :feed, :layout => false
+= haml :sidebar, :layout => false
