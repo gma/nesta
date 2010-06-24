@@ -160,7 +160,8 @@ end
 
 get "*" do
   set_common_variables
-  @page = Page.find_by_path(File.join(params[:splat]))
+  parts = params[:splat].map { |p| p.sub(/\/$/, "") }
+  @page = Page.find_by_path(File.join(parts))
   raise Sinatra::NotFound if @page.nil?
   set_title(@page)
   set_from_page(:description, :keywords)
