@@ -24,6 +24,13 @@ describe "Config" do
       Nesta::Config.title.should == @title
     end
     
+    it "should know how to cope with boolean values" do
+      ENV["NESTA_CACHE"] = "true"
+      Nesta::Config.cache.should be_true
+      ENV["NESTA_CACHE"] = "false"
+      Nesta::Config.cache.should be_false
+    end
+    
     it "should set author hash from ENV" do
       name = "Name from ENV"
       uri = "URI from ENV"

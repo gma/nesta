@@ -19,7 +19,7 @@ module Nesta
     def self.method_missing(method, *args)
       setting = method.to_s
       if settings.include?(setting)
-        ENV["NESTA_#{setting.upcase}"] || from_yaml(setting)
+        from_environment(setting) || from_yaml(setting)
       else
         super
       end
@@ -47,6 +47,12 @@ module Nesta
     end
     
     private
+      def self.from_environment(setting)
+        value = ENV["NESTA_#{setting.upcase}"]
+        overrides = { "true" => true, "false" => false }
+        overrides.has_key?(value) ? overrides[value] : value
+      end
+      
       def self.can_use_yaml?
         ENV.keys.grep(/^NESTA/).empty?
       end
