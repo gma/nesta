@@ -4,11 +4,11 @@ require "builder"
 require "haml"
 require "sass"
 
-require "lib/cache"
-require "lib/config"
-require "lib/models"
-require "lib/path"
-require "lib/overrides"
+require File.join(File.dirname(__FILE__), *%w[lib cache])
+require File.join(File.dirname(__FILE__), *%w[lib config])
+require File.join(File.dirname(__FILE__), *%w[lib models])
+require File.join(File.dirname(__FILE__), *%w[lib path])
+require File.join(File.dirname(__FILE__), *%w[lib overrides])
 
 set :cache_enabled, Nesta::Config.cache
 
