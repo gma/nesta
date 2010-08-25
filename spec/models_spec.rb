@@ -104,6 +104,14 @@ describe "Page", :shared => true do
     it "should find pages" do
       @category.pages.should have(1).item
     end
+    
+    it "should not find pages scheduled in the future" do
+      future_date = (Time.now + 86400).strftime("%d %B %Y")
+      article = create_article(:heading => "Article 4",
+                               :path => "foo/article-4",
+                               :metadata => { "date" => future_date })
+      Page.find_articles.detect{|a| a == article}.should be_nil
+    end
   end
   
   describe "when finding articles" do
