@@ -137,8 +137,7 @@ get "/" do
 end
 
 get %r{/attachments/([\w/.-]+)} do
-  file = File.join(
-      Nesta::Config.attachment_path, params[:captures].first)
+  file = File.join(Nesta::Config.attachment_path, params[:captures].first)
   send_file(file, :disposition => nil)
 end
 

@@ -229,8 +229,7 @@ class Page < FileModel
     def valid_paths(paths)
       paths.select do |path|
         FORMATS.detect do |format|
-          File.exist?(
-              File.join(Nesta::Config.page_path, "#{path}.#{format}"))
+          File.exist?(File.join(Nesta::Config.page_path, "#{path}.#{format}"))
         end
       end
     end
