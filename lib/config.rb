@@ -65,6 +65,9 @@ module Nesta
         end
         rack_env_conf = self.yaml_conf[Sinatra::Application.environment.to_s]
         (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
+      rescue Errno::ENOENT  # config file not found
+        raise unless Sinatra::Application.environment == :test
+        nil
       end
       
       def self.get_path(dirname, basename)
