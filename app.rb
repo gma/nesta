@@ -90,9 +90,11 @@ module Nesta
       end
 
       def local_stylesheet?
-        # Checks for the existence of local/views/local.sass. Useful for themes
-        # that want to give the user the option to add their own CSS rules.
-        File.exist?(File.join(File.dirname(__FILE__), *%w[local views local.sass]))
+        # Checks for the existence of local/views/local.sass. Useful for
+        # themes that want to give the user the option to add their own
+        # CSS rules.
+        File.exist?(
+            File.join(File.dirname(__FILE__), *%w[local views local.sass]))
       end
     end
 
