@@ -1,0 +1,44 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    RedCloth (4.2.2)
+    builder (2.1.2)
+    haml (3.0.12)
+    hoe (2.6.2)
+      rake (>= 0.8.7)
+      rubyforge (>= 2.0.4)
+    hpricot (0.8.2)
+    json_pure (1.4.6)
+    maruku (0.6.0)
+      syntax (>= 1.0.0)
+    rack (1.2.1)
+    rack-test (0.5.3)
+      rack (>= 1.0)
+    rake (0.8.7)
+    rspec (1.3.0)
+    rspec_hpricot_matchers (1.0)
+    rubyforge (2.0.4)
+      json_pure (>= 1.1.7)
+    shotgun (0.8)
+      rack (>= 1.0)
+    sinatra (1.0)
+      rack (>= 1.0)
+    syntax (1.0.0)
+    test-unit (1.2.3)
+      hoe (>= 1.5.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  RedCloth (= 4.2.2)
+  builder (= 2.1.2)
+  haml (= 3.0.12)
+  hpricot (= 0.8.2)
+  maruku (= 0.6.0)
+  rack-test (= 0.5.3)
+  rspec (= 1.3.0)
+  rspec_hpricot_matchers (= 1.0)
+  shotgun
+  sinatra (= 1.0)
+  test-unit (= 1.2.3)
