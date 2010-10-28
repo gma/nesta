@@ -134,7 +134,10 @@ class Page < FileModel
       menu = Nesta::Config.content_path("menu.txt")
       pages = []
       if File.exist?(menu)
-        File.open(menu).each { |line| pages << Page.load(line.chomp) }
+        File.open(menu).each do |line|
+          page = Page.load(line.chomp)
+          pages << page unless page.nil?
+        end
       end
       pages
     end
