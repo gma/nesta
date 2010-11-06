@@ -1,5 +1,5 @@
-require File.join(File.dirname(__FILE__), "model_factory")
-require File.join(File.dirname(__FILE__), "spec_helper")
+require File.expand_path("../model_factory", __FILE__)
+require File.expand_path("../spec_helper", __FILE__)
 
 describe "layout" do
   include ModelFactory
@@ -335,6 +335,6 @@ describe "attachments" do
   end
   
   it "should set the appropriate MIME type" do
-    last_response.headers["Content-Type"].should == "text/plain"
+    last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
   end
 end

@@ -1,5 +1,5 @@
-require File.join(File.dirname(__FILE__), "model_factory")
-require File.join(File.dirname(__FILE__), "spec_helper")
+require File.expand_path("../model_factory", __FILE__)
+require File.expand_path("../spec_helper", __FILE__)
 
 describe "Rendering" do
   include ModelFactory
@@ -21,12 +21,12 @@ describe "Rendering" do
   end
 
   before(:each) do
-    Nesta::Path.local = File.join("test-local")
-    Nesta::Path.themes = File.join("test-themes")
+    @app_root = Nesta::Path.root
+    Nesta::Path.root = File.expand_path("../../fixtures/tmp", __FILE__)
     @theme = "my-theme"
     @paths = {
       :local => Nesta::Path.local,
-      :theme => File.join(Nesta::Path.themes, @theme)
+      :theme => Nesta::Path.themes(@theme)
     }
     @fixtures = []
     stub_configuration
@@ -34,6 +34,7 @@ describe "Rendering" do
   
   after(:each) do
     @fixtures.each { |path| FileUtils.rm(path) if File.exist?(path) }
+    Nesta::Path.root = @app_root
   end
     
   describe "when local files exist" do

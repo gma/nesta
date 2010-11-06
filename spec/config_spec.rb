@@ -1,5 +1,5 @@
-require File.join(File.dirname(__FILE__), "config_spec_helpers")
-require File.join(File.dirname(__FILE__), "spec_helper")
+require File.expand_path("../config_spec_helpers", __FILE__)
+require File.expand_path("../spec_helper", __FILE__)
 
 describe "Config" do
   include ConfigSpecHelper
