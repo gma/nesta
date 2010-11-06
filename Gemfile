@@ -4,7 +4,7 @@ gem "builder", "2.1.2"
 gem "haml", "3.0.12"
 gem "maruku", "0.6.0"
 gem "RedCloth", "4.2.2"
-gem "sinatra", "1.0"
+gem "sinatra", "1.1.0"
 
 group :development do
   gem "shotgun"
