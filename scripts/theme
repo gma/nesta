@@ -91,6 +91,19 @@ create_app_file()
 #
 # use Rack::Static, :urls => ["/$name"], :root => "themes/$name/public"
 
+module Nesta
+  class App < Sinatra::Base
+    helpers do
+      # Add new Sinatra actions here (or override the default ones).
+      #
+      # get "/foo" do
+      #   "hello!"
+      # end
+    end
+  end
+end
+
+
 EOF
 }
 
