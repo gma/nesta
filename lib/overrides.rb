@@ -1,5 +1,22 @@
 module Nesta
   module Overrides
+    module Renderers
+      def haml(template, options = {}, locals = {})
+        render_options = Nesta::Overrides.render_options(template, :haml)
+        super(template, render_options.merge(options), locals)
+      end
+
+      def scss(template, options = {}, locals = {})
+        render_options = Nesta::Overrides.render_options(template, :scss)
+        super(template, render_options.merge(options), locals)
+      end
+
+      def sass(template, options = {}, locals = {})
+        render_options = Nesta::Overrides.render_options(template, :sass)
+        super(template, render_options.merge(options), locals)
+      end
+    end
+
     def self.load_local_app
       require Nesta::Path.local("app")
     rescue LoadError

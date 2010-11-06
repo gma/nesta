@@ -16,6 +16,7 @@ module Nesta
     set :root, File.dirname(__FILE__)
     set :cache_enabled, Nesta::Config.cache
 
+    helpers Nesta::Overrides::Renderers
     helpers do
       def set_from_config(*variables)
         variables.each do |var|
@@ -79,16 +80,6 @@ module Nesta
         date.strftime("%d %B %Y")
       end
   
-      def haml(template, options = {}, locals = {})
-        render_options = Nesta::Overrides.render_options(template, :haml)
-        super(template, render_options.merge(options), locals)
-      end
-  
-      def sass(template, options = {}, locals = {})
-        render_options = Nesta::Overrides.render_options(template, :sass)
-        super(template, render_options.merge(options), locals)
-      end
-
       def local_stylesheet?
         # Checks for the existence of local/views/local.sass. Useful for
         # themes that want to give the user the option to add their own
