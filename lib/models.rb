@@ -236,7 +236,7 @@ class Page < FileModel
     if keywords
       index = Index::Index.new
       Page.find_articles.each do |article|
-        index << {:heading => article.heading, :url => article.abspath, :summary => article.summary, :body => article.body}
+        index << {:heading => article.heading, :href => article.abspath, :summary => article.summary, :body => article.body}
       end
       results = {}
       keywords.each do |keyword|
@@ -246,7 +246,7 @@ class Page < FileModel
       end
       related_article_links = []
       results.each do |key, value|
-        related_article_links << "<a href='#{index[key]['url']}'>#{index[key]['heading']}</a>" unless abspath == index[key]['url']
+        related_article_links << {:href =>index[key]['href'], :heading => index[key]['heading']} unless abspath == index[key]['href']
       end
       related_article_links
     else

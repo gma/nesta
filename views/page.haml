@@ -12,7 +12,10 @@
 
   ~ @page.to_html
 
-  ~ @page.related_articles.join("<br>")
+  - @page.related_articles.each do |related_article|
+    .related
+      %h3 Related Articles:
+      %a{ :href => related_article[:href] }= related_article[:heading]
 
   = haml :summaries, :layout => false, :locals => { :pages => @page.pages, :heading => :h3 }
 
