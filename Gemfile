@@ -5,6 +5,7 @@ gem "haml", "3.0.12"
 gem "maruku", "0.6.0"
 gem "RedCloth", "4.2.2"
 gem "sinatra", "1.1.0"
+gem "ferret", "0.11.6"
 
 group :development do
   gem "shotgun"

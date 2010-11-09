@@ -3,6 +3,8 @@ GEM
   specs:
     RedCloth (4.2.2)
     builder (2.1.2)
+    ferret (0.11.6)
+      rake (> 0.0.0)
     haml (3.0.12)
     hoe (2.6.2)
       rake (>= 0.8.7)
@@ -35,6 +37,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth (= 4.2.2)
   builder (= 2.1.2)
+  ferret (= 0.11.6)
   haml (= 3.0.12)
   hpricot (= 0.8.2)
   maruku (= 0.6.0)
