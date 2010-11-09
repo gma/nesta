@@ -1,0 +1,6 @@
+- unless related_articles.empty?
+  %h3 Related Articles
+  %ol.related_articles
+    - related_articles.each do |related_article|
+      %li
+        %a{ :href => related_article.abspath }= related_article.heading

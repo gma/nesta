@@ -12,11 +12,7 @@
 
   ~ @page.to_html
 
-  .related_articles
-    %h3 Related Articles:
-    - @page.related_articles.each do |related_article|
-      .related_article
-      %a{ :href => related_article.abspath }= related_article.heading
+  = haml :related_articles, :layout => false, :locals => { :related_articles => @page.related_articles}
 
   = haml :summaries, :layout => false, :locals => { :pages => @page.pages, :heading => :h3 }
 
