@@ -131,29 +131,7 @@ class Page < FileModel
         page.date && page.date < DateTime.now
       end.sort { |x, y| y.date <=> x.date }
     end
-    
-    def find_related_articles(page)
-      if page.keywords
-        index = Index::Index.new
-        find_articles.each do |article|
-          index << {:heading => article.heading, :url => article.abspath, :summary => article.summary, :body => article.body}
-        end
-        results = {}
-        page.keywords.each do |keyword|
-          index.search_each(keyword) do |id, score|
-            results[id] ? results[id] = results[id] + score : results[id] = score
-          end
-        end
-        related_article_links = []
-        results.each do |key, value|
-          related_article_links << "<a href='#{index[key]['url']}'>#{index[key]['heading']}</a>" unless page.abspath == index[key]['url']
-        end
-        related_article_links
-      else
-        []
-      end
-    end
-    
+        
     def menu_items
       menu = Nesta::Config.content_path("menu.txt")
       pages = []
@@ -253,6 +231,29 @@ class Page < FileModel
   def articles
     Page.find_articles.select { |article| article.categories.include?(self) }
   end
+  
+  def related_articles
+    if keywords
+      index = Index::Index.new
+      Page.find_articles.each do |article|
+        index << {:heading => article.heading, :url => article.abspath, :summary => article.summary, :body => article.body}
+      end
+      results = {}
+      keywords.each do |keyword|
+        index.search_each(keyword) do |id, score|
+          results[id] ? results[id] = results[id] + score : results[id] = score
+        end
+      end
+      related_article_links = []
+      results.each do |key, value|
+        related_article_links << "<a href='#{index[key]['url']}'>#{index[key]['heading']}</a>" unless abspath == index[key]['url']
+      end
+      related_article_links
+    else
+      []
+    end
+  end
+  
   
   private
     def valid_paths(paths)

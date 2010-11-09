@@ -12,7 +12,7 @@
 
   ~ @page.to_html
 
-  ~ Page.find_related_articles(@page).join("<br>")
+  ~ @page.related_articles.join("<br>")
 
   = haml :summaries, :layout => false, :locals => { :pages => @page.pages, :heading => :h3 }
 
