@@ -246,7 +246,7 @@ class Page < FileModel
       end
       related_article_links = []
       results.each do |key, value|
-        related_article_links << {:href =>index[key]['href'], :heading => index[key]['heading']} unless abspath == index[key]['href']
+        related_article_links << Page.find_by_path(index[key]['href']) unless abspath == index[key]['href']
       end
       related_article_links
     else
