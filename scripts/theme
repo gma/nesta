@@ -94,12 +94,14 @@ create_app_file()
 module Nesta
   class App < Sinatra::Base
     helpers do
-      # Add new Sinatra actions here (or override the default ones).
-      #
-      # get "/foo" do
-      #   "hello!"
-      # end
+      # Add new helpers here.
     end
+
+    # Add new Sinatra actions here (or override the default ones).
+    #
+    # get "/foo" do
+    #   "hello!"
+    # end
   end
 end
 
