@@ -1,5 +1,5 @@
-require File.expand_path("../model_factory", __FILE__)
-require File.expand_path("../spec_helper", __FILE__)
+require File.expand_path("model_factory", File.dirname(__FILE__))
+require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 module ModelMatchers
   class HavePage

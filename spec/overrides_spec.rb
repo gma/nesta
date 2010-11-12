@@ -1,5 +1,5 @@
-require File.expand_path("../model_factory", __FILE__)
-require File.expand_path("../spec_helper", __FILE__)
+require File.expand_path("model_factory", File.dirname(__FILE__))
+require File.expand_path("spec_helper", File.dirname(__FILE__))
 
 describe "Rendering" do
   include ModelFactory
@@ -22,7 +22,8 @@ describe "Rendering" do
 
   before(:each) do
     @app_root = Nesta::Path.root
-    Nesta::Path.root = File.expand_path("../../fixtures/tmp", __FILE__)
+    Nesta::Path.root = File.expand_path(
+        "../fixtures/tmp", File.dirname(__FILE__))
     @theme = "my-theme"
     @paths = {
       :local => Nesta::Path.local,
