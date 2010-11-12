@@ -17,14 +17,14 @@ module Nesta
     register Sinatra::Cache
 
     set :root, File.dirname(__FILE__)
-    set :cache_enabled, Nesta::Config.cache
+    set :cache_enabled, Config.cache
 
-    helpers Nesta::Overrides::Renderers
+    helpers Overrides::Renderers
 
     helpers do
       def set_from_config(*variables)
         variables.each do |var|
-          instance_variable_set("@#{var}", Nesta::Config.send(var))
+          instance_variable_set("@#{var}", Config.send(var))
         end
       end
   
@@ -38,7 +38,7 @@ module Nesta
         if page.respond_to?(:parent) && page.parent
           @title = "#{page.heading} - #{page.parent.heading}"
         else
-          @title = "#{page.heading} - #{Nesta::Config.title}"
+          @title = "#{page.heading} - #{Config.title}"
         end
       end
   
@@ -48,7 +48,7 @@ module Nesta
   
       def set_common_variables
         @menu_items = Page.menu_items
-        @site_title = Nesta::Config.title
+        @site_title = Config.title
         set_from_config(:title, :subtitle, :google_analytics_code)
         @heading = @title
       end
@@ -119,8 +119,8 @@ module Nesta
     # Note that you can modify the behaviour of any of the default objects
     # in local/app.rb, or replace any of the default view templates by
     # creating replacements of the same name in local/views.
-    Nesta::Overrides.load_theme_app
-    Nesta::Overrides.load_local_app
+    Overrides.load_theme_app
+    Overrides.load_local_app
 
     get "/css/:sheet.css" do
       content_type "text/css", :charset => "utf-8"
@@ -138,7 +138,7 @@ module Nesta
     end
 
     get %r{/attachments/([\w/.-]+)} do
-      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
+      file = File.join(Config.attachment_path, params[:captures].first)
       send_file(file, :disposition => nil)
     end
 

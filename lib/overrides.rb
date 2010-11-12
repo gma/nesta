@@ -2,29 +2,29 @@ module Nesta
   module Overrides
     module Renderers
       def haml(template, options = {}, locals = {})
-        defaults = Nesta::Overrides.render_options(template, :haml)
+        defaults = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
       end
 
       def scss(template, options = {}, locals = {})
-        defaults = Nesta::Overrides.render_options(template, :scss)
+        defaults = Overrides.render_options(template, :scss)
         super(template, defaults.merge(options), locals)
       end
 
       def sass(template, options = {}, locals = {})
-        defaults = Nesta::Overrides.render_options(template, :sass)
+        defaults = Overrides.render_options(template, :sass)
         super(template, defaults.merge(options), locals)
       end
     end
 
     def self.load_local_app
-      require Nesta::Path.local("app")
+      require Path.local("app")
     rescue LoadError
     end
     
     def self.load_theme_app
-      if Nesta::Config.theme
-        require Nesta::Path.themes(Nesta::Config.theme, "app")
+      if Config.theme
+        require Path.themes(Config.theme, "app")
       end
     rescue LoadError
     end
@@ -45,15 +45,11 @@ module Nesta
       end
 
       def self.local_view_path
-        Nesta::Path.local("views")
+        Path.local("views")
       end
     
       def self.theme_view_path
-        if Nesta::Config.theme.nil?
-          nil
-        else
-          Nesta::Path.themes(Nesta::Config.theme, "views")
-        end
+        Config.theme.nil? ? nil : Path.themes(Config.theme, "views")
       end
   end
 end
