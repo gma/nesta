@@ -49,7 +49,7 @@ describe "home page" do
   
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   it_should_behave_like "page with menus"
@@ -149,7 +149,7 @@ describe "article" do
   
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   describe "that's not assigned to a category" do
@@ -183,7 +183,7 @@ describe "article" do
   
   describe "that's assigned to categories" do
     before(:each) do
-      # FileModel.purge_cache
+      # Nesta::FileModel.purge_cache
       create_category(:heading => "Apple", :path => "the-apple")
       create_category(:heading => "Banana", :path => "banana")
       article = create_article(
@@ -233,7 +233,7 @@ describe "page" do
 
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   it_should_behave_like "page with menus"
@@ -323,7 +323,7 @@ describe "attachments" do
   
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   it "should be served successfully" do

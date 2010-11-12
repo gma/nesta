@@ -40,34 +40,36 @@ describe "Page", :shared => true do
   
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   it "should be findable" do
     create_page(:heading => "Apple", :path => "the-apple")
-    Page.find_all.should have(1).item
+    Nesta::Page.find_all.should have(1).item
   end
 
   it "should find by path" do
     create_page(:heading => "Banana", :path => "banana")
-    Page.find_by_path("banana").heading.should == "Banana"
+    Nesta::Page.find_by_path("banana").heading.should == "Banana"
   end
   
   it "should not find non existant page" do
-    Page.find_by_path("no-such-page").should be_nil
+    Nesta::Page.find_by_path("no-such-page").should be_nil
   end
   
   it "should ensure file exists on instantiation" do
-    lambda { Page.new("no-such-file") }.should raise_error(Sinatra::NotFound)
+    lambda {
+      Nesta::Page.new("no-such-file")
+    }.should raise_error(Sinatra::NotFound)
   end
   
   it "should reload cached files when modified" do
     create_page(:path => "a-page", :heading => "Version 1")
     File.stub!(:mtime).and_return(Time.new - 1)
-    Page.find_by_path("a-page")
+    Nesta::Page.find_by_path("a-page")
     create_page(:path => "a-page", :heading => "Version 2")
     File.stub!(:mtime).and_return(Time.new)
-    Page.find_by_path("a-page").heading.should == "Version 2"
+    Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
   
   describe "with assigned pages" do
@@ -110,7 +112,7 @@ describe "Page", :shared => true do
       article = create_article(:heading => "Article 4",
                                :path => "foo/article-4",
                                :metadata => { "date" => future_date })
-      Page.find_articles.detect{|a| a == article}.should be_nil
+      Nesta::Page.find_articles.detect{|a| a == article}.should be_nil
     end
   end
   
@@ -121,12 +123,12 @@ describe "Page", :shared => true do
 
     it "should include pages that exist" do
       create_menu(@page.path)
-      Page.menu_items.should == [@page]
+      Nesta::Page.menu_items.should == [@page]
     end
 
     it "should not include pages that don't exist" do
       create_menu(@page.path, "no-such-page")
-      Page.menu_items.should == [@page]
+      Nesta::Page.menu_items.should == [@page]
     end
   end
 
@@ -142,13 +144,13 @@ describe "Page", :shared => true do
     end
     
     it "should only find pages with dates" do
-      articles = Page.find_articles
+      articles = Nesta::Page.find_articles
       articles.size.should > 0
-      Page.find_articles.each { |page| page.date.should_not be_nil }
+      Nesta::Page.find_articles.each { |page| page.date.should_not be_nil }
     end
     
     it "should return articles in reverse chronological order" do
-      article1, article2 = Page.find_articles[0..1]
+      article1, article2 = Nesta::Page.find_articles[0..1]
       article1.date.should > article2.date
     end
   end
@@ -190,7 +192,7 @@ describe "Page", :shared => true do
   describe "when not assigned to category" do
     it "should have empty category list" do
       article = create_article
-      Page.find_by_path(article.path).categories.should be_empty
+      Nesta::Page.find_by_path(article.path).categories.should be_empty
     end
   end
   
@@ -208,7 +210,7 @@ describe "Page", :shared => true do
         "summary" => @summary,
         "read more" => @read_more
       })
-      @article = Page.find_by_path("article-prefix/my-article")
+      @article = Nesta::Page.find_by_path("article-prefix/my-article")
     end
     
     it "should set permalink from filename" do
@@ -263,7 +265,7 @@ describe "Page", :shared => true do
   describe "without metadata" do
     before(:each) do
       create_article
-      @article = Page.find_all.first
+      @article = Nesta::Page.find_all.first
     end
     
     it "should parse heading correctly" do
@@ -286,7 +288,7 @@ describe "Page", :shared => true do
   describe "when checking last modification time" do
     before(:each) do
       create_article
-      @article = Page.find_all.first
+      @article = Nesta::Page.find_all.first
     end
     
     it "should check filesystem" do
@@ -303,7 +305,7 @@ describe "Markdown page" do
 
   it "should set heading from first h1 tag" do
     create_article(:path => "headings", :content => '# Second heading')
-    Page.find_by_path("headings").heading.should == "My article"
+    Nesta::Page.find_by_path("headings").heading.should == "My article"
   end
 
   it_should_behave_like "Page"
@@ -316,7 +318,7 @@ describe "Haml page" do
 
   it "should set heading from first h1 tag" do
     create_article(:path => "headings", :content => '%h1 Second heading')
-    Page.find_by_path("headings").heading.should == "My article"
+    Nesta::Page.find_by_path("headings").heading.should == "My article"
   end
 
   it_should_behave_like "Page"
@@ -329,7 +331,7 @@ describe "Textile page" do
 
   it "should set heading from first h1 tag" do
     create_article(:path => "headings", :content => 'h1. Second heading')
-    Page.find_by_path("headings").heading.should == "My article"
+    Nesta::Page.find_by_path("headings").heading.should == "My article"
   end
 
   it_should_behave_like "Page"

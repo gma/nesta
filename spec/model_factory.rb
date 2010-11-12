@@ -8,7 +8,7 @@ module ModelFactory
     path = filename(Nesta::Config.page_path, options[:path], extension)
     create_file(path, options)
     yield(path) if block_given?
-    Page.new(path)
+    Nesta::Page.new(path)
   end
   
   def create_article(options = {}, &block)

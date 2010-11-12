@@ -17,7 +17,7 @@ describe "sitemap XML" do
   end
   
   after(:each) do
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
     remove_fixtures
   end
   
@@ -70,7 +70,7 @@ describe "sitemap XML lastmod" do
   
   after(:each) do
     remove_fixtures
-    FileModel.purge_cache
+    Nesta::FileModel.purge_cache
   end
   
   it "should be set for file based page" do
