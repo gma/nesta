@@ -3,11 +3,14 @@ require "builder"
 require "haml"
 require "sass"
 
-require File.join(File.dirname(__FILE__), *%w[lib cache])
-require File.join(File.dirname(__FILE__), *%w[lib config])
-require File.join(File.dirname(__FILE__), *%w[lib models])
-require File.join(File.dirname(__FILE__), *%w[lib path])
-require File.join(File.dirname(__FILE__), *%w[lib overrides])
+require File.expand_path('lib/cache', File.dirname(__FILE__))
+require File.expand_path('lib/config', File.dirname(__FILE__))
+require File.expand_path('lib/models', File.dirname(__FILE__))
+require File.expand_path('lib/path', File.dirname(__FILE__))
+require File.expand_path('lib/plugins', File.dirname(__FILE__))
+require File.expand_path('lib/overrides', File.dirname(__FILE__))
+
+Nesta::Plugins.load_local_plugins
 
 module Nesta
   class App < Sinatra::Base
@@ -17,6 +20,7 @@ module Nesta
     set :cache_enabled, Nesta::Config.cache
 
     helpers Nesta::Overrides::Renderers
+
     helpers do
       def set_from_config(*variables)
         variables.each do |var|
