@@ -96,12 +96,6 @@ module Nesta
     helpers do
       # Add new helpers here.
     end
-
-    # Add new Sinatra actions here (or override the default ones).
-    #
-    # get "/hello" do
-    #   "hello!"
-    # end
   end
 end
 
