@@ -24,7 +24,7 @@ module Nesta
     helpers do
       def set_from_config(*variables)
         variables.each do |var|
-          instance_variable_set("@#{var}", Config.send(var))
+          instance_variable_set("@#{var}", Nesta::Config.send(var))
         end
       end
   
@@ -38,7 +38,7 @@ module Nesta
         if page.respond_to?(:parent) && page.parent
           @title = "#{page.heading} - #{page.parent.heading}"
         else
-          @title = "#{page.heading} - #{Config.title}"
+          @title = "#{page.heading} - #{Nesta::Config.title}"
         end
       end
   
@@ -47,8 +47,8 @@ module Nesta
       end
   
       def set_common_variables
-        @menu_items = Page.menu_items
-        @site_title = Config.title
+        @menu_items = Nesta::Page.menu_items
+        @site_title = Nesta::Config.title
         set_from_config(:title, :subtitle, :google_analytics_code)
         @heading = @title
       end
@@ -138,7 +138,7 @@ module Nesta
     end
 
     get %r{/attachments/([\w/.-]+)} do
-      file = File.join(Config.attachment_path, params[:captures].first)
+      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
       send_file(file, :disposition => nil)
     end
 
@@ -161,7 +161,7 @@ module Nesta
     get "*" do
       set_common_variables
       parts = params[:splat].map { |p| p.sub(/\/$/, "") }
-      @page = Page.find_by_path(File.join(parts))
+      @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
       set_title(@page)
       set_from_page(:description, :keywords)

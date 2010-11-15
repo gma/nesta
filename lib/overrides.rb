@@ -18,13 +18,13 @@ module Nesta
     end
 
     def self.load_local_app
-      require Path.local("app")
+      require Nesta::Path.local("app")
     rescue LoadError
     end
     
     def self.load_theme_app
-      if Config.theme
-        require Path.themes(Config.theme, "app")
+      if Nesta::Config.theme
+        require Nesta::Path.themes(Nesta::Config.theme, "app")
       end
     rescue LoadError
     end
@@ -45,11 +45,15 @@ module Nesta
       end
 
       def self.local_view_path
-        Path.local("views")
+        Nesta::Path.local("views")
       end
     
       def self.theme_view_path
-        Config.theme.nil? ? nil : Path.themes(Config.theme, "views")
+        if Nesta::Config.theme.nil?
+          nil
+        else
+          Nesta::Path.themes(Nesta::Config.theme, "views")
+        end
       end
   end
 end
