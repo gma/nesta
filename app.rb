@@ -1,4 +1,4 @@
-require "./sinatra/lib/sinatra/base"
+require "sinatra/base"
 require "builder"
 require "haml"
 require "sass"
