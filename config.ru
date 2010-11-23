@@ -1,5 +1,5 @@
 require "rubygems"
-require "sinatra"
+require "./sinatra/lib/sinatra"
 require "./app"
 
 run Nesta::App

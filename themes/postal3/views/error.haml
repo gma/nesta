@@ -1,0 +1,19 @@
+#header
+  %p#logo
+    %a{ :href => "/" }= @heading
+    %small= no_widow @subtitle
+
+#sidebar
+  = haml :categories, :layout => false
+  = haml :feed, :layout => false
+  = haml :about, :layout => false
+
+#content
+  .breadcrumb
+    %a{ :href => "/" } Home
+
+  %h1 Sorry, something went wrong
+
+  %p
+    An error occurred whilst we were trying to serve your page. Please bear
+    with us, or in the mean time, try another page.

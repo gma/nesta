@@ -1,0 +1,12 @@
+
+
+#  Fruit
+
+This is a category page about Fruit. You can find it here: `content/pages/fruit.mdown`.
+
+The general idea of category pages is that you assign articles to categories (in a similar way that many CMS or blog systems allow you to tag your articles), and then write some text introductory text on the topic. So this paragraph really ought to have some introductory material about fruit in it. Why bother? Well it's a great way to structure your site and introduce a collection of articles. It can also help you to [get more traffic](http://www.wordtracker.com/academy/website-structure).
+
+The articles assigned to the Fruit category are listed below, typically with a short summary of the article and a link inviting you to "read more". If you'd rather show the entire text of your article inline you can just omit the summary from your article.
+
+Have a look at the files that define the articles that follow, and you should find that you can get the hang of it very quickly.
+

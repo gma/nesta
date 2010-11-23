@@ -1,0 +1,27 @@
+%div{:class => "post text"}
+  .content
+    - @page.pages.each do |page|
+      = haml :summary, :layout => false, :locals => { :article => page, :heading => :h3 }
+
+    .wrapper
+      .description
+        ~ @page.to_html
+  .permalink
+    .wrapper
+      %p
+        %a{:title => "permalink", :href => @page.abspath}
+          - if @page.date
+            %span= format_date(@page.date)
+            - if @page.categories.empty?
+              %span{:class => "right"}
+                Uncategorised
+            - else
+              %span{:class => "right"}
+                - @page.categories.each do |category|
+                  = category.heading
+                  %br
+  - if @page.date
+    = haml :comments, :layout => false
+
+  - @page.articles.each do |article|
+    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h2 }

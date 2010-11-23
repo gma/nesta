@@ -1,0 +1,308 @@
+!primary = #2f5086
+!secondary = #333
+!body = !secondary + #444
+!pre_background = !primary + #b3986c
+!pre_color = !pre_background - 140
+!pre_border = !pre_background - 24
+
+!border_type = "solid" #ccc
+!border = 1px !border_type
+
+!sans_serif = "Helvetica Neue, Arial, Helvetica, sans-serif"
+!fixed = "Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal, monospace"
+
+// Typopgraphy
+
+h1, h2, h3, h4, h5, h6, p, div.breadcrumb
+  :color #333
+  :font-family = !sans_serif
+
+h1, h2, h3, h4, h5, h6
+  :color = !secondary
+  a:hover
+    :text-decoration none
+
+h1, h2, h3, h4, h5, h6
+  :margin 0.5em 0
+
+h1
+  :font-size 180%
+
+h2
+  :font-size 150%
+
+h3
+  :font-size 150%
+
+h4
+  :font-size 110%
+
+ol, ol li, p, pre, ul, ul li
+  :margin-bottom 1em
+
+ol li, ul li
+  :margin-bottom 0.75em
+
+ol, p, ul
+  :font-family = !sans_serif
+  :font-size 90%
+  :line-height 140%
+  :color = !body - #111
+
+ul, ol
+  :padding-left 2.5em
+
+strong
+  :font-weight bold
+  :color = !secondary
+
+em
+  :font-style italic
+
+a
+  :color = !primary
+  &:hover
+    :color = !primary + #112
+  &:visited
+    :color = !primary - #111
+
+
+// Layout and page content
+
+body
+  :background white url(/postal3/images/body-bg.png) repeat-x
+
+#container
+  :margin 0 1em 2em 1em
+  :min-width 54em
+
+#wrapper
+  :width 52em
+  :position relative
+  :left 50%
+  :margin-left -26em
+
+#header
+  :margin-bottom 2.3em
+
+  #logo
+    :margin 0
+    :padding-top 0.79em
+
+    :color = !primary
+
+    :font-size 285%
+    :line-height 100%
+    :font-weight bold
+    
+    a
+      :text-decoration none
+      :text-shadow rgb(168, 179, 194) 0px 1px 2px, rgba(255, 255, 255, 0.8) 0 -1px 1px, rgba(47, 80, 134, 0.2) 0 0.25em 15px
+
+      &:hover
+        :color = !primary + #112
+      &:visited
+        :color = !primary
+      span
+        :margin-left 0.2em
+        
+        :font-size 65%
+        :font-weight normal
+
+    small
+      :position absolute
+      :width 12em
+      :top 2em
+      :right 0
+
+      :color = !body
+      :font-size 35%
+      :line-height 120%
+      :font-weight normal
+      :letter-spacing 0
+
+#content
+  :float left
+  :width 37.5em
+  :padding-top 1.5em
+
+#sidebar
+  :width 12em
+  :float right
+  
+  :padding-top 1.5em
+
+  h2
+    :margin 0 0 1em 0
+    :font-size 110%
+
+  ol, ul
+    :margin 1em 0
+    :padding 0
+
+    :list-style none
+
+    :font-size 85%
+    
+    li
+      :margin 0.6em 0
+
+  div.feed
+    :margin 1.5em 0
+    :border-top = !border
+    :border-bottom = !border
+
+div.feed
+  :color = !body
+  :font-family = !sans_serif
+  :font-size 90%
+
+div.feed
+  :margin 0.5em 0
+  :padding-top 1.5em
+  :padding-bottom 1.5em
+
+  a
+    :padding 6px 0 6px 36px
+    :background url(/postal3/images/feed-icon.png) no-repeat left center
+
+#content
+  div.breadcrumb
+    :margin-bottom 1.1em
+
+    :font-size 80%
+    :font-family = !sans_serif
+    :line-height 120%
+    
+    :color = !body
+
+  div.date
+    :margin-top 2.75em
+    :margin-bottom -0.5em
+
+    :font-family = !sans_serif
+    :font-size 75%
+
+    :color = !body
+
+  h2
+    :clear both
+    :margin 1em 0 0.5em 0
+    &.articles
+      :margin-bottom 1em
+      :border-bottom = !border
+      :padding-bottom 0.75em
+
+  div.summary
+    :margin-bottom 1.4em
+    :border-bottom = !border
+    :padding-bottom 0.7em
+    
+    &:last-child
+      :border-bottom none
+      :padding-bottom 0
+    
+    h2,
+    h3
+      :margin-top 0
+      a
+        :text-decoration none
+        &:hover
+          :text-decoration underline
+    
+    p.read_more
+      :font-family = !sans_serif
+      :font-size 90%
+
+  img
+    :max-width 100%
+    :margin 0.75em 0 1.5em 0
+    :border 1px solid #ccc
+    :padding 2px
+
+  ol,
+  ul
+    :padding-left 0
+    :list-style-position outside
+    li
+      :margin-left -0.3em
+      :padding-left 0.3em
+  
+  ol
+    :list-style-type decimal
+  ul
+    :list-style-type disc
+  
+  img.flow
+    :float left
+    :margin 0 1em 1em 0
+    &.alternate
+      :float right
+      :margin 0 0 1em 1em
+
+  blockquote
+    :margin 1.5em 0
+    :padding 0.75em
+
+    :background = #eee
+
+    p
+      :margin 0
+
+    cite
+      :display block
+
+      :text-align right
+
+  div.categories,
+  p.social
+    :margin 1.5em 0
+    :font-family = !sans_serif
+    :font-size 85%
+    :font-weight bold
+    
+    :color = !secondary
+
+    a
+      :margin-left 0.4em
+  
+  p.social
+    :padding-top 20px
+    :border-top = 4px !border_type
+    img
+      :margin 0
+      :border none
+      :padding 0
+      :vertical-align middle
+
+  code, pre
+    :color = !pre_color
+    :font-family = !fixed
+
+  pre
+    :margin 1.5em 0
+    :border-left = 3px "solid" !pre_border
+    :padding 1em
+
+    :font-size 90%
+    :line-height 135%
+    :background-color = !pre_background
+
+    :overflow auto
+
+    code
+      :border none
+      :padding 0
+
+#footer
+  :clear both
+
+  :margin-top 2em
+  :border-top = !border
+  :padding-top 0.5em
+
+  p
+    :font-family = !sans_serif
+    :font-size 70%
+
+    :color = !body

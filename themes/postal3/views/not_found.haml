@@ -1,0 +1,20 @@
+#header
+  %p#logo
+    %a{ :href => "/" }= @heading
+    - if @subtitle
+      %small= no_widow @subtitle
+
+#sidebar
+  = haml :categories, :layout => false
+  = haml :feed, :layout => false
+  = haml :about, :layout => false
+
+#content
+  .breadcrumb
+    %a{ :href => "/" } Home
+
+  %h1 Page not found
+
+  %p
+    Please try another page or, if you think something is wrong with our site,
+    do get in touch and let us know.

@@ -1,0 +1,11 @@
+.summary
+  - haml_tag heading do
+    %a{ :href => article.abspath }= article.heading
+  - if article.summary.nil? || article.summary.empty?
+    :maruku
+      #{article.body}
+  - else
+    :maruku
+      #{article.summary}
+    %p.read_more
+      %a{ :href => article.abspath }= article.read_more

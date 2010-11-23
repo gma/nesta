@@ -1,0 +1,10 @@
+date: 2010-11-23 06:51:02 -0500
+categories: fruit
+read more: Read more about Pears
+summary: This would be an article on Pears if I'd bothered to research it.
+
+#  The benefits of Pears
+
+Pears are good because... blah blah.
+
+You can change this article by editing `content/pages/pears.mdown`.

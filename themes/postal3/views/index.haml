@@ -1,0 +1,13 @@
+#header
+  %h1#logo
+    %a{ :href => "/" }= @heading
+    %small= no_widow @subtitle
+
+#sidebar
+  = haml :categories, :layout => false
+  = haml :feed, :layout => false
+  = haml :about, :layout => false
+
+#content
+  - @articles.each do |article|
+    = haml :summary, :layout => false, :locals => { :article => article, :heading => :h2 }

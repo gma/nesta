@@ -1,0 +1,5 @@
+- if ! @menu_items.empty?
+  %p
+    - @menu_items.each do |page|
+      %a{ :href => page.abspath }= page.heading
+      %br

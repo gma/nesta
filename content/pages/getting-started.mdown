@@ -1,0 +1,13 @@
+date: 2010-11-23 06:51:12 -0500
+read more: Read more tips on getting started
+summary: You can edit this article by opening `content/pages/example.mdown` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
+
+#  Getting started
+
+You can edit this article by opening `content/pages/example.mdown` in your text editor. Make some changes, then save the file and reload this web page to preview your changes.
+
+
+Checkout the [Markdown Cheat Sheet](http://effectif.com/articles/markdown-cheat-sheet) to find out how to format your text to maximum effect.
+
+If you want to add attachments to your pages you can drop them in the `content/attachments` directory and refer to them using a URL such as [/attachments/my-file.png](/attachments/my-file.png) (`my-file.png` doesn't exist, but you get the idea). You can obviously refer to inline images using the same URL structure.
+
