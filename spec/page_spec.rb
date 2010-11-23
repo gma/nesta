@@ -305,6 +305,30 @@ describe "page" do
   end
 end
 
+describe "haml page" do
+  include ModelFactory
+  include RequestSpecHelper
+
+  before(:each) do
+    stub_configuration
+  end
+
+  after(:each) do
+    remove_fixtures
+    Nesta::FileModel.purge_cache
+  end
+
+  it "should be able to access helper methods" do
+    create_page(
+      :path => "a-page",
+      :ext => :haml,
+      :content => "%div= format_date(Date.new(2010, 11, 23))"
+    )
+    get "/a-page"
+    body.should have_tag("div", "23 November 2010")
+  end
+end
+
 describe "attachments" do
   include ModelFactory
   include RequestSpecHelper

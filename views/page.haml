@@ -10,7 +10,7 @@
   - if @page.date
     .date= format_date(@page.date)
 
-  ~ @page.to_html
+  ~ @page.to_html(self)
 
   = haml :summaries, :layout => false, :locals => { :pages => @page.pages, :heading => :h3 }
 
