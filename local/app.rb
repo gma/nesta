@@ -1,7 +1,9 @@
 module Nesta
   class App
     helpers do
-      # Define your own helper methods here.
+      def gist(gn)
+        "<script type='text/javascript' src='https://gist.github.com/#{gn}.js'></script>"
+      end
     end
 
     # Define new actions (or override existing ones) here.

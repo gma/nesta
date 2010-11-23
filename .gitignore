@@ -8,3 +8,4 @@ config/deploy.rb
 db/*.db
 plugins
 public/cache
+content
