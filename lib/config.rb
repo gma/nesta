@@ -1,7 +1,7 @@
 require "yaml"
 
 require "rubygems"
-require "./sinatra/lib/sinatra"
+require "sinatra"
 
 module Nesta
   class Config
