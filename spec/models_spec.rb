@@ -303,12 +303,16 @@ describe "Markdown page" do
     @extension = :mdown
   end
 
-  it "should set heading from first h1 tag" do
-    create_article(:path => "headings", :content => '# Second heading')
-    Nesta::Page.find_by_path("headings").heading.should == "My article"
-  end
-
   it_should_behave_like "Page"
+
+  it "should set heading from first h1 tag" do
+    create_page(
+      :path => "a-page",
+      :heading => "First heading",
+      :content => "# Second heading"
+    )
+    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+  end
 end
 
 describe "Haml page" do
@@ -316,12 +320,16 @@ describe "Haml page" do
     @extension = :haml
   end
 
-  it "should set heading from first h1 tag" do
-    create_article(:path => "headings", :content => '%h1 Second heading')
-    Nesta::Page.find_by_path("headings").heading.should == "My article"
-  end
-
   it_should_behave_like "Page"
+
+  it "should set heading from first h1 tag" do
+    create_page(
+      :path => "a-page",
+      :heading => "First heading",
+      :content => "%h1 Second heading"
+    )
+    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+  end
 end
 
 describe "Textile page" do
@@ -329,10 +337,14 @@ describe "Textile page" do
     @extension = :textile
   end
 
-  it "should set heading from first h1 tag" do
-    create_article(:path => "headings", :content => 'h1. Second heading')
-    Nesta::Page.find_by_path("headings").heading.should == "My article"
-  end
-
   it_should_behave_like "Page"
+
+  it "should set heading from first h1 tag" do
+    create_page(
+      :path => "a-page",
+      :heading => "First heading",
+      :content => "h1. Second heading"
+    )
+    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+  end
 end
