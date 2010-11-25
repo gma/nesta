@@ -3,10 +3,24 @@ module Nesta
     helpers do
       def gist(gn,filename=nil)
         if(!filename.nil?)
-          filename = "?file=#{filename}" 
+          filename = "?file=#{filename}"
         end
         "<script type='text/javascript' src='https://gist.github.com/#{gn}.js#{filename}'></script>"
       end
+
+      def link_to(url,text=nil)
+          "<a href='#{url}'>#{text || url}</a>"
+      end
+    end
+
+    get "/" do
+      set_common_variables
+      set_from_config(:title, :subtitle, :description, :keywords)
+      @heading = @title
+      @title = "#{@title} - #{@subtitle}"
+      @articles = Page.find_articles[0..7]
+      @body_class = "home"
+      cache haml(:index)
     end
 
     # Define new actions (or override existing ones) here.
