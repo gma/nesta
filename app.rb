@@ -132,7 +132,6 @@ module Nesta
       set_from_config(:title, :subtitle, :description, :keywords)
       @heading = @title
       @title = "#{@title} - #{@subtitle}"
-      # add pagination here?
       @articles = Page.find_articles[0..8]
       @body_class = "home"
       cache haml(:index)

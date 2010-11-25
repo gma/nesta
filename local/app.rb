@@ -13,6 +13,17 @@ module Nesta
       end
     end
 
+    get "/" do
+      set_common_variables
+      set_from_config(:title, :subtitle, :description, :keywords)
+      @heading = @title
+      @title = "#{@title} - #{@subtitle}"
+      # paginate?
+      @articles = Page.find_articles[0..20]
+      @body_class = "home"
+      cache haml(:index)
+    end
+
     # Define new actions (or override existing ones) here.
     # get '/hello' do
     #   'Hello!'
