@@ -189,14 +189,14 @@ module Nesta
       end
     end
 
-    def body
+    def body(scope)
       case @format
       when :mdown
         body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
         Maruku.new(body_text).to_html
       when :haml
         body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
-        Haml::Engine.new(body_text).render
+        Haml::Engine.new(body_text).render(scope || Object.new)
       when :textile
         body_text = markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
         RedCloth.new(body_text).to_html
