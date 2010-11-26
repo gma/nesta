@@ -1,6 +1,7 @@
 require File.expand_path("model_factory", File.dirname(__FILE__))
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
+
 module ModelMatchers
   class HavePage
     def initialize(path)
@@ -234,7 +235,7 @@ describe "Page", :shared => true do
     end
     
     it "should not include heading in body" do
-      @article.body.should_not have_tag("h1", "My article")
+      @article.body(nil).should_not have_tag("h1", "My article")
     end
 
     it "should retrieve description from metadata" do

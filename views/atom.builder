@@ -18,7 +18,7 @@ xml.feed :xmlns => "http://www.w3.org/2005/Atom" do
                :type => "text/html",
                :rel => "alternate"
       xml.id atom_id(article)
-      xml.content absolute_urls(article.body), :type => "html"
+      xml.content absolute_urls(article.body(nil)), :type => "html"
       xml.published article.date(:xmlschema)
       article.categories.each do |category|
         xml.category :term => category.permalink
