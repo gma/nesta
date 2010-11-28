@@ -1,8 +1,9 @@
 ._*
+.*.swp
 .bundle
 .DS_Store
 .rvmrc
-.*.swp
+.sass-cache
 config/config.yml
 config/deploy.rb
 db/*.db
