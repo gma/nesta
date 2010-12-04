@@ -119,8 +119,8 @@ module Nesta
     # Note that you can modify the behaviour of any of the default objects
     # in local/app.rb, or replace any of the default view templates by
     # creating replacements of the same name in local/views.
-    Overrides.load_theme_app
     Overrides.load_local_app
+    Overrides.load_theme_app
 
     get "/css/:sheet.css" do
       content_type "text/css", :charset => "utf-8"
