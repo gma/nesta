@@ -1,5 +1,8 @@
 require "rubygems"
-require "sinatra"
+require "bundler/setup"
+
+Bundler.require(:default)
+
 require "./app"
 
 run Nesta::App

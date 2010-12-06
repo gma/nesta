@@ -1,6 +1,8 @@
 require "rubygems"
-require "sinatra"
-require "spec/rake/spectask"
+require "bundler/setup"
+
+Bundler.require(:default, :test)
+
 begin
   require "vlad"
   Vlad.load(:scm => :git, :app => nil, :web => nil)
