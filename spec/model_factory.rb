@@ -32,11 +32,19 @@ module ModelFactory
     create_page(o, &block)
   end
   
-  def create_menu(*paths)
-    menu_file = filename(Nesta::Config.content_path, "menu", :txt)
-    File.open(menu_file, "w") do |file|
-      paths.each { |p| file.write("#{p}\n") }
+  def write_menu_item(indent, file, menu_item)
+    if menu_item.is_a?(Array)
+      indent.sub!(/^/, "  ")
+      menu_item.each { |path| write_menu_item(indent, file, path) }
+      indent.sub!(/^  /, "")
+    else
+      file.write("#{indent}#{menu_item}\n")
     end
+  end
+
+  def create_menu(menu_text)
+    file = filename(Nesta::Config.content_path, "menu", :txt)
+    File.open(file, "w") { |file| file.write(menu_text) }
   end
   
   def delete_page(type, permalink, extension)

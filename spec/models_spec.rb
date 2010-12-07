@@ -53,7 +53,7 @@ describe "Page", :shared => true do
     Nesta::Page.find_by_path("banana").heading.should == "Banana"
   end
   
-  it "should not find non existant page" do
+  it "should not find nonexistent page" do
     Nesta::Page.find_by_path("no-such-page").should be_nil
   end
   
@@ -116,22 +116,6 @@ describe "Page", :shared => true do
     end
   end
   
-  describe "when listing menu items" do
-    before(:each) do
-      @page = create_page(:path => "page-1")
-    end
-
-    it "should include pages that exist" do
-      create_menu(@page.path)
-      Nesta::Page.menu_items.should == [@page]
-    end
-
-    it "should not include pages that don't exist" do
-      create_menu(@page.path, "no-such-page")
-      Nesta::Page.menu_items.should == [@page]
-    end
-  end
-
   describe "when finding articles" do
     before(:each) do
       create_article(:heading => "Article 1", :path => "article-1")
@@ -298,6 +282,28 @@ describe "Page", :shared => true do
   end
 end
 
+describe "All types of page" do
+  include ModelFactory
+
+  before(:each) do
+    stub_configuration
+  end
+  
+  after(:each) do
+    remove_fixtures
+    Nesta::FileModel.purge_cache
+  end
+  
+  it "should still return top level menu items" do
+    # Page.menu_items is deprecated; we're keeping it for the moment so
+    # that we don't break themes or code in local/app.rb (just yet).
+    page1 = create_category(:path => "page-1")
+    page2 = create_category(:path => "page-2")
+    create_menu([page1.path, page2.path].join("\n"))
+    Nesta::Page.menu_items.should == [page1, page2]
+  end
+end
+
 describe "Markdown page" do
   before(:each) do
     @extension = :mdown
@@ -346,5 +352,65 @@ describe "Textile page" do
       :content => "h1. Second heading"
     )
     Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+  end
+end
+
+describe "Menu" do
+  include ModelFactory
+
+  before(:each) do
+    stub_configuration
+    @page = create_page(:path => "page-1")
+  end
+
+  after(:each) do
+    remove_fixtures
+    Nesta::FileModel.purge_cache
+  end
+
+  it "should find top level menu items" do
+    text = [@page.path, "no-such-page"].join("\n")
+    create_menu(text)
+    Nesta::Menu.top_level.should == [@page]
+  end
+
+  it "should find all items in the menu" do
+    create_menu(@page.path)
+    Nesta::Menu.full_menu.should == [@page]
+    Nesta::Menu.for_path('/').should == [@page]
+  end
+
+  describe "with nested sub menus" do
+    before(:each) do
+      (2..6).each do |i|
+        instance_variable_set("@page#{i}", create_page(:path => "page-#{i}"))
+      end
+      text = <<-EOF
+#{@page.path}
+  #{@page2.path}
+    #{@page3.path}
+    #{@page4.path}
+#{@page5.path}
+  #{@page6.path}
+      EOF
+      create_menu(text)
+    end
+
+    it "should return top level menu items" do
+      Nesta::Menu.top_level.should == [@page, @page5]
+    end
+
+    it "should return full tree of menu items" do
+      Nesta::Menu.full_menu.should ==
+        [@page, [@page2, [@page3, @page4]], @page5, [@page6]]
+    end
+
+    it "should return part of the tree of menu items" do
+      Nesta::Menu.for_path(@page2.path).should == [@page2, [@page3, @page4]]
+    end
+
+    it "should deem menu for path that isn't in menu to be nil" do
+      Nesta::Menu.for_path('wibble').should be_nil
+    end
   end
 end
