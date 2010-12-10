@@ -236,6 +236,11 @@ div#sidebar
     font-weight: bold
   ul.menu
     list-style: none
+    ul
+      list-style: disc
+      margin: 0 0 0 1.25em
+    & > ul
+      @include adjust-font-size(0.909, 0, 0)
 
   div.feed,
   div.social

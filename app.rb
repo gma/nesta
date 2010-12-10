@@ -42,12 +42,32 @@ module Nesta
         end
       end
   
+      def display_menu(menu, options = {})
+        defaults = { :class => nil, :levels => 2 }
+        options = defaults.merge(options)
+        if options[:levels] > 0
+          haml_tag :ul, :class => options[:class] do
+            menu.each do |item|
+              haml_tag :li do
+                if item.respond_to?(:each)
+                  display_menu(item, :levels => (options[:levels] - 1))
+                else
+                  haml_tag :a, :href => item.abspath do
+                    haml_concat item.heading
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+
       def no_widow(text)
         text.split[0...-1].join(" ") + "&nbsp;#{text.split[-1]}"
       end
   
       def set_common_variables
-        @menu_items = Nesta::Page.menu_items
+        @menu_items = Nesta::Menu.for_path('/')
         @site_title = Nesta::Config.title
         set_from_config(:title, :subtitle, :google_analytics_code)
         @heading = @title

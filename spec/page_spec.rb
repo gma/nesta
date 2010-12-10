@@ -24,16 +24,39 @@ describe "page with menus", :shared => true do
     @category = create_category
   end
   
-  it "should link to menu items" do
+  it "should not be display menu if not configured" do
+    do_get
+    body.should_not have_tag("#sidebar ul.menu")
+  end
+
+  it "should link to top level menu items" do
     create_menu(@category.path)
-    get @category.abspath
+    do_get
     body.should have_tag(
-        "#sidebar ul.menu a[@href=#{@category.abspath}]", @category.heading)
+      "ul.menu a[@href=#{@category.abspath}]", Regexp.new(@category.heading))
   end
   
-  it "should not be display menu if not configured" do
-    get @category.abspath
-    body.should_not have_tag("#sidebar ul.menu")
+  describe "and nested sub menus" do
+    before(:each) do
+      @level2 = create_category(:path => "level-2", :heading => "Level 2")
+      @level3 = create_category(:path => "level-3", :heading => "Level 3")
+      text = <<-EOF
+#{@category.abspath}
+  #{@level2.abspath}
+    #{@level3.abspath}
+      EOF
+      create_menu(text)
+    end
+
+    it "should display first level of nested sub menus" do
+      do_get
+      body.should have_tag("ul.menu li ul li a", Regexp.new(@level2.heading))
+    end
+
+    it "should not display nested menus to arbitrary depth" do
+      do_get
+      body.should_not have_tag("ul.menu li ul li ul")
+    end
   end
 end
 
@@ -44,44 +67,53 @@ describe "home page" do
   before(:each) do
     stub_configuration
     create_category
-    get "/"
   end
   
   after(:each) do
     remove_fixtures
     Nesta::FileModel.purge_cache
   end
+
+  def do_get
+    get "/"
+  end
   
   it_should_behave_like "page with menus"
   
   it "should render successfully" do
+    do_get
     last_response.should be_ok
   end
   
   it "should display title and subtitle in title tag" do
+    do_get
     body.should have_tag("title", "My blog - about stuff")
   end
   
   it "should display site title in h1 tag" do
+    do_get
     body.should have_tag('#header p.title', /My blog/)
   end
   
   it "should display site subtitle in h1 tag" do
+    do_get
     body.should have_tag('#header p.subtitle', /about stuff/)
   end
   
   it "should set description meta tag" do
+    do_get
     body.should have_tag("meta[@name=description][@content='great web site']")
   end
   
   it "should set keywords meta tag" do
+    do_get
     body.should have_tag("meta[@name=keywords][@content='home, page']")
   end
   
   describe "when articles have no summary" do
     before(:each) do
       create_article
-      get "/"
+      do_get
     end
     
     it "should display full content of article" do
@@ -101,7 +133,7 @@ describe "home page" do
         "summary" => @summary,
         "read more" => @read_more
       })
-      get "/"
+      do_get
     end
     
     it "should display link to article in h2 tag" do
@@ -121,10 +153,12 @@ end
 
 describe "page with meta tags", :shared => true do
   it "should set description meta tag" do
+    do_get
     body.should have_tag("meta[@name=description][@content='#{@description}']")
   end
   
   it "should set the keywords meta tag" do
+    do_get
     body.should have_tag("meta[@name=keywords][@content='#{@keywords}']")
   end
 end
@@ -152,50 +186,55 @@ describe "article" do
     Nesta::FileModel.purge_cache
   end
   
-  describe "that's not assigned to a category" do
-    before(:each) do
-      get @article.abspath
-    end
+  def do_get
+    get @article.abspath
+  end
 
+  describe "that's not assigned to a category" do
     it_should_behave_like "page with menus"  
     it_should_behave_like "page with meta tags"
 
     it "should render successfully" do
+      do_get
       last_response.should be_ok
     end
 
     it "should display the heading" do
+      do_get
       body.should have_tag("h1", "My article")
     end
 
     it "should not display category links" do
+      do_get
       body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
     end
 
     it "should display the date" do
+      do_get
       body.should have_tag("div.date", @date)
     end
 
     it "should display the content" do
+      do_get
       body.should have_tag("p", "Content goes here")
     end
   end
   
   describe "that's assigned to categories" do
     before(:each) do
-      # Nesta::FileModel.purge_cache
       create_category(:heading => "Apple", :path => "the-apple")
       create_category(:heading => "Banana", :path => "banana")
-      article = create_article(
+      @article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
-      get article.abspath
     end
     
     it "should render successfully" do
+      do_get
       last_response.should be_ok
     end
     
     it "should link to each category" do
+      do_get
       body.should have_tag("div.categories", /Categories/)
       body.should have_tag("div.categories") do |categories|
         categories.should have_tag("a[@href=/banana]", "Banana")
@@ -236,8 +275,6 @@ describe "page" do
     Nesta::FileModel.purge_cache
   end
   
-  it_should_behave_like "page with menus"
-  
   describe "that doesn't exist" do
     it "should return 404 if page not found" do
       get "/no-such-page"
@@ -245,6 +282,10 @@ describe "page" do
     end
   end
   
+  def do_get
+    get @category.abspath
+  end
+
   describe "that exists" do
     before(:each) do
       @description = "Page about stuff"
@@ -267,26 +308,32 @@ describe "page" do
     end
 
     it_should_behave_like "page with meta tags"
+    it_should_behave_like "page with menus"
 
     it "should render successfully" do
+      do_get
       last_response.should be_ok
     end
     
     it "should display the heading" do
+      do_get
       body.should have_tag("h1", @category.heading)
     end
 
     it "should display the content" do
+      do_get
       body.should have_tag("p", @content)
     end
 
     it "should display links to relevant pages" do
+      do_get
       body.should have_tag(
           "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
       body.should_not have_tag("h3", @article2.heading)
     end
     
     it "should not include Disqus comments by default" do
+      do_get
       body.should_not have_tag('#disqus_thread')
     end
   end
@@ -295,10 +342,10 @@ describe "page" do
     before(:each) do
       stub_config_key("disqus_short_name", "mysite")
       @category = create_category
-      get @category.abspath
     end
     
     it "should display Disqus comments" do
+      do_get
       body.should have_tag('#disqus_thread')
       body.should have_tag('script[@src*="mysite/embed.js"]')
     end
