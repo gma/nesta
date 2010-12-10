@@ -7,6 +7,7 @@ gem "RedCloth", "4.2.2"
 gem "sinatra", "1.1.0", :require => "sinatra/base"
 
 group :development do
+  # gem (RUBY_VERSION =~ /^1.9/) ? "ruby-debug19" : "ruby-debug"
   gem "shotgun", "0.8"
   gem "vlad", "2.1.0"
   gem "vlad-git", "2.2.0"
