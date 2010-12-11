@@ -19,24 +19,25 @@ describe "layout" do
   end
 end
 
-describe "page with menus", :shared => true do
-  before(:each) do
-    @category = create_category
-  end
-  
-  it "should not be display menu if not configured" do
+describe "page that can display menus", :shared => true do
+  it "should not display menu by default" do
     do_get
     body.should_not have_tag("#sidebar ul.menu")
   end
 
-  it "should link to top level menu items" do
-    create_menu(@category.path)
-    do_get
-    body.should have_tag(
-      "ul.menu a[@href=#{@category.abspath}]", Regexp.new(@category.heading))
+  describe "and simple menu configured" do
+    before(:each) do
+      create_menu(@category.path)
+    end
+
+    it "should link to top level menu items" do
+      do_get
+      body.should have_tag(
+        "ul.menu a[@href=#{@category.abspath}]", Regexp.new(@category.heading))
+    end
   end
   
-  describe "and nested sub menus" do
+  describe "and nested menu configured" do
     before(:each) do
       @level2 = create_category(:path => "level-2", :heading => "Level 2")
       @level3 = create_category(:path => "level-3", :heading => "Level 3")
@@ -78,7 +79,13 @@ describe "home page" do
     get "/"
   end
   
-  it_should_behave_like "page with menus"
+  describe "when categories exist" do
+    before(:each) do
+      @category = create_category
+    end
+  
+    it_should_behave_like "page that can display menus"
+  end
   
   it "should render successfully" do
     do_get
@@ -151,15 +158,15 @@ describe "home page" do
   end
 end
 
-describe "page with meta tags", :shared => true do
-  it "should set description meta tag" do
-    do_get
-    body.should have_tag("meta[@name=description][@content='#{@description}']")
-  end
-  
+describe "page with keyword and description", :shared => true do
   it "should set the keywords meta tag" do
     do_get
     body.should have_tag("meta[@name=keywords][@content='#{@keywords}']")
+  end
+
+  it "should set description meta tag" do
+    do_get
+    body.should have_tag("meta[@name=description][@content='#{@description}']")
   end
 end
 
@@ -190,9 +197,16 @@ describe "article" do
     get @article.abspath
   end
 
+  describe "when categories exist" do
+    before(:each) do
+      @category = create_category
+    end
+  
+    it_should_behave_like "page that can display menus"
+  end
+
   describe "that's not assigned to a category" do
-    it_should_behave_like "page with menus"  
-    it_should_behave_like "page with meta tags"
+    it_should_behave_like "page with keyword and description"
 
     it "should render successfully" do
       do_get
@@ -262,7 +276,7 @@ describe "article" do
   end
 end
 
-describe "page" do
+describe "When a page" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -275,8 +289,8 @@ describe "page" do
     Nesta::FileModel.purge_cache
   end
   
-  describe "that doesn't exist" do
-    it "should return 404 if page not found" do
+  describe "doesn't exist" do
+    it "should respond with 404" do
       get "/no-such-page"
       last_response.should_not be_ok
     end
@@ -286,29 +300,19 @@ describe "page" do
     get @category.abspath
   end
 
-  describe "that exists" do
+  describe "has meta data" do
     before(:each) do
+      @content = "Page content"
       @description = "Page about stuff"
       @keywords = "things, stuff"
-      @content = "Page content"
       @category = create_category(
-          :content => "# My category\n\n#{@content}",
-          :metadata => {
-            "description" => @description,
-            "keywords" => @keywords
-          })
-      @article = create_category(
-          :path => "another-page",
-          :heading => "Categorised",
-          :metadata => { :categories => @category.path },
-          :content => "Article content")
-      @article2 = create_article(
-          :heading => "Second article", :path => "second-article")
-      get @category.abspath
+        :content => "# My category\n\n#{@content}",
+        :metadata => { "description" => @description, "keywords" => @keywords }
+      )
     end
 
-    it_should_behave_like "page with meta tags"
-    it_should_behave_like "page with menus"
+    it_should_behave_like "page with keyword and description"
+    it_should_behave_like "page that can display menus"
 
     it "should render successfully" do
       do_get
@@ -325,13 +329,26 @@ describe "page" do
       body.should have_tag("p", @content)
     end
 
-    it "should display links to relevant pages" do
-      do_get
-      body.should have_tag(
-          "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
-      body.should_not have_tag("h3", @article2.heading)
+    describe "with associated articles" do
+      before(:each) do
+        @article = create_article(
+          :path => "another-page",
+          :heading => "Categorised",
+          :metadata => { :categories => @category.path },
+          :content => "Article content"
+        )
+        @article2 = create_article(
+          :path => "second-article", :heading => "Second article")
+      end
+
+      it "should display links to articles" do
+        do_get
+        body.should have_tag(
+            "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
+        body.should_not have_tag("h3", @article2.heading)
+      end
     end
-    
+
     it "should not include Disqus comments by default" do
       do_get
       body.should_not have_tag('#disqus_thread')
