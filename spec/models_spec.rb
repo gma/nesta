@@ -82,17 +82,18 @@ describe "Page", :shared => true do
         :metadata => {
           "date" => "30 December 2008",
           "categories" => @category.path
-        })
+        }
+      )
       @article = create_article(
         :heading => "Article 3",
         :path => "article-3",
         :metadata => {
           "date" => "31 December 2008",
           "categories" => @category.path
-        })
-      create_category(:path => "category-2", :metadata => {
-        "categories" => @category.path
-      })
+        }
+      )
+      create_category(:path => "category-2",
+                      :metadata => { "categories" => @category.path })
     end
 
     it "should find articles" do
@@ -180,21 +181,63 @@ describe "Page", :shared => true do
     end
   end
   
+  describe "without metadata" do
+    before(:each) do
+      create_article
+      @article = Nesta::Page.find_all.first
+    end
+    
+    it "should use default layout" do
+      @article.layout.should == :layout
+    end
+
+    it "should use default template" do
+      @article.template.should == :page
+    end
+    
+    it "should parse heading correctly" do
+      @article.to_html.should have_tag("h1", "My article")
+    end
+    
+    it "should have default read more link text" do
+      @article.read_more.should == "Continue reading"
+    end
+    
+    it "should not have description" do
+      @article.description.should be_nil
+    end
+    
+    it "should not have keywords" do
+      @article.keywords.should be_nil
+    end
+  end
+  
   describe "with metadata" do
     before(:each) do
+      @layout = "my_layout"
+      @template = "my_template"
       @date = "07 September 2009"
       @keywords = "things, stuff"
       @description = "Page about stuff"
       @summary = 'Multiline\n\nsummary'
       @read_more = "Continue at your leisure"
-      create_article(:metadata => {
+      @article = create_article(:metadata => {
+        "layout" => @layout,
+        "template" => @template,
         "date" => @date.gsub("September", "Sep"),
         "description" => @description,
         "keywords" => @keywords,
         "summary" => @summary,
         "read more" => @read_more
       })
-      @article = Nesta::Page.find_by_path("article-prefix/my-article")
+    end
+
+    it "should override default layout" do
+      @article.layout.should == @layout.to_sym
+    end
+    
+    it "should override default template" do
+      @article.template.should == @template.to_sym
     end
     
     it "should set permalink from filename" do
@@ -243,29 +286,6 @@ describe "Page", :shared => true do
     
     it "should treat double newline chars as paragraph break in summary" do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
-    end
-  end
-  
-  describe "without metadata" do
-    before(:each) do
-      create_article
-      @article = Nesta::Page.find_all.first
-    end
-    
-    it "should parse heading correctly" do
-      @article.to_html.should have_tag("h1", "My article")
-    end
-    
-    it "should have default read more link text" do
-      @article.read_more.should == "Continue reading"
-    end
-    
-    it "should not have description" do
-      @article.description.should be_nil
-    end
-    
-    it "should not have keywords" do
-      @article.keywords.should be_nil
     end
   end
   

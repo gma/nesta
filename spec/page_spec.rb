@@ -1,21 +1,15 @@
 require File.expand_path("model_factory", File.dirname(__FILE__))
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 
-describe "layout" do
-  include ModelFactory
-  include RequestSpecHelper
-  
-  it "should not include GA JavaScript by default" do
-    stub_configuration
-    get "/"
-    body.should_not have_tag("script", /'_setAccount', 'UA-1234'/)
+describe "page with keyword and description", :shared => true do
+  it "should set the keywords meta tag" do
+    do_get
+    body.should have_tag("meta[@name=keywords][@content='#{@keywords}']")
   end
-  
-  it "should include GA JavaScript if configured" do
-    stub_env_config_key("google_analytics_code", "UA-1234")
-    stub_configuration
-    get "/"
-    body.should have_tag("script", /'_setAccount', 'UA-1234'/)
+
+  it "should set description meta tag" do
+    do_get
+    body.should have_tag("meta[@name=description][@content='#{@description}']")
   end
 end
 
@@ -61,7 +55,25 @@ describe "page that can display menus", :shared => true do
   end
 end
 
-describe "home page" do
+describe "The layout" do
+  include ModelFactory
+  include RequestSpecHelper
+  
+  it "should not include GA JavaScript by default" do
+    stub_configuration
+    get "/"
+    body.should_not have_tag("script", /'_setAccount', 'UA-1234'/)
+  end
+  
+  it "should include GA JavaScript if configured" do
+    stub_env_config_key("google_analytics_code", "UA-1234")
+    stub_configuration
+    get "/"
+    body.should have_tag("script", /'_setAccount', 'UA-1234'/)
+  end
+end
+
+describe "The home page" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -158,19 +170,7 @@ describe "home page" do
   end
 end
 
-describe "page with keyword and description", :shared => true do
-  it "should set the keywords meta tag" do
-    do_get
-    body.should have_tag("meta[@name=keywords][@content='#{@keywords}']")
-  end
-
-  it "should set description meta tag" do
-    do_get
-    body.should have_tag("meta[@name=description][@content='#{@description}']")
-  end
-end
-
-describe "article" do
+describe "An article" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -197,6 +197,8 @@ describe "article" do
     get @article.abspath
   end
 
+  it_should_behave_like "page with keyword and description"
+
   describe "when categories exist" do
     before(:each) do
       @category = create_category
@@ -205,41 +207,39 @@ describe "article" do
     it_should_behave_like "page that can display menus"
   end
 
-  describe "that's not assigned to a category" do
-    it_should_behave_like "page with keyword and description"
+  it "should render successfully" do
+    do_get
+    last_response.should be_ok
+  end
 
-    it "should render successfully" do
-      do_get
-      last_response.should be_ok
-    end
+  it "should display the heading" do
+    do_get
+    body.should have_tag("h1", "My article")
+  end
 
-    it "should display the heading" do
-      do_get
-      body.should have_tag("h1", "My article")
-    end
+  it "should not display category links" do
+    do_get
+    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
+  end
 
-    it "should not display category links" do
-      do_get
-      body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
-    end
+  it "should display the date" do
+    do_get
+    body.should have_tag("div.date", @date)
+  end
 
-    it "should display the date" do
-      do_get
-      body.should have_tag("div.date", @date)
-    end
-
-    it "should display the content" do
-      do_get
-      body.should have_tag("p", "Content goes here")
-    end
+  it "should display the content" do
+    do_get
+    body.should have_tag("p", "Content goes here")
   end
   
-  describe "that's assigned to categories" do
+  describe "that is assigned to categories" do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
-      create_category(:heading => "Banana", :path => "banana")
+      @category = create_category(:heading => "Banana", :path => "banana")
       @article = create_article(
-          :metadata => { "categories" => "banana, the-apple" })
+        :path => "#{@category.path}/article",
+        :metadata => { "categories" => "banana, the-apple" }
+      )
     end
     
     it "should render successfully" do
@@ -255,28 +255,22 @@ describe "article" do
         categories.should have_tag("a[@href=/the-apple]", "Apple")
       end
     end
-  end
-  
-  describe "with parent" do
-    before(:each) do
-      @category = create_category(:path => "topic")
-      article = create_article(:path => "topic/article")
-      get article.abspath
-    end
-    
-    it "should link to parent in breadcrumb" do
+
+    it "should link to a category in breadcrumb" do
+      do_get
       body.should have_tag(
           "div.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
     end
     
-    it "should contain parent name in page title" do
+    it "should contain category name in page title" do
+      do_get
       body.should_not have_tag("title", /My blog/)
-      body.should have_tag("title", /- My category$/)
+      body.should have_tag("title", /- #{@category.heading}$/)
     end
   end
 end
 
-describe "When a page" do
+describe "A page" do
   include ModelFactory
   include RequestSpecHelper
   
@@ -289,18 +283,18 @@ describe "When a page" do
     Nesta::FileModel.purge_cache
   end
   
-  describe "doesn't exist" do
-    it "should respond with 404" do
+  def do_get
+    get @category.abspath
+  end
+
+  describe "that doesn't exist" do
+    it "should render the 404 page" do
       get "/no-such-page"
       last_response.should_not be_ok
     end
   end
   
-  def do_get
-    get @category.abspath
-  end
-
-  describe "has meta data" do
+  describe "that has meta data" do
     before(:each) do
       @content = "Page content"
       @description = "Page about stuff"
@@ -369,7 +363,7 @@ describe "When a page" do
   end
 end
 
-describe "haml page" do
+describe "A Haml page" do
   include ModelFactory
   include RequestSpecHelper
 

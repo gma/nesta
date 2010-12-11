@@ -73,6 +73,14 @@ module Nesta
       File.join(prefix, permalink)
     end
 
+    def layout
+      (metadata("layout") || "layout").to_sym
+    end
+
+    def template
+      (metadata("template") || "page").to_sym
+    end
+
     def to_html(scope = nil)
       case @format
       when :mdown
