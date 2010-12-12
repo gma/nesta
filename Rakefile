@@ -3,6 +3,9 @@ require "bundler/setup"
 
 Bundler.require(:default, :test)
 
+require "spec/rake/spectask"
+Bundler::GemHelper.install_tasks
+
 begin
   require "vlad"
   Vlad.load(:scm => :git, :app => nil, :web => nil)
