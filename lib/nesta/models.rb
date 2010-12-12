@@ -43,7 +43,7 @@ module Nesta
     end
 
     def self.deprecated(name, message)
-      if Sinatra::Application.environment != :test
+      if Nesta::App.environment != :test
         $stderr.puts "DEPRECATION WARNING: #{name} is deprecated; #{message}"
       end
     end

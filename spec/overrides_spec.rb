@@ -1,46 +1,46 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "Rendering" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 
   def create_fixture(type, name, content)
-    path = File.join(@paths[type], name)
+    base_path = {
+      :local => Nesta::Path.local,
+      :theme => Nesta::Path.themes(@theme)
+    }[type]
+    path = File.join(base_path, name)
     @fixtures << path
     FileUtils.mkdir_p(File.dirname(path))
-    open(path, "w") { |file| file.write(content) }
+    open(path, 'w') { |file| file.write(content) }
   end
 
   def create_template(type, name, content)
-    create_fixture(type, File.join("views", name), content)
+    create_fixture(type, File.join('views', name), content)
   end
   
   def create_app_file(type)
-    create_fixture(type, "app.rb", "DEFINED_IN_#{type.to_s.upcase}_FILE = true")
+    create_fixture(type, 'app.rb', "DEFINED_IN_#{type.to_s.upcase}_FILE = true")
   end
 
   before(:each) do
-    @app_root = Nesta::Path.root
-    Nesta::Path.root = File.expand_path(
-        "../fixtures/tmp", File.dirname(__FILE__))
-    @theme = "my-theme"
-    @paths = {
-      :local => Nesta::Path.local,
-      :theme => Nesta::Path.themes(@theme)
-    }
+    @app_root = Nesta::App.root
+    Nesta::App.root = File.expand_path('fixtures/tmp', File.dirname(__FILE__))
+    @theme = 'my-theme'
     @fixtures = []
     stub_configuration
   end
   
   after(:each) do
     @fixtures.each { |path| FileUtils.rm(path) if File.exist?(path) }
-    Nesta::Path.root = @app_root
+    Nesta::App.root = @app_root
   end
     
   describe "when local files exist" do
     before(:each) do
-      create_template(:local, "page.haml", "%p Local template")
+      create_template(:local, 'page.haml', '%p Local template')
     end
     
     it "should use local application files" do
@@ -57,7 +57,7 @@ describe "Rendering" do
   
   describe "when theme installed" do
     before(:each) do
-      create_template(:theme, "page.haml", "%p Theme template")
+      create_template(:theme, 'page.haml', '%p Theme template')
     end
     
     it "should not require theme application file automatically" do

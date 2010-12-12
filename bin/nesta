@@ -1,0 +1,58 @@
+#!/usr/bin/env ruby
+
+require 'getoptlong'
+
+require File.expand_path('../lib/nesta/commands', File.dirname(__FILE__))
+
+module Nesta
+  class Cli
+    def self.usage
+      puts <<EOF
+USAGE: #{File.basename($0)} [GLOBAL OPTIONS] <command> [COMMAND OPTIONS]
+
+GLOBAL OPTIONS
+    --help, -h      Display this message.
+
+COMMANDS
+    new <path>      Create a new Nesta project.
+
+OPTIONS FOR new
+    --heroku        Include the heroku:config rake task.
+
+EOF
+exit 0
+    end
+
+    def self.parse_command_line
+      opts = GetoptLong.new(
+        ['--help', '-h', GetoptLong::NO_ARGUMENT],
+        ['--heroku', GetoptLong::NO_ARGUMENT]
+      )
+      options = {}
+      opts.each do |opt, arg|
+        case opt 
+        when '--help'
+          usage
+        else
+          options[opt.sub(/^--/, '')] = arg
+        end
+      end
+      options
+    end
+
+    def self.main(options)
+      command = ARGV.shift
+      command.nil? && usage
+      case command
+      when "new"
+        path = ARGV[0]
+        Nesta::Commands::New.new(path, options)
+      end
+    rescue Nesta::Commands::UsageError => e
+      $stderr.puts "ERROR: #{e}"
+      usage
+    end
+  end
+end
+
+Nesta::Cli.main(Nesta::Cli.parse_command_line)

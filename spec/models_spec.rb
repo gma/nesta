@@ -1,5 +1,5 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 module ModelMatchers
   class HavePage
@@ -27,6 +27,7 @@ module ModelMatchers
 end
 
 describe "Page", :shared => true do
+  include ConfigSpecHelper
   include ModelFactory
   include ModelMatchers
 
@@ -303,6 +304,7 @@ describe "Page", :shared => true do
 end
 
 describe "All types of page" do
+  include ConfigSpecHelper
   include ModelFactory
 
   before(:each) do
@@ -325,6 +327,8 @@ describe "All types of page" do
 end
 
 describe "Markdown page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :mdown
   end
@@ -342,6 +346,8 @@ describe "Markdown page" do
 end
 
 describe "Haml page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :haml
   end
@@ -359,6 +365,8 @@ describe "Haml page" do
 end
 
 describe "Textile page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :textile
   end
@@ -376,6 +384,7 @@ describe "Textile page" do
 end
 
 describe "Menu" do
+  include ConfigSpecHelper
   include ModelFactory
 
   before(:each) do

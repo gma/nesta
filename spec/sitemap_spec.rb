@@ -1,9 +1,10 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "sitemap XML" do
-  include ModelFactory
+  include ConfigSpecHelper
   include RequestSpecHelper
+  include ModelFactory
   
   before(:each) do
     stub_configuration
@@ -61,6 +62,7 @@ describe "sitemap XML" do
 end
 
 describe "sitemap XML lastmod" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   

@@ -11,13 +11,26 @@ Spec::Runner.configure do |config|
   config.include(RspecHpricotMatchers)
 end
 
-set :views => File.join(File.dirname(__FILE__), "..", "views"),
-    :public => File.join(File.dirname(__FILE__), "..", "public")
+module Nesta
+  class App < Sinatra::Base
+    set :environment, :test
+    set :reload_templates, true
+  end
+end
 
-set :environment, :test
-set :reload_templates, true
+require File.expand_path("../lib/nesta/app", File.dirname(__FILE__))
 
-require File.join(File.dirname(__FILE__), "..", "app")
+module FixtureHelper
+  FIXTURE_DIR = File.expand_path("fixtures", File.dirname(__FILE__))
+
+  def create_fixtures_directory
+    FileUtils.mkdir_p(FixtureHelper::FIXTURE_DIR)
+  end
+
+  def remove_fixtures
+    FileUtils.rm_r(FixtureHelper::FIXTURE_DIR, :force => true)
+  end
+end
 
 module RequestSpecHelper
   def app
@@ -26,5 +39,34 @@ module RequestSpecHelper
   
   def body
     last_response.body
+  end
+end
+
+module ConfigSpecHelper
+  include FixtureHelper
+
+  def stub_yaml_config
+    @config = {}
+    Nesta::Config.stub!(:yaml_exists?).and_return(true)
+    Nesta::Config.stub!(:yaml_conf).and_return(@config)
+  end
+
+  def stub_config_key(key, value, options = {})
+    stub_yaml_config unless @config
+    if options[:rack_env]
+      @config['test'] ||= {}
+      @config['test'][key] = value
+    else
+      @config[key] = value
+    end
+  end
+  
+  def stub_configuration(options = {})
+    stub_config_key("title", "My blog", options)
+    stub_config_key("subtitle", "about stuff", options)
+    stub_config_key("description", "great web site", options)
+    stub_config_key("keywords", "home, page", options)
+    content_path = File.join(FixtureHelper::FIXTURE_DIR, "content")
+    stub_config_key("content", content_path, options.merge(:rack_env => true))
   end
 end

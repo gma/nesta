@@ -1,0 +1,73 @@
+# Title and subheading for your site. Used on the home page and in page
+# titles.
+#
+title: "My Site"
+subtitle: "(change this text in config/config.yml)"
+
+# If you want to set the descrition or keywords meta tags on your site's
+# home page, do it here.
+#
+# description: "Set this to something that describes your home page"
+# keywords: "enter 3 or 4, comma separated, keywords"
+
+# You should really specify your content's author when generating an
+# Atom feed. Specify at least one of name, uri or email, and Nesta will
+# include it in your feed. See the Atom spec for more info:
+#
+# http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.feed
+#
+# author:
+#   name: Your Name
+#   uri: http://yourhomepage.com
+#   email: you@yourdomain.com
+
+# You can stick with the default look and feel, or use a theme. Themes are
+# easy to create or install, and live inside the themes directory. You
+# can also use scripts/theme to install them.
+#
+# theme: name-of-theme
+
+# If you want to use the Disqus service (http://disqus.com) to display
+# comments on your site, register a Disqus account and then specify your
+# site's short name here. A comment form will automatically be added to
+# the bottom of your pages.
+#
+# disqus_short_name: mysite
+
+# cache
+#     Set it to true if you'd like Nesta to cache your pages in ./public.
+#     Useful if you're deploying Nesta with a proxy server such as Nginx,
+#     but not in the least bit helpful if your pages are dynamic, or you're
+#     deploying Nesta to Heroku.
+#
+cache: false
+
+# content
+#     The root directory where nesta will look for your article files.
+#     Should contain "pages" and "attachments" subdirectories that contain
+#     your actual content and the (optional) menu.txt file that links to your
+#     main category pages.
+#
+content: content
+
+# google_analytics_code
+#     Set this if you want Google Analytics to track traffic on your site.
+#     Probably best not to set a default value, but to set it in production.
+#
+#     The production settings are used if you're deploying to Heroku, so
+#     scroll down a bit to set it in production even if you're not deploying
+#     to your own server.
+#
+# google_analytics_code: "UA-???????-?"
+
+# Overriding "cache" and "content" in production is recommended if you're
+# deploying Nesta to your own server (but see the deployment documentation
+# on the Nesta site). Setting google_analytics_code in production is
+# recommended regardless of how you're deploying (if you have a GA account!).
+#
+# Don't forget to uncomment the "production:" line too...
+
+# production:
+#   cache: true    
+#   content: /var/apps/nesta/shared/content
+#   google_analytics_code: "UA-???????-?"

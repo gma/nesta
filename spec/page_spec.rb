@@ -1,5 +1,5 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "page with keyword and description", :shared => true do
   it "should set the keywords meta tag" do
@@ -56,6 +56,7 @@ describe "page that can display menus", :shared => true do
 end
 
 describe "The layout" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -66,14 +67,15 @@ describe "The layout" do
   end
   
   it "should include GA JavaScript if configured" do
-    stub_env_config_key("google_analytics_code", "UA-1234")
+    stub_config_key('google_analytics_code', 'UA-1234', :rack_env => true)
     stub_configuration
-    get "/"
-    body.should have_tag("script", /'_setAccount', 'UA-1234'/)
+    get '/'
+    body.should have_tag('script', /'_setAccount', 'UA-1234'/)
   end
 end
 
 describe "The home page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -171,6 +173,7 @@ describe "The home page" do
 end
 
 describe "An article" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -271,6 +274,7 @@ describe "An article" do
 end
 
 describe "A page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -364,6 +368,7 @@ describe "A page" do
 end
 
 describe "A Haml page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 
@@ -388,6 +393,7 @@ describe "A Haml page" do
 end
 
 describe "attachments" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 

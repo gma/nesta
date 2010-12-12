@@ -3,12 +3,12 @@ require "builder"
 require "haml"
 require "sass"
 
-require File.expand_path('lib/cache', File.dirname(__FILE__))
-require File.expand_path('lib/config', File.dirname(__FILE__))
-require File.expand_path('lib/models', File.dirname(__FILE__))
-require File.expand_path('lib/path', File.dirname(__FILE__))
-require File.expand_path('lib/plugins', File.dirname(__FILE__))
-require File.expand_path('lib/overrides', File.dirname(__FILE__))
+require File.expand_path('cache', File.dirname(__FILE__))
+require File.expand_path('config', File.dirname(__FILE__))
+require File.expand_path('models', File.dirname(__FILE__))
+require File.expand_path('path', File.dirname(__FILE__))
+require File.expand_path('plugins', File.dirname(__FILE__))
+require File.expand_path('overrides', File.dirname(__FILE__))
 
 Nesta::Plugins.load_local_plugins
 
@@ -16,7 +16,8 @@ module Nesta
   class App < Sinatra::Base
     register Sinatra::Cache
 
-    set :root, File.dirname(__FILE__)
+    set :root, File.expand_path('../..', File.dirname(__FILE__))
+    set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
 
     helpers Overrides::Renderers
@@ -121,7 +122,7 @@ module Nesta
     error do
       set_common_variables
       haml(:error)
-    end unless Sinatra::Application.environment == :development
+    end unless Nesta::App.environment == :development
 
     # If you want to change Nesta's behaviour, you have two options:
     #
