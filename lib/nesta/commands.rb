@@ -1,4 +1,7 @@
+require 'erb'
 require 'fileutils'
+
+require File.expand_path('version', File.dirname(__FILE__))
 
 module Nesta
   module Commands
@@ -39,9 +42,12 @@ module Nesta
       end
 
       def copy_templates
-        %w[config.ru config/config.yml].each { |file| copy_template(file) }
+        %w[
+          config.ru
+          config/config.yml
+          Gemfile
+        ].each { |file| copy_template(file) }
         if @options.has_key?('heroku')
-          copy_template('Gemfile') 
           copy_template('Rakefile') 
         end
       end

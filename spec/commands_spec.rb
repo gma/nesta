@@ -31,29 +31,29 @@ describe "nesta" do
         command(:new, @project_path)
       end
 
-      it "should create the rackup file" do
-        should_exist('config.ru')
-      end
-
       it "should create the content directories" do
         should_exist('content/attachments')
         should_exist('content/pages')
       end
 
+      it "should create the rackup file" do
+        should_exist('config.ru')
+      end
+
       it "should create the config.yml file" do
         should_exist('config/config.yml')
-      end
-    end
-
-    describe "--heroku" do
-      before(:each) do
-        command(:new, @project_path, 'heroku' => '')
       end
 
       it "should add a Gemfile" do
         should_exist('Gemfile')
         gemfile_source = File.read(project_path('Gemfile'))
         gemfile_source.should match(/gem 'nesta', '#{Nesta::VERSION}'/)
+      end
+    end
+
+    describe "--heroku" do
+      before(:each) do
+        command(:new, @project_path, 'heroku' => '')
       end
 
       it "should add the heroku:config Rake task" do
