@@ -249,7 +249,7 @@ module Nesta
 
     def self.full_menu
       menu = []
-      menu_file = Nesta::Config.content_path("menu.txt")
+      menu_file = Nesta::Config.content_path('menu.txt')
       if File.exist?(menu_file)
         File.open(menu_file) { |file| append_menu_item(menu, file, 0) }
       end
