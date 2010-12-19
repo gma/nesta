@@ -6,7 +6,7 @@ describe "nesta" do
 
   before(:each) do
     create_fixtures_directory
-    @project_path = File.join(FixtureHelper::FIXTURE_DIR, "mysite.com")
+    @project_path = File.join(FixtureHelper::FIXTURE_DIR, 'mysite.com')
   end
   
   after(:each) do
@@ -28,7 +28,7 @@ describe "nesta" do
   describe "new" do
     describe "without options" do
       before(:each) do
-        command(:new, @project_path)
+        command(:new, @project_path).create
       end
 
       it "should create the content directories" do
@@ -53,7 +53,7 @@ describe "nesta" do
 
     describe "--heroku" do
       before(:each) do
-        command(:new, @project_path, 'heroku' => '')
+        command(:new, @project_path, 'heroku' => '').create
       end
 
       it "should add the heroku:config Rake task" do
@@ -64,4 +64,75 @@ describe "nesta" do
       end
     end
   end
+
+  describe "theme:install" do
+    before(:each) do
+      @repo_url = 'git://github.com/gma/nesta-theme-mine.git'
+      @theme_dir = 'themes/mine'
+      FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
+      @command = command(:theme)
+      @command.stub!(:system)
+    end
+
+    after(:each) do
+      FileUtils.rm_r(@theme_dir)
+    end
+
+    it "should clone the repository" do
+      @command.should_receive(:system).with(
+          'git', 'clone', @repo_url, @theme_dir)
+      @command.install(@repo_url)
+    end
+
+    it "should remove the theme's .git directory" do
+      @command.install(@repo_url)
+      File.exist?(@theme_dir).should be_true
+      File.exist?(File.join(@theme_dir, '.git')).should be_false
+    end
+
+    it "should enable the freshly installed theme" do
+      @command.should_receive(:enable).with('mine')
+      @command.install(@repo_url)
+    end
+
+    describe "when theme URL doesn't match recommendation" do
+      before(:each) do
+        @repo_url = 'git://foobar.com/path/to/mytheme.git'
+        @other_theme_dir = 'themes/mytheme'
+        FileUtils.mkdir_p(File.join(@other_theme_dir, '.git'))
+        @command = command(:theme)
+      end
+
+      after(:each) do
+        FileUtils.rm_r(@other_theme_dir)
+      end
+
+      it "should use the basename as theme dir" do
+        @command.should_receive(:system).with(
+            'git', 'clone', @repo_url, @other_theme_dir)
+        @command.install(@repo_url)
+      end
+    end
+  end
+
+  # describe "theme:enable" do
+  #   describe "when no theme is configured" do
+  #     it "should enable the theme"
+  #   end
+
+  #   describe "when another theme is configured" do
+  #     it "should enable the theme"
+  #   end
+  # end
+
+  # describe "theme:create" do
+  #   it "should create the theme directory"
+  #   it "should create a dummy README file"
+  #   it "should create a default app.rb file"
+  #   it "should create public and view directories"
+
+  #   describe "when theme already exists" do
+  #     it "should refuse to do anything"
+  #   end
+  # end
 end

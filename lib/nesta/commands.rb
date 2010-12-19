@@ -22,6 +22,9 @@ module Nesta
         fail("#{path} already exists") if File.exist?(path)
         @path = path
         @options = options
+      end
+
+      def create
         make_directories
         copy_templates
       end
@@ -50,6 +53,21 @@ module Nesta
         if @options.has_key?('heroku')
           copy_template('Rakefile') 
         end
+      end
+    end
+
+    class Theme
+      include Command
+
+      def install(url, options = {})
+        url.nil? && (raise UsageError.new('URL not specified'))
+        name = File.basename(url, '.git').sub(/nesta-theme-/, '')
+        system('git', 'clone', url, "themes/#{name}")
+        FileUtils.rm_r(File.join("themes/#{name}", '.git'))
+        enable(name)
+      end
+
+      def enable(name, options = {})
       end
     end
   end
