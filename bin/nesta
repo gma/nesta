@@ -16,7 +16,8 @@ GLOBAL OPTIONS
 COMMANDS
     new <path>            Create a new Nesta project.
     theme:install <url>   Install a theme from a git repository.
-    theme:enable <name>   Configure a theme in config.yml.
+    theme:enable <name>   Make the theme active, updating config.yml.
+    theme:create <name>   Makes a template for a new theme in ./themes.
 
 OPTIONS FOR new
     --heroku              Include the heroku:config rake task.
@@ -47,12 +48,10 @@ exit 0
       command.nil? && usage
       case command
         when 'new'
-          path = ARGV[0]
-          Nesta::Commands::New.new(path, options).create
+          Nesta::Commands::New.new(ARGV[0], options).execute
         when /^theme:(create|enable|install)$/
-          command = $1
-          name = ARGV[0]
-          Nesta::Commands::Theme.new.send(command, name, options)
+          command_cls = Nesta::Commands::Theme.const_get($1.capitalize.to_sym)
+          command_cls.new(ARGV[0], options).execute
         else
           usage
       end

@@ -69,7 +69,7 @@ create_readme()
 $name Nesta theme
 $(echo $name | sed 's,.,=,'g)============
 
-$name is a theme for the Nesta, a [Ruby CMS](nesta), designed by
+$name is a theme for Nesta, a [Ruby CMS](nesta), designed by
 <insert your name here>.
 
 [nesta]: http://effectif.com/nesta

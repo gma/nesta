@@ -13,10 +13,6 @@ describe "nesta" do
     remove_fixtures
   end
   
-  def command(name, *args)
-    Nesta::Commands.const_get(name.to_s.capitalize.to_sym).new(*args)
-  end
-
   def project_path(path)
     File.join(@project_path, path)
   end
@@ -28,7 +24,7 @@ describe "nesta" do
   describe "new" do
     describe "without options" do
       before(:each) do
-        command(:new, @project_path).create
+        Nesta::Commands::New.new(@project_path).execute
       end
 
       it "should create the content directories" do
@@ -53,7 +49,7 @@ describe "nesta" do
 
     describe "--heroku" do
       before(:each) do
-        command(:new, @project_path, 'heroku' => '').create
+        Nesta::Commands::New.new(@project_path, 'heroku' => '').execute
       end
 
       it "should add the heroku:config Rake task" do
@@ -70,7 +66,7 @@ describe "nesta" do
       @repo_url = 'git://github.com/gma/nesta-theme-mine.git'
       @theme_dir = 'themes/mine'
       FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
-      @command = command(:theme)
+      @command = Nesta::Commands::Theme::Install.new(@repo_url)
       @command.stub!(:system)
     end
 
@@ -81,18 +77,18 @@ describe "nesta" do
     it "should clone the repository" do
       @command.should_receive(:system).with(
           'git', 'clone', @repo_url, @theme_dir)
-      @command.install(@repo_url)
+      @command.execute
     end
 
     it "should remove the theme's .git directory" do
-      @command.install(@repo_url)
+      @command.execute
       File.exist?(@theme_dir).should be_true
       File.exist?(File.join(@theme_dir, '.git')).should be_false
     end
 
     it "should enable the freshly installed theme" do
       @command.should_receive(:enable).with('mine')
-      @command.install(@repo_url)
+      @command.execute
     end
 
     describe "when theme URL doesn't match recommendation" do
@@ -100,7 +96,7 @@ describe "nesta" do
         @repo_url = 'git://foobar.com/path/to/mytheme.git'
         @other_theme_dir = 'themes/mytheme'
         FileUtils.mkdir_p(File.join(@other_theme_dir, '.git'))
-        @command = command(:theme)
+        @command = Nesta::Commands::Theme::Install.new(@repo_url)
       end
 
       after(:each) do
@@ -110,7 +106,7 @@ describe "nesta" do
       it "should use the basename as theme dir" do
         @command.should_receive(:system).with(
             'git', 'clone', @repo_url, @other_theme_dir)
-        @command.install(@repo_url)
+        @command.execute
       end
     end
   end
@@ -119,7 +115,8 @@ describe "nesta" do
     before(:each) do
       config = File.join(FixtureHelper::FIXTURE_DIR, 'config.yml')
       Nesta::Config.stub!(:yaml_path).and_return(config)
-      @command = command(:theme)
+      @name = 'mytheme'
+      @command = Nesta::Commands::Theme::Enable.new(@name)
     end
 
     def create_config_yaml(text)
@@ -128,8 +125,8 @@ describe "nesta" do
 
     shared_examples_for "command that configures the theme" do
       it "should enable the theme" do
-        @command.enable('mytheme')
-        File.read(Nesta::Config.yaml_path).should match(/^theme: mytheme/)
+        @command.execute
+        File.read(Nesta::Config.yaml_path).should match(/^theme: #{@name}/)
       end
     end
 
@@ -158,14 +155,34 @@ describe "nesta" do
     end
   end
 
-  # describe "theme:create" do
-  #   it "should create the theme directory"
-  #   it "should create a dummy README file"
-  #   it "should create a default app.rb file"
-  #   it "should create public and view directories"
+  describe "theme:create" do
+    def should_exist(file)
+      File.exist?(Nesta::Path.themes(@name, file)).should be_true
+    end
 
-  #   describe "when theme already exists" do
-  #     it "should refuse to do anything"
-  #   end
-  # end
+    before(:each) do
+      Nesta::App.stub!(:root).and_return(FixtureHelper::FIXTURE_DIR)
+      @name = 'my-new-theme'
+      Nesta::Commands::Theme::Create.new(@name).execute
+    end
+
+    it "should create the theme directory" do
+      File.directory?(Nesta::Path.themes(@name)).should be_true
+    end
+
+    it "should create a dummy README file" do
+      should_exist('README.md')
+      text = File.read(Nesta::Path.themes(@name, 'README.md'))
+      text.should match(/#{@name} is a theme/)
+    end
+
+    it "should create a default app.rb file" do
+      should_exist('app.rb')
+    end
+
+    it "should create public and view directories" do
+      should_exist("public/#{@name}")
+      should_exist('views')
+    end
+  end
 end
