@@ -46,17 +46,16 @@ module Nesta
       get_path(File.join(content_path, "attachments"), basename)
     end
     
+    def self.yaml_path
+      File.expand_path('config/config.yml', Nesta::App.root)
+    end
+    
     def self.from_environment(setting)
       value = ENV["NESTA_#{setting.upcase}"]
       overrides = { "true" => true, "false" => false }
       overrides.has_key?(value) ? overrides[value] : value
     end
     private_class_method :from_environment
-    
-    def self.yaml_path
-      File.expand_path('config/config.yml', Nesta::App.root)
-    end
-    private_class_method :yaml_path
     
     def self.yaml_exists?
       File.exist?(yaml_path)
@@ -78,7 +77,7 @@ module Nesta
       raise unless Nesta::App.environment == :test
       nil
     end
-    private_class_method :yaml_path
+    private_class_method :from_yaml
     
     def self.get_path(dirname, basename)
       basename.nil? ? dirname : File.join(dirname, basename)

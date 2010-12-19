@@ -15,7 +15,8 @@ GLOBAL OPTIONS
 
 COMMANDS
     new <path>            Create a new Nesta project.
-    theme:install <url>   Install a theme from a git repository
+    theme:install <url>   Install a theme from a git repository.
+    theme:enable <name>   Configure a theme in config.yml.
 
 OPTIONS FOR new
     --heroku              Include the heroku:config rake task.

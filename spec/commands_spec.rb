@@ -115,15 +115,48 @@ describe "nesta" do
     end
   end
 
-  # describe "theme:enable" do
-  #   describe "when no theme is configured" do
-  #     it "should enable the theme"
-  #   end
+  describe "theme:enable" do
+    before(:each) do
+      config = File.join(FixtureHelper::FIXTURE_DIR, 'config.yml')
+      Nesta::Config.stub!(:yaml_path).and_return(config)
+      @command = command(:theme)
+    end
 
-  #   describe "when another theme is configured" do
-  #     it "should enable the theme"
-  #   end
-  # end
+    def create_config_yaml(text)
+      File.open(Nesta::Config.yaml_path, 'w') { |f| f.puts(text) }
+    end
+
+    shared_examples_for "command that configures the theme" do
+      it "should enable the theme" do
+        @command.enable('mytheme')
+        File.read(Nesta::Config.yaml_path).should match(/^theme: mytheme/)
+      end
+    end
+
+    describe "when theme config is commented out" do
+      before(:each) do
+        create_config_yaml('  # theme: blah')
+      end
+
+      it_should_behave_like "command that configures the theme"
+    end
+
+    describe "when another theme is configured" do
+      before(:each) do
+        create_config_yaml('theme: another')
+      end
+
+      it_should_behave_like "command that configures the theme"
+    end
+
+    describe "when no theme config exists" do
+      before(:each) do
+        create_config_yaml('# I have no theme config')
+      end
+
+      it_should_behave_like "command that configures the theme"
+    end
+  end
 
   # describe "theme:create" do
   #   it "should create the theme directory"

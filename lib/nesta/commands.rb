@@ -59,6 +59,8 @@ module Nesta
     class Theme
       include Command
 
+      def initialize(*args); end
+
       def install(url, options = {})
         url.nil? && (raise UsageError.new('URL not specified'))
         name = File.basename(url, '.git').sub(/nesta-theme-/, '')
@@ -68,6 +70,19 @@ module Nesta
       end
 
       def enable(name, options = {})
+        theme_config = /^\s*#?\s*theme:.*/
+        configured = false
+        File.open(Nesta::Config.yaml_path, 'r+') do |file|
+          output = ''
+          file.each_line do |line|
+            output << line.sub(theme_config, "theme: #{name}")
+            configured = true if line =~ theme_config
+          end
+          output << "theme: #{name}\n" unless configured
+          file.pos = 0
+          file.print(output)
+          file.truncate(file.pos)
+        end
       end
     end
   end
