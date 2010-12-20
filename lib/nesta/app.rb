@@ -126,20 +126,21 @@ module Nesta
 
     # If you want to change Nesta's behaviour, you have two options:
     #
-    # 1. Edit the code. You can merge in future upstream changes with git.
-    # 2. Add code to local/app.rb that overrides the default behaviour,
-    #    leaving the default files untouched (no "tricky" merging required).
+    # 1. Create an app.rb file in your project's root directory.
+    # 2. Make a theme or a plugin, and put all your code in there.
     #
-    # Neither way is necessarily *better* than the other; it's up to you to
-    # choose the most appropriate course of action for your site. Merging
-    # future changes in will typically be a straightforward task, but you may
-    # find the ./local directory to be an easy way to manage more significant
-    # changes to Nesta's behaviour that are likely to conflict with future
-    # changes to the main code base.
+    # You can add new routes, or modify the behaviour of any of the
+    # default objects in app.rb, or replace any of the default view
+    # templates by creating replacements of the same name in a ./views
+    # folder situated in the root directory of the project for your
+    # site.
     #
-    # Note that you can modify the behaviour of any of the default objects
-    # in local/app.rb, or replace any of the default view templates by
-    # creating replacements of the same name in local/views.
+    # Your ./views folder gets searched first when rendering a template
+    # or Sass file, then the currently configured theme is searched, and
+    # finally Nesta will check if the template exists in the views
+    # folder in the Nesta gem (which is where the default look and feel
+    # is defined).
+    #
     Overrides.load_local_app
     Overrides.load_theme_app
 
