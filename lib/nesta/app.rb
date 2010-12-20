@@ -16,7 +16,6 @@ module Nesta
   class App < Sinatra::Base
     register Sinatra::Cache
 
-    set :root, File.expand_path('../..', File.dirname(__FILE__))
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
 
