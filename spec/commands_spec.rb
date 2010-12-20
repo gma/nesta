@@ -84,6 +84,12 @@ describe "nesta" do
         should_exist('Rakefile')
         rakefile_source.should match(/require 'vlad'/)
       end
+
+      it "should create deploy.rb" do
+        should_exist('config/deploy.rb')
+        deploy_source = File.read(project_path('config/deploy.rb'))
+        deploy_source.should match(/set :application, 'mysite.com'/)
+      end
     end
   end
 

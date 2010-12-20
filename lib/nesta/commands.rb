@@ -58,6 +58,9 @@ module Nesta
           'Gemfile' => "#{@path}/Gemfile"
         }
         templates['Rakefile'] = "#{@path}/Rakefile" if have_rake_tasks?
+        if @options['vlad']
+          templates['config/deploy.rb'] = "#{@path}/config/deploy.rb"
+        end
         copy_templates(templates)
       end
     end
