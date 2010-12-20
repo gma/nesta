@@ -318,7 +318,7 @@ describe "All types of page" do
   
   it "should still return top level menu items" do
     # Page.menu_items is deprecated; we're keeping it for the moment so
-    # that we don't break themes or code in local/app.rb (just yet).
+    # that we don't break themes or code in a local app.rb (just yet).
     page1 = create_category(:path => "page-1")
     page2 = create_category(:path => "page-2")
     create_menu([page1.path, page2.path].join("\n"))
