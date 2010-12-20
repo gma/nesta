@@ -142,18 +142,26 @@ module Nesta
     Overrides.load_local_app
     Overrides.load_theme_app
 
-    get "/css/:sheet.css" do
-      content_type "text/css", :charset => "utf-8"
+    get '/robots.txt' do
+      content_type 'text/plain', :charset => 'utf-8'
+      <<-EOF
+# robots.txt
+# See http://en.wikipedia.org/wiki/Robots_exclusion_standard
+      EOF
+    end
+
+    get '/css/:sheet.css' do
+      content_type 'text/css', :charset => 'utf-8'
       cache sass(params[:sheet].to_sym)
     end
 
-    get "/" do
+    get '/' do
       set_common_variables
       set_from_config(:title, :subtitle, :description, :keywords)
       @heading = @title
       @title = "#{@title} - #{@subtitle}"
       @articles = Page.find_articles[0..7]
-      @body_class = "home"
+      @body_class = 'home'
       cache haml(:index)
     end
 
@@ -162,15 +170,15 @@ module Nesta
       send_file(file, :disposition => nil)
     end
 
-    get "/articles.xml" do
-      content_type :xml, :charset => "utf-8"
+    get '/articles.xml' do
+      content_type :xml, :charset => 'utf-8'
       set_from_config(:title, :subtitle, :author)
       @articles = Page.find_articles.select { |a| a.date }[0..9]
       cache builder(:atom)
     end
 
-    get "/sitemap.xml" do
-      content_type :xml, :charset => "utf-8"
+    get '/sitemap.xml' do
+      content_type :xml, :charset => 'utf-8'
       @pages = Page.find_all
       @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
         (page > latest) ? page : latest
@@ -178,9 +186,9 @@ module Nesta
       cache builder(:sitemap)
     end
 
-    get "*" do
+    get '*' do
       set_common_variables
-      parts = params[:splat].map { |p| p.sub(/\/$/, "") }
+      parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
       set_title(@page)
