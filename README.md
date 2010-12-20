@@ -21,7 +21,7 @@ Then use the `nesta` command to generate a new site:
     $ nesta new mysite.com
 
 If you intend to deploy to Heroku, you'll also want the Heroku rake
-tasks:
+tasks, so run this version instead:
 
     $ nesta new --heroku mysite.com
 
