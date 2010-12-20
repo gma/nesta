@@ -12,10 +12,16 @@ Gem::Specification.new do |s|
   s.summary     = %q{Ruby CMS, written in Sinatra}
   s.description = <<-EOF
 Nesta is a lightweight Content Management System, written in Ruby using
-the Sinatra web framework. Content is stored on disk in plain text files
-(there is no database). Edit your content in a text editor and keep it
-under version control system (most people use git, but any version
-control system will do fine). Nesta supports themes and plugins.
+the Sinatra web framework. Nesta has the simplicity of a static site
+generator, but (being a fully fledged Rack application) allows you to
+serve dynamic content on demand.
+
+Content is stored on disk in plain text files (there is no database).
+Edit your content in a text editor and keep it under version control
+(most people use git, but any version control system will do fine).
+
+Implementing your site's design is easy, but Nesta also has a small
+selection of themes to choose from.
 EOF
 
   s.rubyforge_project = "nesta"
