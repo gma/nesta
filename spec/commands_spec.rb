@@ -22,6 +22,14 @@ describe "nesta" do
   end
 
   describe "new" do
+    def gemfile_source
+      File.read(project_path('Gemfile'))
+    end
+
+    def rakefile_source
+      File.read(project_path('Rakefile'))
+    end
+
     describe "without options" do
       before(:each) do
         Nesta::Commands::New.new(@project_path).execute
@@ -42,7 +50,6 @@ describe "nesta" do
 
       it "should add a Gemfile" do
         should_exist('Gemfile')
-        gemfile_source = File.read(project_path('Gemfile'))
         gemfile_source.should match(/gem 'nesta', '#{Nesta::VERSION}'/)
       end
     end
@@ -52,11 +59,30 @@ describe "nesta" do
         Nesta::Commands::New.new(@project_path, 'heroku' => '').execute
       end
 
+      it "should add heroku to Gemfile" do
+        gemfile_source.should match(/gem 'heroku'/)
+      end
+
       it "should add the heroku:config Rake task" do
         should_exist('Rakefile')
-        rake_source = File.read(project_path('Rakefile'))
-        rake_source.should match(/namespace :heroku/)
-        rake_source.should match(/task :config/)
+        rakefile_source.should match(/namespace :heroku/)
+        rakefile_source.should match(/task :config/)
+      end
+    end
+
+    describe "--vlad" do
+      before(:each) do
+        Nesta::Commands::New.new(@project_path, 'vlad' => '').execute
+      end
+
+      it "should add vlad to Gemfile" do
+        gemfile_source.should match(/gem 'vlad', '2.1.0'/)
+        gemfile_source.should match(/gem 'vlad-git', '2.2.0'/)
+      end
+
+      it "should configure the vlad rake tasks" do
+        should_exist('Rakefile')
+        rakefile_source.should match(/require 'vlad'/)
       end
     end
   end

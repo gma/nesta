@@ -21,6 +21,7 @@ COMMANDS
 
 OPTIONS FOR new
     --heroku              Include the heroku:config rake task.
+    --vlad                Include config/deploy.rb.
 
 EOF
 exit 0
@@ -29,7 +30,8 @@ exit 0
     def self.parse_command_line
       opts = GetoptLong.new(
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
-        ['--heroku', GetoptLong::NO_ARGUMENT]
+        ['--heroku', GetoptLong::NO_ARGUMENT],
+        ['--vlad', GetoptLong::NO_ARGUMENT]
       )
       options = {}
       opts.each do |opt, arg|

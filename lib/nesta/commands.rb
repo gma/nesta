@@ -15,10 +15,13 @@ module Nesta
         exit 1
       end
 
+      def template_root
+        File.expand_path('../../templates', File.dirname(__FILE__))
+      end
+
       def copy_template(src, dest)
-        root = File.expand_path('../../templates', File.dirname(__FILE__))
         FileUtils.mkdir_p(File.dirname(dest))
-        template = ERB.new(File.read(File.join(root, src)))
+        template = ERB.new(File.read(File.join(template_root, src)))
         File.open(dest, 'w') { |file| file.puts template.result(binding) }
       end
 
@@ -43,6 +46,10 @@ module Nesta
         end
       end
 
+      def have_rake_tasks?
+        @options['heroku'] || @options['vlad']
+      end
+
       def execute
         make_directories
         templates = {
@@ -50,7 +57,7 @@ module Nesta
           'config/config.yml' => "#{@path}/config/config.yml",
           'Gemfile' => "#{@path}/Gemfile"
         }
-        templates['Rakefile'] = "#{@path}/Rakefile" if @options['heroku']
+        templates['Rakefile'] = "#{@path}/Rakefile" if have_rake_tasks?
         copy_templates(templates)
       end
     end

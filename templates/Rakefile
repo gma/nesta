@@ -2,7 +2,13 @@ require 'rubygems'
 require 'bundler/setup'
 
 Bundler.require(:default, :test)
-
+<% if @options['vlad'] %>
+begin
+  require 'vlad'
+  Vlad.load(:scm => :git, :app => nil, :web => nil)
+rescue LoadError
+end<% end %>
+<% if @options['heroku'] %>
 require 'nesta/config'
 require 'nesta/models'
 
@@ -25,4 +31,4 @@ namespace :heroku do
     params = settings.map { |k, v| %Q{#{k}="#{v}"} }.join(" ")
     system("heroku config:add #{params}")
   end
-end
+end<% end %>
