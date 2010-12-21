@@ -6,9 +6,10 @@ require "sass"
 require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
 require File.expand_path('models', File.dirname(__FILE__))
+require File.expand_path('navigation', File.dirname(__FILE__))
+require File.expand_path('overrides', File.dirname(__FILE__))
 require File.expand_path('path', File.dirname(__FILE__))
 require File.expand_path('plugins', File.dirname(__FILE__))
-require File.expand_path('overrides', File.dirname(__FILE__))
 
 Nesta::Plugins.load_local_plugins
 
@@ -20,6 +21,7 @@ module Nesta
     set :cache_enabled, Config.cache
 
     helpers Overrides::Renderers
+    helpers Navigation::Renderers
 
     helpers do
       def set_from_config(*variables)
@@ -42,26 +44,6 @@ module Nesta
         end
       end
   
-      def display_menu(menu, options = {})
-        defaults = { :class => nil, :levels => 2 }
-        options = defaults.merge(options)
-        if options[:levels] > 0
-          haml_tag :ul, :class => options[:class] do
-            menu.each do |item|
-              haml_tag :li do
-                if item.respond_to?(:each)
-                  display_menu(item, :levels => (options[:levels] - 1))
-                else
-                  haml_tag :a, :href => item.abspath do
-                    haml_concat item.heading
-                  end
-                end
-              end
-            end
-          end
-        end
-      end
-
       def no_widow(text)
         text.split[0...-1].join(" ") + "&nbsp;#{text.split[-1]}"
       end
@@ -125,7 +107,7 @@ module Nesta
     # If you want to change Nesta's behaviour, you have two options:
     #
     # 1. Create an app.rb file in your project's root directory.
-    # 2. Make a theme or a plugin, and put all your code in there.
+    # 2. Make a theme or a plugin, and put the relevant code in there.
     #
     # You can add new routes, or modify the behaviour of any of the
     # default objects in app.rb, or replace any of the default view
