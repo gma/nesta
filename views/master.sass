@@ -1,3 +1,5 @@
+@import "mixins.sass"
+
 // Variables
 
 $content-width: 37em
@@ -8,11 +10,6 @@ $dark-tint: $tint - #333
 $background-tint: $tint + #222
 $border-color: $tint + #111
 
-$h1-scale: 2.18
-$h2-scale: 1.64
-$h3-scale: 1.45
-$h4-scale: 1.18
-
 // Reset
 
 *
@@ -20,29 +17,6 @@ $h4-scale: 1.18
   padding: 0
 
 // Typography
-
-$base-scale: 0.88
-$base-font: $base-scale * 1em
-$vertical-rhythm: 1.5em
-$base-vertical-margin: 1.5em
-
-@mixin adjust-font-size($scale, $top-weight: 1, $bottom-weight: 1)
-  $average-margin: $base-vertical-margin / $scale
-  margin-top: $average-margin * $top-weight
-  margin-bottom: $average-margin * $bottom-weight
-  
-  $line-height: $vertical-rhythm / $scale
-  @if $line-height < 1
-    line-height: $line-height * 2
-  @else
-    line-height: $line-height
-
-  font-size: 100% * $scale
-
-@mixin border-radius($radius)
-  -webkit-border-radius: $radius
-  -moz-border-radius: $radius
-  border-radius: $radius
 
 body
   font: $base-font "Helvetica Neue", Helvetica, sans-serif
