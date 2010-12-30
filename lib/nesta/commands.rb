@@ -28,6 +28,22 @@ module Nesta
       def copy_templates(templates)
         templates.each { |src, dest| copy_template(src, dest) }
       end
+
+      def update_config_yaml(pattern, value)
+        return unless File.exist?(Nesta::Config.yaml_path)
+        configured = false
+        File.open(Nesta::Config.yaml_path, 'r+') do |file|
+          output = ''
+          file.each_line do |line|
+            output << line.sub(pattern, value)
+            configured = true if line =~ pattern
+          end
+          output << "#{value}\n" unless configured
+          file.pos = 0
+          file.print(output)
+          file.truncate(file.pos)
+        end
+      end
     end
 
     class New
@@ -62,6 +78,39 @@ module Nesta
           templates['config/deploy.rb'] = "#{@path}/config/deploy.rb"
         end
         copy_templates(templates)
+      end
+    end
+
+    module Demo
+      class Content
+        include Command
+
+        def initialize
+          @dir = 'content-demo'
+        end
+
+        def clone_or_update_repository
+          repository = 'git://github.com/gma/nesta-demo-content.git'
+          path = Nesta::Path.local(@dir)
+          if File.exist?(path)
+            FileUtils.cd(path) { system('git', 'pull', 'origin', 'master') }
+          else
+            system('git', 'clone', repository, path)
+          end
+        end
+
+        def configure_git_to_ignore_repo
+          excludes = Nesta::Path.local('.git/info/exclude')
+          if File.exist?(excludes) && File.read(excludes).scan(@dir).empty?
+            File.open(excludes, 'a') { |file| file.puts @dir }
+          end
+        end
+
+        def execute
+          clone_or_update_repository
+          configure_git_to_ignore_repo
+          update_config_yaml(/^\s*#?\s*content:.*/, "content: #{@dir}")
+        end
       end
     end
 
@@ -115,19 +164,7 @@ module Nesta
         end
 
         def execute
-          theme_config = /^\s*#?\s*theme:.*/
-          configured = false
-          File.open(Nesta::Config.yaml_path, 'r+') do |file|
-            output = ''
-            file.each_line do |line|
-              output << line.sub(theme_config, "theme: #{@name}")
-              configured = true if line =~ theme_config
-            end
-            output << "theme: #{@name}\n" unless configured
-            file.pos = 0
-            file.print(output)
-            file.truncate(file.pos)
-          end
+          update_config_yaml(/^\s*#?\s*theme:.*/, "theme: #{@name}")
         end
       end
     end

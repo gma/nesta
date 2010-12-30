@@ -15,6 +15,7 @@ GLOBAL OPTIONS
 
 COMMANDS
     new <path>            Create a new Nesta project.
+    demo:content          Install example pages in ./content-demo.
     theme:install <url>   Install a theme from a git repository.
     theme:enable <name>   Make the theme active, updating config.yml.
     theme:create <name>   Makes a template for a new theme in ./themes.
@@ -51,6 +52,8 @@ exit 0
       case command
         when 'new'
           Nesta::Commands::New.new(ARGV[0], options).execute
+        when 'demo:content'
+          Nesta::Commands::Demo::Content.new.execute
         when /^theme:(create|enable|install)$/
           command_cls = Nesta::Commands::Theme.const_get($1.capitalize.to_sym)
           command_cls.new(ARGV[0], options).execute

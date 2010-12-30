@@ -21,6 +21,10 @@ describe "nesta" do
     File.exist?(project_path(file)).should be_true
   end
 
+  def create_config_yaml(text)
+    File.open(Nesta::Config.yaml_path, 'w') { |f| f.puts(text) }
+  end
+
   describe "new" do
     def gemfile_source
       File.read(project_path('Gemfile'))
@@ -93,6 +97,66 @@ describe "nesta" do
     end
   end
 
+  describe "demo:content" do
+    before(:each) do
+      @config_path = project_path('config/config.yml')
+      FileUtils.mkdir_p(File.dirname(@config_path))
+      Nesta::Config.stub!(:yaml_path).and_return(@config_path)
+      Nesta::App.stub!(:root).and_return(@project_path)
+      @repo_url = 'git://github.com/gma/nesta-demo-content.git'
+      @demo_path = project_path('content-demo')
+      @command = Nesta::Commands::Demo::Content.new
+      @command.stub!(:system)
+    end
+
+    it "should clone the repository" do
+      @command.should_receive(:system)
+          .with('git', 'clone', @repo_url, @demo_path)
+      @command.execute
+    end
+
+    it "should configure the content directory" do
+      create_config_yaml('content: path/to/content')
+      @command.execute
+      File.read(@config_path).should match(/^content: content-demo/)
+    end
+
+    describe "when repository already exists" do
+      before(:each) do
+        FileUtils.mkdir_p(@demo_path)
+      end
+
+      it "should update the repository" do
+        @command.should_receive(:system).with('git', 'pull', 'origin', 'master')
+        @command.execute
+      end
+    end
+
+    describe "when site versioned with git" do
+      before(:each) do
+        @exclude_path = project_path('.git/info/exclude')
+        FileUtils.mkdir_p(File.dirname(@exclude_path))
+        File.open(@exclude_path, 'w') { |file| file.puts '# Excludes' }
+      end
+
+      it "should tell git to ignore content-demo" do
+        @command.execute
+        File.read(@exclude_path).should match(/content-demo/)
+      end
+
+      describe "and content-demo already ignored" do
+        before(:each) do
+          File.open(@exclude_path, 'w') { |file| file.puts 'content-demo' }
+        end
+
+        it "shouldn't tell git to ignore it twice" do
+          @command.execute
+          File.read(@exclude_path).scan('content-demo').size.should == 1
+        end
+      end
+    end
+  end
+
   describe "theme:install" do
     before(:each) do
       @repo_url = 'git://github.com/gma/nesta-theme-mine.git'
@@ -149,10 +213,6 @@ describe "nesta" do
       Nesta::Config.stub!(:yaml_path).and_return(config)
       @name = 'mytheme'
       @command = Nesta::Commands::Theme::Enable.new(@name)
-    end
-
-    def create_config_yaml(text)
-      File.open(Nesta::Config.yaml_path, 'w') { |f| f.puts(text) }
     end
 
     shared_examples_for "command that configures the theme" do
