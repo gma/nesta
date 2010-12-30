@@ -42,14 +42,8 @@ module Nesta
       @@cache = {}
     end
 
-    def self.deprecated(name, message)
-      if Nesta::App.environment != :test
-        $stderr.puts "DEPRECATION WARNING: #{name} is deprecated; #{message}"
-      end
-    end
-
     def self.menu_items
-      deprecated("Page.menu_items", "see Menu.top_level and Menu.for_path")
+      Nesta.deprecated('Page.menu_items', 'see Menu.top_level and Menu.for_path')
       Menu.top_level
     end
 

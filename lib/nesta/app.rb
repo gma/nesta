@@ -1,8 +1,9 @@
-require "sinatra/base"
-require "builder"
-require "haml"
-require "sass"
+require 'sinatra/base'
+require 'builder'
+require 'haml'
+require 'sass'
 
+require File.expand_path('nesta', File.dirname(__FILE__))
 require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
 require File.expand_path('models', File.dirname(__FILE__))
@@ -19,6 +20,7 @@ module Nesta
 
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
+    set :haml, { :format => :html5 }
 
     helpers Overrides::Renderers
     helpers Navigation::Renderers
@@ -87,10 +89,15 @@ module Nesta
       end
   
       def local_stylesheet?
-        # Checks for the existence of views/local.sass. Useful for
-        # themes that want to give the user the option to add their own
-        # CSS rules.
+        Nesta.deprecated('local_stylesheet?', 'use local_stylesheet_link_tag')
         File.exist?(File.expand_path('views/local.sass', Nesta::App.root))
+      end
+
+      def local_stylesheet_link_tag(name)
+        pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
+        if Dir.glob(pattern).size > 0
+          haml_tag :link, :href => "/css/#{name}.css", :rel => "stylesheet"
+        end
       end
     end
 
@@ -143,7 +150,6 @@ module Nesta
       @heading = @title
       @title = "#{@title} - #{@subtitle}"
       @articles = Page.find_articles[0..7]
-      @body_class = 'home'
       cache haml(:index)
     end
 
