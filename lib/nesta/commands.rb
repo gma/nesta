@@ -30,13 +30,16 @@ module Nesta
       end
 
       def update_config_yaml(pattern, value)
-        return unless File.exist?(Nesta::Config.yaml_path)
         configured = false
         File.open(Nesta::Config.yaml_path, 'r+') do |file|
           output = ''
           file.each_line do |line|
-            output << line.sub(pattern, value)
-            configured = true if line =~ pattern
+            if configured
+              output << line
+            else
+              output << line.sub(pattern, value)
+              configured = true if line =~ pattern
+            end
           end
           output << "#{value}\n" unless configured
           file.pos = 0

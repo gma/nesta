@@ -102,6 +102,7 @@ describe "nesta" do
       @config_path = project_path('config/config.yml')
       FileUtils.mkdir_p(File.dirname(@config_path))
       Nesta::Config.stub!(:yaml_path).and_return(@config_path)
+      create_config_yaml('content: path/to/content')
       Nesta::App.stub!(:root).and_return(@project_path)
       @repo_url = 'git://github.com/gma/nesta-demo-content.git'
       @demo_path = project_path('content-demo')
@@ -116,7 +117,6 @@ describe "nesta" do
     end
 
     it "should configure the content directory" do
-      create_config_yaml('content: path/to/content')
       @command.execute
       File.read(@config_path).should match(/^content: content-demo/)
     end
