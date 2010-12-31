@@ -97,14 +97,14 @@ module Nesta
     def keywords
       metadata("keywords")
     end
+    
+    def metadata(key)
+      @metadata[key]
+    end
 
     private
     def markup
       @markup
-    end
-
-    def metadata(key)
-      @metadata[key]
     end
 
     def paragraph_is_metadata(text)
