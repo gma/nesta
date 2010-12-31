@@ -203,6 +203,11 @@ section.articles
     li
       position: relative
       list-style: none
+    article
+      ol li
+        list-style: decimal
+      ul li
+        list-style: disc
 
   header[role=main] h1
     @include adjust-font-size($h1-scale, 1.5, 0.5)
