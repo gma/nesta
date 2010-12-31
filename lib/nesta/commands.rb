@@ -29,7 +29,7 @@ module Nesta
         templates.each { |src, dest| copy_template(src, dest) }
       end
 
-      def update_config_yaml(pattern, value)
+      def update_config_yaml(pattern, replacement)
         configured = false
         File.open(Nesta::Config.yaml_path, 'r+') do |file|
           output = ''
@@ -37,11 +37,11 @@ module Nesta
             if configured
               output << line
             else
-              output << line.sub(pattern, value)
+              output << line.sub(pattern, replacement)
               configured = true if line =~ pattern
             end
           end
-          output << "#{value}\n" unless configured
+          output << "#{replacement}\n" unless configured
           file.pos = 0
           file.print(output)
           file.truncate(file.pos)
