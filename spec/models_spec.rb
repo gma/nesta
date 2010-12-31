@@ -222,6 +222,7 @@ describe "Page", :shared => true do
       @description = "Page about stuff"
       @summary = 'Multiline\n\nsummary'
       @read_more = "Continue at your leisure"
+      @skillz = "ruby, guitar, bowstaff"
       @article = create_article(:metadata => {
         "layout" => @layout,
         "template" => @template,
@@ -229,7 +230,8 @@ describe "Page", :shared => true do
         "description" => @description,
         "keywords" => @keywords,
         "summary" => @summary,
-        "read more" => @read_more
+        "read more" => @read_more,
+        "skillz" => @skillz
       })
     end
 
@@ -287,6 +289,10 @@ describe "Page", :shared => true do
     
     it "should treat double newline chars as paragraph break in summary" do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
+    end
+    
+    it "should allow arbitrary access to metadata" do
+      @article.metadata('skillz').should == @skillz
     end
   end
   
