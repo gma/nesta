@@ -21,6 +21,7 @@ COMMANDS
     theme:create <name>   Makes a template for a new theme in ./themes.
 
 OPTIONS FOR new
+    --git                 Create a new git repository for the project.
     --heroku              Include the heroku:config rake task.
     --vlad                Include config/deploy.rb.
 
@@ -30,6 +31,7 @@ exit 0
 
     def self.parse_command_line
       opts = GetoptLong.new(
+        ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
         ['--heroku', GetoptLong::NO_ARGUMENT],
         ['--vlad', GetoptLong::NO_ARGUMENT]

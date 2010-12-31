@@ -58,6 +58,30 @@ describe "nesta" do
       end
     end
 
+    describe "--git" do
+      before(:each) do
+        @command = Nesta::Commands::New.new(@project_path, 'git' => '')
+        @command.stub!(:system)
+      end
+
+      it "should create a .gitignore file" do
+        @command.execute
+        File.read(project_path('.gitignore')).should match(/\.bundle/)
+      end
+
+      it "should create a git repo" do
+        @command.should_receive(:system).with('git', 'init')
+        @command.execute
+      end
+
+      it "should commit the blank project" do
+        @command.should_receive(:system).with('git', 'add', '.')
+        @command.should_receive(:system)
+            .with('git', 'commit', '-m', 'Initial commit')
+        @command.execute
+      end
+    end
+
     describe "--heroku" do
       before(:each) do
         Nesta::Commands::New.new(@project_path, 'heroku' => '').execute

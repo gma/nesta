@@ -69,6 +69,17 @@ module Nesta
         @options['heroku'] || @options['vlad']
       end
 
+      def create_repository
+        FileUtils.cd(@path) do
+          File.open('.gitignore', 'w') do |file|
+            file.puts %w[._* .*.swp .bundle .DS_Store .sass-cache].join("\n")
+          end
+          system('git', 'init')
+          system('git', 'add', '.')
+          system('git', 'commit', '-m', 'Initial commit')
+        end
+      end
+
       def execute
         make_directories
         templates = {
@@ -81,6 +92,7 @@ module Nesta
           templates['config/deploy.rb'] = "#{@path}/config/deploy.rb"
         end
         copy_templates(templates)
+        create_repository if @options['git']
       end
     end
 
