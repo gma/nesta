@@ -76,8 +76,8 @@ describe "nesta" do
 
       it "should commit the blank project" do
         @command.should_receive(:system).with('git', 'add', '.')
-        @command.should_receive(:system)
-            .with('git', 'commit', '-m', 'Initial commit')
+        @command.should_receive(:system).with(
+            'git', 'commit', '-m', 'Initial commit')
         @command.execute
       end
     end
@@ -135,8 +135,8 @@ describe "nesta" do
     end
 
     it "should clone the repository" do
-      @command.should_receive(:system)
-          .with('git', 'clone', @repo_url, @demo_path)
+      @command.should_receive(:system).with(
+          'git', 'clone', @repo_url, @demo_path)
       @command.execute
     end
 
