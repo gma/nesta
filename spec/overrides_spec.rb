@@ -18,6 +18,7 @@ describe "Rendering" do
   end
 
   def create_template(type, name, content)
+    create_fixture(type, File.join('views', 'layout.haml'), '= yield')
     create_fixture(type, File.join('views', name), content)
   end
   

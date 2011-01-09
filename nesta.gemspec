@@ -35,14 +35,14 @@ EOF
   s.add_dependency("haml", "3.0.25")
   s.add_dependency("maruku", "0.6.0")
   s.add_dependency("RedCloth", "4.2.3")
-  s.add_dependency("sinatra", "1.1.0")
+  s.add_dependency("sinatra", "1.1.2")
   
   # Useful in development
   s.add_dependency("shotgun", ">= 0.8")
 
   # Test libraries
-  s.add_development_dependency("hpricot", "0.8.2")
-  s.add_development_dependency("rack-test", "0.5.3")
+  s.add_development_dependency("hpricot", "0.8.3")
+  s.add_development_dependency("rack-test", "0.5.7")
   s.add_development_dependency("rspec", "1.3.0")
   s.add_development_dependency("rspec_hpricot_matchers", "1.0")
   s.add_development_dependency("test-unit", "1.2.3")
