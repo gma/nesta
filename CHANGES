@@ -1,0 +1,35 @@
+= 0.9.2 / 10 January 2011
+
+ * Made the FileModel.metadata method public, to allow for custom
+   metadata at the top of each page. (Wynn Netherland)
+
+ * Relaxed the stringent dependency specifications, using pessimistic
+   version constraints (see http://docs.rubygems.org/read/chapter/16).
+
+ * Added templates required by `nesta theme:create`.
+
+= 0.9.1 / 31 December 2010
+
+ * Re-implemented the default theme, using semantic HTML5 and
+   Andy Clarke's Universal Internet Explorer 6 CSS. Named the previous
+   default theme "slate" and moved it into a separate GitHub project.
+   https://github.com/gma/nesta-theme-slate
+
+ * Added `--git` switch to `nesta new`, that will create a new git
+   repository and make an initial commit.
+
+ * Moved the navigation helpers into the Nesta::Navigation::Renderers
+   module.
+
+= 0.9.0 / 20 December 2010
+
+ * Packaged Nesta as a gem for the first time, instead of as a template
+   site that can be cloned, edited and deployed. Added the `nesta`
+   command for generating new sites and managing themes.
+
+= Previous versions / from 26 November 2008
+
+ * Prior to 0.9.0 Nesta was distributed as a git repository that could
+   be forked, edited and deployed. The only change log for these
+   versions is the Git commit history.
+   https://github.com/gma/nesta/commits/master
