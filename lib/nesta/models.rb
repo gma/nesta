@@ -57,15 +57,15 @@ module Nesta
     end
 
     def permalink
-      File.basename(@filename, ".*")
+      File.basename(@filename, '.*').sub(/\/?index$/, '')
     end
 
     def path
-      abspath.sub(/^\//, "")
+      abspath.sub(/^\//, '')
     end
 
     def abspath
-      prefix = File.dirname(@filename).sub(Nesta::Config.page_path, "")
+      prefix = File.dirname(@filename).sub(Nesta::Config.page_path, '')
       File.join(prefix, permalink)
     end
 
@@ -151,15 +151,27 @@ module Nesta
 
     def heading
       regex = case @format
-              when :mdown
-                /^#\s*(.*)/
-              when :haml
-                /^\s*%h1\s+(.*)/
-              when :textile
-                /^\s*h1\.\s+(.*)/
-              end
+        when :mdown
+          /^#\s*(.*)/
+        when :haml
+          /^\s*%h1\s+(.*)/
+        when :textile
+          /^\s*h1\.\s+(.*)/
+        end
       markup =~ regex
       Regexp.last_match(1)
+    end
+  
+    def title
+      if metadata('title')
+        metadata('title')
+      elsif parent
+        "#{heading} - #{parent.heading}"
+      elsif heading
+        "#{heading} - #{Nesta::Config.title}"
+      elsif abspath == '/'
+        Nesta::Config.title
+      end
     end
 
     def date(format = nil)
@@ -215,6 +227,7 @@ module Nesta
     end
 
     def parent
+      return nil if abspath == '/'
       child_path = if File.basename(path, @format.to_s) == 'index'
         File.dirname(path)
       else

@@ -59,9 +59,26 @@ describe "Page", :shared => true do
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
-  it "should find index for home page by path" do
-    create_page(:heading => 'Home', :path => 'index')
-    Nesta::Page.find_by_path('/').heading.should == 'Home'
+  describe "for home page" do
+    it "should set title to heading and site title" do
+      create_page(:heading => 'Home', :path => 'index')
+      Nesta::Page.find_by_path('/').title.should == 'Home - My blog'
+    end
+
+    it "should respect title metadata" do
+      create_page(:path => 'index', :metadata => { 'title' => 'Specific title' })
+      Nesta::Page.find_by_path('/').title.should == 'Specific title'
+    end
+
+    it "should set title to site title by default" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').title.should == 'My blog'
+    end
+
+    it "should set abspath to empty string" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').abspath.should == '/'
+    end
   end
   
   it "should not find nonexistent page" do
@@ -231,23 +248,23 @@ describe "Page", :shared => true do
   
   describe "with metadata" do
     before(:each) do
-      @layout = "my_layout"
-      @template = "my_template"
-      @date = "07 September 2009"
-      @keywords = "things, stuff"
-      @description = "Page about stuff"
+      @layout = 'my_layout'
+      @template = 'my_template'
+      @date = '07 September 2009'
+      @keywords = 'things, stuff'
+      @description = 'Page about stuff'
       @summary = 'Multiline\n\nsummary'
-      @read_more = "Continue at your leisure"
-      @skillz = "ruby, guitar, bowstaff"
+      @read_more = 'Continue at your leisure'
+      @skillz = 'ruby, guitar, bowstaff'
       @article = create_article(:metadata => {
-        "layout" => @layout,
-        "template" => @template,
-        "date" => @date.gsub("September", "Sep"),
-        "description" => @description,
-        "keywords" => @keywords,
-        "summary" => @summary,
-        "read more" => @read_more,
-        "skillz" => @skillz
+        'layout' => @layout,
+        'template' => @template,
+        'date' => @date.gsub('September', 'Sep'),
+        'description' => @description,
+        'keywords' => @keywords,
+        'summary' => @summary,
+        'read more' => @read_more,
+        'skillz' => @skillz
       })
     end
 
@@ -260,15 +277,15 @@ describe "Page", :shared => true do
     end
     
     it "should set permalink from filename" do
-      @article.permalink.should == "my-article"
+      @article.permalink.should == 'my-article'
     end
     
     it "should set path from filename" do
-      @article.path.should == "article-prefix/my-article"
+      @article.path.should == 'article-prefix/my-article'
     end
     
     it "should retrieve heading" do
-      @article.heading.should == "My article"
+      @article.heading.should == 'My article'
     end
     
     it "should be possible to convert an article to HTML" do

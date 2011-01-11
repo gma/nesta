@@ -38,14 +38,6 @@ module Nesta
         end
       end
   
-      def set_title(page)
-        if page.respond_to?(:parent) && page.parent
-          @title = "#{page.heading} - #{page.parent.heading}"
-        else
-          @title = "#{page.heading} - #{Nesta::Config.title}"
-        end
-      end
-  
       def no_widow(text)
         text.split[0...-1].join(" ") + "&nbsp;#{text.split[-1]}"
       end
@@ -166,7 +158,7 @@ module Nesta
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
-      set_title(@page)
+      @title = @page.title
       set_from_page(:description, :keywords)
       cache haml(@page.template, :layout => @page.layout)
     end

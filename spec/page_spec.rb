@@ -114,12 +114,12 @@ describe "The home page" do
     last_response.should be_ok
   end
   
-  it "should display site title in h1 tag" do
+  it "should display site title in hgroup tag" do
     pending "Hpricot doesn't support HTML5"
     body.should have_tag('hgroup h1', /My blog/)
   end
   
-  it "should display site subtitle in heading tag" do
+  it "should display site subtitle in hgroup tag" do
     pending "Hpricot doesn't support HTML5"
     do_get
     body.should have_tag('hgroup h2', /about stuff/)
@@ -157,7 +157,7 @@ describe "The home page" do
     end
     
     it "should display article summary if available" do
-      body.should have_tag("p", @summary.split('\n\n').first)
+      body.should have_tag('p', @summary.split('\n\n').first)
     end
     
     it "should display read more link" do
@@ -173,15 +173,15 @@ describe "An article" do
   
   before(:each) do
     stub_configuration
-    @date = "07 September 2009"
-    @keywords = "things, stuff"
-    @description = "Page about stuff"
+    @date = '07 September 2009'
+    @keywords = 'things, stuff'
+    @description = 'Page about stuff'
     @summary = 'Multiline\n\nsummary'
     @article = create_article(:metadata => {
-      "date" => @date.gsub("September", "Sep"),
-      "description" => @description,
-      "keywords" => @keywords,
-      "summary" => @summary,
+      'date' => @date.gsub('September', 'Sep'),
+      'description' => @description,
+      'keywords' => @keywords,
+      'summary' => @summary
     })
   end
   
@@ -211,31 +211,36 @@ describe "An article" do
 
   it "should display the heading" do
     do_get
-    body.should have_tag("h1", "My article")
+    body.should have_tag('h1', 'My article')
+  end
+
+  it "should use heading for title tag" do
+    do_get
+    body.should have_tag('title', 'My article - My blog')
   end
 
   it "should not display category links" do
     do_get
-    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
+    body.should_not have_tag('div.breadcrumb div.categories', /filed in/)
   end
 
   it "should display the date" do
     do_get
-    body.should have_tag("time", @date)
+    body.should have_tag('time', @date)
   end
 
   it "should display the content" do
     do_get
-    body.should have_tag("p", "Content goes here")
+    body.should have_tag('p', 'Content goes here')
   end
   
   describe "that is assigned to categories" do
     before(:each) do
-      create_category(:heading => "Apple", :path => "the-apple")
-      @category = create_category(:heading => "Banana", :path => "banana")
+      create_category(:heading => 'Apple', :path => 'the-apple')
+      @category = create_category(:heading => 'Banana', :path => 'banana')
       @article = create_article(
         :path => "#{@category.path}/article",
-        :metadata => { "categories" => "banana, the-apple" }
+        :metadata => { 'categories' => 'banana, the-apple' }
       )
     end
     
@@ -295,12 +300,17 @@ describe "A page" do
   
   describe "that has meta data" do
     before(:each) do
+      @title = 'Different title'
       @content = "Page content"
       @description = "Page about stuff"
       @keywords = "things, stuff"
       @category = create_category(
         :content => "# My category\n\n#{@content}",
-        :metadata => { "description" => @description, "keywords" => @keywords }
+        :metadata => {
+          'title' => @title,
+          'description' => @description,
+          'keywords' => @keywords
+        }
       )
     end
 
@@ -314,7 +324,12 @@ describe "A page" do
     
     it "should display the heading" do
       do_get
-      body.should have_tag("h1", @category.heading)
+      body.should have_tag('h1', @category.heading)
+    end
+
+    it "should use title metadata to set heading" do
+      do_get
+      body.should have_tag('title', @title)
     end
 
     it "should display the content" do
