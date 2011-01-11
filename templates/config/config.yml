@@ -4,12 +4,6 @@
 title: "My Site"
 subtitle: "(change this text in config/config.yml)"
 
-# If you want to set the descrition or keywords meta tags on your site's
-# home page, do it here.
-#
-# description: "Set this to something that describes your home page"
-# keywords: "enter 3 or 4, comma separated, keywords"
-
 # You should really specify your content's author when generating an
 # Atom feed. Specify at least one of name, uri or email, and Nesta will
 # include it in your feed. See the Atom spec for more info:

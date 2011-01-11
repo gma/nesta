@@ -1,16 +1,19 @@
 = 0.9.3 / Unreleased
 
- * The URL /my-page can be served from pages/my-page/index.mdown as well
-   as pages/my-page.mdown. Index pages can also be created with Textile
-   or Haml, just like any other page.
+ * The URL /my-page can be served from `pages/my-page/index.mdown` as
+   well as pages/my-page.mdown. Index pages can also be created with
+   Textile or Haml, just like any other page.
 
  * The route and view for serving the home page (/) has been removed, 
    and the home page must now be created as an index page in
    content/pages.
- 
+
    Running `nesta new mysite.com` will create `content/pages/index.haml`
    that is suitable for a blog.
 
+ * The description and keywords settings have been removed from
+   config.yml as they can now be set on `content/pages/index.haml`.
+ 
 = 0.9.2 / 10 January 2011
 
  * Made the FileModel.metadata method public, to allow for custom
