@@ -81,6 +81,14 @@ describe "The home page" do
   
   before(:each) do
     stub_configuration
+    template_path = File.expand_path(
+        'templates', File.dirname(File.dirname(__FILE__)))
+    create_category(
+      :path => 'index',
+      :ext => :haml,
+      :heading => 'Home',
+      :content => File.read(File.join(template_path, 'index.haml'))
+    )
     create_category
   end
   
@@ -106,11 +114,6 @@ describe "The home page" do
     last_response.should be_ok
   end
   
-  it "should display title and subtitle in title tag" do
-    do_get
-    body.should have_tag("title", "My blog - about stuff")
-  end
-  
   it "should display site title in h1 tag" do
     pending "Hpricot doesn't support HTML5"
     body.should have_tag('hgroup h1', /My blog/)
@@ -120,16 +123,6 @@ describe "The home page" do
     pending "Hpricot doesn't support HTML5"
     do_get
     body.should have_tag('hgroup h2', /about stuff/)
-  end
-  
-  it "should set description meta tag" do
-    do_get
-    body.should have_tag("meta[@name=description][@content='great web site']")
-  end
-  
-  it "should set keywords meta tag" do
-    do_get
-    body.should have_tag("meta[@name=keywords][@content='home, page']")
   end
   
   describe "when articles have no summary" do

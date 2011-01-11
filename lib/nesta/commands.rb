@@ -85,6 +85,7 @@ module Nesta
         templates = {
           'config.ru' => "#{@path}/config.ru",
           'config/config.yml' => "#{@path}/config/config.yml",
+          'index.haml' => "#{@path}/content/pages/index.haml",
           'Gemfile' => "#{@path}/Gemfile"
         }
         templates['Rakefile'] = "#{@path}/Rakefile" if have_rake_tasks?

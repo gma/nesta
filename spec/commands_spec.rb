@@ -44,6 +44,10 @@ describe "nesta" do
         should_exist('content/pages')
       end
 
+      it "should create the home page" do
+        should_exist('content/pages/index.haml')
+      end
+
       it "should create the rackup file" do
         should_exist('config.ru')
       end

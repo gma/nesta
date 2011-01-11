@@ -1,9 +1,9 @@
-require "rubygems"
-require "spec"
-require "spec/interop/test"
-require "rack/test"
-require "rspec_hpricot_matchers"
-require "sinatra"
+require 'rubygems'
+require 'spec'
+require 'spec/interop/test'
+require 'rack/test'
+require 'rspec_hpricot_matchers'
+require 'sinatra'
 
 Test::Unit::TestCase.send :include, Rack::Test::Methods
 
@@ -18,10 +18,10 @@ module Nesta
   end
 end
 
-require File.expand_path("../lib/nesta/app", File.dirname(__FILE__))
+require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 
 module FixtureHelper
-  FIXTURE_DIR = File.expand_path("fixtures", File.dirname(__FILE__))
+  FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
 
   def create_fixtures_directory
     FileUtils.mkdir_p(FixtureHelper::FIXTURE_DIR)
@@ -62,11 +62,9 @@ module ConfigSpecHelper
   end
   
   def stub_configuration(options = {})
-    stub_config_key("title", "My blog", options)
-    stub_config_key("subtitle", "about stuff", options)
-    stub_config_key("description", "great web site", options)
-    stub_config_key("keywords", "home, page", options)
-    content_path = File.join(FixtureHelper::FIXTURE_DIR, "content")
-    stub_config_key("content", content_path, options.merge(:rack_env => true))
+    stub_config_key('title', 'My blog', options)
+    stub_config_key('subtitle', 'about stuff', options)
+    content_path = File.join(FixtureHelper::FIXTURE_DIR, 'content')
+    stub_config_key('content', content_path, options.merge(:rack_env => true))
   end
 end

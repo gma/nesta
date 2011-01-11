@@ -99,6 +99,18 @@ module Nesta
           haml_tag :link, :href => "/css/#{name}.css", :rel => "stylesheet"
         end
       end
+
+      def latest_articles
+        Nesta::Page.find_articles[0..7]
+      end
+
+      def article_summaries(articles)
+        haml(
+          :summaries,
+          :layout => false,
+          :locals => { :pages => latest_articles }
+        )
+      end
     end
 
     not_found do
@@ -111,23 +123,6 @@ module Nesta
       haml(:error)
     end unless Nesta::App.environment == :development
 
-    # If you want to change Nesta's behaviour, you have two options:
-    #
-    # 1. Create an app.rb file in your project's root directory.
-    # 2. Make a theme or a plugin, and put the relevant code in there.
-    #
-    # You can add new routes, or modify the behaviour of any of the
-    # default objects in app.rb, or replace any of the default view
-    # templates by creating replacements of the same name in a ./views
-    # folder situated in the root directory of the project for your
-    # site.
-    #
-    # Your ./views folder gets searched first when rendering a template
-    # or Sass file, then the currently configured theme is searched, and
-    # finally Nesta will check if the template exists in the views
-    # folder in the Nesta gem (which is where the default look and feel
-    # is defined).
-    #
     Overrides.load_local_app
     Overrides.load_theme_app
 
@@ -142,15 +137,6 @@ module Nesta
     get '/css/:sheet.css' do
       content_type 'text/css', :charset => 'utf-8'
       cache sass(params[:sheet].to_sym)
-    end
-
-    get '/' do
-      set_common_variables
-      set_from_config(:title, :subtitle, :description, :keywords)
-      @heading = @title
-      @title = "#{@title} - #{@subtitle}"
-      @articles = Page.find_articles[0..7]
-      cache haml(:index)
     end
 
     get %r{/attachments/([\w/.-]+)} do
@@ -176,6 +162,7 @@ module Nesta
 
     get '*' do
       set_common_variables
+      @heading = @title
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
