@@ -45,13 +45,23 @@ describe "Page", :shared => true do
   end
   
   it "should be findable" do
-    create_page(:heading => "Apple", :path => "the-apple")
+    create_page(:heading => 'Apple', :path => 'the-apple')
     Nesta::Page.find_all.should have(1).item
   end
 
   it "should find by path" do
-    create_page(:heading => "Banana", :path => "banana")
-    Nesta::Page.find_by_path("banana").heading.should == "Banana"
+    create_page(:heading => 'Banana', :path => 'banana')
+    Nesta::Page.find_by_path('banana').heading.should == 'Banana'
+  end
+  
+  it "should find index page by path" do
+    create_page(:heading => 'Banana', :path => 'banana/index')
+    Nesta::Page.find_by_path('banana').heading.should == 'Banana'
+  end
+
+  it "should find index for home page by path" do
+    create_page(:heading => 'Home', :path => 'index')
+    Nesta::Page.find_by_path('/').heading.should == 'Home'
   end
   
   it "should not find nonexistent page" do
@@ -168,6 +178,12 @@ describe "Page", :shared => true do
   it "should be able to find parent page" do
     category = create_category(:path => "parent")
     article = create_article(:path => "parent/child")
+    article.parent.should == category
+  end
+
+  it "should be able to find parent of index page" do
+    category = create_category(:path => "parent")
+    article = create_article(:path => "parent/child/index")
     article.parent.should == category
   end
   

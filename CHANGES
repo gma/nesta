@@ -1,3 +1,10 @@
+= 0.9.3 / Unreleased
+
+ * The URL /path can be served from pages/path/index.mdown as well
+   as pages/path.mdown. More significantly, you can now create
+   pages/index.mdown for your home page. Index pages can also be created
+   with Textile or Haml, just like any other page.
+
 = 0.9.2 / 10 January 2011
 
  * Made the FileModel.metadata method public, to allow for custom

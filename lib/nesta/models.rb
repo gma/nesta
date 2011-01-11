@@ -29,10 +29,12 @@ module Nesta
 
     def self.load(path)
       FORMATS.each do |format|
-        filename = model_path("#{path}.#{format}")
-        if File.exist?(filename) && needs_loading?(path, filename)
-          @@cache[path] = self.new(filename)
-          break
+        [path, File.join(path, 'index')].each do |basename|
+          filename = model_path("#{basename}.#{format}")
+          if File.exist?(filename) && needs_loading?(path, filename)
+            @@cache[path] = self.new(filename)
+            break
+          end
         end
       end
       @@cache[path]
@@ -213,7 +215,12 @@ module Nesta
     end
 
     def parent
-      Page.load(File.dirname(path))
+      child_path = if File.basename(path, @format.to_s) == 'index'
+        File.dirname(path)
+      else
+        path
+      end
+      Page.load(File.dirname(child_path))
     end
 
     def pages
