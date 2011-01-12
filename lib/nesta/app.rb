@@ -92,8 +92,8 @@ module Nesta
         end
       end
 
-      def latest_articles
-        Nesta::Page.find_articles[0..7]
+      def latest_articles(count = 8)
+        Nesta::Page.find_articles[0..count - 1]
       end
 
       def article_summaries(articles)
