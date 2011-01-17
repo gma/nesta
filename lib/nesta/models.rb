@@ -56,17 +56,25 @@ module Nesta
       @mtime = File.mtime(filename)
     end
 
-    def permalink
-      File.basename(@filename, '.*').sub(/\/?index$/, '')
+    def index_page?
+      @filename =~ /\/?index\.\w+$/
+    end
+
+    def abspath
+      page_path = @filename.sub(Nesta::Config.page_path, '')
+      if index_page?
+        File.dirname(page_path)
+      else
+        File.join(File.dirname(page_path), File.basename(page_path, '.*'))
+      end
     end
 
     def path
       abspath.sub(/^\//, '')
     end
 
-    def abspath
-      prefix = File.dirname(@filename).sub(Nesta::Config.page_path, '')
-      File.join(prefix, permalink)
+    def permalink
+      File.basename(path)
     end
 
     def layout
@@ -228,12 +236,8 @@ module Nesta
 
     def parent
       return nil if abspath == '/'
-      child_path = if File.basename(path, @format.to_s) == 'index'
-        File.dirname(path)
-      else
-        path
-      end
-      Page.load(File.dirname(child_path))
+      parent_path = path.index('/').nil? ? 'index' : File.dirname(path)
+      Page.load(parent_path)
     end
 
     def pages

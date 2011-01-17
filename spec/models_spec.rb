@@ -75,7 +75,12 @@ describe "Page", :shared => true do
       Nesta::Page.find_by_path('/').title.should == 'My blog'
     end
 
-    it "should set abspath to empty string" do
+    it "should set permalink to empty string" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').permalink.should == ''
+    end
+
+    it "should set abspath to /" do
       create_page(:path => 'index')
       Nesta::Page.find_by_path('/').abspath.should == '/'
     end
@@ -168,6 +173,32 @@ describe "Page", :shared => true do
     end
   end
   
+  it "should be able to find parent page" do
+    category = create_category(:path => 'parent')
+    article = create_article(:path => 'parent/child')
+    article.parent.should == category
+  end
+    
+  describe "(with deep index page)" do
+    it "should be able to find index parent" do
+      home = create_category(:path => 'index', :heading => 'Home')
+      category = create_category(:path => 'parent')
+      category.parent.should == home
+      home.parent.should be_nil
+    end
+
+    it "should be able to find parent of index" do
+      category = create_category(:path => "parent")
+      index = create_category(:path => "parent/child/index")
+      index.parent.should == category
+    end
+
+    it "should be able to find permalink of index" do
+      index = create_category(:path => "parent/child/index")
+      index.permalink.should == 'child'
+    end
+  end
+
   describe "when assigned to categories" do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
@@ -181,7 +212,7 @@ describe "Page", :shared => true do
       @article.should be_in_category("the-apple")
       @article.should be_in_category("banana")
     end
-    
+
     it "should sort categories by heading" do
       @article.categories.first.heading.should == "Apple"
     end
@@ -190,18 +221,6 @@ describe "Page", :shared => true do
       delete_page(:category, "banana", @extension)
       @article.should_not be_in_category("banana")
     end
-  end
-  
-  it "should be able to find parent page" do
-    category = create_category(:path => "parent")
-    article = create_article(:path => "parent/child")
-    article.parent.should == category
-  end
-
-  it "should be able to find parent of index page" do
-    category = create_category(:path => "parent")
-    article = create_article(:path => "parent/child/index")
-    article.parent.should == category
   end
   
   it "should set parent to nil when at root" do
@@ -276,7 +295,7 @@ describe "Page", :shared => true do
       @article.template.should == @template.to_sym
     end
     
-    it "should set permalink from filename" do
+    it "should set permalink to basename of filename" do
       @article.permalink.should == 'my-article'
     end
     
