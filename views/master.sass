@@ -84,6 +84,13 @@ pre
 img
   border: none
 
+nav.breadcrumb
+  margin-top: $vertical-rhythm
+  color: $meta-color
+  padding: 0.5em 0
+
+  font-size: 0.909em
+
 // Layout
 
 article, aside, footer, header, nav, section
@@ -94,13 +101,6 @@ div#container
   margin: 0 auto
   padding: 1em 1em 0 1em
 
-  nav.breadcrumb
-    margin-top: $vertical-rhythm
-    color: $meta-color
-    padding: 0.5em 0
-    
-    font-size: 0.909em
-  
   div#content
     position: relative
     width: $content-width
@@ -138,16 +138,33 @@ a
     color: $active-link-color
     border-bottom-color: $active-link-color
 
+nav.breadcrumb    
+  ul
+    margin: 0
+  li
+    display: inline
+    list-style: none
+    &::after
+      content: " > "
+    &:last-child::after
+      content: ""
+
+nav.breadcrumb,
 nav.categories,
 div.feed,
 article p.meta
   a
     color: $nav-link-color
-    border-bottom-color: $background-color
   &:hover a
     color: $link-color
   a:hover
     color: $hover-link-color
+
+nav.categories,
+div.feed,
+article p.meta
+  a
+    border-bottom-color: $background-color
 
 article p.meta
   a

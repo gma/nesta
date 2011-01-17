@@ -1,10 +1,5 @@
 %nav.breadcrumb
-  %a(href="/") Home
-  &gt;
-  - if @page.parent
-    %a(href="#{@page.parent.abspath}")= @page.parent.heading
-    &gt;
-  = @page.heading
+  - display_breadcrumbs
 
 #content
   %article(role="main")
