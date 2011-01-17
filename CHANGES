@@ -1,20 +1,44 @@
-= 0.9.3 / Unreleased
-
- * The URL /my-page can be served from `pages/my-page/index.mdown` as
-   well as pages/my-page.mdown. Index pages can also be created with
-   Textile or Haml, just like any other page.
+= 0.9.3 / 18 January 2011
 
  * The route and view for serving the home page (/) has been removed, 
    and the home page must now be created as an index page in
    content/pages.
 
-   Running `nesta new mysite.com` will create `content/pages/index.haml`
-   that is suitable for a blog.
+   You will have to create `content/pages/index.haml` manually when
+   upgrading. Running `nesta new mysite.com` will create a
+   `content/pages/index.haml` file that is suitable for a blog.
+
+ * The URL /my-page can be served from `pages/my-page/index.mdown` as
+   well as pages/my-page.mdown (index pages can also be created with
+   Textile or Haml, just like any other page).
 
  * The description and keywords settings have been removed from
    config.yml as they can now be set on `content/pages/index.haml`.
- 
+
  * Added the Title metadata key to override a page's default title tag.
+
+ * Specify the sort order of pages that are listed on a category page.
+   Optionally append a colon and a number to a path in the 'Categories'
+   metadata to control the sort order of pages listed on the category
+   page.
+
+   See these files for the syntax:
+   https://github.com/gma/nesta-demo-content/tree/master/pages/examples
+
+ * Support arbitrarily deep hierarchies when generating the breadcrumb
+   (see the new helper method added to Nesta::Navigation).
+
+ * Dropped the --heroku switch (Heroku runs fine without it and there is
+   less chance that committing config.yml to your repository will be an
+   issue now that Nesta sites live in their own repositories).
+
+ * Re-implemented /articles.xml and /sitemap.xml in Haml, dropping the
+   dependency on builder. This side steps a bug in Ruby 1.9.1, so Nesta
+   can now run on 1.9.1 again. Also fixed a validity error in the Atom
+   feed.
+
+ * Bug fix: Don't output empty <li> tags for nested submenus that are
+   beneath the requested number of levels.
 
 = 0.9.2 / 10 January 2011
 
