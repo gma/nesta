@@ -14,10 +14,14 @@ module Nesta
       end
 
       def display_menu_item(item, options = {})
-        haml_tag :li do
-          if item.respond_to?(:each)
-            display_menu(item, :levels => (options[:levels] - 1))
-          else
+        if item.respond_to?(:each)
+          if (options[:levels] - 1) > 0
+            haml_tag :li do
+              display_menu(item, :levels => (options[:levels] - 1))
+            end
+          end
+        else
+          haml_tag :li do
             haml_tag :a, :href => item.abspath do
               haml_concat item.heading
             end
