@@ -140,7 +140,7 @@ module Nesta
       content_type :xml, :charset => 'utf-8'
       set_from_config(:title, :subtitle, :author)
       @articles = Page.find_articles.select { |a| a.date }[0..9]
-      cache builder(:atom)
+      cache haml(:atom, :format => :xhtml, :layout => false)
     end
 
     get '/sitemap.xml' do
