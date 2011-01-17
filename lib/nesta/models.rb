@@ -262,9 +262,12 @@ module Nesta
 
     private
       def valid_paths(paths)
+        page_dir = Nesta::Config.page_path
         paths.select do |path|
           FORMATS.detect do |format|
-            File.exist?(File.join(Nesta::Config.page_path, "#{path}.#{format}"))
+            [path, File.join(path, 'index')].detect do |candidate|
+              File.exist?(File.join(page_dir, "#{candidate}.#{format}"))
+            end
           end
         end
       end
