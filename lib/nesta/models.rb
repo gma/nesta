@@ -235,9 +235,17 @@ module Nesta
     end
 
     def parent
-      return nil if abspath == '/'
-      parent_path = path.index('/').nil? ? 'index' : File.dirname(path)
-      Page.load(parent_path)
+      if abspath == '/'
+        nil
+      else
+        parent_path = File.dirname(path)
+        while parent_path != '.' do
+          parent = Page.load(parent_path)
+          return parent unless parent.nil?
+          parent_path = File.dirname(parent_path)
+        end
+        Page.load('index')
+      end
     end
 
     def pages

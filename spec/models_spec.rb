@@ -199,6 +199,20 @@ describe "Page", :shared => true do
     end
   end
 
+  describe "(with missing nested page)" do
+    it "should consider grandparent to be parent" do
+      grandparent = create_category(:path => 'grandparent')
+      child = create_category(:path => 'grandparent/parent/child')
+      child.parent.should == grandparent
+    end
+
+    it "should consider grandparent home page to be parent" do
+      home = create_category(:path => 'index')
+      child = create_category(:path => 'parent/child')
+      child.parent.should == home
+    end
+  end
+
   describe "when assigned to categories" do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
