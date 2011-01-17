@@ -219,11 +219,6 @@ describe "An article" do
     body.should have_tag('title', 'My article - My blog')
   end
 
-  it "should not display category links" do
-    do_get
-    body.should_not have_tag('div.breadcrumb div.categories', /filed in/)
-  end
-
   it "should display the date" do
     do_get
     body.should have_tag('time', @date)
