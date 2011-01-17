@@ -66,7 +66,7 @@ module Nesta
       end
 
       def have_rake_tasks?
-        @options['heroku'] || @options['vlad']
+        @options['vlad']
       end
 
       def create_repository

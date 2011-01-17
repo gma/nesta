@@ -86,22 +86,6 @@ describe "nesta" do
       end
     end
 
-    describe "--heroku" do
-      before(:each) do
-        Nesta::Commands::New.new(@project_path, 'heroku' => '').execute
-      end
-
-      it "should add heroku to Gemfile" do
-        gemfile_source.should match(/gem 'heroku'/)
-      end
-
-      it "should add the heroku:config Rake task" do
-        should_exist('Rakefile')
-        rakefile_source.should match(/namespace :heroku/)
-        rakefile_source.should match(/task :config/)
-      end
-    end
-
     describe "--vlad" do
       before(:each) do
         Nesta::Commands::New.new(@project_path, 'vlad' => '').execute
