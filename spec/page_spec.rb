@@ -332,6 +332,31 @@ describe "A page" do
       body.should have_tag("p", @content)
     end
 
+    describe "with associated pages" do
+      before(:each) do
+        @category1 = create_category(
+          :path => 'category1',
+          :heading => 'Category 1',
+          :metadata => {
+            'categories' => 'category-prefix/my-category:-1'
+          }
+        )
+        @category2 = create_category(
+          :path => 'category2',
+          :heading => 'Category 2',
+          :metadata => {
+            'categories' => 'category-prefix/my-category:1'
+          }
+        )
+      end
+
+      it "should list highest priority pages at the top" do
+        do_get
+        body.should have_tag('li:nth-child(1) h1 a', 'Category 2')
+        body.should have_tag('li:nth-child(2) h1 a', 'Category 1')
+      end
+    end
+
     describe "with associated articles" do
       before(:each) do
         @article = create_article(

@@ -227,11 +227,18 @@ module Nesta
     end
 
     def categories
-      categories = metadata("categories")
-      paths = categories.nil? ? [] : categories.split(",").map { |p| p.strip }
-      valid_paths(paths).map { |p| Page.find_by_path(p) }.sort do |x, y|
+      paths = category_strings.map { |specifier| specifier.sub(/:-?\d+$/, '') }
+      pages = valid_paths(paths).map { |p| Page.find_by_path(p) }
+      pages.sort do |x, y|
         x.heading.downcase <=> y.heading.downcase
       end
+    end
+
+    def priority(category)
+      category_string = category_strings.detect do |string|
+        string =~ /^#{category}([,:\s]|$)/
+      end
+      category_string && category_string.split(':', 2)[-1].to_i 
     end
 
     def parent
@@ -252,7 +259,12 @@ module Nesta
       Page.find_all.select do |page|
         page.date.nil? && page.categories.include?(self)
       end.sort do |x, y|
-        x.heading.downcase <=> y.heading.downcase
+        by_priority = y.priority(path) <=> x.priority(path)
+        if by_priority == 0
+          x.heading.downcase <=> y.heading.downcase
+        else
+          by_priority
+        end
       end
     end
 
@@ -261,6 +273,11 @@ module Nesta
     end
 
     private
+      def category_strings
+        strings = metadata('categories')
+        strings.nil? ? [] : strings.split(',').map { |string| string.strip }
+      end
+
       def valid_paths(paths)
         page_dir = Nesta::Config.page_path
         paths.select do |path|

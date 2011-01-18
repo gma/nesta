@@ -104,43 +104,80 @@ describe "Page", :shared => true do
     File.stub!(:mtime).and_return(Time.new)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
+
+  it "should have default priority of 0 in category" do
+    page = create_page(:metadata => { 'categories' => 'some-page' })
+    page.priority('some-page').should == 0
+    page.priority('another-page').should be_nil
+  end
+
+  it "should read priority from category metadata" do
+    page = create_page(:metadata => {
+      'categories' => ' some-page:1, another-page , and-another :-1 '
+    })
+    page.priority('some-page').should == 1
+    page.priority('another-page').should == 0
+    page.priority('and-another').should == -1
+  end
   
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
-      create_article(:heading => "Article 1", :path => "article-1")
+      create_article(:heading => 'Article 1', :path => 'article-1')
       create_article(
-        :heading => "Article 2",
-        :path => "article-2",
+        :heading => 'Article 2',
+        :path => 'article-2',
         :metadata => {
-          "date" => "30 December 2008",
-          "categories" => @category.path
+          'date' => '30 December 2008',
+          'categories' => @category.path
         }
       )
       @article = create_article(
-        :heading => "Article 3",
-        :path => "article-3",
+        :heading => 'Article 3',
+        :path => 'article-3',
         :metadata => {
-          "date" => "31 December 2008",
-          "categories" => @category.path
+          'date' => '31 December 2008',
+          'categories' => @category.path
         }
       )
-      create_category(:path => "category-2",
-                      :metadata => { "categories" => @category.path })
+      @category1 = create_category(
+        :path => 'category-1',
+        :heading => 'Category 1',
+        :metadata => { 'categories' => @category.path }
+      )
+      @category2 = create_category(
+        :path => 'category-2',
+        :heading => 'Category 2',
+        :metadata => { 'categories' => @category.path }
+      )
+      @category3 = create_category(
+        :path => 'category-3',
+        :heading => 'Category 3',
+        :metadata => { 'categories' => "#{@category.path}:1" }
+      )
     end
 
     it "should find articles" do
       @category.articles.should have(2).items
     end
     
-    it "should list most recent articles first" do
+    it "should order articles by reverse chronological order" do
       @category.articles.first.path.should == @article.path
     end
     
     it "should find pages" do
-      @category.pages.should have(1).item
+      @category.pages.should have(3).items
+    end
+
+    it "should sort pages by priority" do
+      @category.pages.index(@category3).should == 0
     end
     
+    it "should order pages by heading if priority not set" do
+      pages = @category.pages
+      pages.index(@category1).should < pages.index(@category2)
+    end
+
     it "should not find pages scheduled in the future" do
       future_date = (Time.now + 86400).strftime("%d %B %Y")
       article = create_article(:heading => "Article 4",
