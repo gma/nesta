@@ -149,7 +149,7 @@ module Nesta
       @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
         (page > latest) ? page : latest
       end
-      cache builder(:sitemap)
+      cache haml(:sitemap, :format => :xhtml, :layout => false)
     end
 
     get '*' do
