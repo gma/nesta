@@ -1,14 +1,15 @@
 # Nesta - a CMS for Ruby Developers
 
-A CMS for small web sites and blogs, written in
-[Sinatra](http://www.sinatrarb.com/ "Sinatra").
+A CMS for small web sites and blogs, written in [Sinatra][frank].
 
-Content can be written in
-[Markdown](http://daringfireball.net/projects/markdown/ "Daring Fireball:
-Markdown") or [Textile](http://textism.com/tools/textile/) and stored in text
-files (though you can also use Haml if you need to add some HTML to your
-pages). There's no database; write your content in your editor. Publish by
-pushing to a git repository.
+Content can be written in [Markdown][markdown] or [Textile][textile] and
+stored in text files (though you can also use Haml if you need to add
+some HTML to your pages). There's no database; write your content in
+your editor. Publish by pushing to a git repository.
+
+[frank]: http://www.sinatrarb.com/ "Sinatra"
+[markdown]: http://daringfireball.net/projects/markdown/
+[textile]: http://textism.com/tools/textile/
 
 ## Installation
 
@@ -18,12 +19,7 @@ Begin by installing the gem:
 
 Then use the `nesta` command to generate a new site:
 
-    $ nesta new mysite.com
-
-If you intend to deploy to Heroku, you'll also want the Heroku rake
-tasks, so run this version instead:
-
-    $ nesta new --heroku mysite.com
+    $ nesta new mysite.com --git
 
 Install a few dependencies, and you're away:
 
@@ -40,6 +36,7 @@ shotgun...
     $ bundle exec shotgun config.ru
 
 ...then point your web browser at http://localhost:9393. Start editing
-the files in `content/pages` (see [Creating Your
-Content](http://effectif.com/nesta/creating-content) for full
-instructions).
+the files in `content/pages` (see [Creating Your Content][content] for
+full instructions).
+
+[content]: http://effectif.com/nesta/creating-content
