@@ -30,11 +30,11 @@ namespace :vlad do
   end
   
   remote_task :symlink_config_yml do
-    run "ln -s #{shared_path}/config.yml #{current_path}/config/config.yml"
+    run "ln -s --force #{shared_path}/config.yml #{current_path}/config/config.yml"
   end
   
   remote_task :symlink_attachments do
-    run "ln -s #{shared_path}/content/attachments #{current_path}/public/attachments"
+    run "ln -s --force #{shared_path}/content/attachments #{current_path}/public/attachments"
   end
   
   task :update do
