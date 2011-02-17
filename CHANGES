@@ -1,3 +1,8 @@
+= 0.9.4 / Unreleased
+
+ * Set the default encoding to UTF-8. Without it Heroku would sometimes
+   fail to render pages (issue 14).
+
 = 0.9.3 / 18 January 2011
 
  * The route and view for serving the home page (/) has been removed, 

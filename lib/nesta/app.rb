@@ -11,6 +11,8 @@ require File.expand_path('overrides', File.dirname(__FILE__))
 require File.expand_path('path', File.dirname(__FILE__))
 require File.expand_path('plugins', File.dirname(__FILE__))
 
+Encoding.default_external = 'utf-8' if RUBY_VERSION =~ /^1.9/
+
 Nesta::Plugins.load_local_plugins
 
 module Nesta
