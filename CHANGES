@@ -1,5 +1,7 @@
 = 0.9.4 / Unreleased
 
+ * Updated the link colours in the default theme.
+
  * Set the default encoding to UTF-8. Without it Heroku would sometimes
    fail to render pages (issue 14).
 
