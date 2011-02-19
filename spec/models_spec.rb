@@ -1,5 +1,5 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 module ModelMatchers
   class HavePage
@@ -27,6 +27,7 @@ module ModelMatchers
 end
 
 describe "Page", :shared => true do
+  include ConfigSpecHelper
   include ModelFactory
   include ModelMatchers
 
@@ -44,13 +45,45 @@ describe "Page", :shared => true do
   end
   
   it "should be findable" do
-    create_page(:heading => "Apple", :path => "the-apple")
+    create_page(:heading => 'Apple', :path => 'the-apple')
     Nesta::Page.find_all.should have(1).item
   end
 
   it "should find by path" do
-    create_page(:heading => "Banana", :path => "banana")
-    Nesta::Page.find_by_path("banana").heading.should == "Banana"
+    create_page(:heading => 'Banana', :path => 'banana')
+    Nesta::Page.find_by_path('banana').heading.should == 'Banana'
+  end
+  
+  it "should find index page by path" do
+    create_page(:heading => 'Banana', :path => 'banana/index')
+    Nesta::Page.find_by_path('banana').heading.should == 'Banana'
+  end
+
+  describe "for home page" do
+    it "should set title to heading and site title" do
+      create_page(:heading => 'Home', :path => 'index')
+      Nesta::Page.find_by_path('/').title.should == 'Home - My blog'
+    end
+
+    it "should respect title metadata" do
+      create_page(:path => 'index', :metadata => { 'title' => 'Specific title' })
+      Nesta::Page.find_by_path('/').title.should == 'Specific title'
+    end
+
+    it "should set title to site title by default" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').title.should == 'My blog'
+    end
+
+    it "should set permalink to empty string" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').permalink.should == ''
+    end
+
+    it "should set abspath to /" do
+      create_page(:path => 'index')
+      Nesta::Page.find_by_path('/').abspath.should == '/'
+    end
   end
   
   it "should not find nonexistent page" do
@@ -71,43 +104,80 @@ describe "Page", :shared => true do
     File.stub!(:mtime).and_return(Time.new)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
+
+  it "should have default priority of 0 in category" do
+    page = create_page(:metadata => { 'categories' => 'some-page' })
+    page.priority('some-page').should == 0
+    page.priority('another-page').should be_nil
+  end
+
+  it "should read priority from category metadata" do
+    page = create_page(:metadata => {
+      'categories' => ' some-page:1, another-page , and-another :-1 '
+    })
+    page.priority('some-page').should == 1
+    page.priority('another-page').should == 0
+    page.priority('and-another').should == -1
+  end
   
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
-      create_article(:heading => "Article 1", :path => "article-1")
+      create_article(:heading => 'Article 1', :path => 'article-1')
       create_article(
-        :heading => "Article 2",
-        :path => "article-2",
+        :heading => 'Article 2',
+        :path => 'article-2',
         :metadata => {
-          "date" => "30 December 2008",
-          "categories" => @category.path
+          'date' => '30 December 2008',
+          'categories' => @category.path
         }
       )
       @article = create_article(
-        :heading => "Article 3",
-        :path => "article-3",
+        :heading => 'Article 3',
+        :path => 'article-3',
         :metadata => {
-          "date" => "31 December 2008",
-          "categories" => @category.path
+          'date' => '31 December 2008',
+          'categories' => @category.path
         }
       )
-      create_category(:path => "category-2",
-                      :metadata => { "categories" => @category.path })
+      @category1 = create_category(
+        :path => 'category-1',
+        :heading => 'Category 1',
+        :metadata => { 'categories' => @category.path }
+      )
+      @category2 = create_category(
+        :path => 'category-2',
+        :heading => 'Category 2',
+        :metadata => { 'categories' => @category.path }
+      )
+      @category3 = create_category(
+        :path => 'category-3',
+        :heading => 'Category 3',
+        :metadata => { 'categories' => "#{@category.path}:1" }
+      )
     end
 
     it "should find articles" do
       @category.articles.should have(2).items
     end
     
-    it "should list most recent articles first" do
+    it "should order articles by reverse chronological order" do
       @category.articles.first.path.should == @article.path
     end
     
     it "should find pages" do
-      @category.pages.should have(1).item
+      @category.pages.should have(3).items
+    end
+
+    it "should sort pages by priority" do
+      @category.pages.index(@category3).should == 0
     end
     
+    it "should order pages by heading if priority not set" do
+      pages = @category.pages
+      pages.index(@category1).should < pages.index(@category2)
+    end
+
     it "should not find pages scheduled in the future" do
       future_date = (Time.now + 86400).strftime("%d %B %Y")
       article = create_article(:heading => "Article 4",
@@ -140,6 +210,46 @@ describe "Page", :shared => true do
     end
   end
   
+  it "should be able to find parent page" do
+    category = create_category(:path => 'parent')
+    article = create_article(:path => 'parent/child')
+    article.parent.should == category
+  end
+    
+  describe "(with deep index page)" do
+    it "should be able to find index parent" do
+      home = create_category(:path => 'index', :heading => 'Home')
+      category = create_category(:path => 'parent')
+      category.parent.should == home
+      home.parent.should be_nil
+    end
+
+    it "should be able to find parent of index" do
+      category = create_category(:path => "parent")
+      index = create_category(:path => "parent/child/index")
+      index.parent.should == category
+    end
+
+    it "should be able to find permalink of index" do
+      index = create_category(:path => "parent/child/index")
+      index.permalink.should == 'child'
+    end
+  end
+
+  describe "(with missing nested page)" do
+    it "should consider grandparent to be parent" do
+      grandparent = create_category(:path => 'grandparent')
+      child = create_category(:path => 'grandparent/parent/child')
+      child.parent.should == grandparent
+    end
+
+    it "should consider grandparent home page to be parent" do
+      home = create_category(:path => 'index')
+      child = create_category(:path => 'parent/child')
+      child.parent.should == home
+    end
+  end
+
   describe "when assigned to categories" do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
@@ -153,7 +263,7 @@ describe "Page", :shared => true do
       @article.should be_in_category("the-apple")
       @article.should be_in_category("banana")
     end
-    
+
     it "should sort categories by heading" do
       @article.categories.first.heading.should == "Apple"
     end
@@ -162,12 +272,6 @@ describe "Page", :shared => true do
       delete_page(:category, "banana", @extension)
       @article.should_not be_in_category("banana")
     end
-  end
-  
-  it "should be able to find parent page" do
-    category = create_category(:path => "parent")
-    article = create_article(:path => "parent/child")
-    article.parent.should == category
   end
   
   it "should set parent to nil when at root" do
@@ -214,21 +318,23 @@ describe "Page", :shared => true do
   
   describe "with metadata" do
     before(:each) do
-      @layout = "my_layout"
-      @template = "my_template"
-      @date = "07 September 2009"
-      @keywords = "things, stuff"
-      @description = "Page about stuff"
+      @layout = 'my_layout'
+      @template = 'my_template'
+      @date = '07 September 2009'
+      @keywords = 'things, stuff'
+      @description = 'Page about stuff'
       @summary = 'Multiline\n\nsummary'
-      @read_more = "Continue at your leisure"
+      @read_more = 'Continue at your leisure'
+      @skillz = 'ruby, guitar, bowstaff'
       @article = create_article(:metadata => {
-        "layout" => @layout,
-        "template" => @template,
-        "date" => @date.gsub("September", "Sep"),
-        "description" => @description,
-        "keywords" => @keywords,
-        "summary" => @summary,
-        "read more" => @read_more
+        'layout' => @layout,
+        'template' => @template,
+        'date' => @date.gsub('September', 'Sep'),
+        'description' => @description,
+        'keywords' => @keywords,
+        'summary' => @summary,
+        'read more' => @read_more,
+        'skillz' => @skillz
       })
     end
 
@@ -240,16 +346,16 @@ describe "Page", :shared => true do
       @article.template.should == @template.to_sym
     end
     
-    it "should set permalink from filename" do
-      @article.permalink.should == "my-article"
+    it "should set permalink to basename of filename" do
+      @article.permalink.should == 'my-article'
     end
     
     it "should set path from filename" do
-      @article.path.should == "article-prefix/my-article"
+      @article.path.should == 'article-prefix/my-article'
     end
     
     it "should retrieve heading" do
-      @article.heading.should == "My article"
+      @article.heading.should == 'My article'
     end
     
     it "should be possible to convert an article to HTML" do
@@ -287,6 +393,10 @@ describe "Page", :shared => true do
     it "should treat double newline chars as paragraph break in summary" do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
+    
+    it "should allow arbitrary access to metadata" do
+      @article.metadata('skillz').should == @skillz
+    end
   end
   
   describe "when checking last modification time" do
@@ -303,6 +413,7 @@ describe "Page", :shared => true do
 end
 
 describe "All types of page" do
+  include ConfigSpecHelper
   include ModelFactory
 
   before(:each) do
@@ -316,7 +427,7 @@ describe "All types of page" do
   
   it "should still return top level menu items" do
     # Page.menu_items is deprecated; we're keeping it for the moment so
-    # that we don't break themes or code in local/app.rb (just yet).
+    # that we don't break themes or code in a local app.rb (just yet).
     page1 = create_category(:path => "page-1")
     page2 = create_category(:path => "page-2")
     create_menu([page1.path, page2.path].join("\n"))
@@ -325,6 +436,8 @@ describe "All types of page" do
 end
 
 describe "Markdown page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :mdown
   end
@@ -342,6 +455,8 @@ describe "Markdown page" do
 end
 
 describe "Haml page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :haml
   end
@@ -359,6 +474,8 @@ describe "Haml page" do
 end
 
 describe "Textile page" do
+  include ConfigSpecHelper
+
   before(:each) do
     @extension = :textile
   end
@@ -376,6 +493,7 @@ describe "Textile page" do
 end
 
 describe "Menu" do
+  include ConfigSpecHelper
   include ModelFactory
 
   before(:each) do

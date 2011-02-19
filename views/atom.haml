@@ -1,0 +1,28 @@
+!!! XML
+%feed(xmlns='http://www.w3.org/2005/Atom')
+  %title(type='text')= @title
+  %generator(uri='http://effectif.com/nesta') Nesta
+  %id= atom_id
+  %link(href="#{base_url}/articles.xml" rel='self')
+  %link(href=base_url rel='alternate')
+  %subtitle(type='text')= @subtitle
+  - if @articles[0]
+    %updated= @articles[0].date(:xmlschema)
+  - if @author
+    %author
+      - if @author['name']
+        %name= @author['name']
+      - if @author['uri']
+        %uri= @author['uri']
+      - if @author['email']
+        %email= @author['email']
+  - @articles.each do |article|
+    %entry
+      %title= article.heading
+      %link{ :href => url_for(article), :type => 'text/html', :rel => 'alternate' }
+      %id= atom_id(article)
+      %content(type='html')&= find_and_preserve(absolute_urls(article.body))
+      %published= article.date(:xmlschema)
+      %updated= article.date(:xmlschema)
+      - article.categories.each do |category|
+        %category{ :term => category.permalink }

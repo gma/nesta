@@ -1,5 +1,5 @@
-require File.expand_path("model_factory", File.dirname(__FILE__))
-require File.expand_path("spec_helper", File.dirname(__FILE__))
+require File.expand_path('spec_helper', File.dirname(__FILE__))
+require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "page with keyword and description", :shared => true do
   it "should set the keywords meta tag" do
@@ -56,6 +56,7 @@ describe "page that can display menus", :shared => true do
 end
 
 describe "The layout" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -66,19 +67,28 @@ describe "The layout" do
   end
   
   it "should include GA JavaScript if configured" do
-    stub_env_config_key("google_analytics_code", "UA-1234")
+    stub_config_key('google_analytics_code', 'UA-1234', :rack_env => true)
     stub_configuration
-    get "/"
-    body.should have_tag("script", /'_setAccount', 'UA-1234'/)
+    get '/'
+    body.should have_tag('script', /'_setAccount', 'UA-1234'/)
   end
 end
 
 describe "The home page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
   before(:each) do
     stub_configuration
+    template_path = File.expand_path(
+        'templates', File.dirname(File.dirname(__FILE__)))
+    create_category(
+      :path => 'index',
+      :ext => :haml,
+      :heading => 'Home',
+      :content => File.read(File.join(template_path, 'index.haml'))
+    )
     create_category
   end
   
@@ -104,29 +114,15 @@ describe "The home page" do
     last_response.should be_ok
   end
   
-  it "should display title and subtitle in title tag" do
-    do_get
-    body.should have_tag("title", "My blog - about stuff")
+  it "should display site title in hgroup tag" do
+    pending "Hpricot doesn't support HTML5"
+    body.should have_tag('hgroup h1', /My blog/)
   end
   
-  it "should display site title in h1 tag" do
+  it "should display site subtitle in hgroup tag" do
+    pending "Hpricot doesn't support HTML5"
     do_get
-    body.should have_tag('#header p.title', /My blog/)
-  end
-  
-  it "should display site subtitle in h1 tag" do
-    do_get
-    body.should have_tag('#header p.subtitle', /about stuff/)
-  end
-  
-  it "should set description meta tag" do
-    do_get
-    body.should have_tag("meta[@name=description][@content='great web site']")
-  end
-  
-  it "should set keywords meta tag" do
-    do_get
-    body.should have_tag("meta[@name=keywords][@content='home, page']")
+    body.should have_tag('hgroup h2', /about stuff/)
   end
   
   describe "when articles have no summary" do
@@ -157,11 +153,11 @@ describe "The home page" do
     
     it "should display link to article in h2 tag" do
       body.should have_tag(
-          "h2 a[@href=#{@article.abspath}]", /^\s*#{@article.heading}$/)
+          "h1 a[@href=#{@article.abspath}]", /^\s*#{@article.heading}$/)
     end
     
     it "should display article summary if available" do
-      body.should have_tag("p", @summary.split('\n\n').first)
+      body.should have_tag('p', @summary.split('\n\n').first)
     end
     
     it "should display read more link" do
@@ -171,20 +167,21 @@ describe "The home page" do
 end
 
 describe "An article" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
   before(:each) do
     stub_configuration
-    @date = "07 September 2009"
-    @keywords = "things, stuff"
-    @description = "Page about stuff"
+    @date = '07 September 2009'
+    @keywords = 'things, stuff'
+    @description = 'Page about stuff'
     @summary = 'Multiline\n\nsummary'
     @article = create_article(:metadata => {
-      "date" => @date.gsub("September", "Sep"),
-      "description" => @description,
-      "keywords" => @keywords,
-      "summary" => @summary,
+      'date' => @date.gsub('September', 'Sep'),
+      'description' => @description,
+      'keywords' => @keywords,
+      'summary' => @summary
     })
   end
   
@@ -214,31 +211,31 @@ describe "An article" do
 
   it "should display the heading" do
     do_get
-    body.should have_tag("h1", "My article")
+    body.should have_tag('h1', 'My article')
   end
 
-  it "should not display category links" do
+  it "should use heading for title tag" do
     do_get
-    body.should_not have_tag("div.breadcrumb div.categories", /filed in/)
+    body.should have_tag('title', 'My article - My blog')
   end
 
   it "should display the date" do
     do_get
-    body.should have_tag("div.date", @date)
+    body.should have_tag('time', @date)
   end
 
   it "should display the content" do
     do_get
-    body.should have_tag("p", "Content goes here")
+    body.should have_tag('p', 'Content goes here')
   end
   
   describe "that is assigned to categories" do
     before(:each) do
-      create_category(:heading => "Apple", :path => "the-apple")
-      @category = create_category(:heading => "Banana", :path => "banana")
+      create_category(:heading => 'Apple', :path => 'the-apple')
+      @category = create_category(:heading => 'Banana', :path => 'banana')
       @article = create_article(
         :path => "#{@category.path}/article",
-        :metadata => { "categories" => "banana, the-apple" }
+        :metadata => { 'categories' => 'banana, the-apple' }
       )
     end
     
@@ -248,18 +245,19 @@ describe "An article" do
     end
     
     it "should link to each category" do
+      pending "Hpricot doesn't support HTML5"
       do_get
-      body.should have_tag("div.categories", /Categories/)
-      body.should have_tag("div.categories") do |categories|
+      body.should have_tag("nav.categories") do |categories|
         categories.should have_tag("a[@href=/banana]", "Banana")
         categories.should have_tag("a[@href=/the-apple]", "Apple")
       end
     end
 
     it "should link to a category in breadcrumb" do
+      pending "Hpricot doesn't support HTML5"
       do_get
       body.should have_tag(
-          "div.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
+          "nav.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
     end
     
     it "should contain category name in page title" do
@@ -271,6 +269,7 @@ describe "An article" do
 end
 
 describe "A page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -296,12 +295,17 @@ describe "A page" do
   
   describe "that has meta data" do
     before(:each) do
+      @title = 'Different title'
       @content = "Page content"
       @description = "Page about stuff"
       @keywords = "things, stuff"
       @category = create_category(
         :content => "# My category\n\n#{@content}",
-        :metadata => { "description" => @description, "keywords" => @keywords }
+        :metadata => {
+          'title' => @title,
+          'description' => @description,
+          'keywords' => @keywords
+        }
       )
     end
 
@@ -315,12 +319,42 @@ describe "A page" do
     
     it "should display the heading" do
       do_get
-      body.should have_tag("h1", @category.heading)
+      body.should have_tag('h1', @category.heading)
+    end
+
+    it "should use title metadata to set heading" do
+      do_get
+      body.should have_tag('title', @title)
     end
 
     it "should display the content" do
       do_get
       body.should have_tag("p", @content)
+    end
+
+    describe "with associated pages" do
+      before(:each) do
+        @category1 = create_category(
+          :path => 'category1',
+          :heading => 'Category 1',
+          :metadata => {
+            'categories' => 'category-prefix/my-category:-1'
+          }
+        )
+        @category2 = create_category(
+          :path => 'category2',
+          :heading => 'Category 2',
+          :metadata => {
+            'categories' => 'category-prefix/my-category:1'
+          }
+        )
+      end
+
+      it "should list highest priority pages at the top" do
+        do_get
+        body.should have_tag('li:nth-child(1) h1 a', 'Category 2')
+        body.should have_tag('li:nth-child(2) h1 a', 'Category 1')
+      end
     end
 
     describe "with associated articles" do
@@ -338,7 +372,7 @@ describe "A page" do
       it "should display links to articles" do
         do_get
         body.should have_tag(
-            "h3 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
+            "h1 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
         body.should_not have_tag("h3", @article2.heading)
       end
     end
@@ -364,6 +398,7 @@ describe "A page" do
 end
 
 describe "A Haml page" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 
@@ -388,6 +423,7 @@ describe "A Haml page" do
 end
 
 describe "attachments" do
+  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 

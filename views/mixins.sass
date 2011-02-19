@@ -11,8 +11,8 @@ $h4-scale: 1.18
 
 $base-scale: 0.88
 $base-font: $base-scale * 1em
-$vertical-rhythm: 1.5em
-$base-vertical-margin: 1.5em
+$vertical-rhythm: 1.75em
+$base-vertical-margin: 1.75em
 
 @mixin adjust-font-size($scale, $top-weight: 1, $bottom-weight: 1)
   $average-margin: $base-vertical-margin / $scale
@@ -32,3 +32,8 @@ $base-vertical-margin: 1.5em
   -moz-border-radius: $radius
   border-radius: $radius
 
+@mixin transition($definition)
+  -moz-transition: $definition
+  -o-transition: $definition
+  -webkit-transition: $definition
+  transition: $definition

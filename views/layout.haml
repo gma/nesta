@@ -1,27 +1,24 @@
-!!!
-%html{ :lang => "en", "xml:lang" => "en", :xmlns => 'http://www.w3.org/1999/xhtml' }
+<!DOCTYPE html>
+%html(lang="en")
   %head
-    %meta{ "http-equiv" => "content-type", "content" => "text/html; charset=utf-8" }
+    %meta(charset="utf-8")
     - if @description
-      %meta{ "name" => "description", "content" => @description }
+      %meta(name="description" content=@description)
     - if @keywords
-      %meta{ "name" => "keywords", "content" => @keywords }
+      %meta(name="keywords" content=@keywords)
     %title= @title
-    %link{ :href => "/css/master.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
-    - if local_stylesheet?
-      %link{ :href => "/css/local.css", :media => "screen", :rel => "stylesheet", :type => "text/css" }
-    %link{ :href => "/articles.xml", :rel => "alternate", :type => "application/atom+xml" }
+    <!--[if ! lte IE 6]><!-->
+    %link(href="/css/master.css" media="screen" rel="stylesheet")
+    <!--<![endif]-->
+    /[if lte IE 6]
+      %link(rel="stylesheet" href="http://universal-ie6-css.googlecode.com/files/ie6.1.1.css" media="screen, projection")
+    /[if lt IE 9]
+      %script(src="//html5shim.googlecode.com/svn/trunk/html5.js")
+    = local_stylesheet_link_tag('local')
+    %link(href="/articles.xml" rel="alternate" type="application/atom+xml")
     = haml :analytics, :layout => false
-  %body{ :class => @body_class }
+  %body
     #container
-      #header
-        %p.title= @heading
-        %p.subtitle= @subtitle
+      = haml :header, :layout => false
       = yield
-      #footer
-        %p
-          Powered by
-          = succeed "," do
-            %a{ :href => "http://effectif.com/nesta" } nesta
-          designed by
-          %a{ :href => "http://effectif.com" } Graham Ashton
+      = haml :footer, :layout => false

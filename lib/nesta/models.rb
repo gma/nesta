@@ -29,10 +29,12 @@ module Nesta
 
     def self.load(path)
       FORMATS.each do |format|
-        filename = model_path("#{path}.#{format}")
-        if File.exist?(filename) && needs_loading?(path, filename)
-          @@cache[path] = self.new(filename)
-          break
+        [path, File.join(path, 'index')].each do |basename|
+          filename = model_path("#{basename}.#{format}")
+          if File.exist?(filename) && needs_loading?(path, filename)
+            @@cache[path] = self.new(filename)
+            break
+          end
         end
       end
       @@cache[path]
@@ -42,14 +44,8 @@ module Nesta
       @@cache = {}
     end
 
-    def self.deprecated(name, message)
-      if Sinatra::Application.environment != :test
-        $stderr.puts "DEPRECATION WARNING: #{name} is deprecated; #{message}"
-      end
-    end
-
     def self.menu_items
-      deprecated("Page.menu_items", "see Menu.top_level and Menu.for_path")
+      Nesta.deprecated('Page.menu_items', 'see Menu.top_level and Menu.for_path')
       Menu.top_level
     end
 
@@ -60,17 +56,25 @@ module Nesta
       @mtime = File.mtime(filename)
     end
 
-    def permalink
-      File.basename(@filename, ".*")
-    end
-
-    def path
-      abspath.sub(/^\//, "")
+    def index_page?
+      @filename =~ /\/?index\.\w+$/
     end
 
     def abspath
-      prefix = File.dirname(@filename).sub(Nesta::Config.page_path, "")
-      File.join(prefix, permalink)
+      page_path = @filename.sub(Nesta::Config.page_path, '')
+      if index_page?
+        File.dirname(page_path)
+      else
+        File.join(File.dirname(page_path), File.basename(page_path, '.*'))
+      end
+    end
+
+    def path
+      abspath.sub(/^\//, '')
+    end
+
+    def permalink
+      File.basename(path)
     end
 
     def layout
@@ -103,14 +107,14 @@ module Nesta
     def keywords
       metadata("keywords")
     end
+    
+    def metadata(key)
+      @metadata[key]
+    end
 
     private
     def markup
       @markup
-    end
-
-    def metadata(key)
-      @metadata[key]
     end
 
     def paragraph_is_metadata(text)
@@ -155,15 +159,27 @@ module Nesta
 
     def heading
       regex = case @format
-              when :mdown
-                /^#\s*(.*)/
-              when :haml
-                /^\s*%h1\s+(.*)/
-              when :textile
-                /^\s*h1\.\s+(.*)/
-              end
+        when :mdown
+          /^#\s*(.*)/
+        when :haml
+          /^\s*%h1\s+(.*)/
+        when :textile
+          /^\s*h1\.\s+(.*)/
+        end
       markup =~ regex
       Regexp.last_match(1)
+    end
+  
+    def title
+      if metadata('title')
+        metadata('title')
+      elsif parent
+        "#{heading} - #{parent.heading}"
+      elsif heading
+        "#{heading} - #{Nesta::Config.title}"
+      elsif abspath == '/'
+        Nesta::Config.title
+      end
     end
 
     def date(format = nil)
@@ -211,22 +227,44 @@ module Nesta
     end
 
     def categories
-      categories = metadata("categories")
-      paths = categories.nil? ? [] : categories.split(",").map { |p| p.strip }
-      valid_paths(paths).map { |p| Page.find_by_path(p) }.sort do |x, y|
+      paths = category_strings.map { |specifier| specifier.sub(/:-?\d+$/, '') }
+      pages = valid_paths(paths).map { |p| Page.find_by_path(p) }
+      pages.sort do |x, y|
         x.heading.downcase <=> y.heading.downcase
       end
     end
 
+    def priority(category)
+      category_string = category_strings.detect do |string|
+        string =~ /^#{category}([,:\s]|$)/
+      end
+      category_string && category_string.split(':', 2)[-1].to_i 
+    end
+
     def parent
-      Page.load(File.dirname(path))
+      if abspath == '/'
+        nil
+      else
+        parent_path = File.dirname(path)
+        while parent_path != '.' do
+          parent = Page.load(parent_path)
+          return parent unless parent.nil?
+          parent_path = File.dirname(parent_path)
+        end
+        Page.load('index')
+      end
     end
 
     def pages
       Page.find_all.select do |page|
         page.date.nil? && page.categories.include?(self)
       end.sort do |x, y|
-        x.heading.downcase <=> y.heading.downcase
+        by_priority = y.priority(path) <=> x.priority(path)
+        if by_priority == 0
+          x.heading.downcase <=> y.heading.downcase
+        else
+          by_priority
+        end
       end
     end
 
@@ -235,10 +273,18 @@ module Nesta
     end
 
     private
+      def category_strings
+        strings = metadata('categories')
+        strings.nil? ? [] : strings.split(',').map { |string| string.strip }
+      end
+
       def valid_paths(paths)
+        page_dir = Nesta::Config.page_path
         paths.select do |path|
           FORMATS.detect do |format|
-            File.exist?(File.join(Nesta::Config.page_path, "#{path}.#{format}"))
+            [path, File.join(path, 'index')].detect do |candidate|
+              File.exist?(File.join(page_dir, "#{candidate}.#{format}"))
+            end
           end
         end
       end
@@ -249,7 +295,7 @@ module Nesta
 
     def self.full_menu
       menu = []
-      menu_file = Nesta::Config.content_path("menu.txt")
+      menu_file = Nesta::Config.content_path('menu.txt')
       if File.exist?(menu_file)
         File.open(menu_file) { |file| append_menu_item(menu, file, 0) }
       end

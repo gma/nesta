@@ -1,7 +1,5 @@
-require File.join(File.dirname(__FILE__), "config_spec_helpers")
-
 module ModelFactory
-  include ConfigSpecHelper
+  include FixtureHelper
 
   def create_page(options)
     extension = options[:ext] || :mdown
@@ -13,11 +11,11 @@ module ModelFactory
   
   def create_article(options = {}, &block)
     o = {
-      :path => "article-prefix/my-article",
-      :heading => "My article",
-      :content => "Content goes here",
+      :path => 'article-prefix/my-article',
+      :heading => 'My article',
+      :content => 'Content goes here',
       :metadata => {
-        "date" => "29 December 2008"
+        'date' => '29 December 2008'
       }.merge(options.delete(:metadata) || {})
     }.merge(options)
     create_page(o, &block)
@@ -25,35 +23,31 @@ module ModelFactory
   
   def create_category(options = {}, &block)
     o = {
-      :path => "category-prefix/my-category",
-      :heading => "My category",
-      :content => "Content goes here"
+      :path => 'category-prefix/my-category',
+      :heading => 'My category',
+      :content => 'Content goes here'
     }.merge(options)
     create_page(o, &block)
   end
   
   def write_menu_item(indent, file, menu_item)
     if menu_item.is_a?(Array)
-      indent.sub!(/^/, "  ")
+      indent.sub!(/^/, '  ')
       menu_item.each { |path| write_menu_item(indent, file, path) }
-      indent.sub!(/^  /, "")
+      indent.sub!(/^  /, '')
     else
       file.write("#{indent}#{menu_item}\n")
     end
   end
 
   def create_menu(menu_text)
-    file = filename(Nesta::Config.content_path, "menu", :txt)
-    File.open(file, "w") { |file| file.write(menu_text) }
+    file = filename(Nesta::Config.content_path, 'menu', :txt)
+    File.open(file, 'w') { |file| file.write(menu_text) }
   end
   
   def delete_page(type, permalink, extension)
     file = filename(Nesta::Config.page_path, permalink, extension)
     FileUtils.rm(file)
-  end
-  
-  def remove_fixtures
-    FileUtils.rm_r(ConfigSpecHelper::FIXTURE_DIR, :force => true)
   end
   
   def create_content_directories
@@ -72,24 +66,29 @@ module ModelFactory
       File.join(directory, "#{basename}.#{extension}")
     end
     
+    def heading(options)
+      prefix = case options[:ext]
+        when :haml
+          "%div\n  %h1"
+        when :textile
+          "<div>\nh1."
+        else
+          '# '
+        end
+      "#{prefix} #{options[:heading]}\n\n"
+    end
+
     def create_file(path, options = {})
       create_content_directories
       metadata = options[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
-      if options[:ext] == :haml
-        prefix = "%div\n  %h1"
-      elsif options[:ext] == :textile
-        prefix =  "<div>\nh1."
-      else
-        prefix = '# '
-      end
-      heading = options[:heading] ? "#{prefix} #{options[:heading]}\n\n" : ""
+      heading = options[:heading] ? heading(options) : ''
       contents =<<-EOF
 #{metatext}
 
 #{heading}#{options[:content]}
       EOF
       FileUtils.mkdir_p(File.dirname(path))
-      File.open(path, "w") { |file| file.write(contents) }
+      File.open(path, 'w') { |file| file.write(contents) }
     end
 end

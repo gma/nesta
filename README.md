@@ -1,44 +1,42 @@
 # Nesta - a CMS for Ruby Developers
 
-A CMS for small web sites and blogs, written in
-[Sinatra](http://www.sinatrarb.com/ "Sinatra").
+A CMS for small web sites and blogs, written in [Sinatra][frank].
 
-Content can be written in
-[Markdown](http://daringfireball.net/projects/markdown/ "Daring Fireball:
-Markdown") or [Textile](http://textism.com/tools/textile/) and stored in text
-files (though you can also use Haml if you need to add some HTML to your
-pages). There's no database; write your content in your editor. Publish by
-pushing to a git repository.
+Content can be written in [Markdown][markdown] or [Textile][textile] and
+stored in text files (though you can also use Haml if you need to add
+some HTML to your pages). There's no database; write your content in
+your editor. Publish by pushing to a git repository.
+
+[frank]: http://www.sinatrarb.com/ "Sinatra"
+[markdown]: http://daringfireball.net/projects/markdown/
+[textile]: http://textism.com/tools/textile/
 
 ## Installation
 
-Begin by cloning the git repository:
+Begin by installing the gem:
 
-    $ git clone git://github.com/gma/nesta.git
+    $ gem install nesta
 
-Nesta's dependencies are managed with bundler, which handles installing the
-necessary gems for you:
+Then use the `nesta` command to generate a new site:
 
-    $ gem install bundler
-    $ cd nesta
-    $ bundle install
+    $ nesta new mysite.com --git
 
-You'll need a config file. You can start with the default and tweak it to suit
-later:
+Install a few dependencies, and you're away:
 
-    $ cp config/config.yml.sample config/config.yml
+    $ cd mysite.com
+    $ bundle
 
-Create some sample web pages (optional):
-
-    $ bundle exec rake setup:sample_content
+You'll find basic configuration options for your site in
+`config/config.yml`. The defaults will work, but you'll want to tweak it
+before you go very far.
 
 That's it - you can launch a local web server in development mode using
 shotgun...
 
     $ bundle exec shotgun config.ru
 
-...then point your web browser at http://localhost:9393. Start editing the
-files in `nesta/content`, and you're on your way.
+...then point your web browser at http://localhost:9393. Start editing
+the files in `content/pages` (see the [Writing content][content] docs
+for full instructions).
 
-See [http://effectif.com/nesta](http://effectif.com/nesta) for more
-documentation.
+[content]: http://nestacms.com/docs/creating-content

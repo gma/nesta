@@ -1,13 +1,12 @@
-.breadcrumb
-  %a{ :href => "/" } Home
+%nav.breadcrumb
+  %a(href="/") Home
 
 #content
-  %h1 Sorry, something went wrong
+  %section(role="main")
+    %h1 Sorry, something went wrong
 
-  %p
-    An error occurred whilst we were trying to serve your page. Please bear
-    with us, or in the mean time, try another page.
+    %p
+      An error occurred whilst we were trying to serve your page. Please
+      bear with us, or try another page.
 
-#sidebar
-  = haml :categories, :layout => false
-  = haml :feed, :layout => false
+= haml :sidebar, :layout => false

@@ -1,3 +1,4 @@
+*.gem
 ._*
 .*.swp
 .bundle
@@ -7,5 +8,6 @@
 config/config.yml
 config/deploy.rb
 db/*.db
+pkg/*
 plugins
 public/cache

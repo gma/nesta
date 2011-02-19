@@ -1,0 +1,16 @@
+- if page.date
+  %footer
+    %p.meta
+      Published
+      - if page.date
+        on
+        %time(datetime="#{page.date.to_s}" pubdate=true)= format_date(page.date)
+      - if (! page.categories.empty?)
+        in
+        - page.categories.each do |category|
+          - if category != page.categories[-1]
+            = succeed ',' do
+              %a(href="#{category.abspath}")= category.heading
+          - else
+            %a(href="#{category.abspath}")= category.heading
+

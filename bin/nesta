@@ -1,0 +1,70 @@
+#!/usr/bin/env ruby
+
+require 'getoptlong'
+
+require File.expand_path('../lib/nesta/commands', File.dirname(__FILE__))
+
+module Nesta
+  class Cli
+    def self.usage
+      puts <<EOF
+USAGE: #{File.basename($0)} [GLOBAL OPTIONS] <command> [COMMAND OPTIONS]
+
+GLOBAL OPTIONS
+    --help, -h            Display this message.
+
+COMMANDS
+    new <path>            Create a new Nesta project.
+    demo:content          Install example pages in ./content-demo.
+    theme:install <url>   Install a theme from a git repository.
+    theme:enable <name>   Make the theme active, updating config.yml.
+    theme:create <name>   Makes a template for a new theme in ./themes.
+
+OPTIONS FOR new
+    --git                 Create a new git repository for the project.
+    --vlad                Include config/deploy.rb.
+
+EOF
+exit 0
+    end
+
+    def self.parse_command_line
+      opts = GetoptLong.new(
+        ['--git', GetoptLong::NO_ARGUMENT],
+        ['--help', '-h', GetoptLong::NO_ARGUMENT],
+        ['--vlad', GetoptLong::NO_ARGUMENT]
+      )
+      options = {}
+      opts.each do |opt, arg|
+        case opt 
+        when '--help'
+          usage
+        else
+          options[opt.sub(/^--/, '')] = arg
+        end
+      end
+      options
+    end
+
+    def self.main(options)
+      command = ARGV.shift
+      command.nil? && usage
+      case command
+        when 'new'
+          Nesta::Commands::New.new(ARGV[0], options).execute
+        when 'demo:content'
+          Nesta::Commands::Demo::Content.new.execute
+        when /^theme:(create|enable|install)$/
+          command_cls = Nesta::Commands::Theme.const_get($1.capitalize.to_sym)
+          command_cls.new(ARGV[0], options).execute
+        else
+          usage
+      end
+    rescue Nesta::Commands::UsageError => e
+      $stderr.puts "ERROR: #{e}"
+      usage
+    end
+  end
+end
+
+Nesta::Cli.main(Nesta::Cli.parse_command_line)

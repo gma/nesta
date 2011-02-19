@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'nesta', '<%= Nesta::VERSION %>'
+<% if @options['heroku'] %>gem 'heroku'<% end %>
+<% if @options['vlad'] %>gem 'vlad', '2.1.0'
+gem 'vlad-git', '2.2.0'<% end %>
+
+# gem (RUBY_VERSION =~ /^1.9/) ? 'ruby-debug19': 'ruby-debug'

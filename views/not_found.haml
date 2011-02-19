@@ -1,13 +1,12 @@
-.breadcrumb
-  %a{ :href => "/" } Home
+%nav.breadcrumb
+  %a(href="/") Home
 
 #content
-  %h1 Page not found
+  %section(role="main")
+    %h1 Page not found
 
-  %p
-    Please try another page or, if you think something is wrong with our site,
-    do get in touch and let us know.
+    %p
+      Please try another page or, if you think something is wrong with
+      our site, do get in touch and let us know.
 
-#sidebar
-  = haml :categories, :layout => false
-  = haml :feed, :layout => false
+= haml :sidebar, :layout => false

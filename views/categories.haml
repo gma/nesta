@@ -1,3 +1,4 @@
 - if ! @menu_items.empty?
-  %h2 Articles by category
-  - display_menu(@menu_items, :class => "menu")
+  %nav.categories
+    %h1 Articles by category
+    - display_menu(@menu_items, :class => "menu")
