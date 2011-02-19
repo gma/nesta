@@ -24,7 +24,7 @@ Then use the `nesta` command to generate a new site:
 Install a few dependencies, and you're away:
 
     $ cd mysite.com
-    $ bundle install
+    $ bundle
 
 You'll find basic configuration options for your site in
 `config/config.yml`. The defaults will work, but you'll want to tweak it
@@ -36,7 +36,7 @@ shotgun...
     $ bundle exec shotgun config.ru
 
 ...then point your web browser at http://localhost:9393. Start editing
-the files in `content/pages` (see [Creating Your Content][content] for
-full instructions).
+the files in `content/pages` (see the [Writing content][content] docs
+for full instructions).
 
-[content]: http://effectif.com/nesta/creating-content
+[content]: http://nestacms.com/docs/creating-content
