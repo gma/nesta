@@ -1,3 +1,8 @@
+= 0.9.5 / (Unreleased)
+
+ * Bug fix: Made article_summaries render summaries for the articles
+   passed to it (Robert Syme).
+
 = 0.9.4 / 18 February 2011
 
  * Updated the link colours in the default theme.
