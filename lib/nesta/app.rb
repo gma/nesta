@@ -101,7 +101,7 @@ module Nesta
         haml(
           :summaries,
           :layout => false,
-          :locals => { :pages => latest_articles }
+          :locals => { :pages => articles }
         )
       end
     end
