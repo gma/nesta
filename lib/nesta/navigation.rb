@@ -53,7 +53,7 @@ module Nesta
       end
 
       def breadcrumb_label(page)
-        (page.abspath == '/') ? 'Home' : page.heading
+        (page.abspath == '/') ? 'Hem' : page.heading
       end
     end
   end
