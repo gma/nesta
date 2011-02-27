@@ -108,10 +108,6 @@ module Nesta
       metadata("keywords")
     end
     
-    def use_comments?
-      metadata("comments").nil? ? false : true
-    end
-    
     def metadata(key)
       @metadata[key]
     end
@@ -177,10 +173,10 @@ module Nesta
     def title
       if metadata('title')
         metadata('title')
-      #elsif parent && !parent.heading.nil?
-      #  "#{heading} - #{parent.heading}"
+      elsif parent && !parent.heading.nil?
+        "#{heading} - #{parent.heading}"
       elsif heading
-        "#{heading}" # - #{Nesta::Config.title}"
+        "#{heading} - #{Nesta::Config.title}"
       elsif abspath == '/'
         Nesta::Config.title
       end
