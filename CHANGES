@@ -3,6 +3,9 @@
  * Bug fix: Made article_summaries render summaries for the articles
    passed to it (Robert Syme).
 
+ * Bug fix: Don't use parent's heading in page title if parent's heading
+   is blank (Christopher Lindblom).
+
 = 0.9.4 / 18 February 2011
 
  * Updated the link colours in the default theme.
