@@ -28,7 +28,7 @@ GEM
     rspec_hpricot_matchers (1.0)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
-    shotgun (0.8)
+    shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.1.2)
       rack (~> 1.1)
