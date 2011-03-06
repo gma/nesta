@@ -126,9 +126,11 @@ module Nesta
       @metadata = {}
       if paragraph_is_metadata(first_para)
         @markup = remaining
-        for line in first_para.split("\n") do
-          key, value = line.split(/\s*:\s*/, 2)
-          @metadata[key.downcase] = value.chomp
+        data = YAML::load(first_para)
+        if data.is_a?(Hash)
+          data.each do |key, value|
+            @metadata[key.downcase] = value
+          end
         end
       else
         @markup = [first_para, remaining].join("\n\n")
