@@ -1,5 +1,7 @@
 = 0.9.5 / (Unreleased)
 
+ * Added --version option to nesta command (Christopher Lindblom).
+
  * Bug fix: Made article_summaries render summaries for the articles
    passed to it (Robert Syme).
 
