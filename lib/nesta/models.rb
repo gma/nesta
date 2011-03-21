@@ -152,6 +152,14 @@ module Nesta
         page.date && page.date < DateTime.now
       end.sort { |x, y| y.date <=> x.date }
     end
+    
+    def self.search(searchterm, scope=nil)
+      result = []
+      find_all.select do |page|
+        result << page if page.matches_searchterm?(searchterm, scope)
+      end
+      result
+    end
 
     def ==(other)
       other.respond_to?(:path) && (self.path == other.path)
@@ -270,6 +278,17 @@ module Nesta
 
     def articles
       Page.find_articles.select { |article| article.categories.include?(self) }
+    end
+    
+    def matches_searchterm?(searchterm, scope=nil)
+      return false if searchterm.length < 3
+      searchterm.downcase!
+      return true if self.keywords && self.keywords.downcase.index(searchterm)
+      return true if self.heading && self.heading.downcase.index(searchterm)
+      return true if self.summary && self.summary.downcase.index(searchterm)
+      h = self.to_html(scope)
+      return true if h && h.to_s.downcase.index(searchterm)
+      false
     end
 
     private
