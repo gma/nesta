@@ -22,7 +22,7 @@ module Nesta
           end
         else
           haml_tag :li do
-            haml_tag :a, :href => item.abspath do
+            haml_tag :a, :<, :href => item.abspath do
               haml_concat item.heading
             end
           end
