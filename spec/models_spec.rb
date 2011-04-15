@@ -284,6 +284,13 @@ describe "Page", :shared => true do
       Nesta::Page.find_by_path(article.path).categories.should be_empty
     end
   end
+
+  describe "without contents" do
+    it "should produce an empty page" do
+      page = create_page(:contents => "")
+      page.to_html.should be_empty
+    end
+  end
   
   describe "without metadata" do
     before(:each) do

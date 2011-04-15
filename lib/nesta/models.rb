@@ -118,7 +118,7 @@ module Nesta
     end
 
     def paragraph_is_metadata(text)
-      text.split("\n").first =~ /^[\w ]+:/
+      text.nil? ? false : text.split("\n").first =~ /^[\w ]+:/
     end
 
     def parse_file
