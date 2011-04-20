@@ -2,7 +2,7 @@ require "time"
 require 'psych'
 
 require "rubygems"
-require "nesta/markdown"
+require "markdown"
 require "redcloth"
 
 module Nesta
