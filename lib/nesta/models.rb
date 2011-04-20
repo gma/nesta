@@ -5,6 +5,8 @@ require "rubygems"
 require "maruku"
 require "redcloth"
 
+Markdown = Maruku
+
 module Nesta
   class FileModel
     FORMATS = [:mdown, :haml, :textile]
@@ -89,7 +91,7 @@ module Nesta
     def to_html(scope = nil)
       case @format
       when :mdown
-        Maruku.new(markup).to_html
+        Markdown.new(markup).to_html
       when :haml
         Haml::Engine.new(markup).to_html(scope || Object.new)
       when :textile
@@ -210,7 +212,7 @@ module Nesta
         when :textile
           RedCloth.new(summary_text).to_html
         else
-          Maruku.new(summary_text).to_html
+          Markdown.new(summary_text).to_html
         end
       end
     end
@@ -219,7 +221,7 @@ module Nesta
       case @format
       when :mdown
         body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
-        Maruku.new(body_text).to_html
+        Markdown.new(body_text).to_html
       when :haml
         body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
         Haml::Engine.new(body_text).render
