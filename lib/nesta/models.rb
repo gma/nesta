@@ -1,4 +1,5 @@
 require "time"
+require 'psych'
 
 require "rubygems"
 require "maruku"
@@ -126,7 +127,7 @@ module Nesta
       @metadata = {}
       if paragraph_is_metadata(first_para)
         @markup = remaining
-        data = YAML::load(first_para)
+        data = Psych.load(first_para)
         if data.is_a?(Hash)
           data.each do |key, value|
             @metadata[key.downcase] = value

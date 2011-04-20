@@ -81,7 +81,7 @@ module ModelFactory
     def create_file(path, options = {})
       create_content_directories
       metadata = options[:metadata] || {}
-      metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
+      metatext = metadata.is_a?(Hash) && !metadata.empty? ? metadata.to_yaml.gsub(/^---\n/, '').chomp : ''
       heading = options[:heading] ? heading(options) : ''
       contents =<<-EOF
 #{metatext}
