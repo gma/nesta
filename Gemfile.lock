@@ -5,8 +5,8 @@ PATH
       RedCloth (~> 4.2)
       haml (~> 3.0)
       redcarpet (>= 1.9.0)
-      shotgun (>= 0.8)
-      sinatra (= 1.1.2)
+      shotgun (>= 0.9)
+      sinatra (~> 1.2)
 
 GEM
   remote: http://rubygems.org/
@@ -29,9 +29,9 @@ GEM
       json_pure (>= 1.1.7)
     shotgun (0.9)
       rack (>= 1.0)
-    sinatra (1.1.2)
+    sinatra (1.2.3)
       rack (~> 1.1)
-      tilt (~> 1.2)
+      tilt (< 2.0, >= 1.2.2)
     test-unit (1.2.3)
       hoe (>= 1.5.1)
     tilt (1.2.2)

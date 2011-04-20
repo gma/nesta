@@ -34,10 +34,10 @@ EOF
   s.add_dependency('haml', '~> 3.0')
   s.add_dependency('redcarpet', '>= 1.9.0')
   s.add_dependency('RedCloth', '~> 4.2')
-  s.add_dependency('sinatra', '1.1.2')
+  s.add_dependency('sinatra', '~> 1.2')
   
   # Useful in development
-  s.add_dependency('shotgun', '>= 0.8')
+  s.add_dependency('shotgun', '>= 0.9')
 
   # Test libraries
   s.add_development_dependency('hpricot', '0.8.3')
