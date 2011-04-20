@@ -32,7 +32,7 @@ EOF
   s.require_paths = ["lib"]
 
   s.add_dependency('haml', '~> 3.0')
-  s.add_dependency('maruku', '>= 0.6.0')
+  s.add_dependency('redcarpet', '>= 1.9.0')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sinatra', '1.1.2')
   

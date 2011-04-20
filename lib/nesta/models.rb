@@ -2,10 +2,8 @@ require "time"
 require 'psych'
 
 require "rubygems"
-require "maruku"
+require "nesta/markdown"
 require "redcloth"
-
-Markdown = Maruku
 
 module Nesta
   class FileModel
