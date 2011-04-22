@@ -54,6 +54,11 @@ content: content
 #
 # google_analytics_code: "UA-???????-?"
 
+# prefer_pages_first_locale
+#     Set this if you want a locale-less url to take to a page written
+#     in the pages default language, as opposed to the site's default language.
+prefer_pages_first_locale: true
+
 # Overriding "cache" and "content" in production is recommended if you're
 # deploying Nesta to your own server (but see the deployment documentation
 # on the Nesta site). Setting google_analytics_code in production is

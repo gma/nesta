@@ -1,0 +1,17 @@
+%nav.breadcrumb
+  %a(href="/") Home
+
+#content
+  %section(role="main")
+    %h1 
+      Page not available in
+      - if @requested_locale
+        = @requested_locale.title
+      - else
+        the requested language.
+
+    %p
+      Try looking up this page in
+      - display_locales(@page, :final => " or ", :keep_own => true)
+
+= haml :sidebar, :layout => false

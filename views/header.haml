@@ -2,3 +2,6 @@
   %hgroup
     %h1= @heading
     %h2= @subtitle
+  #locales
+    - if @page
+      - display_locales(@page, :all => :true, :keep_own => :but_dont_link, :separator => " | ", :final => " | ")

@@ -60,17 +60,23 @@ module Nesta
       @filename =~ /\/?index\.\w+$/
     end
 
-    def abspath
+    def abspath(options = {})
+      options[:locale] ||= current_locale
       page_path = @filename.sub(Nesta::Config.page_path, '')
+      suffix = (options[:locale]!=:omit && options[:locale] != Nesta::App.first_locale(self)) ? "?locale=#{options[:locale]}" : ""
       if index_page?
         File.dirname(page_path)
       else
         File.join(File.dirname(page_path), File.basename(page_path, '.*'))
-      end
+      end + suffix
     end
 
     def path
       abspath.sub(/^\//, '')
+    end
+
+    def root?
+      abspath(:locale => :omit) == "/"
     end
 
     def permalink
@@ -108,30 +114,65 @@ module Nesta
       metadata("keywords")
     end
     
-    def metadata(key)
-      @metadata[key]
+    def metadata(key, locale = current_locale)
+      (@metadata[locale] && @metadata[locale][key]) || (locale != :all && metadata(key, :all)) || nil
+    end
+
+    def locales()
+      @markup.keys == [:all] ? R18n.get.available_locales.map {|l| l.code} : @markup.keys 
     end
 
     private
-    def markup
-      @markup
+    def markup(locale = current_locale)
+      @markup[locale] || (locale != :all && markup(:all)) || nil
+    end
+
+    def current_locale
+      current_app = Nesta::App.current_app
+      (current_app && current_app.current_locale) || locales.first 
     end
 
     def paragraph_is_metadata(text)
       text.split("\n").first =~ /^[\w ]+:/
     end
 
+    def parse_metadata(paragraph, locale = Nesta::App.first_locale)
+      @metadata[locale] ||= {}
+      for line in paragraph.split("\n") do
+        key, value = line.split(/\s*:\s*/, 2)
+        @metadata[locale][key.downcase] = value.chomp
+      end
+    end
+
     def parse_file
-      first_para, remaining = File.open(@filename).read.split(/\r?\n\r?\n/, 2)
+      text = File.open(@filename).read
+      first_para, remaining = text.split(/\r?\n\r?\n/, 2)
       @metadata = {}
+      @markup = {}
       if paragraph_is_metadata(first_para)
-        @markup = remaining
-        for line in first_para.split("\n") do
-          key, value = line.split(/\s*:\s*/, 2)
-          @metadata[key.downcase] = value.chomp
+        language_key = first_para.match(/language_key\s*:\s*([^\s]+)\s*/) ? Regexp.last_match[1] : "language"
+        if first_para !~ /#{language_key}\s*:\s*/i
+          locale = first_para =~ /languages:\s*all\s*/i ? :all : Nesta::App.first_locale
+          @markup[locale] = remaining
+          parse_metadata(first_para, locale)
+        else
+          regexp = (/((?:\w+\s*:[^\n]+\n)*)                # some fields before the "language:" field
+                     (?:#{language_key}\s*:\s*([^\n]+)\n)  # the "language:" field
+                     ((?:\w+\s*:[^\n]+\n)*)                # some fields after the "language:" field
+                    /xmi)
+          match = text.match(regexp)
+          while match
+            locale = match.captures[1]
+            parse_metadata(match.captures[0], :all)
+            parse_metadata(match.captures[2], locale)
+            
+            text = match.post_match
+            match = text.match(regexp)
+            @markup[locale] = match ? match.pre_match : text
+          end
         end
       else
-        @markup = [first_para, remaining].join("\n\n")
+        @markup[Nesta::App.first_locale] = text 
       end
     rescue Errno::ENOENT  # file not found
       raise Sinatra::NotFound
@@ -177,7 +218,7 @@ module Nesta
         "#{heading} - #{parent.heading}"
       elsif heading
         "#{heading} - #{Nesta::Config.title}"
-      elsif abspath == '/'
+      elsif root?
         Nesta::Config.title
       end
     end
@@ -229,7 +270,9 @@ module Nesta
     def categories
       paths = category_strings.map { |specifier| specifier.sub(/:-?\d+$/, '') }
       pages = valid_paths(paths).map { |p| Page.find_by_path(p) }
-      pages.sort do |x, y|
+      pages.select do |page|
+        page.locales.include? current_locale
+      end.sort do |x, y|
         x.heading.downcase <=> y.heading.downcase
       end
     end
@@ -242,7 +285,7 @@ module Nesta
     end
 
     def parent
-      if abspath == '/'
+      if root?
         nil
       else
         parent_path = File.dirname(path)

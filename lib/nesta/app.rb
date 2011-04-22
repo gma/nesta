@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'haml'
 require 'sass'
+require 'sinatra/r18n'
 
 require File.expand_path('nesta', File.dirname(__FILE__))
 require File.expand_path('cache', File.dirname(__FILE__))
@@ -18,6 +19,10 @@ Nesta::Plugins.load_local_plugins
 module Nesta
   class App < Sinatra::Base
     register Sinatra::Cache
+    
+    register Sinatra::R18n
+    set :root, Nesta::App.root
+    set :translations, Proc.new {Nesta::Config.content_path("translations")}
 
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
@@ -26,13 +31,51 @@ module Nesta
     helpers Overrides::Renderers
     helpers Navigation::Renderers
 
+    @@apps = {}
+    before do
+      @@apps[Thread.current] = self
+      set_locale
+    end
+    after do
+      @@apps.delete(Thread.current)
+    end
+
+    def self.current_app
+      @@apps[Thread.current]
+    end
+
+    def self.first_locale(page = nil)
+      if Nesta::App.environment == :test
+        "en"
+      else
+        if page && Nesta::Config.prefer_pages_first_locale
+          page.locales.first
+        else
+          available_locales.first
+        end
+      end
+    end
+
+    def self.available_locales
+      R18n.get.available_locales.map {|l| l.code}
+    end
+
     helpers do
+      def current_locale
+        @locale
+      end
+
+      def set_locale(page = nil)
+        @locale = (params[:locale] ||= params[:lang]) || Nesta::App.first_locale(page)
+      end
+
+
       def set_from_config(*variables)
         variables.each do |var|
           instance_variable_set("@#{var}", Nesta::Config.send(var))
         end
       end
-  
+      
       def set_from_page(*variables)
         variables.each do |var|
           instance_variable_set("@#{var}", @page.send(var))
@@ -110,6 +153,17 @@ module Nesta
       set_common_variables
       haml(:not_found)
     end
+    # FIXME: needed for the custom LocaleNotAvailable exception to
+    # work. look in sinatra's base.rb for the reason, I would say this
+    # is some kind of Sinatra bug
+    set :show_exceptions, :after_handler 
+    class LocaleNotAvailable < ::Exception; end
+    error LocaleNotAvailable do
+      @requested_locale = current_locale && R18n::Locale.load(current_locale)
+      @locale = Nesta::App.first_locale
+      set_common_variables
+      haml(:locale_not_available)
+    end
 
     error do
       set_common_variables
@@ -159,9 +213,12 @@ module Nesta
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
+      set_locale(@page)
+      raise LocaleNotAvailable unless @page.locales.include?(current_locale)
       @title = @page.title
       set_from_page(:description, :keywords)
       cache haml(@page.template, :layout => @page.layout)
     end
   end
 end
+
