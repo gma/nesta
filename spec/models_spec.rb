@@ -185,8 +185,20 @@ describe "Page", :shared => true do
                                :metadata => { "date" => future_date })
       Nesta::Page.find_articles.detect{|a| a == article}.should be_nil
     end
+
+    it "should not find pages scheduled in the future outside GMT" do
+      future_date = '1 January 2011'
+      article = create_article(:heading => "Article 5",
+                               :path => "foo/article-5",
+                               :metadata => { "date" => future_date })
+      # Due to the timezone, this value is Jan 1 2011 in GMT
+      now = DateTime.parse('2010-12-31T20:00:01-04:00')
+      DateTime.stub!(:now).and_return(now)
+
+      Nesta::Page.find_articles.detect {|a| a == article}.should be_nil
+    end
   end
-  
+
   describe "when finding articles" do
     before(:each) do
       create_article(:heading => "Article 1", :path => "article-1")

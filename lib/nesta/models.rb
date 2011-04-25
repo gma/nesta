@@ -149,7 +149,7 @@ module Nesta
 
     def self.find_articles
       find_all.select do |page|
-        page.date && page.date < DateTime.now
+        page.date && page.date < DateTime.now.to_date
       end.sort { |x, y| y.date <=> x.date }
     end
 
