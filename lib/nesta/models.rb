@@ -156,9 +156,9 @@ module Nesta
           @markup[locale] = remaining
           parse_metadata(first_para, locale)
         else
-          regexp = (/((?:\w+\s*:[^\n]+\n)*)                # some fields before the "language:" field
+          regexp = (/((?:[^\n]+\s*:[^\n]+\n)*)                # some fields before the "language:" field
                      (?:#{language_key}\s*:\s*([^\n]+)\n)  # the "language:" field
-                     ((?:\w+\s*:[^\n]+\n)*)                # some fields after the "language:" field
+                     ((?:[^\n]+\s*:[^\n]+\n)*)                # some fields after the "language:" field
                     /xmi)
           match = text.match(regexp)
           while match
