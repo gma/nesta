@@ -392,7 +392,7 @@ describe "A page" do
     it "should display Disqus comments" do
       do_get
       body.should have_tag('#disqus_thread')
-      body.should have_tag('script[@src*="mysite/embed.js"]')
+      body.should have_tag('script[@src*="mysite.disqus.com/embed.js"]')
     end
   end
 end
