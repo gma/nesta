@@ -1,0 +1,4 @@
+    def hello_world(name)
+      puts %{Hello #{name}}
+    end
+{:lang='ruby'}

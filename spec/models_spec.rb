@@ -452,6 +452,19 @@ describe "Markdown page" do
     )
     Nesta::Page.find_by_path("a-page").heading.should == "First heading"
   end
+
+  it "should render Coderay div if there is a codeblock with a lang attribute" do
+    f = File.open("spec/markdown/coderay.mdown")
+    content = f.read
+    f.close
+    create_page(
+      :path => "coderay-page",
+      :heading => "Coderay heading",
+      :content => content
+    )
+
+    Nesta::Page.find_by_path("coderay-page").body.should have_tag(".CodeRay")
+  end
 end
 
 describe "Haml page" do
