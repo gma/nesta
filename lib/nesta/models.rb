@@ -71,8 +71,8 @@ module Nesta
       end + suffix
     end
 
-    def path
-      abspath.sub(/^\//, '')
+    def path(options = {})
+      abspath(options).sub(/^\//, '')
     end
 
     def root?
