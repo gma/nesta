@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "nesta/version"
 
 Gem::Specification.new do |s|
-  s.name        = "nesta"
+  s.name        = "sidkay-nesta"
   s.version     = Nesta::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Graham Ashton"]
@@ -32,7 +32,8 @@ EOF
   s.require_paths = ["lib"]
 
   s.add_dependency('haml', '~> 3.0')
-  s.add_dependency('maruku', '>= 0.6.0')
+  s.add_dependency('kramdown', '>= 0.13.2')
+  s.add_dependency('coderay')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sinatra', '1.1.2')
   
