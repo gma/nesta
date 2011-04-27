@@ -1,7 +1,7 @@
 require "time"
 
 require "rubygems"
-require "maruku"
+require "kramdown"
 require "redcloth"
 
 module Nesta
@@ -88,7 +88,7 @@ module Nesta
     def to_html(scope = nil)
       case @format
       when :mdown
-        Maruku.new(markup).to_html
+        Kramdown::Document.new(markup).to_html
       when :haml
         Haml::Engine.new(markup).to_html(scope || Object.new)
       when :textile
@@ -207,7 +207,7 @@ module Nesta
         when :textile
           RedCloth.new(summary_text).to_html
         else
-          Maruku.new(summary_text).to_html
+          Kramdown::Document.new(summary_text).to_html
         end
       end
     end
@@ -216,7 +216,7 @@ module Nesta
       case @format
       when :mdown
         body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
-        Maruku.new(body_text).to_html
+        Kramdown::Document.new(body_text).to_html
       when :haml
         body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
         Haml::Engine.new(body_text).render
