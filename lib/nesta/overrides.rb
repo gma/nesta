@@ -18,15 +18,15 @@ module Nesta
     end
 
     def self.load_local_app
-      require Nesta::Path.local("app")
-    rescue LoadError
+      file_to_load = Nesta::Path.local("app.rb")
+      require file_to_load if File.exists? file_to_load
     end
     
     def self.load_theme_app
       if Nesta::Config.theme
-        require Nesta::Path.themes(Nesta::Config.theme, "app")
+        file_to_load = Nesta::Path.themes(Nesta::Config.theme, "app.rb")
+        require file_to_load if File.exists? file_to_load
       end
-    rescue LoadError
     end
 
     private
