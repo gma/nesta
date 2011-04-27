@@ -1,7 +1,8 @@
 require "time"
+require 'psych'
 
 require "rubygems"
-require "maruku"
+require "markdown"
 require "redcloth"
 
 module Nesta
@@ -88,7 +89,7 @@ module Nesta
     def to_html(scope = nil)
       case @format
       when :mdown
-        Maruku.new(markup).to_html
+        Markdown.new(markup).to_html
       when :haml
         Haml::Engine.new(markup).to_html(scope || Object.new)
       when :textile
@@ -126,9 +127,11 @@ module Nesta
       @metadata = {}
       if paragraph_is_metadata(first_para)
         @markup = remaining
-        for line in first_para.split("\n") do
-          key, value = line.split(/\s*:\s*/, 2)
-          @metadata[key.downcase] = value.chomp
+        data = Psych.load(first_para)
+        if data.is_a?(Hash)
+          data.each do |key, value|
+            @metadata[key.downcase] = value
+          end
         end
       else
         @markup = [first_para, remaining].join("\n\n")
@@ -207,7 +210,7 @@ module Nesta
         when :textile
           RedCloth.new(summary_text).to_html
         else
-          Maruku.new(summary_text).to_html
+          Markdown.new(summary_text).to_html
         end
       end
     end
@@ -216,7 +219,7 @@ module Nesta
       case @format
       when :mdown
         body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
-        Maruku.new(body_text).to_html
+        Markdown.new(body_text).to_html
       when :haml
         body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
         Haml::Engine.new(body_text).render

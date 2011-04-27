@@ -362,7 +362,7 @@ describe "A page" do
         @article = create_article(
           :path => "another-page",
           :heading => "Categorised",
-          :metadata => { :categories => @category.path },
+          :metadata => { 'categories' => @category.path },
           :content => "Article content"
         )
         @article2 = create_article(

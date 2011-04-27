@@ -1,12 +1,11 @@
-require "yaml"
-
+require "psych"
 require "rubygems"
 require "sinatra"
 
 module Nesta
   class Config
     @settings = %w[
-      title subtitle theme disqus_short_name cache content google_analytics_code
+      title subtitle theme disqus_short_name cache content google_analytics_code markdown_flags
     ]
     @author_settings = %w[name uri email]
     @yaml = nil
@@ -22,6 +21,14 @@ module Nesta
       else
         super
       end
+    end
+
+    def self.markdown_flags
+      flags = from_environment('markdown_flags') || from_yaml('markdown_flags') || []
+      if flags.respond_to?(:split)
+        flags = flags.split(/\s*,\s*/)
+      end
+      flags
     end
     
     def self.author
@@ -68,7 +75,7 @@ module Nesta
 
     def self.from_yaml(setting)
       if can_use_yaml?
-        self.yaml_conf ||= YAML::load(IO.read(yaml_path))
+        self.yaml_conf ||= Psych.load(IO.read(yaml_path))
         rack_env_conf = self.yaml_conf[Nesta::App.environment.to_s]
         (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
       end
