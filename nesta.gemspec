@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require "nesta/version"
 
 Gem::Specification.new do |s|
-  s.name        = "sidkay-nesta"
+  s.name        = "nesta"
   s.version     = Nesta::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Graham Ashton"]
@@ -24,7 +24,7 @@ Implementing your site's design is easy, but Nesta also has a small
 selection of themes to choose from.
 EOF
 
-  s.rubyforge_project = "sidkay-nesta"
+  s.rubyforge_project = "nesta"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -36,7 +36,7 @@ EOF
   s.add_dependency('kramdown', '>= 0.13.2')
   s.add_dependency('coderay', '>= 0.9.7')
   s.add_dependency('RedCloth', '~> 4.2')
-  s.add_dependency('sinatra', '1.1.2')
+  s.add_dependency('sinatra', '>= 1.1.2')
   
   # Useful in development
   s.add_dependency('shotgun', '>= 0.8')
