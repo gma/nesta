@@ -6,13 +6,13 @@
     ~ @page.to_html(self)
 
     %section.pages
-      = haml :summaries, :layout => false, :locals => { :pages => @page.pages }
+      = article_summaries(@page.pages)
 
     - unless @page.articles.empty?
       %section.articles
         %header
           %h1= "Articles on #{@page.heading}"
-        = haml :summaries, :layout => false, :locals => { :pages => @page.articles, :heading => :h3 }
+        = article_summaries(@page.articles)
 
     = haml :page_meta, :layout => false, :locals => { :page => @page }
 

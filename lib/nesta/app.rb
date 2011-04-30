@@ -98,11 +98,7 @@ module Nesta
       end
 
       def article_summaries(articles)
-        haml(
-          :summaries,
-          :layout => false,
-          :locals => { :pages => articles }
-        )
+        haml(:summaries, :layout => false, :locals => { :pages => articles })
       end
     end
 
