@@ -83,11 +83,7 @@ module ModelFactory
       metadata = options[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
       heading = options[:heading] ? heading(options) : ''
-      contents =<<-EOF
-#{metatext}
-
-#{heading}#{options[:content]}
-      EOF
+      contents = options[:contents] || "#{metatext}\n\n#{heading}#{options[:content]}"
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') { |file| file.write(contents) }
     end
