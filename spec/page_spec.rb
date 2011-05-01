@@ -420,6 +420,23 @@ describe "A Haml page" do
     get "/a-page"
     body.should have_tag("div", "23 November 2010")
   end
+
+  it "should access helpers when rendering articles on a category page" do
+    category = create_page(
+      :path => "a-page",
+      :heading => "First heading",
+      :content => "Blah blah"
+    )
+    create_article(
+      :path => "an-article",
+      :ext => :haml,
+      :heading => "First heading",
+      :metadata => { :categories => category.path },
+      :content => "%h1 Second heading\n\n%div= format_date(Date.new(2010, 11, 23))"
+    )
+    get "/a-page"
+    body.should have_tag("div", "23 November 2010")
+  end
 end
 
 describe "attachments" do

@@ -22,6 +22,11 @@
  * Bug fix: Empty files in the content directory would cause the site to
    crash - they are now served properly.
 
+ * Bug fix: When pages written in Haml were included on a category page
+   the default theme didn't provide access to Sinatra's helper methods
+   within Haml templates. See https://github.com/gma/nesta/pull/18
+   (Carl Furrow).
+
 = 0.9.4 / 18 February 2011
 
  * Updated the link colours in the default theme.

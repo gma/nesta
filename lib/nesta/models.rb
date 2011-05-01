@@ -91,14 +91,7 @@ module Nesta
     end
 
     def to_html(scope = nil)
-      case @format
-      when :mdown
-        Maruku.new(markup).to_html
-      when :haml
-        Haml::Engine.new(markup).to_html(scope || Object.new)
-      when :textile
-        RedCloth.new(markup).to_html
-      end
+      convert_to_html(@format, scope, markup)
     end
 
     def last_modified
@@ -118,30 +111,41 @@ module Nesta
     end
 
     private
-    def markup
-      @markup
-    end
-
-    def metadata?(text)
-      text.split("\n").first =~ /^[\w ]+:/
-    end
-
-    def parse_file
-      contents = File.open(@filename).read
-    rescue Errno::ENOENT
-      raise Sinatra::NotFound
-    else
-      first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
-      metadata = {}
-      if metadata?(first_paragraph)
-        first_paragraph.split("\n").each do |line|
-          key, value = line.split(/\s*:\s*/, 2)
-          metadata[key.downcase] = value.chomp
-        end
+      def markup
+        @markup
       end
-      markup = metadata?(first_paragraph) ? remaining : contents
-      return metadata, markup
-    end
+
+      def metadata?(text)
+        text.split("\n").first =~ /^[\w ]+:/
+      end
+
+      def parse_file
+        contents = File.open(@filename).read
+      rescue Errno::ENOENT
+        raise Sinatra::NotFound
+      else
+        first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
+        metadata = {}
+        if metadata?(first_paragraph)
+          first_paragraph.split("\n").each do |line|
+            key, value = line.split(/\s*:\s*/, 2)
+            metadata[key.downcase] = value.chomp
+          end
+        end
+        markup = metadata?(first_paragraph) ? remaining : contents
+        return metadata, markup
+      end
+
+      def convert_to_html(format, scope, text)
+        case format
+          when :mdown
+            Maruku.new(text).to_html
+          when :haml
+            Haml::Engine.new(text).to_html(scope)
+          when :textile
+            RedCloth.new(text).to_html
+          end
+      end
   end
 
   class Page < FileModel
@@ -218,18 +222,16 @@ module Nesta
       end
     end
 
-    def body
-      case @format
-      when :mdown
-        body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
-        Maruku.new(body_text).to_html
-      when :haml
-        body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
-        Haml::Engine.new(body_text).render
-      when :textile
-        body_text = markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
-        RedCloth.new(body_text).to_html
-      end
+    def body(scope = nil)
+      body_text = case @format
+        when :mdown
+          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
+        when :haml
+          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
+        when :textile
+          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
+        end
+      convert_to_html(@format, scope, body_text)
     end
 
     def categories
