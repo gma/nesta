@@ -2,8 +2,10 @@
 
  * Added --version option to nesta command (Christopher Lindblom).
 
- * Bug fix: Made article_summaries render summaries for the articles
-   passed to it (Robert Syme).
+ * Upgraded Haml and Sass to version 3.1 (Andrew Nesbitt).
+
+ * Updated the URL from which the Disqus JavaScript is loaded
+   (Sidharta Surya Kusnanto).
 
  * Bug fix: Don't use parent's heading in page title if parent's heading
    is blank (Christopher Lindblom).
@@ -14,7 +16,11 @@
  * Updated the URL from which Disqus JavaScript is loaded
    (Sidharta Surya Kusnanto).
 
- * Upgraded Haml and Sass to version 3.1 (Andrew Nesbitt).
+ * Bug fix: Made article_summaries render summaries for the pages
+   passed into it (Robert Syme).
+
+ * Bug fix: Empty files in the content directory would cause the site to
+   crash - they are now served properly.
 
 = 0.9.4 / 18 February 2011
 

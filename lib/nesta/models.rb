@@ -52,7 +52,12 @@ module Nesta
     def initialize(filename)
       @filename = filename
       @format = filename.split(".").last.to_sym
-      parse_file
+      if File.zero?(filename)
+        @metadata = {}
+        @markup = ''
+      else
+        @metadata, @markup = parse_file
+      end
       @mtime = File.mtime(filename)
     end
 
@@ -117,24 +122,25 @@ module Nesta
       @markup
     end
 
-    def paragraph_is_metadata(text)
+    def metadata?(text)
       text.split("\n").first =~ /^[\w ]+:/
     end
 
     def parse_file
-      first_para, remaining = File.open(@filename).read.split(/\r?\n\r?\n/, 2)
-      @metadata = {}
-      if paragraph_is_metadata(first_para)
-        @markup = remaining
-        for line in first_para.split("\n") do
-          key, value = line.split(/\s*:\s*/, 2)
-          @metadata[key.downcase] = value.chomp
-        end
-      else
-        @markup = [first_para, remaining].join("\n\n")
-      end
-    rescue Errno::ENOENT  # file not found
+      contents = File.open(@filename).read
+    rescue Errno::ENOENT
       raise Sinatra::NotFound
+    else
+      first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
+      metadata = {}
+      if metadata?(first_paragraph)
+        first_paragraph.split("\n").each do |line|
+          key, value = line.split(/\s*:\s*/, 2)
+          metadata[key.downcase] = value.chomp
+        end
+      end
+      markup = metadata?(first_paragraph) ? remaining : contents
+      return metadata, markup
     end
   end
 
@@ -256,9 +262,10 @@ module Nesta
     end
 
     def pages
-      Page.find_all.select do |page|
+      in_category = Page.find_all.select do |page|
         page.date.nil? && page.categories.include?(self)
-      end.sort do |x, y|
+      end
+      in_category.sort do |x, y|
         by_priority = y.priority(path) <=> x.priority(path)
         if by_priority == 0
           x.heading.downcase <=> y.heading.downcase

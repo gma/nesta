@@ -285,6 +285,16 @@ describe "Page", :shared => true do
     end
   end
   
+  describe "with no content" do
+    it "should produce no HTML output" do
+      create_article do |path|
+        file = File.open(path, 'w')
+        file.close
+      end
+      Nesta::Page.find_all.first.to_html.should == ''
+    end
+  end
+
   describe "without metadata" do
     before(:each) do
       create_article
