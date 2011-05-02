@@ -194,12 +194,12 @@ module Nesta
 
     def date(format = nil)
       @date ||= if metadata("date")
-                  if format == :xmlschema
-                    Time.parse(metadata("date")).xmlschema
-                  else
-                    DateTime.parse(metadata("date"))
-                  end
-                end
+        if format == :xmlschema
+          Time.parse(metadata("date")).xmlschema
+        else
+          DateTime.parse(metadata("date"))
+        end
+      end
     end
 
     def atom_id
