@@ -1,3 +1,8 @@
+= 0.9.6 / (Unreleased)
+
+ * Strip trailing # characters from Markdown headings at the top of a
+   page.
+
 = 0.9.5 / (1 May 2011)
 
  * Added --version option to nesta command (Christopher Lindblom).
