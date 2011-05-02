@@ -170,7 +170,7 @@ module Nesta
     def heading
       regex = case @format
         when :mdown
-          /^#\s*(.*)/
+          /^#\s*(.*?)(\s*#+|$)/
         when :haml
           /^\s*%h1\s+(.*)/
         when :textile
