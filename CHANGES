@@ -3,6 +3,10 @@
  * Strip trailing # characters from Markdown headings at the top of a
    page.
 
+ * Bug fix: Don't render the return value of local_stylesheet_link_tag
+   directly into the page (haml_tag now writes direct to the output
+   buffer).
+
 = 0.9.5 / (1 May 2011)
 
  * Added --version option to nesta command (Christopher Lindblom).
