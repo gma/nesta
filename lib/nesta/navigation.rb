@@ -43,7 +43,7 @@ module Nesta
         haml_tag :ul, :class => options[:class] do
           breadcrumb_ancestors[0...-1].each do |page|
             haml_tag :li do
-              haml_tag :a, :href => page.abspath do
+              haml_tag :a, :<, :href => page.abspath do
                 haml_concat breadcrumb_label(page)
               end
             end
