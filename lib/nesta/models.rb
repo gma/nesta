@@ -170,16 +170,20 @@ module Nesta
     end
 
     def heading
-      regex = case @format
-        when :mdown
-          /^#\s*(.*?)(\s*#+|$)/
-        when :haml
-          /^\s*%h1\s+(.*)/
-        when :textile
-          /^\s*h1\.\s+(.*)/
-        end
-      markup =~ regex
-      Regexp.last_match(1)
+      if metadata('heading')
+        metadata('heading')
+      else
+        regex = case @format
+                when :mdown
+                  /^#\s*(.*?)(\s*#+|$)/
+                when :haml
+                  /^\s*%h1\s+(.*)/
+                when :textile
+                  /^\s*h1\.\s+(.*)/
+                end
+        markup =~ regex
+        Regexp.last_match(1)
+      end
     end
   
     def title

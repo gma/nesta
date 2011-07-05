@@ -408,6 +408,16 @@ describe "Page", :shared => true do
       @article.metadata('skillz').should == @skillz
     end
   end
+
+  describe "with a heading in the metadata" do
+    before(:each) do
+      @article = create_article(:metadata => {:heading => "Custom Heading"})
+    end
+
+    it "should use the heading from the metadata" do
+      @article.heading.should == "Custom Heading"
+    end
+  end
   
   describe "when checking last modification time" do
     before(:each) do
