@@ -127,9 +127,11 @@ module Nesta
         first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
         metadata = {}
         if metadata?(first_paragraph)
-          first_paragraph.split("\n").each do |line|
-            key, value = line.split(/\s*:\s*/, 2)
-            metadata[key.downcase] = value.chomp
+          data = YAML.load(first_paragraph)
+          if data.is_a?(Hash)
+            data.each do |key, value|
+              metadata[key.downcase] = value
+            end
           end
         end
         markup = metadata?(first_paragraph) ? remaining : contents
