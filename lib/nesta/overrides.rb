@@ -45,8 +45,8 @@ module Nesta
           elsif template_exists?(engine, theme_view_path, template)
             return { :views => theme_view_path, :engine => engine }
           end
-          {:engine => engines.first}
         end
+        {:engine => engines.first}
       end
 
       def self.local_view_path
