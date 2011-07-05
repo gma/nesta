@@ -12,8 +12,12 @@ module Nesta
       end
 
       def sass(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :sass)
-        super(template, defaults.merge(options), locals)
+        defaults = Overrides.render_options(template, :sass, :scss)
+        if defaults[:engine] == :sass
+          super(template, defaults.merge(options), locals)
+        else
+          return scss(template, defaults.merge(options), locals)
+        end
       end
     end
 
@@ -34,13 +38,14 @@ module Nesta
         views && File.exist?(File.join(views, "#{template}.#{engine}"))
       end
 
-      def self.render_options(template, engine)
-        if template_exists?(engine, local_view_path, template)
-          { :views => local_view_path }
-        elsif template_exists?(engine, theme_view_path, template)
-          { :views => theme_view_path }
-        else
-          {}
+      def self.render_options(template, *engines)
+        engines.each do |engine|
+          if template_exists?(engine, local_view_path, template)
+            return { :views => local_view_path, :engine => engine }
+          elsif template_exists?(engine, theme_view_path, template)
+            return { :views => theme_view_path, :engine => engine }
+          end
+          {:engine => engines.first}
         end
       end
 
