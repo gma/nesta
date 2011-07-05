@@ -40,3 +40,11 @@ the files in `content/pages` (see the [Writing content][content] docs
 for full instructions).
 
 [content]: http://nestacms.com/docs/creating-content
+
+## Changes from [the main repo][upstream]
+
+* Sinatra is upgraded to the latest version
+* Page metadata is YAML instead of "key: value"
+* A timezone issue around Page.find_articles has been fixed
+
+[upstream]: https://github.com/gma/nesta
