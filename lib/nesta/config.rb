@@ -46,7 +46,7 @@ module Nesta
     end
     
     def self.yaml_path
-      File.expand_path('config/config.yml', Nesta::App.root)
+      File.expand_path('config/config.yml', Nesta::Env.root)
     end
     
     def self.from_environment(setting)

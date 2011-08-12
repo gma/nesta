@@ -115,7 +115,7 @@ describe "nesta" do
       FileUtils.mkdir_p(File.dirname(@config_path))
       Nesta::Config.stub!(:yaml_path).and_return(@config_path)
       create_config_yaml('content: path/to/content')
-      Nesta::App.stub!(:root).and_return(@project_path)
+      Nesta::Env.stub!(:root).and_return(@project_path)
       @repo_url = 'git://github.com/gma/nesta-demo-content.git'
       @demo_path = project_path('content-demo')
       @command = Nesta::Commands::Demo::Content.new
@@ -265,7 +265,7 @@ describe "nesta" do
     end
 
     before(:each) do
-      Nesta::App.stub!(:root).and_return(FixtureHelper::FIXTURE_DIR)
+      Nesta::Env.stub!(:root).and_return(FixtureHelper::FIXTURE_DIR)
       @name = 'my-new-theme'
       Nesta::Commands::Theme::Create.new(@name).execute
     end
