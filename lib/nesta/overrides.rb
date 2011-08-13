@@ -1,24 +1,28 @@
 module Nesta
   module Overrides
     module Renderers
+
       def haml(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :haml)
+        defaults, engine = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
       end
 
-      def scss(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :scss)
-        super(template, defaults.merge(options), locals)
+      def scss(template, options = {}, locals = {}, full_path = false)
+        options = Overrides.merge_options(template, :scss, options, full_path)
+        super(template, options, locals)
       end
 
-      def sass(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :sass, :scss)
-        if defaults[:engine] == :sass
-          super(template, defaults.merge(options), locals)
-        else
-          return scss(template, defaults.merge(options), locals)
-        end
+      def sass(template, options = {}, locals = {}, full_path = false)
+        options = Overrides.merge_options(template, :sass, options, full_path)
+        super(template, options, locals)
       end
+
+      def stylesheet(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :sass, :scss)
+        engine_invoke = engine == :sass ? method(sass) : method(:scss)
+        return engine_invoke.call(template, defaults.merge(options), locals, true)
+      end
+
     end
 
     def self.load_local_app
@@ -39,14 +43,14 @@ module Nesta
       end
 
       def self.render_options(template, *engines)
-        engines.each do |engine|
-          if template_exists?(engine, local_view_path, template)
-            return { :views => local_view_path, :engine => engine }
-          elsif template_exists?(engine, theme_view_path, template)
-            return { :views => theme_view_path, :engine => engine }
+        [local_view_path, theme_view_path].each do |path|
+          engines.each do |engine|
+            if template_exists?(engine, path, template)
+              return { :views => path}, engine
+            end
           end
         end
-        {:engine => engines.first}
+        return {}, nil
       end
 
       def self.local_view_path
@@ -58,6 +62,15 @@ module Nesta
           nil
         else
           Nesta::Path.themes(Nesta::Config.theme, "views")
+        end
+      end
+
+      def self.merge_options(template, engine, options, full_path)
+        unless full_path
+          defaults, engine = Overrides.render_options(template, engine)
+          defaults.merge(options)
+        else
+          options
         end
       end
   end

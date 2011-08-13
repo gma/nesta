@@ -125,7 +125,7 @@ module Nesta
 
     get '/css/:sheet.css' do
       content_type 'text/css', :charset => 'utf-8'
-      cache sass(params[:sheet].to_sym)
+      cache stylesheet(params[:sheet].to_sym)
     end
 
     get %r{/attachments/([\w/.-]+)} do
