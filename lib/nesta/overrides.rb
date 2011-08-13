@@ -19,8 +19,8 @@ module Nesta
 
       def stylesheet(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :sass, :scss)
-        engine_invoke = engine == :sass ? method(sass) : method(:scss)
-        return engine_invoke.call(template, defaults.merge(options), locals, true)
+        engine_invoke = engine == :sass ? method(:sass) : method(:scss)
+        engine_invoke.call(template, defaults.merge(options), locals, true)
       end
 
     end
