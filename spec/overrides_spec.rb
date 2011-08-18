@@ -39,6 +39,20 @@ describe "Rendering" do
     Nesta::Env.root = @app_root
   end
     
+  describe "when rendering stylesheets" do
+    it "should render the SASS stylesheets" do
+      create_template(:local, 'master.sass', "body\n  width: 10px * 2")
+      get "/css/master.css"
+      body.should match(/width: 20px;/)
+    end
+
+    it "should render the SCSS stylesheets" do
+      create_template(:local, 'master.scss', "body {\n  width: 10px * 2;\n}")
+      get "/css/master.css"
+      body.should match(/width: 20px;/)
+    end
+  end
+
   describe "when local files exist" do
     before(:each) do
       create_template(:local, 'page.haml', '%p Local template')

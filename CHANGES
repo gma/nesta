@@ -1,10 +1,16 @@
 = 0.9.6 / (Unreleased)
 
- * Strip trailing # characters from Markdown headings at the top of a
-   page.
+ * Nesta no longer cares whether you write your Sass stylesheets in the
+   original indented Sass format or the default SCSS syntax (which is a
+   superset of CSS). To use this functionality within your own site or
+   theme change change any calls to the existing `sass` or `scss`
+   helpers to `stylesheet`. (Isaac Cambron, Graham Ashton)
 
  * Add an HTML class ("current") to the menu items whose path matches
    the current page.
+
+ * Bug fix: Strip trailing # characters from Markdown headings at the
+   top of a page.
 
  * Bug fix: Don't render the return value of local_stylesheet_link_tag
    directly into the page (haml_tag now writes direct to the output

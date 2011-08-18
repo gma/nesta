@@ -2,18 +2,24 @@ module Nesta
   module Overrides
     module Renderers
       def haml(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :haml)
+        defaults, engine = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
       end
 
       def scss(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :scss)
+        defaults, engine = Overrides.render_options(template, :scss)
         super(template, defaults.merge(options), locals)
       end
 
       def sass(template, options = {}, locals = {})
-        defaults = Overrides.render_options(template, :sass)
+        defaults, engine = Overrides.render_options(template, :sass)
         super(template, defaults.merge(options), locals)
+      end
+
+      def stylesheet(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :sass, :scss)
+        renderer = Sinatra::Templates.instance_method(engine)
+        renderer.bind(self).call(template, defaults.merge(options), locals)
       end
     end
 
@@ -34,14 +40,15 @@ module Nesta
         views && File.exist?(File.join(views, "#{template}.#{engine}"))
       end
 
-      def self.render_options(template, engine)
-        if template_exists?(engine, local_view_path, template)
-          { :views => local_view_path }
-        elsif template_exists?(engine, theme_view_path, template)
-          { :views => theme_view_path }
-        else
-          {}
+      def self.render_options(template, *engines)
+        [local_view_path, theme_view_path].each do |path|
+          engines.each do |engine|
+            if template_exists?(engine, path, template)
+              return { :views => path }, engine
+            end
+          end
         end
+        [{}, nil]
       end
 
       def self.local_view_path
