@@ -1,4 +1,4 @@
-= 0.9.6 / (Unreleased)
+= 0.9.6 / (18 August 2011)
 
  * Nesta no longer cares whether you write your Sass stylesheets in the
    original indented Sass format or the default SCSS syntax (which is a
