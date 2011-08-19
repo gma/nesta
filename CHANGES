@@ -1,4 +1,9 @@
-= 0.9.6 / (18 August 2011)
+= 0.9.7 / (19 August 2011)
+
+ * No code changes from 0.9.6; version number increased to allow new gem
+   to be deployed to rubygems.org.
+
+= 0.9.6 / (18 August 2011) [never released due to packaging bug]
 
  * Nesta no longer cares whether you write your Sass stylesheets in the
    original indented Sass format or the default SCSS syntax (which is a
