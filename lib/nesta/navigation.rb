@@ -21,14 +21,16 @@ module Nesta
             end
           end
         else
+          #(@page != nil and @page.abspath == item.abspath) ? "current" : ""
           html_class = (request.path == item.abspath) ? "current" : nil
           haml_tag :li, :class => html_class do
             haml_tag :a, :<, :href => item.abspath do
-              haml_concat item.heading
+              haml_concat item.metadata("menu").nil? ? item.heading : item.metadata("menu")
             end
           end
         end
       end
+      
 
       def breadcrumb_ancestors
         ancestors = []
