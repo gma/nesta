@@ -46,7 +46,7 @@ module Nesta
       end
 
       def self.render_options(template, *engines)
-        [local_view_path, theme_view_path].each do |path|
+        [local_view_path, theme_view_path, Nesta::Path.local("content/pages")].each do |path|
           engines.each do |engine|
             if template_exists?(engine, path, template)
               return { :views => path }, engine
