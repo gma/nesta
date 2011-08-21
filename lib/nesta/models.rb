@@ -109,6 +109,17 @@ module Nesta
     def metadata(key)
       @metadata[key]
     end
+    
+    
+    def articles_by_tags
+       Page.find_articles.select { |article| not (article.tags & self.tags).empty? }
+     end
+
+     def tags
+       strings = metadata('tags')
+       strings.nil? ? [] : strings.split(',').map { |string| string.strip }
+     end
+    
 
     private
       def markup
