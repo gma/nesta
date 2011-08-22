@@ -19,6 +19,7 @@ module Nesta
   class App < Sinatra::Base
     register Sinatra::Cache
 
+    set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
     set :haml, { :format => :html5 }
