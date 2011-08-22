@@ -1,12 +1,13 @@
 = 0.9.8 / (22 August 2011)
 
- * The application's root directory needs to be set in order for Heroku
-   to be able to find files in the ./public folder. The modifications
-   made in 0.9.6 to make Nesta easier to mount inside another Rack
-   application moved Nesta::App.root to the (new) Nesta::Env class.
-
-   In 0.9.6 I forgot to actually set Nesta::App.root, which Sinatra
-   needs to use to find your ./public folder. Whoops.
+ * Bug fix: The Sinatra app's root directory wasn't set which meant
+   that Nesta couldn't always find the ./public directory (such as when
+   running on Heroku).
+   
+   The modifications made in 0.9.6 to make Nesta easier to mount inside
+   another Rack application moved Nesta::App.root to the (new)
+   Nesta::Env class. In 0.9.6 I forgot to actually set Nesta::App.root
+   as well, which was a big mistake. Whoops.
 
 = 0.9.7 / (19 August 2011)
 
