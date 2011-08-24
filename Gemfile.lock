@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nesta (0.9.8)
+    nesta (0.9.9)
       RedCloth (~> 4.2)
       haml (~> 3.1)
       maruku (>= 0.6.0)
@@ -12,7 +12,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    RedCloth (4.2.7)
+    RedCloth (4.2.8)
     haml (3.1.2)
     hoe (2.6.2)
       rake (>= 0.8.7)
@@ -29,7 +29,7 @@ GEM
     rspec_hpricot_matchers (1.0)
     rubyforge (2.0.4)
       json_pure (>= 1.1.7)
-    sass (3.1.5)
+    sass (3.1.7)
     shotgun (0.9)
       rack (>= 1.0)
     sinatra (1.1.2)
