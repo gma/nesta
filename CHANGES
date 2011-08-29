@@ -1,3 +1,9 @@
+= 0.9.10 / (Unreleased)
+
+ * Mark pages as draft by setting a flag. Draft pages won't be shown in
+   production, but will be visible on your local copy of your site (as
+   it's running in production).
+
 = 0.9.9 / (24 August 2011)
 
  * Bug fix: What a debacle this is turning into. The new Nesta::Env

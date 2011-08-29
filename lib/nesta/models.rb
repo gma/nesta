@@ -110,6 +110,11 @@ module Nesta
       @metadata[key]
     end
 
+    def flagged_as?(flag)
+      flags = metadata("flags")
+      flags && flags.split(",").map { |flag| flag.strip }.include?(flag)
+    end
+
     private
       def markup
         @markup
@@ -279,6 +284,10 @@ module Nesta
 
     def articles
       Page.find_articles.select { |article| article.categories.include?(self) }
+    end
+
+    def draft?
+      flagged_as?("draft")
     end
 
     private

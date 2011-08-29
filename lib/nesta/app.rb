@@ -112,7 +112,7 @@ module Nesta
     error do
       set_common_variables
       haml(:error)
-    end unless Nesta::App.environment == :development
+    end unless Nesta::App.development?
 
     Overrides.load_local_app
     Overrides.load_theme_app
@@ -156,7 +156,9 @@ module Nesta
       @heading = @title
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
-      raise Sinatra::NotFound if @page.nil?
+      if @page.nil? || (@page.draft? && (! Nesta::App.development?))
+        raise Sinatra::NotFound 
+      end
       @title = @page.title
       set_from_page(:description, :keywords)
       cache haml(@page.template, :layout => @page.layout)

@@ -119,6 +119,11 @@ describe "Page", :shared => true do
     page.priority('another-page').should == 0
     page.priority('and-another').should == -1
   end
+
+  it "should determine whether a page is in draft from the flags" do
+    page = create_category(:metadata => { 'flags' => 'draft' })
+    page.should be_draft
+  end
   
   describe "with assigned pages" do
     before(:each) do
