@@ -120,11 +120,6 @@ describe "Page", :shared => true do
     page.priority('and-another').should == -1
   end
 
-  it "should determine whether a page is in draft from the flags" do
-    page = create_category(:metadata => { 'flags' => 'draft' })
-    page.should be_draft
-  end
-  
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
@@ -181,6 +176,17 @@ describe "Page", :shared => true do
     it "should order pages by heading if priority not set" do
       pages = @category.pages
       pages.index(@category1).should < pages.index(@category2)
+    end
+
+    it "should not find draft pages" do
+      draft = create_page(:heading => 'Forthcoming content',
+                          :path => 'foo/in-draft',
+                          :metadata => {
+        'categories' => @category.path,
+        'flags' => 'draft'
+      })
+      Nesta::App.stub!(:production?).and_return(true)
+      @category.pages.should_not include(draft)
     end
 
     it "should not find pages scheduled in the future" do
@@ -342,14 +348,15 @@ describe "Page", :shared => true do
       @read_more = 'Continue at your leisure'
       @skillz = 'ruby, guitar, bowstaff'
       @article = create_article(:metadata => {
-        'layout' => @layout,
-        'template' => @template,
         'date' => @date.gsub('September', 'Sep'),
         'description' => @description,
+        'flags' => 'draft, orange',
         'keywords' => @keywords,
-        'summary' => @summary,
+        'layout' => @layout,
         'read more' => @read_more,
-        'skillz' => @skillz
+        'skillz' => @skillz,
+        'summary' => @summary,
+        'template' => @template
       })
     end
 
@@ -409,8 +416,17 @@ describe "Page", :shared => true do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
     
-    it "should allow arbitrary access to metadata" do
+    it "should allow access to metadata" do
       @article.metadata('skillz').should == @skillz
+    end
+
+    it "should allow access to flags" do
+      @article.should be_flagged_as('draft')
+      @article.should be_flagged_as('orange')
+    end
+
+    it "should know whether or not it's a draft" do
+      @article.should be_draft
     end
   end
   

@@ -112,7 +112,7 @@ module Nesta
 
     def flagged_as?(flag)
       flags = metadata("flags")
-      flags && flags.split(",").map { |flag| flag.strip }.include?(flag)
+      flags && flags.split(",").map { |name| name.strip }.include?(flag)
     end
 
     private
@@ -162,6 +162,10 @@ module Nesta
       load(path)
     end
 
+    def self.find_all
+      super.select { |p| ! p.hidden? }
+    end
+
     def self.find_articles
       find_all.select do |page|
         page.date && page.date < DateTime.now
@@ -170,6 +174,14 @@ module Nesta
 
     def ==(other)
       other.respond_to?(:path) && (self.path == other.path)
+    end
+
+    def draft?
+      flagged_as?("draft")
+    end
+
+    def hidden?
+      draft? && Nesta::App.production?
     end
 
     def heading
@@ -284,10 +296,6 @@ module Nesta
 
     def articles
       Page.find_articles.select { |article| article.categories.include?(self) }
-    end
-
-    def draft?
-      flagged_as?("draft")
     end
 
     private
