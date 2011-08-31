@@ -52,7 +52,12 @@ module Nesta
     def initialize(filename)
       @filename = filename
       @format = filename.split(".").last.to_sym
-      parse_file
+      if File.zero?(filename)
+        @metadata = {}
+        @markup = {}
+      else
+        @metadata, @markup = parse_file
+      end
       @mtime = File.mtime(filename)
     end
 
@@ -92,14 +97,7 @@ module Nesta
     end
 
     def to_html(scope = nil)
-      case @format
-      when :mdown
-        Maruku.new(markup).to_html
-      when :haml
-        Haml::Engine.new(markup).to_html(scope || Object.new)
-      when :textile
-        RedCloth.new(markup).to_html
-      end
+      convert_to_html(@format, scope, markup)
     end
 
     def last_modified
@@ -122,39 +120,48 @@ module Nesta
       @markup.keys == [:all] ? R18n.get.available_locales.map {|l| l.code} : @markup.keys 
     end
 
+    def flagged_as?(flag)
+      flags = metadata("flags")
+      flags && flags.split(",").map { |name| name.strip }.include?(flag)
+    end
+
     private
+    
     def markup(locale = current_locale)
-      @markup[locale] || (locale != :all && markup(:all)) || nil
+      @markup[locale] || (locale != :all && markup(:all)) || ''
     end
 
     def current_locale
       current_app = Nesta::App.current_app
-      (current_app && current_app.current_locale) || locales.first 
+      (current_app && current_app.current_locale) || locales.first
     end
 
-    def paragraph_is_metadata(text)
-      text.split("\n").first =~ /^[\w ]+:/
-    end
-
-    def parse_metadata(paragraph, locale = Nesta::App.first_locale)
-      @metadata[locale] ||= {}
+    def parse_metadata(paragraph)
       for line in paragraph.split("\n") do
         key, value = line.split(/\s*:\s*/, 2)
-        @metadata[locale][key.downcase] = value.chomp
+        (retval ||= {})[key.downcase] = value.chomp
       end
+      retval
+    end
+
+    def metadata?(text)
+      text.split("\n").first =~ /^[\w ]+:/
     end
 
     def parse_file
       text = File.open(@filename).read
+    rescue Errno::ENOENT
+      raise Sinatra::NotFound
+    else
       first_para, remaining = text.split(/\r?\n\r?\n/, 2)
-      @metadata = {}
-      @markup = {}
-      if paragraph_is_metadata(first_para)
+      metadata = {}
+      markup = {}
+      if metadata?(first_para)
         language_key = first_para.match(/language_key\s*:\s*([^\s]+)\s*/) ? Regexp.last_match[1] : "language"
         if first_para !~ /#{language_key}\s*:\s*/i
           locale = first_para =~ /languages:\s*all\s*/i ? :all : Nesta::App.first_locale
-          @markup[locale] = remaining
-          parse_metadata(first_para, locale)
+          markup[locale] = remaining
+          metadata[locale] = parse_metadata(first_para)
         else
           regexp = (/((?:[^\n]+\s*:[^\n]+\n)*)                # some fields before the "language:" field
                      (?:#{language_key}\s*:\s*([^\n]+)\n)  # the "language:" field
@@ -163,21 +170,31 @@ module Nesta
           match = text.match(regexp)
           while match
             locale = match.captures[1]
-            parse_metadata(match.captures[0], :all)
-            parse_metadata(match.captures[2], locale)
-            
+            metadata[:all] = parse_metadata(match.captures[0])
+            metadata[locale] = parse_metadata(match.captures[2])
             text = match.post_match
             match = text.match(regexp)
-            @markup[locale] = match ? match.pre_match : text
+            markup[locale] = match ? match.pre_match : text
           end
         end
       else
-        @markup[Nesta::App.first_locale] = text 
+        markup[Nesta::App.first_locale] = text
       end
-    rescue Errno::ENOENT  # file not found
-      raise Sinatra::NotFound
+      [metadata, markup]
+    end
+
+    def convert_to_html(format, scope, text)
+      case format
+      when :mdown
+        Maruku.new(text).to_html
+      when :haml
+        Haml::Engine.new(text).to_html(scope)
+      when :textile
+        RedCloth.new(text).to_html
+      end
     end
   end
+
 
   class Page < FileModel
     def self.model_path(basename = nil)
@@ -185,7 +202,12 @@ module Nesta
     end
 
     def self.find_by_path(path)
-      load(path)
+      page = load(path)
+      page && page.hidden? ? nil : page
+    end
+
+    def self.find_all
+      super.select { |p| ! p.hidden? }
     end
 
     def self.find_articles
@@ -198,10 +220,18 @@ module Nesta
       other.respond_to?(:path) && (self.path == other.path)
     end
 
+    def draft?
+      flagged_as?('draft')
+    end
+
+    def hidden?
+      draft? && Nesta::App.production?
+    end
+
     def heading
       regex = case @format
         when :mdown
-          /^#\s*(.*)/
+          /^#\s*(.*?)(\s*#+|$)/
         when :haml
           /^\s*%h1\s+(.*)/
         when :textile
@@ -225,20 +255,20 @@ module Nesta
 
     def date(format = nil)
       @date ||= if metadata("date")
-                  if format == :xmlschema
-                    Time.parse(metadata("date")).xmlschema
-                  else
-                    DateTime.parse(metadata("date"))
-                  end
-                end
+        if format == :xmlschema
+          Time.parse(metadata("date")).xmlschema
+        else
+          DateTime.parse(metadata("date"))
+        end
+      end
     end
 
     def atom_id
-      metadata("atom id")
+      metadata('atom id')
     end
 
     def read_more
-      metadata("read more") || "Continue reading"
+      metadata('read more') || 'Continue reading'
     end
 
     def summary
@@ -253,18 +283,16 @@ module Nesta
       end
     end
 
-    def body
-      case @format
-      when :mdown
-        body_text = markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
-        Maruku.new(body_text).to_html
-      when :haml
-        body_text = markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
-        Haml::Engine.new(body_text).render
-      when :textile
-        body_text = markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
-        RedCloth.new(body_text).to_html
-      end
+    def body(scope = nil)
+      body_text = case @format
+        when :mdown
+          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
+        when :haml
+          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
+        when :textile
+          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
+        end
+      convert_to_html(@format, scope, body_text)
     end
 
     def categories
@@ -299,9 +327,10 @@ module Nesta
     end
 
     def pages
-      Page.find_all.select do |page|
+      in_category = Page.find_all.select do |page|
         page.date.nil? && page.categories.include?(self)
-      end.sort do |x, y|
+      end
+      in_category.sort do |x, y|
         by_priority = y.priority(path) <=> x.priority(path)
         if by_priority == 0
           x.heading.downcase <=> y.heading.downcase

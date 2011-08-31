@@ -3,6 +3,7 @@ require 'haml'
 require 'sass'
 require 'sinatra/r18n'
 
+require File.expand_path('env', File.dirname(__FILE__))
 require File.expand_path('nesta', File.dirname(__FILE__))
 require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
@@ -24,6 +25,7 @@ module Nesta
     set :root, Nesta::App.root
     set :translations, Proc.new {Nesta::Config.content_path("translations")}
 
+    set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
     set :haml, { :format => :html5 }
@@ -141,11 +143,7 @@ module Nesta
       end
 
       def article_summaries(articles)
-        haml(
-          :summaries,
-          :layout => false,
-          :locals => { :pages => articles }
-        )
+        haml(:summaries, :layout => false, :locals => { :pages => articles })
       end
     end
 
@@ -168,7 +166,7 @@ module Nesta
     error do
       set_common_variables
       haml(:error)
-    end unless Nesta::App.environment == :development
+    end unless Nesta::App.development?
 
     Overrides.load_local_app
     Overrides.load_theme_app
@@ -183,7 +181,7 @@ module Nesta
 
     get '/css/:sheet.css' do
       content_type 'text/css', :charset => 'utf-8'
-      cache sass(params[:sheet].to_sym)
+      cache stylesheet(params[:sheet].to_sym)
     end
 
     get %r{/attachments/([\w/.-]+)} do

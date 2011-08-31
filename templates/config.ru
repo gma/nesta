@@ -3,7 +3,8 @@ require 'bundler/setup'
 
 Bundler.require(:default)
 
-require 'nesta/app'
+require 'nesta/env'
+Nesta::Env.root = ::File.expand_path('.', ::File.dirname(__FILE__))
 
-Nesta::App.root = ::File.expand_path('.', ::File.dirname(__FILE__))
+require 'nesta/app'
 run Nesta::App

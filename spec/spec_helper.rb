@@ -18,6 +18,7 @@ module Nesta
   end
 end
 
+require File.expand_path('../lib/nesta/env', File.dirname(__FILE__))
 require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 
 module FixtureHelper

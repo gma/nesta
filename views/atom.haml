@@ -21,7 +21,7 @@
       %title= article.heading
       %link{ :href => url_for(article), :type => 'text/html', :rel => 'alternate' }
       %id= atom_id(article)
-      %content(type='html')&= find_and_preserve(absolute_urls(article.body))
+      %content(type='html')&= find_and_preserve(absolute_urls(article.body(self)))
       %published= article.date(:xmlschema)
       %updated= article.date(:xmlschema)
       - article.categories.each do |category|
