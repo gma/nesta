@@ -4,6 +4,8 @@
    production, but will be visible on your local copy of your site (as
    it's running in production).
 
+ * Changes markdown parser to use with Redcarpet instead of Maruku.
+
 = 0.9.9 / (24 August 2011)
 
  * Bug fix: What a debacle this is turning into. The new Nesta::Env
