@@ -159,7 +159,8 @@ module Nesta
     end
 
     def self.find_by_path(path)
-      load(path)
+      page = load(path)
+      page && page.hidden? ? nil : page
     end
 
     def self.find_all
@@ -177,7 +178,7 @@ module Nesta
     end
 
     def draft?
-      flagged_as?("draft")
+      flagged_as?('draft')
     end
 
     def hidden?
@@ -220,11 +221,11 @@ module Nesta
     end
 
     def atom_id
-      metadata("atom id")
+      metadata('atom id')
     end
 
     def read_more
-      metadata("read more") || "Continue reading"
+      metadata('read more') || 'Continue reading'
     end
 
     def summary

@@ -178,23 +178,33 @@ describe "Page", :shared => true do
       pages.index(@category1).should < pages.index(@category2)
     end
 
-    it "should not find draft pages" do
-      draft = create_page(:heading => 'Forthcoming content',
-                          :path => 'foo/in-draft',
-                          :metadata => {
-        'categories' => @category.path,
-        'flags' => 'draft'
-      })
-      Nesta::App.stub!(:production?).and_return(true)
-      @category.pages.should_not include(draft)
-    end
-
     it "should not find pages scheduled in the future" do
       future_date = (Time.now + 86400).strftime("%d %B %Y")
       article = create_article(:heading => "Article 4",
                                :path => "foo/article-4",
                                :metadata => { "date" => future_date })
       Nesta::Page.find_articles.detect{|a| a == article}.should be_nil
+    end
+  end
+
+  describe "with pages in draft" do
+    before(:each) do
+      @category = create_category
+      @draft = create_page(:heading => 'Forthcoming content',
+                           :path => 'foo/in-draft',
+                           :metadata => {
+        'categories' => @category.path,
+        'flags' => 'draft'
+      })
+      Nesta::App.stub!(:production?).and_return(true)
+    end
+
+    it "should not find assigned drafts" do
+      @category.pages.should_not include(@draft)
+    end
+
+    it "should not find drafts by path" do
+      Nesta::Page.find_by_path('foo/in-draft').should be_nil
     end
   end
   
