@@ -4,7 +4,11 @@ module ModelFactory
   def create_page(options)
     extension = options[:ext] || :mdown
     path = filename(Nesta::Config.page_path, options[:path], extension)
-    create_file(path, options)
+    if options[:translations]
+      create_translated_file(path, options, options[:translations])
+    else
+      create_file(path, options)
+    end
     yield(path) if block_given?
     Nesta::Page.new(path)
   end
@@ -78,17 +82,38 @@ module ModelFactory
       "#{prefix} #{options[:heading]}\n\n"
     end
 
-    def create_file(path, options = {})
-      create_content_directories
-      metadata = options[:metadata] || {}
-      metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
+    def metatext_for(metadata)
+      (metadata || {}).map { |key, value| "#{key}: #{value}" }.join("\n")
+    end
+
+    def contents_for(options)
       heading = options[:heading] ? heading(options) : ''
-      contents =<<-EOF
-#{metatext}
+      <<-EOF
+#{metatext_for(options[:metadata])}
 
 #{heading}#{options[:content]}
       EOF
+    end
+
+    def create_dirs(path)
+      create_content_directories
       FileUtils.mkdir_p(File.dirname(path))
-      File.open(path, 'w') { |file| file.write(contents) }
+    end      
+
+    def create_file(path, options = {})
+      create_dirs(path)
+      File.open(path, 'w') { |file| file.write(contents_for(options)) }
+    end
+
+    def create_translated_file(path, options, translations)
+      create_dirs(path)
+      File.open(path, 'w') do |file|
+        file.write(metatext_for(options[:metadata]) + "\n")
+        translations.each_pair do |locale, locale_options|
+          locale_options[:metadata] = (locale_options[:metadata] || {}).to_a
+          locale_options[:metadata].unshift([:language, locale])
+          file.write(contents_for(locale_options))
+        end
+      end
     end
 end

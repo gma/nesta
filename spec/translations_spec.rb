@@ -35,6 +35,9 @@ describe "Page with multiple translations" do
 
   it "should respect language-specific metadata" do
     create_page(:path => 'carrots',
+                :metadata => {
+                  :global => "global"
+                },
                 :translations => {
                   :en => {
                     :heading => 'Carrot',
@@ -57,10 +60,12 @@ describe "Page with multiple translations" do
     @page.metadata('somekey').should == 'something'
     @page.metadata('poet').should == 'Shakespeare'
     @page.metadata('poeta').should be_nil
+    @page.metadata('global').should == "global"
     stub_locale('pt')
     @page.metadata('somekey').should == 'alguma coisa'
     @page.metadata('poet').should be_nil
     @page.metadata('poeta').should == 'Pessoa'
+    @page.metadata('global').should == "global"
   end
   
 end

@@ -136,12 +136,12 @@ module Nesta
       (current_app && current_app.current_locale) || locales.first
     end
 
-    def parse_metadata(paragraph)
+    def parse_metadata(paragraph, existing = nil)
       for line in paragraph.split("\n") do
         key, value = line.split(/\s*:\s*/, 2)
         (retval ||= {})[key.downcase] = value.chomp
       end
-      retval
+      existing ? existing.merge(retval || {}) : retval
     end
 
     def metadata?(text)
@@ -170,7 +170,7 @@ module Nesta
           match = text.match(regexp)
           while match
             locale = match.captures[1]
-            metadata[:all] = parse_metadata(match.captures[0])
+            metadata[:all] = parse_metadata(match.captures[0], metadata[:all])
             metadata[locale] = parse_metadata(match.captures[2])
             text = match.post_match
             match = text.match(regexp)
