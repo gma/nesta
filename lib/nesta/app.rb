@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'haml'
 require 'sass'
 
+require File.expand_path('env', File.dirname(__FILE__))
 require File.expand_path('nesta', File.dirname(__FILE__))
 require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
@@ -19,6 +20,7 @@ module Nesta
   class App < Sinatra::Base
     register Sinatra::Cache
 
+    set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
     set :haml, { :format => :html5 }
@@ -83,11 +85,11 @@ module Nesta
   
       def local_stylesheet?
         Nesta.deprecated('local_stylesheet?', 'use local_stylesheet_link_tag')
-        File.exist?(File.expand_path('views/local.sass', Nesta::Env.root))
+        File.exist?(File.expand_path('views/local.sass', Nesta::App.root))
       end
 
       def local_stylesheet_link_tag(name)
-        pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::Env.root)
+        pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0
           haml_tag :link, :href => "/css/#{name}.css", :rel => "stylesheet"
         end
@@ -110,7 +112,7 @@ module Nesta
     error do
       set_common_variables
       haml(:error)
-    end unless Nesta::App.environment == :development
+    end unless Nesta::App.development?
 
     Overrides.load_local_app
     Overrides.load_theme_app

@@ -119,7 +119,7 @@ describe "Page", :shared => true do
     page.priority('another-page').should == 0
     page.priority('and-another').should == -1
   end
-  
+
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
@@ -184,6 +184,27 @@ describe "Page", :shared => true do
                                :path => "foo/article-4",
                                :metadata => { "date" => future_date })
       Nesta::Page.find_articles.detect{|a| a == article}.should be_nil
+    end
+  end
+
+  describe "with pages in draft" do
+    before(:each) do
+      @category = create_category
+      @draft = create_page(:heading => 'Forthcoming content',
+                           :path => 'foo/in-draft',
+                           :metadata => {
+        'categories' => @category.path,
+        'flags' => 'draft'
+      })
+      Nesta::App.stub!(:production?).and_return(true)
+    end
+
+    it "should not find assigned drafts" do
+      @category.pages.should_not include(@draft)
+    end
+
+    it "should not find drafts by path" do
+      Nesta::Page.find_by_path('foo/in-draft').should be_nil
     end
   end
   
@@ -337,14 +358,15 @@ describe "Page", :shared => true do
       @read_more = 'Continue at your leisure'
       @skillz = 'ruby, guitar, bowstaff'
       @article = create_article(:metadata => {
-        'layout' => @layout,
-        'template' => @template,
         'date' => @date.gsub('September', 'Sep'),
         'description' => @description,
+        'flags' => 'draft, orange',
         'keywords' => @keywords,
-        'summary' => @summary,
+        'layout' => @layout,
         'read more' => @read_more,
-        'skillz' => @skillz
+        'skillz' => @skillz,
+        'summary' => @summary,
+        'template' => @template
       })
     end
 
@@ -404,8 +426,17 @@ describe "Page", :shared => true do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
     
-    it "should allow arbitrary access to metadata" do
+    it "should allow access to metadata" do
       @article.metadata('skillz').should == @skillz
+    end
+
+    it "should allow access to flags" do
+      @article.should be_flagged_as('draft')
+      @article.should be_flagged_as('orange')
+    end
+
+    it "should know whether or not it's a draft" do
+      @article.should be_draft
     end
   end
   

@@ -3,6 +3,7 @@
 .*.swp
 .bundle
 .DS_Store
+.rbenv-version
 .rvmrc
 .sass-cache
 config/config.yml

@@ -27,8 +27,8 @@ describe "Rendering" do
   end
 
   before(:each) do
-    @app_root = Nesta::Env.root
-    Nesta::Env.root = File.expand_path('fixtures/tmp', File.dirname(__FILE__))
+    @app_root = Nesta::App.root
+    Nesta::App.root = File.expand_path('fixtures/tmp', File.dirname(__FILE__))
     @theme = 'my-theme'
     @fixtures = []
     stub_configuration
@@ -36,7 +36,7 @@ describe "Rendering" do
   
   after(:each) do
     @fixtures.each { |path| FileUtils.rm(path) if File.exist?(path) }
-    Nesta::Env.root = @app_root
+    Nesta::App.root = @app_root
   end
     
   describe "when rendering stylesheets" do

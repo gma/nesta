@@ -121,6 +121,11 @@ module Nesta
      end
     
 
+    def flagged_as?(flag)
+      flags = metadata("flags")
+      flags && flags.split(",").map { |name| name.strip }.include?(flag)
+    end
+
     private
       def markup
         @markup
@@ -165,7 +170,12 @@ module Nesta
     end
 
     def self.find_by_path(path)
-      load(path)
+      page = load(path)
+      page && page.hidden? ? nil : page
+    end
+
+    def self.find_all
+      super.select { |p| ! p.hidden? }
     end
 
     def self.find_articles
@@ -176,6 +186,14 @@ module Nesta
 
     def ==(other)
       other.respond_to?(:path) && (self.path == other.path)
+    end
+
+    def draft?
+      flagged_as?('draft')
+    end
+
+    def hidden?
+      draft? && Nesta::App.production?
     end
 
     def heading
@@ -214,11 +232,11 @@ module Nesta
     end
 
     def atom_id
-      metadata("atom id")
+      metadata('atom id')
     end
 
     def read_more
-      metadata("read more") || "Continue reading"
+      metadata('read more') || 'Continue reading'
     end
 
     def summary

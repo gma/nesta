@@ -1,6 +1,7 @@
 require 'erb'
 require 'fileutils'
 
+require File.expand_path('env', File.dirname(__FILE__))
 require File.expand_path('app', File.dirname(__FILE__))
 require File.expand_path('path', File.dirname(__FILE__))
 require File.expand_path('version', File.dirname(__FILE__))
