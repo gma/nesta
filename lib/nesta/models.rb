@@ -1,7 +1,7 @@
 require "time"
 
 require "rubygems"
-require "maruku"
+require "redcarpet"
 require "redcloth"
 
 module Nesta
@@ -144,7 +144,7 @@ module Nesta
       def convert_to_html(format, scope, text)
         case format
           when :mdown
-            Maruku.new(text).to_html
+            Redcarpet.new(text).to_html
           when :haml
             Haml::Engine.new(text).to_html(scope)
           when :textile
@@ -235,7 +235,7 @@ module Nesta
         when :textile
           RedCloth.new(summary_text).to_html
         else
-          Maruku.new(summary_text).to_html
+          Redcarpet.new(summary_text).to_html
         end
       end
     end
