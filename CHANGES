@@ -4,6 +4,9 @@
    production, but will be visible on your local copy of your site (as
    it's running in production).
 
+ * Upgraded Sinatra to version 1.2.6. Upgraded other dependencies to
+   latest compatible versions.
+
 = 0.9.9 / (24 August 2011)
 
  * Bug fix: What a debacle this is turning into. The new Nesta::Env
