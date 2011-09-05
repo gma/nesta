@@ -48,7 +48,7 @@ module Nesta
             end
           end
         end
-        [{}, nil]
+        [{}, :sass]
       end
 
       def self.local_view_path

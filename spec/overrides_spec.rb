@@ -40,16 +40,21 @@ describe "Rendering" do
   end
     
   describe "when rendering stylesheets" do
-    it "should render the SASS stylesheets" do
+    it "should render Sass stylesheets" do
       create_template(:local, 'master.sass', "body\n  width: 10px * 2")
       get "/css/master.css"
       body.should match(/width: 20px;/)
     end
 
-    it "should render the SCSS stylesheets" do
+    it "should render SCSS stylesheets" do
       create_template(:local, 'master.scss', "body {\n  width: 10px * 2;\n}")
       get "/css/master.css"
       body.should match(/width: 20px;/)
+    end
+
+    it "should render the Gem's stylesheet if no other's found" do
+      get "/css/master.css"
+      last_response.should be_ok
     end
   end
 

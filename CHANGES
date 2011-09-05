@@ -7,6 +7,10 @@
  * Upgraded Sinatra to version 1.2.6. Upgraded other dependencies to
    latest compatible versions.
 
+ * Bug fix: The `stylesheet` helper method assumes that you're using
+   the Sass rendering engine by default, which allows it to find .sass
+   files within the gem if no matching files are found locally.
+
 = 0.9.9 / (24 August 2011)
 
  * Bug fix: What a debacle this is turning into. The new Nesta::Env
