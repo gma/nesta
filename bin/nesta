@@ -6,7 +6,7 @@ require File.expand_path('../lib/nesta/commands', File.dirname(__FILE__))
 
 module Nesta
   class Cli
-    def self.usage
+    def self.usage(exitcode=1)
       puts <<EOF
 USAGE: #{File.basename($0)} [GLOBAL OPTIONS] <command> [COMMAND OPTIONS]
 
@@ -26,7 +26,7 @@ OPTIONS FOR new
     --vlad                Include config/deploy.rb.
 
 EOF
-exit 0
+      exit exitcode
     end
 
     def self.version
@@ -45,7 +45,7 @@ exit 0
       opts.each do |opt, arg|
         case opt 
         when '--help'
-          usage
+          usage(exitcode=0)
         when '--version'
           version
         else
@@ -53,6 +53,9 @@ exit 0
         end
       end
       options
+    rescue GetoptLong::InvalidOption => e
+      $stderr.puts
+      usage
     end
 
     def self.main(options)
@@ -67,7 +70,7 @@ exit 0
           command_cls = Nesta::Commands::Theme.const_get($1.capitalize.to_sym)
           command_cls.new(ARGV[0], options).execute
         else
-          usage
+          usage(exitcode=0)
       end
     rescue Nesta::Commands::UsageError => e
       $stderr.puts "ERROR: #{e}"
