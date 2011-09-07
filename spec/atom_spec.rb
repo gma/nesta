@@ -17,7 +17,7 @@ describe "atom feed" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
   end
   
   it "should render successfully" do

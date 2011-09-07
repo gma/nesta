@@ -40,7 +40,7 @@ describe "Page", :shared => true do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   
@@ -462,7 +462,7 @@ describe "All types of page" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   
@@ -545,7 +545,7 @@ describe "Menu" do
   end
 
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
 

@@ -19,7 +19,7 @@ describe "sitemap XML" do
   
   after(:each) do
     Nesta::FileModel.purge_cache
-    remove_fixtures
+    remove_temp_directory
   end
   
   it "should render successfully" do
@@ -71,7 +71,7 @@ describe "sitemap XML lastmod" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   

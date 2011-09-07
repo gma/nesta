@@ -2,15 +2,13 @@ require File.expand_path("spec_helper", File.dirname(__FILE__))
 require File.expand_path("../lib/nesta/commands", File.dirname(__FILE__))
 
 describe "nesta" do
-  include FixtureHelper
-
   before(:each) do
-    create_fixtures_directory
-    @project_path = File.join(FixtureHelper::FIXTURE_DIR, 'mysite.com')
+    create_temp_directory
+    @project_path = temp_path('mysite.com')
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
   end
   
   def project_path(path)
@@ -221,7 +219,7 @@ describe "nesta" do
 
   describe "theme:enable" do
     before(:each) do
-      config = File.join(FixtureHelper::FIXTURE_DIR, 'config.yml')
+      config = temp_path('config.yml')
       Nesta::Config.stub!(:yaml_path).and_return(config)
       @name = 'mytheme'
       @command = Nesta::Commands::Theme::Enable.new(@name)
@@ -265,7 +263,7 @@ describe "nesta" do
     end
 
     before(:each) do
-      Nesta::App.stub!(:root).and_return(FixtureHelper::FIXTURE_DIR)
+      Nesta::App.stub!(:root).and_return(TempFileHelper::TEMP_DIR)
       @name = 'my-new-theme'
       Nesta::Commands::Theme::Create.new(@name).execute
     end

@@ -1,6 +1,4 @@
 module ModelFactory
-  include FixtureHelper
-
   def create_page(options)
     extension = options[:ext] || :mdown
     path = filename(Nesta::Config.page_path, options[:path], extension)

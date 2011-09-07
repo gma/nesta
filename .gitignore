@@ -12,3 +12,4 @@ db/*.db
 pkg/*
 plugins
 public/cache
+spec/tmp

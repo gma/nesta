@@ -93,7 +93,7 @@ describe "The home page" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
 
@@ -186,7 +186,7 @@ describe "An article" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   
@@ -278,7 +278,7 @@ describe "A page" do
   end
 
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   
@@ -407,7 +407,7 @@ describe "A Haml page" do
   end
 
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
 
@@ -457,7 +457,7 @@ describe "attachments" do
   end
   
   after(:each) do
-    remove_fixtures
+    remove_temp_directory
     Nesta::FileModel.purge_cache
   end
   

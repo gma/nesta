@@ -21,15 +21,19 @@ end
 require File.expand_path('../lib/nesta/env', File.dirname(__FILE__))
 require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 
-module FixtureHelper
-  FIXTURE_DIR = File.expand_path('fixtures', File.dirname(__FILE__))
+module TempFileHelper
+  TEMP_DIR = File.expand_path('tmp', File.dirname(__FILE__))
 
-  def create_fixtures_directory
-    FileUtils.mkdir_p(FixtureHelper::FIXTURE_DIR)
+  def create_temp_directory
+    FileUtils.mkdir_p(TempFileHelper::TEMP_DIR)
   end
 
-  def remove_fixtures
-    FileUtils.rm_r(FixtureHelper::FIXTURE_DIR, :force => true)
+  def remove_temp_directory
+    FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
+  end
+  
+  def temp_path(base)
+    File.join(TempFileHelper::TEMP_DIR, base)
   end
 end
 
@@ -44,8 +48,6 @@ module RequestSpecHelper
 end
 
 module ConfigSpecHelper
-  include FixtureHelper
-
   def stub_yaml_config
     @config = {}
     Nesta::Config.stub!(:yaml_exists?).and_return(true)
@@ -65,7 +67,11 @@ module ConfigSpecHelper
   def stub_configuration(options = {})
     stub_config_key('title', 'My blog', options)
     stub_config_key('subtitle', 'about stuff', options)
-    content_path = File.join(FixtureHelper::FIXTURE_DIR, 'content')
-    stub_config_key('content', content_path, options.merge(:rack_env => true))
+    stub_config_key(
+        'content', temp_path('content'), options.merge(:rack_env => true))
   end
+end
+
+Spec::Runner.configure do |config|
+  config.include(TempFileHelper)
 end

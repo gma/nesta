@@ -2,14 +2,14 @@ module Nesta
   module Plugins
     def self.load_local_plugins
       plugins = Dir.glob(File.expand_path('../plugins/*', File.dirname(__FILE__)))
-      plugins.each { |plugin| require_plugin(plugin) }
+      plugins.each { |path| require_plugin(path) }
     end
 
     private
-      def self.require_plugin(plugin)
-        require File.join(plugin, 'lib', File.basename(plugin))
+      def self.require_plugin(path)
+        require File.join(path, 'lib', File.basename(path))
       rescue LoadError => e
-        $stderr.write("Couldn't load plugins/#{File.basename(plugin)}: #{e}\n")
+        $stderr.write("Couldn't load plugins/#{File.basename(path)}: #{e}\n")
       end
   end
 end
