@@ -27,7 +27,7 @@ describe "Rendering" do
 
   before(:each) do
     @app_root = Nesta::App.root
-    Nesta::App.root = File.expand_path('fixtures/tmp', File.dirname(__FILE__))
+    Nesta::App.root = temp_path('root')
     @theme = 'my-theme'
     @fixtures = []
     stub_configuration
