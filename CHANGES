@@ -2,7 +2,8 @@
 
  * Load Nesta plugins from gems. Any gem whose name begins with
    nesta-plugin- can be used in a project by adding it to the project's
-   Gemfile beneath the `gem "nesta"` line.
+   Gemfile beneath the `gem "nesta"` line. New plugins can be created
+   with the `nesta plugin:create` command.
 
  * Mark pages as draft by setting a flag. Draft pages won't be shown in
    production, but will be visible on your local copy of your site (as

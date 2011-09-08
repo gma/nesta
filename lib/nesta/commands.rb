@@ -55,7 +55,9 @@ module Nesta
 
       def initialize(path, options = {})
         path.nil? && (raise UsageError.new('path not specified'))
-        fail("#{path} already exists") if File.exist?(path)
+        if File.exist?(path)
+          raise UsageError.new("#{path} already exists") 
+        end
         @path = path
         @options = options
       end
@@ -127,6 +129,75 @@ module Nesta
           clone_or_update_repository
           configure_git_to_ignore_repo
           update_config_yaml(/^\s*#?\s*content:.*/, "content: #{@dir}")
+        end
+      end
+    end
+
+    module Plugin
+      class Create
+        def initialize(name)
+          name.nil? && (raise UsageError.new('name not specified'))
+          @name = name
+          @gem_name = "nesta-plugin-#{name}"
+          if File.exist?(@gem_name)
+            raise UsageError.new("#{@gem_name} already exists")
+          end
+        end
+
+        def lib_path(*parts)
+          File.join(@gem_name, 'lib', *parts)
+        end
+
+        def modify_required_file
+          File.open(lib_path("#{@gem_name}.rb"), 'w') do |file|
+            file.write <<-EOF
+require "#{@gem_name}/version"
+
+Nesta::Plugin.register(__FILE__)
+            EOF
+          end
+        end
+
+        def modify_init_file
+          module_name = @name.split('-').map { |name| name.capitalize }.join('::')
+          File.open(lib_path(@gem_name, 'init.rb'), 'w') do |file|
+            file.puts <<-EOF
+module Nesta
+  module Plugin
+    module #{module_name}
+      module Helpers
+        helpers do
+          # If your plugin needs any helper methods, add them here...
+        end 
+      end
+    end
+  end
+
+  class App
+    helpers Nesta::Plugin::#{module_name}::Helpers
+  end
+end
+            EOF
+          end
+        end
+
+        def specify_gem_dependency
+          File.open(File.join(@gem_name, "#{@gem_name}.gemspec"), 'r+') do |file|
+            file.each_line do |line|
+              if line =~ /specify any dependencies here/
+                file.puts('  s.add_dependency("nesta", ">= 0.9.10")')
+                file.puts('  s.add_development_dependency("rake")')
+              end
+            end
+          end
+        end
+
+        def execute
+          system('bundle', 'gem', @gem_name)
+          modify_required_file
+          modify_init_file
+          specify_gem_dependency
+          Dir.chdir(@gem_name) { system('git', 'add', '.') }
         end
       end
     end
