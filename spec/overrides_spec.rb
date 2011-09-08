@@ -2,7 +2,6 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "Rendering" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 

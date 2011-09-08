@@ -7,10 +7,6 @@ require 'sinatra'
 
 Test::Unit::TestCase.send :include, Rack::Test::Methods
 
-Spec::Runner.configure do |config|
-  config.include(RspecHpricotMatchers)
-end
-
 module Nesta
   class App < Sinatra::Base
     set :environment, :test
@@ -20,32 +16,6 @@ end
 
 require File.expand_path('../lib/nesta/env', File.dirname(__FILE__))
 require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
-
-module TempFileHelper
-  TEMP_DIR = File.expand_path('tmp', File.dirname(__FILE__))
-
-  def create_temp_directory
-    FileUtils.mkdir_p(TempFileHelper::TEMP_DIR)
-  end
-
-  def remove_temp_directory
-    FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
-  end
-  
-  def temp_path(base)
-    File.join(TempFileHelper::TEMP_DIR, base)
-  end
-end
-
-module RequestSpecHelper
-  def app
-    Nesta::App
-  end
-  
-  def body
-    last_response.body
-  end
-end
 
 module ConfigSpecHelper
   def stub_yaml_config
@@ -72,6 +42,35 @@ module ConfigSpecHelper
   end
 end
 
+module TempFileHelper
+  TEMP_DIR = File.expand_path('tmp', File.dirname(__FILE__))
+
+  def create_temp_directory
+    FileUtils.mkdir_p(TempFileHelper::TEMP_DIR)
+  end
+
+  def remove_temp_directory
+    FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
+  end
+  
+  def temp_path(base)
+    File.join(TempFileHelper::TEMP_DIR, base)
+  end
+end
+
 Spec::Runner.configure do |config|
+  config.include(RspecHpricotMatchers)
+
+  config.include(ConfigSpecHelper)
   config.include(TempFileHelper)
+end
+
+module RequestSpecHelper
+  def app
+    Nesta::App
+  end
+  
+  def body
+    last_response.body
+  end
 end

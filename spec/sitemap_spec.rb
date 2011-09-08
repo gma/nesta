@@ -2,7 +2,6 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 require File.expand_path('model_factory', File.dirname(__FILE__))
 
 describe "sitemap XML" do
-  include ConfigSpecHelper
   include RequestSpecHelper
   include ModelFactory
   
@@ -62,7 +61,6 @@ describe "sitemap XML" do
 end
 
 describe "sitemap XML lastmod" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   

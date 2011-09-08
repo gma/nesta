@@ -1,8 +1,6 @@
 require File.expand_path('spec_helper', File.dirname(__FILE__))
 
 describe "Config" do
-  include ConfigSpecHelper
-
   after(:each) do
     ENV.keys.each { |variable| ENV.delete(variable) if variable =~ /NESTA_/ }
   end

@@ -56,7 +56,6 @@ describe "page that can display menus", :shared => true do
 end
 
 describe "The layout" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -75,7 +74,6 @@ describe "The layout" do
 end
 
 describe "The home page" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -167,7 +165,6 @@ describe "The home page" do
 end
 
 describe "An article" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -269,7 +266,6 @@ describe "An article" do
 end
 
 describe "A page" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
   
@@ -398,7 +394,6 @@ describe "A page" do
 end
 
 describe "A Haml page" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 
@@ -440,7 +435,6 @@ describe "A Haml page" do
 end
 
 describe "attachments" do
-  include ConfigSpecHelper
   include ModelFactory
   include RequestSpecHelper
 
