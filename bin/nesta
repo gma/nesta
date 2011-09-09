@@ -75,6 +75,9 @@ EOF
         else
           usage(exitcode=0)
       end
+    rescue RuntimeError => e
+      $stderr.puts "ERROR: #{e}"
+      exit 1
     rescue Nesta::Commands::UsageError => e
       $stderr.puts "ERROR: #{e}"
       usage

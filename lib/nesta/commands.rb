@@ -56,7 +56,7 @@ module Nesta
       def initialize(path, options = {})
         path.nil? && (raise UsageError.new('path not specified'))
         if File.exist?(path)
-          raise UsageError.new("#{path} already exists") 
+          raise RuntimeError.new("#{path} already exists") 
         end
         @path = path
         @options = options
@@ -140,7 +140,7 @@ module Nesta
           @name = name
           @gem_name = "nesta-plugin-#{name}"
           if File.exist?(@gem_name)
-            raise UsageError.new("#{@gem_name} already exists")
+            raise RuntimeError.new("#{@gem_name} already exists")
           end
         end
 
