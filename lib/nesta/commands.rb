@@ -185,7 +185,7 @@ end
           File.open(File.join(@gem_name, "#{@gem_name}.gemspec"), 'r+') do |file|
             file.each_line do |line|
               if line =~ /specify any dependencies here/
-                file.puts('  s.add_dependency("nesta", ">= 0.9.10")')
+                file.puts('  s.add_dependency("nesta", ">= 0.9.11")')
                 file.puts('  s.add_development_dependency("rake")')
               end
             end

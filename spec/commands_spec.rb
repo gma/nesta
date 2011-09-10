@@ -235,7 +235,7 @@ describe "nesta" do
       it "should specify plugin gem's dependencies" do
         @command.execute
         text = File.read(@gem_spec)
-        text.should include('s.add_dependency("nesta", ">= 0.9.10")')
+        text.should include('s.add_dependency("nesta", ">= 0.9.11")')
         text.should include('s.add_development_dependency("rake")')
       end
     end
