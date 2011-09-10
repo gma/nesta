@@ -166,9 +166,7 @@ module Nesta
   module Plugin
     module #{module_name}
       module Helpers
-        helpers do
-          # If your plugin needs any helper methods, add them here...
-        end 
+        # If your plugin needs any helper methods, add them here...
       end
     end
   end
@@ -182,12 +180,16 @@ end
         end
 
         def specify_gem_dependency
-          File.open(File.join(@gem_name, "#{@gem_name}.gemspec"), 'r+') do |file|
-            file.each_line do |line|
-              if line =~ /specify any dependencies here/
-                file.puts('  s.add_dependency("nesta", ">= 0.9.11")')
-                file.puts('  s.add_development_dependency("rake")')
+          gemspec = File.join(@gem_name, "#{@gem_name}.gemspec")
+          File.open(gemspec, 'r+') do |file|
+            code = file.read
+            file.truncate(0)
+            code.each_line do |line|
+              if line =~ /^end/
+                file.puts '  s.add_dependency("nesta", ">= 0.9.11")'
+                file.puts '  s.add_development_dependency("rake")'
               end
+              file.print line
             end
           end
         end

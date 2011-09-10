@@ -207,6 +207,7 @@ describe "nesta" do
         @init_file = create_gem_file('lib', @gem_name, 'init.rb')
         @gem_spec = create_gem_file("#{@gem_name}.gemspec") do |file|
           file.puts "  # specify any dependencies here; for example:"
+          file.puts "end"
         end
       end
 
@@ -226,7 +227,6 @@ describe "nesta" do
         boilerplate = <<-EOF
     module My::Feature
       module Helpers
-        helpers do
         EOF
         init.should include(boilerplate)
         init.should include('helpers Nesta::Plugin::My::Feature::Helpers')
