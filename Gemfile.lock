@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nesta (0.9.10)
+    nesta (0.9.11)
       RedCloth (~> 4.2)
       haml (~> 3.1)
       rdiscount (~> 1.6)
