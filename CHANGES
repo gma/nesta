@@ -1,5 +1,10 @@
 = 0.9.11 / (Unreleased)
 
+ * Use Tilt to render the Markdown, Textile and Haml in content/pages.
+   Redcarpet is now the default Markdown processor. To continue using
+   Maruku add it to Gemfile and call `Tilt.prefer Tilt::MarukuTemplate`
+   in your app.rb file.
+
  * Bug fix: require nesta/plugin automatically on load. The
    Nesta::Plugin.register method is called by plugins as soon as they
    are loaded, so we need to make it available. In 0.9.10 this method
