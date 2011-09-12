@@ -1,8 +1,10 @@
-require "time"
+require 'time'
 
-require "rubygems"
-require "maruku"
-require "redcloth"
+Tilt.register Tilt::MarukuTemplate, 'mdown'
+Tilt.register Tilt::KramdownTemplate, 'mdown'
+Tilt.register Tilt::BlueClothTemplate, 'mdown'
+Tilt.register Tilt::RDiscountTemplate, 'mdown'
+Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
   class FileModel
@@ -57,7 +59,7 @@ module Nesta
 
     def initialize(filename)
       @filename = filename
-      @format = filename.split(".").last.to_sym
+      @format = filename.split('.').last.to_sym
       if File.zero?(filename)
         @metadata = {}
         @markup = ''
@@ -89,11 +91,11 @@ module Nesta
     end
 
     def layout
-      (metadata("layout") || "layout").to_sym
+      (metadata('layout') || 'layout').to_sym
     end
 
     def template
-      (metadata("template") || "page").to_sym
+      (metadata('template') || 'page').to_sym
     end
 
     def to_html(scope = nil)
@@ -105,11 +107,11 @@ module Nesta
     end
 
     def description
-      metadata("description")
+      metadata('description')
     end
 
     def keywords
-      metadata("keywords")
+      metadata('keywords')
     end
     
     def metadata(key)
@@ -117,8 +119,8 @@ module Nesta
     end
 
     def flagged_as?(flag)
-      flags = metadata("flags")
-      flags && flags.split(",").map { |name| name.strip }.include?(flag)
+      flags = metadata('flags')
+      flags && flags.split(',').map { |name| name.strip }.include?(flag)
     end
 
     private
@@ -148,14 +150,8 @@ module Nesta
       end
 
       def convert_to_html(format, scope, text)
-        case format
-          when :mdown
-            Maruku.new(text).to_html
-          when :haml
-            Haml::Engine.new(text).to_html(scope)
-          when :textile
-            RedCloth.new(text).to_html
-          end
+        template = Tilt[format].new { text }
+        template.render(scope)
       end
   end
 
@@ -237,23 +233,18 @@ module Nesta
     def summary
       if summary_text = metadata("summary")
         summary_text.gsub!('\n', "\n")
-        case @format
-        when :textile
-          RedCloth.new(summary_text).to_html
-        else
-          Maruku.new(summary_text).to_html
-        end
+        convert_to_html(@format, nil, summary_text)
       end
     end
 
     def body(scope = nil)
       body_text = case @format
         when :mdown
-          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, "")
+          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
         when :haml
-          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, "")
+          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
         when :textile
-          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, "")
+          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '')
         end
       convert_to_html(@format, scope, body_text)
     end
