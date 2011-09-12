@@ -11,6 +11,12 @@ module Nesta
 
     attr_reader :filename, :mtime
 
+    class CaseInsensitiveHash < Hash
+      def [](key)
+        super(key.to_s.downcase)
+      end
+    end
+
     def self.model_path(basename = nil)
       Nesta::Config.content_path(basename)
     end
@@ -130,7 +136,7 @@ module Nesta
         raise Sinatra::NotFound
       else
         first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
-        metadata = {}
+        metadata = CaseInsensitiveHash.new
         if metadata?(first_paragraph)
           first_paragraph.split("\n").each do |line|
             key, value = line.split(/\s*:\s*/, 2)
