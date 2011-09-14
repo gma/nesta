@@ -128,9 +128,14 @@ module Nesta
       cache stylesheet(params[:sheet].to_sym)
     end
 
-    get %r{/attachments/([\w/.-]+)} do
-      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
-      send_file(file, :disposition => nil)
+    get %r{/attachments/([\w/.-]+)} do |file|
+      raise Sinatra::NotFound if file =~ /\.\.\//
+      filename = File.join(Nesta::Config.attachment_path, file)
+      if File.exist?(filename) and File.file?(filename)
+        send_file(filename, :disposition => nil)
+      else 
+        raise Sinatra::NotFound 
+      end
     end
 
     get '/articles.xml' do
