@@ -8,7 +8,7 @@ Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
   class FileModel
-    FORMATS = [:mdown, :haml, :textile]
+    FORMATS = [:mdown, :haml, :textile, :htmf]
     @@cache = {}
 
     attr_reader :filename, :mtime
@@ -206,6 +206,8 @@ module Nesta
           /^\s*%h1\s+(.*)/
         when :textile
           /^\s*h1\.\s+(.*)/
+        when :htmf
+          /^\s*<h1[^><]*>(.*)<\/h1>/
         end
       markup =~ regex
       Regexp.last_match(1)
