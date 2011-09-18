@@ -87,7 +87,7 @@ module Nesta
       end
 
       def local_stylesheet_link_tag(name)
-        pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
+        pattern = File.expand_path("views/#{name}.{scss,sass,css}", Nesta::App.root)
         if Dir.glob(pattern).size > 0
           haml_tag :link, :href => "/css/#{name}.css", :rel => "stylesheet"
         end
