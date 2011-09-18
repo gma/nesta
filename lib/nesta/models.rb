@@ -5,7 +5,8 @@ Tilt.register Tilt::KramdownTemplate, 'mdown'
 Tilt.register Tilt::BlueClothTemplate, 'mdown'
 Tilt.register Tilt::RDiscountTemplate, 'mdown'
 Tilt.register Tilt::RedcarpetTemplate, 'mdown'
-Tilt.register Tilt::HtmlTemplate, 'htmf'
+Tilt.register Tilt::PlainHtmlTemplate, 'htmf'
+Tilt.register Tilt::PlainCssTemplate, 'css'
 
 module Nesta
   class FileModel
