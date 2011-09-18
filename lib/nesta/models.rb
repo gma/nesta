@@ -5,6 +5,7 @@ Tilt.register Tilt::KramdownTemplate, 'mdown'
 Tilt.register Tilt::BlueClothTemplate, 'mdown'
 Tilt.register Tilt::RDiscountTemplate, 'mdown'
 Tilt.register Tilt::RedcarpetTemplate, 'mdown'
+Tilt.register Tilt::HtmlTemplate, 'htmf'
 
 module Nesta
   class FileModel
@@ -207,7 +208,7 @@ module Nesta
         when :textile
           /^\s*h1\.\s+(.*)/
         when :htmf
-          /^\s*<h1[^><]*>(.*)<\/h1>/
+          /^\s*<h1[^><]*>(.*?)<\/h1>/
         end
       markup =~ regex
       Regexp.last_match(1)
@@ -257,7 +258,9 @@ module Nesta
         when :haml
           markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
         when :textile
-          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '')
+          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '') 
+        when :htmf
+          markup.sub(/^\s*<h1[^><]*>.*?<\/h1>\s*/, '') 
         end
       convert_to_html(@format, scope, body_text)
     end
