@@ -182,15 +182,17 @@ end
         def specify_gem_dependency
           gemspec = File.join(@gem_name, "#{@gem_name}.gemspec")
           File.open(gemspec, 'r+') do |file|
-            code = file.read
-            file.truncate(0)
-            code.each_line do |line|
+            output = ''
+            file.each_line do |line|
               if line =~ /^end/
-                file.puts '  s.add_dependency("nesta", ">= 0.9.11")'
-                file.puts '  s.add_development_dependency("rake")'
+                output << '  s.add_dependency("nesta", ">= 0.9.11")' + "\n"
+                output << '  s.add_development_dependency("rake")' + "\n"
               end
-              file.print line
+              output << line
             end
+            file.pos = 0
+            file.print(output)
+            file.truncate(file.pos)
           end
         end
 
