@@ -1,33 +1,24 @@
 module Nesta
   module Overrides
     module Renderers
+      
       def haml(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
       end
       
-      def erubis(template, options = {}, locals = {})
-        defaults, engine = Overrides.render_options(template, :erubis)
+      def sass(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :sass)
         super(template, defaults.merge(options), locals)
       end
-    
+
       def scss(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :scss)
         super(template, defaults.merge(options), locals)
       end
 
-      def sass(template, options = {}, locals = {})
-        defaults, engine = Overrides.render_options(template, :sass)
-        super(template, defaults.merge(options), locals)
-      end
-      
-      def css(template, options = {}, locals = {})
-        defaults, engine = Overrides.render_options(template, :css)
-        super(template, defaults.merge(options), locals)
-      end
-
       def stylesheet(template, options = {}, locals = {})
-        defaults, engine = Overrides.render_options(template, :sass, :scss, :css)
+        defaults, engine = Overrides.render_options(template, :sass, :scss)
         renderer = Sinatra::Templates.instance_method(engine)
         renderer.bind(self).call(template, defaults.merge(options), locals)
       end
