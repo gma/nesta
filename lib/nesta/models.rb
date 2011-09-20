@@ -5,12 +5,10 @@ Tilt.register Tilt::KramdownTemplate, 'mdown'
 Tilt.register Tilt::BlueClothTemplate, 'mdown'
 Tilt.register Tilt::RDiscountTemplate, 'mdown'
 Tilt.register Tilt::RedcarpetTemplate, 'mdown'
-Tilt.register Tilt::PlainHtmlTemplate, 'htmf'
-Tilt.register Tilt::PlainCssTemplate, 'css'
+
 
 module Nesta
   class FileModel
-    FORMATS = [:mdown, :haml, :textile, :htmf]
     @@cache = {}
 
     attr_reader :filename, :mtime
@@ -26,10 +24,10 @@ module Nesta
     end
 
     def self.find_all
-      file_pattern = File.join(model_path, "**", "*.{#{FORMATS.join(',')}}")
+      file_pattern = File.join(model_path, "**", "*.{#{Nesta::Formats.extensions.join(',')}}")
       Dir.glob(file_pattern).map do |path|
         relative = path.sub("#{model_path}/", "")
-        load(relative.sub(/\.(#{FORMATS.join('|')})/, ""))
+        load(relative.sub(/\.(#{Nesta::Formats.extensions.join('|')})/, ""))
       end
     end
 
@@ -38,7 +36,7 @@ module Nesta
     end
 
     def self.load(path)
-      FORMATS.each do |format|
+      Nesta::Formats.extensions.each do |format|
         [path, File.join(path, 'index')].each do |basename|
           filename = model_path("#{basename}.#{format}")
           if File.exist?(filename) && needs_loading?(path, filename)
@@ -201,18 +199,7 @@ module Nesta
     end
 
     def heading
-      regex = case @format
-        when :mdown
-          /^#\s*(.*?)(\s*#+|$)/
-        when :haml
-          /^\s*%h1\s+(.*)/
-        when :textile
-          /^\s*h1\.\s+(.*)/
-        when :htmf
-          /^\s*<h1[^><]*>(.*?)<\/h1>/
-        end
-      markup =~ regex
-      Regexp.last_match(1)
+      Nesta::Formats[@format].heading(markup)
     end
   
     def title
@@ -253,16 +240,7 @@ module Nesta
     end
 
     def body(scope = nil)
-      body_text = case @format
-        when :mdown
-          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
-        when :haml
-          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
-        when :textile
-          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '') 
-        when :htmf
-          markup.sub(/^\s*<h1[^><]*>.*?<\/h1>\s*/, '') 
-        end
+      body_text = Nesta::Formats[@format].body(markup)
       convert_to_html(@format, scope, body_text)
     end
 
@@ -322,7 +300,7 @@ module Nesta
       def valid_paths(paths)
         page_dir = Nesta::Config.page_path
         paths.select do |path|
-          FORMATS.detect do |format|
+          Nesta::Formats.extensions.detect do |format|
             [path, File.join(path, 'index')].detect do |candidate|
               File.exist?(File.join(page_dir, "#{candidate}.#{format}"))
             end
