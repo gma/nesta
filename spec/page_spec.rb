@@ -447,23 +447,33 @@ describe "attachments" do
   
   before(:each) do
     create_attachment
-    get "/attachments/test.txt"
   end
   
   after(:each) do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
+
+
   
   it "should be served successfully" do
+    get "/attachments/test.txt"
     last_response.should be_ok
   end
   
   it "should be sent to the client" do
+    get "/attachments/test.txt"
     body.should include("I'm a test attachment")
   end
   
   it "should set the appropriate MIME type" do
+    get "/attachments/test.txt"
     last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
   end
+  it "should be directory traversal free" do
+    get "/attachments/../pages/index.haml"
+    last_response.should_not be_ok
+  end
+ 
+
 end
