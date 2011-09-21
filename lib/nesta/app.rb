@@ -103,6 +103,12 @@ module Nesta
       end
     end
 
+    before do
+      if request.path =~ Regexp.new('./$')
+        redirect to(request.path.sub(Regexp.new('/$'), ''))
+      end
+    end
+
     not_found do
       set_common_variables
       haml(:not_found)
@@ -129,9 +135,13 @@ module Nesta
       cache stylesheet(params[:sheet].to_sym)
     end
 
-    get %r{/attachments/([\w/.-]+)} do
+    get %r{/attachments/([\w/.-]+)} do |file|
       file = File.join(Nesta::Config.attachment_path, params[:captures].first)
-      send_file(file, :disposition => nil)
+      if file =~ /\.\.\//
+        not_found
+      else 
+        send_file(file, :disposition => nil)
+      end
     end
 
     get '/articles.xml' do

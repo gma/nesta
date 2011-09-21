@@ -100,7 +100,8 @@ describe "atom feed" do
     end
     
     it "should include hostname in URLs" do
-      body.should have_tag("entry/content", /href='http:\/\/example.org\/foo/)
+      body.should have_tag("entry/content",
+                           Regexp.new('href=.+http:\/\/example.org\/foo'))
     end
     
     it "should not include article heading in content" do

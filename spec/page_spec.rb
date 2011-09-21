@@ -288,7 +288,7 @@ describe "A page" do
       last_response.should_not be_ok
     end
   end
-  
+
   describe "that has meta data" do
     before(:each) do
       @title = 'Different title'
@@ -308,11 +308,18 @@ describe "A page" do
     it_should_behave_like "page with keyword and description"
     it_should_behave_like "page that can display menus"
 
+    describe "whose URL ends in /" do
+      it "should be redirected, removing the slash" do
+        get @category.abspath + '/'
+        last_response.should be_redirect
+      end
+    end
+
     it "should render successfully" do
       do_get
       last_response.should be_ok
     end
-    
+
     it "should display the heading" do
       do_get
       body.should have_tag('h1', @category.heading)
@@ -438,32 +445,47 @@ describe "attachments" do
   include ModelFactory
   include RequestSpecHelper
 
-  def create_attachment
+  before(:each) do
     stub_configuration
     create_content_directories
-    path = File.join(Nesta::Config.attachment_path, "test.txt")
-    File.open(path, "w") { |file| file.write("I'm a test attachment") }
   end
-  
-  before(:each) do
-    create_attachment
-    get "/attachments/test.txt"
-  end
-  
+
   after(:each) do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
-  
-  it "should be served successfully" do
-    last_response.should be_ok
+    
+  describe "in the attachments folder" do
+    before(:each) do
+      path = File.join(Nesta::Config.attachment_path, 'test.txt')
+      File.open(path, 'w') { |file| file.write("I'm a test attachment") }
+    end
+    
+    it "should be served successfully" do
+      get "/attachments/test.txt"
+      last_response.should be_ok
+    end
+    
+    it "should be sent to the client" do
+      get "/attachments/test.txt"
+      body.should include("I'm a test attachment")
+    end
+    
+    it "should set the appropriate MIME type" do
+      get "/attachments/test.txt"
+      last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
+    end
   end
-  
-  it "should be sent to the client" do
-    body.should include("I'm a test attachment")
-  end
-  
-  it "should set the appropriate MIME type" do
-    last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
+
+  describe "outside the attachments folder" do
+    before(:each) do
+      path = File.join(Nesta::Config.page_path, 'index.haml')
+      File.open(path, 'w') { |file| file.write('%h1 Test page') }
+    end
+
+    it "should be directory traversal free" do
+      get '/attachments/../pages/index.haml'
+      last_response.should_not be_ok
+    end
   end
 end
