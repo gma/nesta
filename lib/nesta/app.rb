@@ -129,12 +129,11 @@ module Nesta
     end
 
     get %r{/attachments/([\w/.-]+)} do |file|
-      raise Sinatra::NotFound if file =~ /\.\.\//
-      filename = File.join(Nesta::Config.attachment_path, file)
-      if File.exist?(filename) and File.file?(filename)
-        send_file(filename, :disposition => nil)
+      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
+      if file =~ /\.\.\//
+        not_found
       else 
-        raise Sinatra::NotFound 
+        send_file(file, :disposition => nil)
       end
     end
 

@@ -438,42 +438,47 @@ describe "attachments" do
   include ModelFactory
   include RequestSpecHelper
 
-  def create_attachment
+  before(:each) do
     stub_configuration
     create_content_directories
-    path = File.join(Nesta::Config.attachment_path, "test.txt")
-    File.open(path, "w") { |file| file.write("I'm a test attachment") }
   end
-  
-  before(:each) do
-    create_attachment
-  end
-  
+
   after(:each) do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
+    
+  describe "in the attachments folder" do
+    before(:each) do
+      path = File.join(Nesta::Config.attachment_path, 'test.txt')
+      File.open(path, 'w') { |file| file.write("I'm a test attachment") }
+    end
+    
+    it "should be served successfully" do
+      get "/attachments/test.txt"
+      last_response.should be_ok
+    end
+    
+    it "should be sent to the client" do
+      get "/attachments/test.txt"
+      body.should include("I'm a test attachment")
+    end
+    
+    it "should set the appropriate MIME type" do
+      get "/attachments/test.txt"
+      last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
+    end
+  end
 
+  describe "outside the attachments folder" do
+    before(:each) do
+      path = File.join(Nesta::Config.page_path, 'index.haml')
+      File.open(path, 'w') { |file| file.write('%h1 Test page') }
+    end
 
-  
-  it "should be served successfully" do
-    get "/attachments/test.txt"
-    last_response.should be_ok
+    it "should be directory traversal free" do
+      get '/attachments/../pages/index.haml'
+      last_response.should_not be_ok
+    end
   end
-  
-  it "should be sent to the client" do
-    get "/attachments/test.txt"
-    body.should include("I'm a test attachment")
-  end
-  
-  it "should set the appropriate MIME type" do
-    get "/attachments/test.txt"
-    last_response.headers["Content-Type"].should =~ Regexp.new("^text/plain")
-  end
-  it "should be directory traversal free" do
-    get "/attachments/../pages/index.haml"
-    last_response.should_not be_ok
-  end
- 
-
 end
