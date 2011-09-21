@@ -1,7 +1,7 @@
 = 0.9.11 / (Unreleased)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
-   Redcarpet is now the default Markdown processor. To continue using
+   RDiscount is now the default Markdown processor. To continue using
    Maruku add it to Gemfile and call `Tilt.prefer Tilt::MarukuTemplate`
    in your app.rb file.
 

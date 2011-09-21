@@ -311,7 +311,7 @@ describe "Page", :shared => true do
         file = File.open(path, 'w')
         file.close
       end
-      Nesta::Page.find_all.first.to_html.should == ''
+      Nesta::Page.find_all.first.to_html.should match(/^\s*$/)
     end
   end
 
