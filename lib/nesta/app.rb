@@ -102,6 +102,12 @@ module Nesta
       end
     end
 
+    before do
+      if request.path =~ Regexp.new('./$')
+        redirect to(request.path.sub(Regexp.new('/$'), ''))
+      end
+    end
+
     not_found do
       set_common_variables
       haml(:not_found)

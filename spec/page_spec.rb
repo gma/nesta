@@ -288,7 +288,7 @@ describe "A page" do
       last_response.should_not be_ok
     end
   end
-  
+
   describe "that has meta data" do
     before(:each) do
       @title = 'Different title'
@@ -308,11 +308,18 @@ describe "A page" do
     it_should_behave_like "page with keyword and description"
     it_should_behave_like "page that can display menus"
 
+    describe "whose URL ends in /" do
+      it "should be redirected, removing the slash" do
+        get @category.abspath + '/'
+        last_response.should be_redirect
+      end
+    end
+
     it "should render successfully" do
       do_get
       last_response.should be_ok
     end
-    
+
     it "should display the heading" do
       do_get
       body.should have_tag('h1', @category.heading)
