@@ -8,14 +8,14 @@ module Nesta
     end
     
     def self.normalize(ext)
-      ext.is_a? Symbol ? ext : ext.to_s.downcase.sub(/^\./, '').to_sym
+      (ext.is_a? Symbol) ? ext : ext.to_s.downcase.sub(/^\./, '').to_sym
     end
 
     # Register a template implementation by file extension.
     def self.register(template_class, *extensions)
       extensions.each do |ext|
         ext = normalize(ext)
-        mappings[ext].unshift(template_class).uniq!
+        @template_mappings[ext].unshift(template_class).uniq!
       end
     end
     
