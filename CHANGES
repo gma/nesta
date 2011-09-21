@@ -5,6 +5,9 @@
    Maruku add it to Gemfile and call `Tilt.prefer Tilt::MarukuTemplate`
    in your app.rb file.
 
+ * Remove trailing slashes from all URLs, redirecting to the URL without
+   the slash. See ticket #60 on GitHub.
+
  * Bug fix: require nesta/plugin automatically on load. The
    Nesta::Plugin.register method is called by plugins as soon as they
    are loaded, so we need to make it available. In 0.9.10 this method
