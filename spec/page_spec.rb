@@ -295,12 +295,14 @@ describe "A page" do
       @content = "Page content"
       @description = "Page about stuff"
       @keywords = "things, stuff"
+      @articles_heading = "Posts about this stuff"
       @category = create_category(
         :content => "# My category\n\n#{@content}",
         :metadata => {
           'title' => @title,
           'description' => @description,
-          'keywords' => @keywords
+          'keywords' => @keywords,
+          'articles heading' => @articles_heading
         }
       )
     end
@@ -377,6 +379,11 @@ describe "A page" do
         body.should have_tag(
             "h1 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
         body.should_not have_tag("h3", @article2.heading)
+      end
+
+      it "should display the article heading" do
+        do_get
+        body.should have_tag('h1', @articles_heading)
       end
     end
 

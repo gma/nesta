@@ -8,6 +8,12 @@
  * Remove trailing slashes from all URLs, redirecting to the URL without
    the slash. See ticket #60 on GitHub.
 
+ * Added the 'Articles heading' metadata key. When articles are listed
+   on a category page, Nesta adds a heading above the articles based on
+   the category's title (e.g. "Articles on Thing").  If you set the
+   'Articles heading' metadata Nesta will allow you to override the
+   entire heading for a given page.
+
  * Bug fix: require nesta/plugin automatically on load. The
    Nesta::Plugin.register method is called by plugins as soon as they
    are loaded, so we need to make it available. In 0.9.10 this method
