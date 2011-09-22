@@ -53,7 +53,9 @@ module Nesta
     class New
       include Command
 
-      def initialize(path, options = {})
+      def initialize(*args)
+        path = args.shift
+        options = args.shift || {}
         path.nil? && (raise UsageError.new('path not specified'))
         if File.exist?(path)
           raise RuntimeError.new("#{path} already exists") 
@@ -104,7 +106,7 @@ module Nesta
       class Content
         include Command
 
-        def initialize
+        def initialize(*args)
           @dir = 'content-demo'
         end
 
@@ -135,7 +137,8 @@ module Nesta
 
     module Plugin
       class Create
-        def initialize(name)
+        def initialize(*args)
+          name = args.shift
           name.nil? && (raise UsageError.new('name not specified'))
           @name = name
           @gem_name = "nesta-plugin-#{name}"
@@ -210,7 +213,9 @@ end
       class Create
         include Command
 
-        def initialize(name, options = {})
+        def initialize(*args)
+          name = args.shift
+          options = args.shift || {}
           name.nil? && (raise UsageError.new('name not specified'))
           @name = name
           @theme_path = Nesta::Path.themes(@name)
@@ -234,7 +239,9 @@ end
       class Install
         include Command
 
-        def initialize(url, options = {})
+        def initialize(*args)
+          url = args.shift
+          options = args.shift || {}
           url.nil? && (raise UsageError.new('URL not specified'))
           @url = url
           @name = File.basename(url, '.git').sub(/nesta-theme-/, '')
@@ -250,7 +257,9 @@ end
       class Enable
         include Command
 
-        def initialize(name, options = {})
+        def initialize(*args)
+          name = args.shift
+          options = args.shift || {}
           name.nil? && (raise UsageError.new('name not specified'))
           @name = name
         end

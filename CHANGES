@@ -1,3 +1,11 @@
+= 0.9.12 / (Unreleased)
+
+ * Extend the `nesta` command to support new commands that could, for
+   example, be added by a plugin. The class to be instantiated within
+   the Nesta::Commands module is determined from the command line
+   argument (e.g. `nesta plugin:create` will instantiate the class
+   called Nesta::Commands::Plugin::Create).
+
 = 0.9.11 / (22 September 2011)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
