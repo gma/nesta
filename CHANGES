@@ -1,4 +1,4 @@
-= 0.9.11 / (21 September 2011)
+= 0.9.11 / (22 September 2011)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
    RDiscount is now the default Markdown processor. To continue using
