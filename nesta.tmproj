@@ -21,7 +21,7 @@
 	<integer>343</integer>
 	<key>metaData</key>
 	<dict>
-		<key>lib/nesta/app.rb</key>
+		<key>bin/nesta</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -33,7 +33,35 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>114</integer>
+			<integer>37</integer>
+		</dict>
+		<key>lib/nesta.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>lib/nesta/app.rb</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>33</integer>
+				<key>line</key>
+				<integer>8</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
 		</dict>
 		<key>lib/nesta/cache.rb</key>
 		<dict>
@@ -47,35 +75,35 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>87</integer>
+			<integer>37</integer>
 		</dict>
 		<key>lib/nesta/commands.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>24</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>160</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>138</integer>
+			<integer>0</integer>
 		</dict>
 		<key>lib/nesta/config.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>0</integer>
+				<integer>44</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>8</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>31</integer>
+			<integer>0</integer>
 		</dict>
 		<key>lib/nesta/env.rb</key>
 		<dict>
@@ -96,14 +124,14 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>18</integer>
+				<integer>7</integer>
 				<key>line</key>
-				<integer>261</integer>
+				<integer>252</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>272</integer>
+			<integer>93</integer>
 		</dict>
 		<key>lib/nesta/navigation.rb</key>
 		<dict>
@@ -117,7 +145,7 @@
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
-			<integer>12</integer>
+			<integer>0</integer>
 		</dict>
 		<key>lib/nesta/nesta.rb</key>
 		<dict>
@@ -138,14 +166,30 @@
 			<key>caret</key>
 			<dict>
 				<key>column</key>
-				<integer>13</integer>
+				<integer>0</integer>
 				<key>line</key>
-				<integer>53</integer>
+				<integer>19</integer>
 			</dict>
+			<key>columnSelection</key>
+			<false/>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>9</integer>
+				<key>line</key>
+				<integer>23</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>19</integer>
+			</dict>
 		</dict>
 		<key>lib/nesta/path.rb</key>
 		<dict>
@@ -161,7 +205,7 @@
 			<key>firstVisibleLine</key>
 			<integer>0</integer>
 		</dict>
-		<key>lib/nesta/plugins.rb</key>
+		<key>lib/nesta/plugin.rb</key>
 		<dict>
 			<key>caret</key>
 			<dict>
@@ -182,7 +226,7 @@
 				<key>column</key>
 				<integer>0</integer>
 				<key>line</key>
-				<integer>0</integer>
+				<integer>3</integer>
 			</dict>
 			<key>firstVisibleColumn</key>
 			<integer>0</integer>
@@ -235,8 +279,8 @@
 	<key>openDocuments</key>
 	<array>
 		<string>lib/nesta/app.rb</string>
+		<string>bin/nesta</string>
 		<string>lib/nesta/version.rb</string>
-		<string>lib/nesta/plugins.rb</string>
 		<string>lib/nesta/path.rb</string>
 		<string>lib/nesta/overrides.rb</string>
 		<string>lib/nesta/nesta.rb</string>
@@ -245,6 +289,8 @@
 		<string>views/atom.haml</string>
 		<string>views/error.haml</string>
 		<string>lib/nesta/models.rb</string>
+		<string>lib/nesta.rb</string>
+		<string>lib/nesta/plugin.rb</string>
 		<string>lib/nesta/env.rb</string>
 		<string>lib/nesta/config.rb</string>
 		<string>lib/nesta/commands.rb</string>
@@ -253,6 +299,6 @@
 	<key>showFileHierarchyDrawer</key>
 	<true/>
 	<key>windowFrame</key>
-	<string>{{330, 91}, {1567, 967}}</string>
+	<string>{{458, 91}, {1567, 967}}</string>
 </dict>
 </plist>
