@@ -101,6 +101,10 @@ module Nesta
       def article_summaries(articles)
         haml(:summaries, :layout => false, :locals => { :pages => articles })
       end
+
+      def articles_heading
+        @page.metadata('articles heading') || "Articles on #{@page.heading}"
+      end
     end
 
     before do

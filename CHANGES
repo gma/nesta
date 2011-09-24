@@ -1,4 +1,12 @@
-= 0.9.11 / (Unreleased)
+= 0.9.12 / (Unreleased)
+
+ * Extend the `nesta` command to support new commands that could, for
+   example, be added by a plugin. The class to be instantiated within
+   the Nesta::Commands module is determined from the command line
+   argument (e.g. `nesta plugin:create` will instantiate the class
+   called Nesta::Commands::Plugin::Create).
+
+= 0.9.11 / (22 September 2011)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
    RDiscount is now the default Markdown processor. To continue using
@@ -7,6 +15,12 @@
 
  * Remove trailing slashes from all URLs, redirecting to the URL without
    the slash. See ticket #60 on GitHub.
+
+ * Added the 'Articles heading' metadata key. When articles are listed
+   on a category page, Nesta adds a heading above the articles based on
+   the category's title (e.g. "Articles on Thing").  If you set the
+   'Articles heading' metadata Nesta will allow you to override the
+   entire heading for a given page.
 
  * Bug fix: require nesta/plugin automatically on load. The
    Nesta::Plugin.register method is called by plugins as soon as they

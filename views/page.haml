@@ -11,7 +11,7 @@
     - unless @page.articles.empty?
       %section.articles
         %header
-          %h1= "Articles on #{@page.heading}"
+          %h1= articles_heading
         = article_summaries(@page.articles)
 
     = haml :page_meta, :layout => false, :locals => { :page => @page }

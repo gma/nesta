@@ -59,21 +59,22 @@ EOF
       usage
     end
 
+    def self.class_for_command(command)
+      const_names = command.split(':').map { |word| word.capitalize }
+      const_names.inject(Nesta::Commands) do |namespace, const|
+        namespace.const_get(const)
+      end
+    end
+
     def self.main(options)
       command = ARGV.shift
       command.nil? && usage
-      case command
-        when 'new'
-          Nesta::Commands::New.new(ARGV[0], options).execute
-        when 'demo:content'
-          Nesta::Commands::Demo::Content.new.execute
-        when 'plugin:create'
-          Nesta::Commands::Plugin::Create.new(ARGV[0]).execute
-        when /^theme:(create|enable|install)$/
-          command_cls = Nesta::Commands::Theme.const_get($1.capitalize.to_sym)
-          command_cls.new(ARGV[0], options).execute
-        else
-          usage(exitcode=0)
+      begin
+        command_cls = class_for_command(command)
+      rescue NameError
+        usage
+      else
+        command_cls.new(ARGV[0], options).execute
       end
     rescue RuntimeError => e
       $stderr.puts "ERROR: #{e}"
