@@ -142,6 +142,7 @@ module Nesta
         if metadata?(first_paragraph)
           first_paragraph.split("\n").each do |line|
             key, value = line.split(/\s*:\s*/, 2)
+            next if value.nil?
             metadata[key.downcase] = value.chomp
           end
         end

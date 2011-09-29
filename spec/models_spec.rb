@@ -58,6 +58,18 @@ describe "Page", :shared => true do
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
+  it "should be parseable if metadata is invalid" do
+    dodgy_metadata = "Key: value\nKey without value\nAnother key: value"
+    create_page(:heading => 'Banana', :path => 'banana') do |path|
+      text = File.read(path)
+      File.open(path, 'w') do |file|
+        file.puts(dodgy_metadata)
+        file.write(text)
+      end
+    end
+    Nesta::Page.find_by_path('banana')
+  end
+
   describe "for home page" do
     it "should set title to heading and site title" do
       create_page(:heading => 'Home', :path => 'index')
