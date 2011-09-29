@@ -513,12 +513,31 @@ describe "Haml page" do
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    create_page(
+    page = create_page(
       :path => "a-page",
       :heading => "First heading",
       :content => "%h1 Second heading"
     )
-    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+    page.heading.should == "First heading"
+  end
+
+  it "should wrap <p> tags around one line summary text" do
+    page = create_page(
+      :path => "a-page",
+      :heading => "First para",
+      :metadata => { "Summary" => "Wrap me" }
+    )
+    page.summary.should include("<p>Wrap me</p>")
+  end
+
+  it "should wrap <p> tags around multiple lines of summary text" do
+    page = create_page(
+      :path => "a-page",
+      :heading => "First para",
+      :metadata => { "Summary" => 'Wrap me\nIn paragraph tags' }
+    )
+    page.summary.should include("<p>Wrap me</p>")
+    page.summary.should include("<p>In paragraph tags</p>")
   end
 end
 
