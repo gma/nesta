@@ -10,11 +10,11 @@ module Nesta
     ]
     @author_settings = %w[name uri email]
     @yaml = nil
-    
+
     class << self
       attr_accessor :settings, :author_settings, :yaml_conf
     end
-    
+
     def self.method_missing(method, *args)
       setting = method.to_s
       if settings.include?(setting)
@@ -23,7 +23,7 @@ module Nesta
         super
       end
     end
-    
+
     def self.author
       environment_config = {}
       %w[name uri email].each do |setting|
@@ -32,30 +32,30 @@ module Nesta
       end
       environment_config.empty? ? from_yaml("author") : environment_config
     end
-    
+
     def self.content_path(basename = nil)
       get_path(content, basename)
     end
-    
+
     def self.page_path(basename = nil)
       get_path(File.join(content_path, "pages"), basename)
     end
-    
+
     def self.attachment_path(basename = nil)
       get_path(File.join(content_path, "attachments"), basename)
     end
-    
+
     def self.yaml_path
       File.expand_path('config/config.yml', Nesta::App.root)
     end
-    
+
     def self.from_environment(setting)
       value = ENV["NESTA_#{setting.upcase}"]
       overrides = { "true" => true, "false" => false }
       overrides.has_key?(value) ? overrides[value] : value
     end
     private_class_method :from_environment
-    
+
     def self.yaml_exists?
       File.exist?(yaml_path)
     end
@@ -68,7 +68,7 @@ module Nesta
 
     def self.from_yaml(setting)
       if can_use_yaml?
-        self.yaml_conf ||= YAML::load(IO.read(yaml_path))
+        self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
         rack_env_conf = self.yaml_conf[Nesta::App.environment.to_s]
         (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
       end
@@ -77,7 +77,7 @@ module Nesta
       nil
     end
     private_class_method :from_yaml
-    
+
     def self.get_path(dirname, basename)
       basename.nil? ? dirname : File.join(dirname, basename)
     end

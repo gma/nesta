@@ -4,13 +4,13 @@ describe "Config" do
   after(:each) do
     ENV.keys.each { |variable| ENV.delete(variable) if variable =~ /NESTA_/ }
   end
-  
+
   describe "when settings defined in ENV" do
     before(:each) do
       @title = "Title from ENV"
       ENV["NESTA_TITLE"] = @title
     end
-    
+
     it "should never try and access config.yml" do
       stub_config_key("subtitle", "Subtitle in YAML file")
       Nesta::Config.subtitle.should be_nil
@@ -20,14 +20,14 @@ describe "Config" do
       stub_config_key("title", "Title in YAML file")
       Nesta::Config.title.should == @title
     end
-    
+
     it "should know how to cope with boolean values" do
       ENV["NESTA_CACHE"] = "true"
       Nesta::Config.cache.should be_true
       ENV["NESTA_CACHE"] = "false"
       Nesta::Config.cache.should be_false
     end
-    
+
     it "should set author hash from ENV" do
       name = "Name from ENV"
       uri = "URI from ENV"
@@ -38,13 +38,13 @@ describe "Config" do
       Nesta::Config.author["email"].should be_nil
     end
   end
-  
+
   describe "when settings only defined in config.yml" do
     before(:each) do
       @title = "Title in YAML file"
       stub_config_key("subtitle", @title)
     end
-    
+
     it "should read configuration from YAML" do
       Nesta::Config.subtitle.should == @title
     end
@@ -57,11 +57,26 @@ describe "Config" do
       Nesta::Config.author["uri"].should == uri
       Nesta::Config.author["email"].should be_nil
     end
-    
+
     it "should override top level settings with RACK_ENV specific settings" do
       stub_config_key('content', 'general/path')
       stub_config_key('content', 'rack_env/path', :rack_env => true)
       Nesta::Config.content.should == 'rack_env/path'
+    end
+
+  end
+
+  describe "Dynamically assigning values in YAML file" do
+    before do
+      stub_yaml_exists
+    end
+
+    it "should parse ERB within YAML" do
+      yaml_data =<<-FILE.gsub(/^ +/, '')
+      content: <%= ( true ? "content/evaluated" : "not_evaluated" ) %>
+      FILE
+      stub_io_read(yaml_data)
+      Nesta::Config.content.should == "content/evaluated"
     end
   end
 end
