@@ -6,6 +6,11 @@ module Nesta
         super(template, defaults.merge(options), locals)
       end
 
+      def erb(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :erb)
+        super(template, defaults.merge(options), locals)
+      end
+
       def scss(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :scss)
         super(template, defaults.merge(options), locals)
