@@ -549,12 +549,12 @@ describe "Textile page" do
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    create_page(
+    page = create_page(
       :path => "a-page",
       :heading => "First heading",
       :content => "h1. Second heading"
     )
-    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+    page.heading.should == "First heading"
   end
 end
 
