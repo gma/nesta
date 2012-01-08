@@ -113,7 +113,11 @@ module Nesta
     def keywords
       metadata('keywords')
     end
-    
+
+    def icon
+      metadata('icon')
+    end
+
     def metadata(key)
       @metadata[key]
     end
