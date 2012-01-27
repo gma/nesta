@@ -1,19 +1,23 @@
 module Nesta
   module Overrides
     module Renderers
-      
       def haml(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
       end
-      
-      def sass(template, options = {}, locals = {})
-        defaults, engine = Overrides.render_options(template, :sass)
+
+      def erb(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :erb)
         super(template, defaults.merge(options), locals)
       end
 
       def scss(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :scss)
+        super(template, defaults.merge(options), locals)
+      end
+
+      def sass(template, options = {}, locals = {})
+        defaults, engine = Overrides.render_options(template, :sass)
         super(template, defaults.merge(options), locals)
       end
 

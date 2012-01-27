@@ -144,6 +144,7 @@ module Nesta
         if metadata?(first_paragraph)
           first_paragraph.split("\n").each do |line|
             key, value = line.split(/\s*:\s*/, 2)
+            next if value.nil?
             metadata[key.downcase] = value.chomp
           end
         end
@@ -151,7 +152,19 @@ module Nesta
         return metadata, markup
       end
 
+      def tag_lines_of_haml(text)
+        tagged = (text =~ /^\s*%/)
+        if tagged
+          text
+        else
+          text.split(/\r?\n/).inject("") do |accumulator, line|
+            accumulator << "%p #{line}\n"
+          end
+        end
+      end
+
       def convert_to_html(format, scope, text)
+        text = tag_lines_of_haml(text) if @format == :haml
         template = Tilt[format].new { text }
         template.render(scope)
       end

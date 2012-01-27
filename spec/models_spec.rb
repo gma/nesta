@@ -58,6 +58,18 @@ describe "Page", :shared => true do
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
+  it "should be parseable if metadata is invalid" do
+    dodgy_metadata = "Key: value\nKey without value\nAnother key: value"
+    create_page(:heading => 'Banana', :path => 'banana') do |path|
+      text = File.read(path)
+      File.open(path, 'w') do |file|
+        file.puts(dodgy_metadata)
+        file.write(text)
+      end
+    end
+    Nesta::Page.find_by_path('banana')
+  end
+
   describe "for home page" do
     it "should set title to heading and site title" do
       create_page(:heading => 'Home', :path => 'index')
@@ -501,12 +513,31 @@ describe "Haml page" do
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    create_page(
+    page = create_page(
       :path => "a-page",
       :heading => "First heading",
       :content => "%h1 Second heading"
     )
-    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+    page.heading.should == "First heading"
+  end
+
+  it "should wrap <p> tags around one line summary text" do
+    page = create_page(
+      :path => "a-page",
+      :heading => "First para",
+      :metadata => { "Summary" => "Wrap me" }
+    )
+    page.summary.should include("<p>Wrap me</p>")
+  end
+
+  it "should wrap <p> tags around multiple lines of summary text" do
+    page = create_page(
+      :path => "a-page",
+      :heading => "First para",
+      :metadata => { "Summary" => 'Wrap me\nIn paragraph tags' }
+    )
+    page.summary.should include("<p>Wrap me</p>")
+    page.summary.should include("<p>In paragraph tags</p>")
   end
 end
 
@@ -518,12 +549,12 @@ describe "Textile page" do
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    create_page(
+    page = create_page(
       :path => "a-page",
       :heading => "First heading",
       :content => "h1. Second heading"
     )
-    Nesta::Page.find_by_path("a-page").heading.should == "First heading"
+    page.heading.should == "First heading"
   end
 end
 

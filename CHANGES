@@ -6,6 +6,13 @@
    argument (e.g. `nesta plugin:create` will instantiate the class
    called Nesta::Commands::Plugin::Create).
 
+ * Bug fix: Don't crash if a page's metadata only contains the key, with
+   no corresponding value. You could argue this wasn't a bug, but the
+   error message was difficult to trace. #77
+
+ * Bug fix: Summaries on Haml pages were not marked up as paragraphs.
+   See #75.
+
 = 0.9.11 / (22 September 2011)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
