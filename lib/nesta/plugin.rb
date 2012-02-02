@@ -23,13 +23,13 @@ module Nesta
       plugins.each { |path| require_local_plugin(path) }
     end
 
-    private
-      def self.require_local_plugin(path)
-        Nesta.deprecated(
-            'loading plugins from ./plugins', "convert #{path} to a gem")
-        require File.join(path, 'lib', File.basename(path))
-      rescue LoadError => e
-        $stderr.write("Couldn't load plugins/#{File.basename(path)}: #{e}\n")
-      end
+    def self.require_local_plugin(path)
+      Nesta.deprecated(
+          'loading plugins from ./plugins', "convert #{path} to a gem")
+      require File.join(path, 'lib', File.basename(path))
+    rescue LoadError => e
+      $stderr.write("Couldn't load plugins/#{File.basename(path)}: #{e}\n")
+    end
+    private_class_method :require_local_plugin
   end
 end
