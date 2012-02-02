@@ -60,6 +60,14 @@ EOF
       usage
     end
 
+    def self.require_bundled_gems
+      if File.exist?('Gemfile')
+        require 'bundler'
+        Bundler.setup(:default)
+        Bundler.require(:default)
+      end
+    end
+
     def self.class_for_command(command)
       const_names = command.split(':').map { |word| word.capitalize }
       const_names.inject(Nesta::Commands) do |namespace, const|
@@ -87,4 +95,6 @@ EOF
   end
 end
 
+Nesta::Cli.require_bundled_gems
+Nesta::Plugin.initialize_plugins
 Nesta::Cli.main(Nesta::Cli.parse_command_line)
