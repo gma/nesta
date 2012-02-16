@@ -36,6 +36,7 @@ EOF
   s.add_dependency('rdiscount', '~> 1.6')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sinatra', '1.2.6')
+  s.add_dependency('rack', '~> 1.1')
   
   # Useful in development
   s.add_dependency('shotgun', '>= 0.8')
