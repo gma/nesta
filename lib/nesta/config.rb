@@ -7,6 +7,7 @@ module Nesta
   class Config
     @settings = %w[
       title subtitle theme disqus_short_name cache content google_analytics_code
+      expires expires_type
     ]
     @author_settings = %w[name uri email]
     @yaml = nil

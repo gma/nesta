@@ -239,6 +239,14 @@ module Nesta
       metadata('atom id')
     end
 
+    def expires
+      metadata('expires').nil? ? nil : metadata('expires').to_i
+    end
+
+    def expires_type
+      metadata('expires type').nil? ? nil : metadata('expires type').to_sym
+    end
+
     def read_more
       metadata('read more') || 'Continue reading'
     end

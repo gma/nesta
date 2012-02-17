@@ -36,6 +36,29 @@ subtitle: "(change this text in config/config.yml)"
 #
 cache: false
 
+# expires
+#     The amount of time each page can be cached for by the client. If your
+#     pages changes very often, set this to a small value. If on the other hand
+#     your pages are mostly static, set it to a large value. Within the time you
+#     put, a browser that has a copy of the file in its cache might choose not
+#     to requery your website for the latest version. Can be overriden in
+#     individual pages. In seconds.
+#     Default: 0
+#
+# expires: 3600
+
+# expires_type
+#     Whether or not proxies can cache the pages we serve. If set to public,
+#     both proxies between the browser and the web server and the browser itself
+#     can cache the pages. If set to private, only the client's browser can.
+#     In practice, if the pages are modified depending on who requests
+#     them, you should set this to private. Otherwise if all clients get the
+#     same page (usually the case, particularly on nesta websites), set it to
+#     public.
+#     Default: public
+#
+# expires_type: private
+
 # content
 #     The root directory where nesta will look for your article files.
 #     Should contain "pages" and "attachments" subdirectories that contain
