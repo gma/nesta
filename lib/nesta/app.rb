@@ -165,7 +165,6 @@ module Nesta
 
     get '*' do
       set_common_variables
-      @heading = @title
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
