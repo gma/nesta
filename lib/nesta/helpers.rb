@@ -34,7 +34,7 @@ module Nesta
       end
 
       def absolute_urls(text)
-        text.gsub!(/(<a href=['"])\//, '\1' + base_url + '/')
+        text.gsub!(/(<a href=['"])\//, '\1' + url('/'))
         text
       end
 
@@ -63,7 +63,7 @@ module Nesta
       def local_stylesheet_link_tag(name)
         pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0
-          haml_tag :link, :href => "/css/#{name}.css", :rel => "stylesheet"
+          haml_tag :link, :href => url("/css/#{name}.css"), :rel => "stylesheet"
         end
       end
 

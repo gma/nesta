@@ -23,7 +23,7 @@ module Nesta
         else
           html_class = (request.path == item.abspath) ? "current" : nil
           haml_tag :li, :class => html_class do
-            haml_tag :a, :<, :href => item.abspath do
+            haml_tag :a, :<, :href => url(item.abspath) do
               haml_concat item.heading
             end
           end
@@ -44,7 +44,7 @@ module Nesta
         haml_tag :ul, :class => options[:class] do
           breadcrumb_ancestors[0...-1].each do |page|
             haml_tag :li do
-              haml_tag :a, :<, :href => page.abspath do
+              haml_tag :a, :<, :href => url(page.abspath) do
                 haml_concat breadcrumb_label(page)
               end
             end
