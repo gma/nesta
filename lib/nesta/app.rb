@@ -22,6 +22,9 @@ module Nesta
     set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :cache_enabled, Config.cache
+    set :expires_time, Config.expires
+    set :expires_type, (Config.expires_type.nil? ?
+                        nil : Config.expires_type.to_sym)
     set :haml, { :format => :html5 }
 
     helpers Overrides::Renderers
@@ -29,6 +32,12 @@ module Nesta
     helpers View::Helpers
 
     before do
+      unless options.expires_time.nil?
+        expires options.expires_time,
+          options.expires_type || :public,
+          :must_revalidate
+      end
+
       if request.path =~ Regexp.new('./$')
         redirect to(request.path.sub(Regexp.new('/$'), ''))
       end
@@ -91,6 +100,9 @@ module Nesta
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
       @title = @page.title
+      expires @page.expires,
+        @page.expires_type || options.expires_type || :public,
+        :must_revalidate unless @page.expires.nil?
       set_from_page(:description, :keywords)
       cache haml(@page.template, :layout => @page.layout)
     end
