@@ -3,8 +3,8 @@
   %title(type='text')= @title
   %generator(uri='http://effectif.com/nesta') Nesta
   %id= atom_id
-  %link(href="#{url '/articles.xml'}" rel='self')
-  %link(href="#{url '/'}" rel='alternate')
+  %link(href="#{url('/articles.xml')}" rel='self')
+  %link(href="#{url('/')}" rel='alternate')
   %subtitle(type='text')= @subtitle
   - if @articles[0]
     %updated= @articles[0].date(:xmlschema)
