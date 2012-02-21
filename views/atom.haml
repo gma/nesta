@@ -19,7 +19,7 @@
   - @articles.each do |article|
     %entry
       %title= article.heading
-      %link{ :href => url_for(article), :type => 'text/html', :rel => 'alternate' }
+      %link{ :href => url(article.path), :type => 'text/html', :rel => 'alternate' }
       %id= atom_id(article)
       %content(type='html')&= find_and_preserve(absolute_urls(article.body(self)))
       %published= article.date(:xmlschema)
