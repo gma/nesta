@@ -202,6 +202,8 @@ module Nesta
 
     def heading
       regex = case @format
+        when :erb
+          /<h1>\s*(.*)<\/h1>/
         when :mdown
           /^#\s*(.*?)(\s*#+|$)/
         when :haml
@@ -252,6 +254,8 @@ module Nesta
 
     def body(scope = nil)
       body_text = case @format
+        when :erb
+          markup.sub(/<h1>.*<\/h1>/, '')
         when :mdown
           markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
         when :haml
