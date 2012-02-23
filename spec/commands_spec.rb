@@ -247,6 +247,7 @@ describe "nesta" do
       @theme_dir = 'themes/mine'
       FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
       @command = Nesta::Commands::Theme::Install.new(@repo_url)
+      @command.stub!(:enable)
       @command.stub!(:system)
     end
 
