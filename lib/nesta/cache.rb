@@ -1,5 +1,4 @@
 require 'fileutils'
-# require 'sinatra/base'
 
 module Sinatra 
     
