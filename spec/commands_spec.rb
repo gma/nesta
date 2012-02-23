@@ -272,12 +272,13 @@ describe "nesta" do
       @command.execute
     end
 
-    describe "when theme URL doesn't match recommendation" do
+    describe "when theme URL doesn't match recommended pattern" do
       before(:each) do
         @repo_url = 'git://foobar.com/path/to/mytheme.git'
         @other_theme_dir = 'themes/mytheme'
         FileUtils.mkdir_p(File.join(@other_theme_dir, '.git'))
         @command = Nesta::Commands::Theme::Install.new(@repo_url)
+        @command.stub!(:enable)
       end
 
       after(:each) do
