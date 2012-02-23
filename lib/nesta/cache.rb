@@ -26,7 +26,7 @@ module Sinatra
       #  TODO:: implement the opts={} hash functionality. What other options are needed?
       # 
       def cache(content, opts={})
-        return content unless options.cache_enabled
+        return content unless settings.cache_enabled
         
         unless content.nil?
           content = "#{content}\n#{page_cached_timestamp}\n"
@@ -50,7 +50,7 @@ module Sinatra
       #
       #  TODO:: implement the options={} hash functionality. What options are really needed ? 
       def cache_expire(path = nil, opts={})
-        return unless options.cache_enabled
+        return unless settings.cache_enabled
         
         path = (path.nil?) ? cache_page_path(request.path_info) : cache_page_path(path)
         if File.exist?(path)
@@ -71,7 +71,7 @@ module Sinatra
       #      => <!--  page cached: 2009-02-24 12:00:00 -->
       #
       def page_cached_timestamp
-        "<!-- page cached: #{Time.now.strftime("%Y-%d-%m %H:%M:%S")} -->\n" if options.cache_enabled
+        "<!-- page cached: #{Time.now.strftime("%Y-%d-%m %H:%M:%S")} -->\n" if settings.cache_enabled
       end
       
       
@@ -83,36 +83,36 @@ module Sinatra
         # 
         def cache_file_name(path,opts={})
           name = (path.empty? || path == "/") ? "index" : Rack::Utils.unescape(path.sub(/^(\/)/,'').chomp('/'))
-          name << options.cache_page_extension unless (name.split('/').last || name).include? '.'
+          name << settings.cache_page_extension unless (name.split('/').last || name).include? '.'
           return name
         end
         
         # Sets the full path to the cached page/file
-        # Dependent upon Sinatra.options .public and .cache_dir variables being present and set.
+        # Dependent upon Sinatra.settings .public and .cache_dir variables being present and set.
         # 
         def cache_page_path(path,opts={})
           # test if given a full path rather than relative path, otherwise join the public path to cache_dir 
           # and ensure it is a full path
-          cache_dir = (options.cache_dir == File.expand_path(options.cache_dir)) ? 
-              options.cache_dir : File.expand_path("#{options.public}/#{options.cache_dir}")
+          cache_dir = (settings.cache_dir == File.expand_path(settings.cache_dir)) ? 
+              settings.cache_dir : File.expand_path("#{settings.public}/#{settings.cache_dir}")
           cache_dir = cache_dir[0..-2] if cache_dir[-1,1] == '/'
           "#{cache_dir}/#{cache_file_name(path,opts)}"
         end
         
         #  TODO:: this implementation really stinks, how do I incorporate Sinatra's logger??
         def log(msg,scope=:debug)
-          if options.cache_logging
-            "Log: msg=[#{msg}]" if scope == options.cache_logging_level
+          if settings.cache_logging
+            "Log: msg=[#{msg}]" if scope == settings.cache_logging_level
           else
             # just ignore the stuff...
-            # puts "just ignoring msg=[#{msg}] since cache_logging => [#{options.cache_logging.to_s}]"
+            # puts "just ignoring msg=[#{msg}] since cache_logging => [#{settings.cache_logging.to_s}]"
           end
         end
         
     end #/module Helpers
     
     
-    # Sets the default options:
+    # Sets the default settings:
     # 
     #  * +:cache_enabled+ => toggle for the cache functionality. Default is: +true+
     #  * +:cache_page_extension+ => sets the default extension for cached files. Default is: +.html+
