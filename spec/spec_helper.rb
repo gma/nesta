@@ -20,8 +20,16 @@ require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 module ConfigSpecHelper
   def stub_yaml_config
     @config = {}
-    Nesta::Config.stub!(:yaml_exists?).and_return(true)
+    stub_yaml_exists
     Nesta::Config.stub!(:yaml_conf).and_return(@config)
+  end
+
+  def stub_yaml_exists
+    Nesta::Config.stub!(:yaml_exists?).and_return(true)
+  end
+
+  def stub_io_read(content)
+    IO.stub!(:read).and_return(content)
   end
 
   def stub_config_key(key, value, options = {})
@@ -33,7 +41,7 @@ module ConfigSpecHelper
       @config[key] = value
     end
   end
-  
+
   def stub_configuration(options = {})
     stub_config_key('title', 'My blog', options)
     stub_config_key('subtitle', 'about stuff', options)
@@ -52,7 +60,7 @@ module TempFileHelper
   def remove_temp_directory
     FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
   end
-  
+
   def temp_path(base)
     File.join(TempFileHelper::TEMP_DIR, base)
   end
@@ -69,7 +77,7 @@ module RequestSpecHelper
   def app
     Nesta::App
   end
-  
+
   def body
     last_response.body
   end
