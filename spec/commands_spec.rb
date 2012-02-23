@@ -267,7 +267,7 @@ describe "nesta" do
     end
 
     it "should enable the freshly installed theme" do
-      @command.should_receive(:enable).with('mine')
+      @command.should_receive(:enable)
       @command.execute
     end
 

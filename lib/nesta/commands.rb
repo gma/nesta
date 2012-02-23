@@ -250,7 +250,11 @@ end
         def execute
           system('git', 'clone', @url, "themes/#{@name}")
           FileUtils.rm_r(File.join("themes/#{@name}", '.git'))
-          enable(@name)
+          enable
+        end
+
+        def enable
+          Enable.new(@name).execute
         end
       end
 
