@@ -78,6 +78,10 @@ module Nesta
       def articles_heading
         @page.metadata('articles heading') || "Articles on #{@page.heading}"
       end
+
+      def current_item?(item)
+        request.path == item.abspath
+      end
     end
   end
 end
