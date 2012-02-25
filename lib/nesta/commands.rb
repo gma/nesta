@@ -59,7 +59,7 @@ module Nesta
 
       def execute
         editor = ENV.fetch('NESTA_EDITOR', ENV.fetch('EDITOR'))
-      rescue KeyError
+      rescue IndexError
         $stderr.puts "No editor: set NESTA_EDITOR or EDITOR environment variable"
       else
         system(editor, @filename)
