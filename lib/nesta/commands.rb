@@ -50,6 +50,22 @@ module Nesta
       end
     end
 
+    class Edit
+      include Command
+
+      def initialize(*args)
+        @filename = Nesta::Config.page_path(args.shift)
+      end
+
+      def execute
+        editor = ENV.fetch('NESTA_EDITOR', ENV.fetch('EDITOR'))
+      rescue KeyError
+        $stderr.puts "No editor: set NESTA_EDITOR or EDITOR environment variable"
+      else
+        system(editor, @filename)
+      end
+    end
+
     class New
       include Command
 

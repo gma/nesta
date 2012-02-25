@@ -16,6 +16,7 @@ GLOBAL OPTIONS
 
 COMMANDS
     new <path>            Create a new Nesta project.
+    edit <path>           Edit a document (path relative to content/pages).
     demo:content          Install example pages in ./content-demo.
     plugin:create <name>  Create a gem called nesta-plugin-name.
     theme:install <url>   Install a theme from a git repository.

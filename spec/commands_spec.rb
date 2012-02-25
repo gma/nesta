@@ -167,6 +167,30 @@ describe "nesta" do
     end
   end
 
+  describe "edit" do
+    before(:each) do
+      Nesta::Config.stub!(:content_path).and_return('content')
+      @page_path = 'path/to/page.mdown'
+      @command = Nesta::Commands::Edit.new(@page_path)
+      @command.stub!(:system)
+    end
+
+    it "should launch the editor" do
+      ENV['NESTA_EDITOR'] = 'vi'
+      full_path = File.join('content/pages', @page_path)
+      @command.should_receive(:system).with(ENV['NESTA_EDITOR'], full_path)
+      @command.execute
+    end
+
+    it "should not try and launch an editor if environment not setup" do
+      ENV.delete('NESTA_EDITOR')
+      ENV.delete('EDITOR')
+      @command.should_not_receive(:system)
+      $stderr.stub!(:puts)
+      @command.execute
+    end
+  end
+
   describe "plugin:create" do
     before(:each) do
       @name = 'my-feature'
