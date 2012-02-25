@@ -20,6 +20,7 @@ module Nesta
       def set_common_variables
         @menu_items = Nesta::Menu.for_path('/')
         @site_title = Nesta::Config.title
+        @feed_url = Nesta::Config.feed
         set_from_config(:title, :subtitle, :google_analytics_code)
         @heading = @title
       end
