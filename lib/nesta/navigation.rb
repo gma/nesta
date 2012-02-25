@@ -21,7 +21,7 @@ module Nesta
             end
           end
         else
-          html_class = (request.path == item.abspath) ? "current" : nil
+          html_class = current_item?(item) ? "current" : nil
           haml_tag :li, :class => html_class do
             haml_tag :a, :<, :href => item.abspath do
               haml_concat item.heading
