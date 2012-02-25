@@ -80,7 +80,7 @@ module Nesta
       end
 
       def current_item?(item)
-        (request.path == item.abspath)
+        request.path == item.abspath
       end
     end
   end
