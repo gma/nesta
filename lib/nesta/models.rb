@@ -8,7 +8,7 @@ Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
   class FileModel
-    FORMATS = [:mdown, :haml, :textile]
+    FORMATS = [:erb, :mdown, :haml, :textile]
     @@cache = {}
 
     attr_reader :filename, :mtime
@@ -202,6 +202,8 @@ module Nesta
 
     def heading
       regex = case @format
+        when :erb
+          /<h1>\s*(.*)<\/h1>/
         when :mdown
           /^#\s*(.*?)(\s*#+|$)/
         when :haml
@@ -252,6 +254,8 @@ module Nesta
 
     def body(scope = nil)
       body_text = case @format
+        when :erb
+          markup.sub(/<h1>.*<\/h1>/, '')
         when :mdown
           markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
         when :haml
