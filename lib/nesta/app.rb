@@ -2,8 +2,8 @@ require 'sinatra/base'
 require 'haml'
 require 'sass'
 
+require File.expand_path('../nesta', File.dirname(__FILE__))
 require File.expand_path('env', File.dirname(__FILE__))
-require File.expand_path('nesta', File.dirname(__FILE__))
 require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
 require File.expand_path('models', File.dirname(__FILE__))
@@ -11,7 +11,6 @@ require File.expand_path('helpers', File.dirname(__FILE__))
 require File.expand_path('navigation', File.dirname(__FILE__))
 require File.expand_path('overrides', File.dirname(__FILE__))
 require File.expand_path('path', File.dirname(__FILE__))
-require File.expand_path('plugin', File.dirname(__FILE__))
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION =~ /^1.9/
 
