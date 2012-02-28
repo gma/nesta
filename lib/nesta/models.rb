@@ -250,16 +250,19 @@ module Nesta
       end
     end
 
-    def body(scope = nil)
-      body_text = case @format
+    def body_markup
+      case @format
         when :mdown
           markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
         when :haml
           markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
         when :textile
           markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '')
-        end
-      convert_to_html(@format, scope, body_text)
+      end
+    end
+
+    def body(scope = nil)
+      convert_to_html(@format, scope, body_markup)
     end
 
     def categories
