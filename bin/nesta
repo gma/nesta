@@ -13,6 +13,7 @@ USAGE: #{File.basename($0)} [GLOBAL OPTIONS] <command> [COMMAND OPTIONS]
 GLOBAL OPTIONS
     --help, -h            Display this message.
     --version, -v         Display version number.
+    --bash-completion     Output command completion setup for Bash.
 
 COMMANDS
     new <path>            Create a new Nesta project.
@@ -38,6 +39,7 @@ EOF
 
     def self.parse_command_line
       opts = GetoptLong.new(
+        ['--bash-completion', GetoptLong::NO_ARGUMENT],
         ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
         ['--version', '-v', GetoptLong::NO_ARGUMENT],
@@ -46,6 +48,8 @@ EOF
       options = {}
       opts.each do |opt, arg|
         case opt 
+        when '--bash-completion'
+          bash_completion
         when '--help'
           usage(exitcode=0)
         when '--version'
@@ -91,6 +95,51 @@ EOF
     rescue Nesta::Commands::UsageError => e
       $stderr.puts "ERROR: #{e}"
       usage
+    end
+
+    def self.bash_completion
+      puts <<-EOF
+# Bash completion configuration for the nesta command.
+#
+# Install it with these commands:
+#
+# $ nesta --bash-completion > ~/.nesta-completion.sh
+# $ echo '[ -f ~/.nesta-completion.sh ] && source ~/.nesta-completion.sh' \ 
+#       >> ~/.bash_profile
+# $ source ~/.nesta-completion.sh
+
+_nesta() {
+    local cur prev opts pages
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    opts="new 'demo:content' edit 'plugin:create' 'theme:install' 'theme:enable' 'theme:create'"
+
+    case "${cur}" in
+        theme:*)
+            COMPREPLY=( $(compgen -W "enable install" -- ${cur##*:}) )
+            return 0
+            ;;
+    esac
+
+    case "${prev}" in
+        edit)
+            local pages_path="content/pages"
+            local pages="$(find $pages_path -type f | sed 's,$pages_path,,')"
+            COMPREPLY=( $(compgen -W "$pages" -- $cur) )
+            return 0
+            ;;
+        *)
+            ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "$opts" -- $cur) )
+    return 0
+}
+complete -F _nesta nesta
+      EOF
+      exit 0
     end
   end
 end
