@@ -8,7 +8,7 @@ Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
   class FileModel
-    FORMATS = [:mdown, :haml, :textile]
+    FORMATS = [:erb, :mdown, :haml, :textile]
     @@cache = {}
 
     attr_reader :filename, :mtime
