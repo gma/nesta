@@ -5,11 +5,11 @@
         %article
           %header
             %h1
-              %a(href="#{page.abspath}")= page.heading
+              %a(href="#{url(page.abspath)}")= page.heading
           - if page.summary.nil? || page.summary.empty?
             ~ page.body(self)
           - else
             ~ page.summary
             %p.read_more
-              %a(href="#{page.abspath}")= page.read_more
+              %a(href="#{url(page.abspath)}")= page.read_more
           = haml :page_meta, :layout => false, :locals => { :page => page }

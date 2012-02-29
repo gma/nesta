@@ -3,8 +3,8 @@
   %title(type='text')= @title
   %generator(uri='http://nestacms.com') Nesta
   %id= atom_id
-  %link(href="#{base_url}/articles.xml" rel='self')
-  %link(href=base_url rel='alternate')
+  %link(href="#{url('/articles.xml')}" rel='self')
+  %link(href="#{url('/')}" rel='alternate')
   %subtitle(type='text')= @subtitle
   - if @articles[0]
     %updated= @articles[0].date(:xmlschema)
@@ -19,7 +19,7 @@
   - @articles.each do |article|
     %entry
       %title= article.heading
-      %link{ :href => url_for(article), :type => 'text/html', :rel => 'alternate' }
+      %link{ :href => url(article.path), :type => 'text/html', :rel => 'alternate' }
       %id= atom_id(article)
       %content(type='html')&= find_and_preserve(absolute_urls(article.body(self)))
       %published= article.date(:xmlschema)

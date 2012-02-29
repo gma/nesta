@@ -8,14 +8,14 @@
       %meta(name="keywords" content=@keywords)
     %title= @title
     <!--[if ! lte IE 6]><!-->
-    %link(href="/css/master.css" media="screen" rel="stylesheet")
+    %link(href="#{url('/css/master.css')}" media="screen" rel="stylesheet")
     <!--<![endif]-->
     /[if lte IE 6]
       %link(rel="stylesheet" href="http://universal-ie6-css.googlecode.com/files/ie6.1.1.css" media="screen, projection")
     /[if lt IE 9]
       %script(src="//html5shim.googlecode.com/svn/trunk/html5.js")
     - local_stylesheet_link_tag('local')
-    %link(href="/articles.xml" rel="alternate" type="application/atom+xml")
+    %link(href="#{url('/articles.xml')}" rel="alternate" type="application/atom+xml")
     = haml :analytics, :layout => false
   %body
     #container

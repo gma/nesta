@@ -1,11 +1,11 @@
 !!! XML
 %urlset(xmlns="http://www.sitemaps.org/schemas/sitemap/0.9")
   %url
-    %loc= base_url
+    %loc= url('/')
     %changefreq daily
     %priority 1.0
     %lastmod= @last.xmlschema
   - @pages.each do |page|
     %url
-      %loc= url_for(page)
+      %loc= url(page.path)
       %lastmod= page.last_modified.xmlschema
