@@ -410,7 +410,7 @@ describe "Page", :shared => true do
     end
 
     it "should not include heading in body markup" do
-      @article.body_markup.should_not include("My article"); 
+      @article.body_markup.should_not include("My article")
     end
     
     it "should not include heading in body" do
