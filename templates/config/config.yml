@@ -4,6 +4,13 @@
 title: "My Site"
 subtitle: "(change this text in config/config.yml)"
 
+
+# Feed for your site. If you don't specify one, Nesta will use the unadorned
+# /articles.xml. You can generate your own Feedburner (or some such) URL from
+# the default and then specify it here.
+#
+# feed: /articles.xml
+
 # You should really specify your content's author when generating an
 # Atom feed. Specify at least one of name, uri or email, and Nesta will
 # include it in your feed. See the Atom spec for more info:
