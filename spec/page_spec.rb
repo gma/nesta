@@ -27,7 +27,7 @@ describe "page that can display menus", :shared => true do
     it "should link to top level menu items" do
       do_get
       body.should have_tag(
-        "ul.menu a[@href=#{@category.abspath}]", Regexp.new(@category.heading))
+        "ul.menu a[@href$=#{@category.abspath}]", Regexp.new(@category.heading))
     end
   end
   
@@ -151,7 +151,7 @@ describe "The home page" do
     
     it "should display link to article in h2 tag" do
       body.should have_tag(
-          "h1 a[@href=#{@article.abspath}]", /^\s*#{@article.heading}$/)
+          "h1 a[@href$=#{@article.abspath}]", /^\s*#{@article.heading}$/)
     end
     
     it "should display article summary if available" do
@@ -159,7 +159,7 @@ describe "The home page" do
     end
     
     it "should display read more link" do
-      body.should have_tag("a[@href=#{@article.abspath}]", @read_more)
+      body.should have_tag("a[@href$=#{@article.abspath}]", @read_more)
     end
   end
 end
@@ -377,7 +377,7 @@ describe "A page" do
       it "should display links to articles" do
         do_get
         body.should have_tag(
-            "h1 a[@href='#{@article.abspath}']", /^\s*#{@article.heading}$/)
+            "h1 a[@href$='#{@article.abspath}']", /^\s*#{@article.heading}$/)
         body.should_not have_tag("h3", @article2.heading)
       end
 

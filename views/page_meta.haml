@@ -10,7 +10,7 @@
         - page.categories.each do |category|
           - if category != page.categories[-1]
             = succeed ',' do
-              %a(href="#{category.abspath}")= category.heading
+              %a(href="#{url(category.abspath)}")= category.heading
           - else
-            %a(href="#{category.abspath}")= category.heading
+            %a(href="#{url(category.abspath)}")= category.heading
 

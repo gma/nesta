@@ -28,8 +28,8 @@ module Nesta
     helpers View::Helpers
 
     before do
-      if request.path =~ Regexp.new('./$')
-        redirect to(request.path.sub(Regexp.new('/$'), ''))
+      if request.path_info =~ Regexp.new('./$')
+        redirect to(request.path_info.sub(Regexp.new('/$'), ''))
       end
     end
 

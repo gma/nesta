@@ -32,7 +32,7 @@ describe "atom feed" do
   end
   
   it "should have an alternate link element" do
-    body.should have_tag("/feed/link[@rel=alternate][@href='http://example.org']")
+    body.should have_tag("/feed/link[@rel=alternate][@href='http://example.org/']")
   end
 
   it "should have a self link element" do

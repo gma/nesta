@@ -31,12 +31,12 @@ describe "sitemap XML" do
   end
   
   it "should reference the home page" do
-    body.should have_tag("/urlset/url/loc", "http://example.org")
+    body.should have_tag("/urlset/url/loc", "http://example.org/")
   end
   
   it "should configure home page to be checked frequently" do
     body.should have_tag("/urlset/url") do |url|
-      url.should have_tag("loc", "http://example.org")
+      url.should have_tag("loc", "http://example.org/")
       url.should have_tag("changefreq", "daily")
       url.should have_tag("priority", "1.0")
     end
@@ -44,7 +44,7 @@ describe "sitemap XML" do
   
   it "should set the homepage lastmod from latest article" do
     body.should have_tag("/urlset/url") do |url|
-      url.should have_tag("loc", "http://example.org")
+      url.should have_tag("loc", "http://example.org/")
       url.should have_tag("lastmod", /^2009-01-03T15:10:00/)
     end
   end
@@ -93,7 +93,7 @@ describe "sitemap XML lastmod" do
     end
     get "/sitemap.xml"
     body.should have_tag("url") do |url|
-      url.should have_tag("loc", "http://example.org")
+      url.should have_tag("loc", "http://example.org/")
       url.should have_tag("lastmod", /^2009-01-04/)
     end
   end
