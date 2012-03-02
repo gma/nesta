@@ -58,6 +58,12 @@ describe "Page", :shared => true do
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
+  it "should respond to #parse_metadata, returning hash of key/value" do
+    page = create_page(:heading => 'Banana', :path => 'banana')
+    metadata = page.parse_metadata('My key: some value')
+    metadata['my key'].should == 'some value'
+  end
+
   it "should be parseable if metadata is invalid" do
     dodgy_metadata = "Key: value\nKey without value\nAnother key: value"
     create_page(:heading => 'Banana', :path => 'banana') do |path|

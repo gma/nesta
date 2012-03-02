@@ -123,6 +123,16 @@ module Nesta
       flags && flags.split(',').map { |name| name.strip }.include?(flag)
     end
 
+    def parse_metadata(first_paragraph)
+      metadata = CaseInsensitiveHash.new
+      first_paragraph.split("\n").each do |line|
+        key, value = line.split(/\s*:\s*/, 2)
+        next if value.nil?
+        metadata[key.downcase] = value.chomp
+      end
+      metadata
+    end
+
     private
       def markup
         @markup
@@ -138,16 +148,11 @@ module Nesta
         raise Sinatra::NotFound
       else
         first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
-        metadata = CaseInsensitiveHash.new
         if metadata?(first_paragraph)
-          first_paragraph.split("\n").each do |line|
-            key, value = line.split(/\s*:\s*/, 2)
-            next if value.nil?
-            metadata[key.downcase] = value.chomp
-          end
+          return parse_metadata(first_paragraph), remaining
+        else
+          return {}, contents
         end
-        markup = metadata?(first_paragraph) ? remaining : contents
-        return metadata, markup
       end
 
       def tag_lines_of_haml(text)
