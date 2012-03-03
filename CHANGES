@@ -1,14 +1,52 @@
 = 0.9.12 / (Unreleased)
 
- * Extend the `nesta` command to support new commands that could, for
-   example, be added by a plugin. The class to be instantiated within
+ * The nesta script has a new command; edit. You can pass it the path
+   to a file within your content/pages folder and it will open the file
+   in your default editor (as set by the EDITOR environment variable).
+
+ * The nesta script has a new option; --bash-completion. Run nesta with
+   this option and it will print some Bash that will configure command
+   line completion for the nesta command.
+
+   You can type `nesta edit <TAB>` and Bash will complete the names of
+   the files in your content/pages directory. :-)
+
+   Installation instructions at the top of the Bash script.
+
+ * Nesta can now be mounted cleanly at a path, rather than at a site's
+   root, and assets and links will be served correctly.
+   (Max Sadrieh, Graham Ashton)
+
+ * The default config.ru file that is generated when you create a new
+   project now enables Etag HTTP headers. (Max Sadrieh)
+
+ * Two helper methods have been removed; url_for and base_url. Use
+   Sinatra's url helper instead. They would have been deprecated rather
+   than removed, but if you try and load Nesta's helpers in a Rails app
+   url_for breaks Rails's rendering. (Max Sadrieh, Graham Ashton)
+
+ * The Page class has a new method; body_markup. It can be overridden by
+   a plugin, and is used by the foldable plugin. (Micah Chalmer)
+
+ * The FileModel class has a new method; parse_metadata. It can be
+   overriden by plugins that implement an alternate metadata syntax.
+   Used by the yaml-metadata plugin.
+
+ * Erb templates in your ./views folder, or in a theme's folder, will
+   now be found when you call Sinatra's erb helper method.
+
+ * config.yml can now contain Erb (and therefore inline Ruby), which
+   will be interpreted when loaded. (Glenn Gillen)
+
+ * Extended the `nesta` command to support new commands that could (for
+   example) be added by a plugin. The class to be instantiated within
    the Nesta::Commands module is determined from the command line
    argument (e.g. `nesta plugin:create` will instantiate the class
    called Nesta::Commands::Plugin::Create).
 
  * Bug fix: Don't crash if a page's metadata only contains the key, with
    no corresponding value. You could argue this wasn't a bug, but the
-   error message was difficult to trace. #77
+   error message was difficult to trace. See #77.
 
  * Bug fix: Summaries on Haml pages were not marked up as paragraphs.
    See #75.
