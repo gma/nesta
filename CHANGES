@@ -1,4 +1,4 @@
-= 0.9.12 / (3 March 2012)
+= 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
    to a file within your content/pages folder and it will open the file
