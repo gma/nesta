@@ -126,7 +126,7 @@ _nesta() {
     case "${prev}" in
         edit)
             local pages_path="content/pages"
-            local pages="$(find $pages_path -type f | sed 's,$pages_path,,')"
+            local pages="$(find $pages_path -type f | sed s,$pages_path/,,)"
             COMPREPLY=( $(compgen -W "$pages" -- $cur) )
             return 0
             ;;
