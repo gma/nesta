@@ -494,6 +494,45 @@ describe "All types of page" do
     create_menu([page1.path, page2.path].join("\n"))
     Nesta::Page.menu_items.should == [page1, page2]
   end
+  
+  it "should be searchable by a searchterm in the keywords metadata" do
+    page = create_page(:path => "a-page", :metadata => {:keywords => "keyword-1, keyword-2"})
+    page.matches_searchterm?('keyword-1').should be true
+    page.matches_searchterm?('something completely different').should be false
+  end
+  
+  it "should be searchable by a searchterm in heading" do
+    page = create_page(:path => "a-page", :heading => "My Title")
+    page.matches_searchterm?('title').should be true
+    page.matches_searchterm?('something completely different').should be false
+  end
+  
+  it "should be searchable by a searchterm in summary" do
+    page = create_page(:path => "a-page", :metadata => {:summary => "This is a fancy page summary"})
+    page.matches_searchterm?('page summary').should be true
+    page.matches_searchterm?('something completely different').should be false
+  end
+  
+  it "should be searchable by a searchterm in the content" do
+    page = create_page(:path => "a-page", :content => "This is my content")
+    page.matches_searchterm?('Content').should be true
+    page.matches_searchterm?('something completely different').should be false
+  end
+  
+  it "should find an array of pages that match the searchterm" do
+    page1 = create_page(:path => 'page-1', :content => "This is the first page", :heading => "A Heading")
+    page2 = create_page(:path => 'page-2', :content => "This is the second page", :heading => "A Heading")
+    Nesta::Page.search('first').size.should be 1
+    Nesta::Page.search('first').first.should == page1
+  end
+  
+  it "should return an empty array when searchterm is shorter than 3 characters" do
+    page1 = create_page(:path => 'page-1', :content => "This is the first page", :heading => "A Heading")
+    page2 = create_page(:path => 'page-2', :content => "This is the second page", :heading => "A Heading")
+    Nesta::Page.search('').empty?.should be true
+    Nesta::Page.search('p').empty?.should be true
+    Nesta::Page.search('pa').empty?.should be true
+  end
 end
 
 describe "Markdown page" do

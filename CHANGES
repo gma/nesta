@@ -110,6 +110,8 @@
 
 = 0.9.5 / (1 May 2011)
 
+ * Added basic search (Ulrich Zurucker, sononum)
+
  * Added --version option to nesta command (Christopher Lindblom).
 
  * Upgraded Haml and Sass to version 3.1 (Andrew Nesbitt).

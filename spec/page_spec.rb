@@ -55,6 +55,13 @@ describe "page that can display menus", :shared => true do
   end
 end
 
+describe "successfully rendered page", :shared => true do
+  it "should render successfully" do
+    do_get
+    last_response.should be_ok
+  end
+end
+
 describe "The layout" do
   include ModelFactory
   include RequestSpecHelper
@@ -405,6 +412,11 @@ describe "A page" do
       body.should have_tag('script[@src*="mysite.disqus.com/embed.js"]')
     end
   end
+  
+  it "should display search form" do
+    get '/'
+    body.should have_tag('form#quicksearch', :with => {"action" => '/search', :method => 'get'})
+  end
 end
 
 describe "A Haml page" do
@@ -446,6 +458,87 @@ describe "A Haml page" do
     get "/a-page"
     body.should have_tag("div", "23 November 2010")
   end
+end
+
+describe "A search page" do
+  include ConfigSpecHelper
+  include ModelFactory
+  include RequestSpecHelper
+  
+  before(:each) do
+    stub_configuration
+    create_page(:path => 'page-1', :heading => "Page One", :metadata => {:keywords => 'a keyword'}, :content => "some content, page 1")
+    create_page(:path => 'page-2', :heading => "Page Two", :metadata => {:keywords => 'a keyword'}, :content => "some content, page 2")
+    create_page(:path => "a-page", :ext => :haml, :content => "%div= format_date(Date.new(2010, 11, 23))") # This is important as it tests if haml-pages can access helper methods - see 'A HAML page'
+  end
+
+  after(:each) do
+    remove_fixtures
+    Nesta::FileModel.purge_cache
+  end
+  
+  describe "without query string" do
+    def do_get
+      get '/search'
+    end
+    it_should_behave_like "successfully rendered page"
+    
+    it "should have search title" do
+      do_get
+      body.should have_tag('title', 'Search')
+      body.should_not have_tag('p', /Sorry/)
+    end
+  end
+  
+  describe "with query string" do
+    def do_get(q='searchterm')
+      get "/search?q=#{q}"
+    end
+
+    it_should_behave_like "successfully rendered page"
+    
+    it "should include query in title" do
+      q = 'something'
+      do_get q
+      body.should have_tag('title', "Search results for '#{q}'")
+    end
+    
+    it "should work with empty search result" do
+      q = 'something'
+      do_get q
+      body.should have_tag('p', "Sorry, your search for '#{q}' did not bring any results.")
+    end
+    
+    it "should strip all tags from the query string" do
+      do_get '%3Ca+href%3D%22%22%3EMy+Query%3C%2Fa%3E'
+      body.should_not have_tag('a', "My Query")
+    end
+    
+    it "should find the right pages" do
+      do_get 'one'
+      body.should have_tag('a', 'Page One')
+    end
+  end
+  
+  describe "with empty query string" do
+    def do_get
+      get '/search?q='
+    end
+
+    it_should_behave_like "successfully rendered page"
+    
+    it "should have search title" do
+      do_get
+      body.should have_tag('title', 'Search')
+    end
+    
+    it "should not say sorry" do
+      do_get
+      body.should_not have_tag('p', /Sorry/)
+    end
+    
+  end
+  
 end
 
 describe "attachments" do

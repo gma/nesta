@@ -1,0 +1,31 @@
+%nav.breadcrumb
+  %ul
+    %li
+      %a{:href => '/'} Home
+
+#content
+  %article(role="main")
+
+  %h1= @title
+  - if @pages.empty? && !@query.empty?
+    %p= "Sorry, your search for '#{@query}' did not bring any results."
+
+  %form#search{:action => '/search'}
+    %input.query{:name => 'q', :value => @query}
+    %input.submit{:type => 'submit', :value => 'Search'}
+
+  %section.pages
+    - unless @pages.empty?
+      %ol
+        - @pages.each do |page|
+          %li
+            %article
+              %header
+                %h3
+                  %a(href="#{page.abspath}")= page.heading
+              - unless page.summary.nil? || page.summary.empty?
+                ~ page.summary
+              - else
+                ~ page.description
+              = haml :page_meta, :layout => false, :locals => { :page => page }
+= haml :sidebar, :layout => false

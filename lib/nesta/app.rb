@@ -83,6 +83,16 @@ module Nesta
       end
       cache haml(:sitemap, :format => :xhtml, :layout => false)
     end
+    
+    get '/search' do
+      set_common_variables
+      @query = params[:q] || ''
+      @query.gsub!(%r{</?[^>]+?>}, '')
+      @title = 'Search'
+      @title = "Search results for '#{@query}'" unless @query.empty?
+      @pages = Page.search(@query, self)
+      haml :search
+    end
 
     get '*' do
       set_common_variables
