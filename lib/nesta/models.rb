@@ -7,6 +7,8 @@ Tilt.register Tilt::RDiscountTemplate, 'mdown'
 Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
+  class MetadataParseError < RuntimeError; end
+
   class FileModel
     FORMATS = [:mdown, :haml, :textile]
     @@cache = {}
@@ -124,6 +126,8 @@ module Nesta
     end
 
     def parse_metadata(first_paragraph)
+      is_metadata = first_paragraph.split("\n").first =~ /^[\w ]+:/
+      raise MetadataParseError unless is_metadata
       metadata = CaseInsensitiveHash.new
       first_paragraph.split("\n").each do |line|
         key, value = line.split(/\s*:\s*/, 2)
@@ -138,19 +142,15 @@ module Nesta
         @markup
       end
 
-      def metadata?(text)
-        text.split("\n").first =~ /^[\w ]+:/
-      end
-
       def parse_file
         contents = File.open(@filename).read
       rescue Errno::ENOENT
         raise Sinatra::NotFound
       else
         first_paragraph, remaining = contents.split(/\r?\n\r?\n/, 2)
-        if metadata?(first_paragraph)
+        begin
           return parse_metadata(first_paragraph), remaining
-        else
+        rescue MetadataParseError
           return {}, contents
         end
       end
