@@ -176,20 +176,17 @@ describe "nesta" do
     end
 
     it "should launch the editor" do
-      ENV['NESTA_EDITOR'] = 'vi'
+      ENV['EDITOR'] = 'vi'
       full_path = File.join('content/pages', @page_path)
-      @command.should_receive(:system).with(ENV['NESTA_EDITOR'], full_path)
+      @command.should_receive(:system).with(ENV['EDITOR'], full_path)
       @command.execute
     end
 
-    if ! ENV.has_key?('CI')  # breaks inexplicably on Travis
-      it "should not try and launch an editor if environment not setup" do
-        ENV.delete('NESTA_EDITOR')
-        ENV.delete('EDITOR')
-        @command.should_not_receive(:system)
-        $stderr.stub!(:puts)
-        @command.execute
-      end
+    it "should not try and launch an editor if environment not setup" do
+      ENV.delete('EDITOR')
+      @command.should_not_receive(:system)
+      $stderr.stub!(:puts)
+      @command.execute
     end
   end
 
