@@ -1,4 +1,4 @@
-= 0.9.12 / (Unreleased)
+= 0.9.12 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
    to a file within your content/pages folder and it will open the file
@@ -50,6 +50,8 @@
 
  * Bug fix: Summaries on Haml pages were not marked up as paragraphs.
    See #75.
+
+= 0.9.12 / (Released then pulled, due to rubygems [still] being a total mess)
 
 = 0.9.11 / (22 September 2011)
 
