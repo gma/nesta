@@ -25,8 +25,13 @@
    than removed, but if you try and load Nesta's helpers in a Rails app
    url_for breaks Rails's rendering. (Max Sadrieh, Graham Ashton)
 
- * The Page class has a new method; body_markup. It can be overridden by
+ * The Page class has a new method; body_markup. Ir can be overridden by
    a plugin, and is used by the foldable plugin. (Micah Chalmer)
+
+ * The `current_item?` helper has been created in `Nesta::Navigation`.
+   You can override it to implement your own logic for determining
+   whether or not a menu item rendered by the menu helpers are
+   considered to be "current". (Chad Ostrowski)
 
  * The FileModel class has a new method; parse_metadata. It can be
    overriden by plugins that implement an alternate metadata syntax.
