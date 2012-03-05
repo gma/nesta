@@ -196,7 +196,7 @@ describe "Page", :shared => true do
     end
 
     it "should not find pages scheduled in the future" do
-      future_date = (Time.now + 86400).strftime("%d %B %Y")
+      future_date = (Time.now + 172800).strftime("%d %B %Y")
       article = create_article(:heading => "Article 4",
                                :path => "foo/article-4",
                                :metadata => { "date" => future_date })
