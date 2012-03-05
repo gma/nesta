@@ -76,7 +76,9 @@ module Nesta
     private_class_method :from_yaml
     
     def self.get_path(dirname, basename)
-      basename.nil? ? dirname : File.join(dirname, basename)
+      # We want paths relative to the project root
+      abs_dirname = File.expand_path(dirname, Nesta::App.root)
+      basename.nil? ? abs_dirname : File.join(abs_dirname, basename)
     end
     private_class_method :get_path
   end

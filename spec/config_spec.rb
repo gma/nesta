@@ -64,4 +64,16 @@ describe "Config" do
       Nesta::Config.content.should == 'rack_env/path'
     end
   end
+
+  it "should prepend the project path to content path if the content path is relative" do
+    Nesta::App.stub!(:root).and_return("/project/path")
+    stub_config_key('content', 'relative/path')
+    Nesta::Config.content_path.should == "/project/path/relative/path"
+  end
+
+  it "should not prepend the project path to content path if the content path is absolute" do
+    Nesta::App.stub!(:root).and_return("/project/path")
+    stub_config_key('content', '/absolute/path')
+    Nesta::Config.content_path.should == "/absolute/path"
+  end
 end
