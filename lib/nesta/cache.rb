@@ -94,7 +94,7 @@ module Sinatra
           # test if given a full path rather than relative path, otherwise join the public path to cache_dir 
           # and ensure it is a full path
           cache_dir = (settings.cache_dir == File.expand_path(settings.cache_dir)) ? 
-              settings.cache_dir : File.expand_path("#{settings.public}/#{settings.cache_dir}")
+              settings.cache_dir : File.expand_path("#{settings.public_folder}/#{settings.cache_dir}")
           cache_dir = cache_dir[0..-2] if cache_dir[-1,1] == '/'
           "#{cache_dir}/#{cache_file_name(path,opts)}"
         end
