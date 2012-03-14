@@ -375,6 +375,7 @@ describe "Page", :shared => true do
       @read_more = 'Continue at your leisure'
       @skillz = 'ruby, guitar, bowstaff'
       @article = create_article(:metadata => {
+        'heading' => 'My interesting article',
         'date' => @date.gsub('September', 'Sep'),
         'description' => @description,
         'flags' => 'draft, orange',
@@ -404,7 +405,7 @@ describe "Page", :shared => true do
     end
     
     it "should retrieve heading" do
-      @article.heading.should == 'My article'
+      @article.heading.should == 'My interesting article'
     end
     
     it "should be possible to convert an article to HTML" do
