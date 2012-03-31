@@ -204,8 +204,8 @@ end
             output = ''
             file.each_line do |line|
               if line =~ /^end/
-                output << '  s.add_dependency("nesta", ">= 0.9.11")' + "\n"
-                output << '  s.add_development_dependency("rake")' + "\n"
+                output << '  gem.add_dependency("nesta", ">= 0.9.11")' + "\n"
+                output << '  gem.add_development_dependency("rake")' + "\n"
               end
               output << line
             end
