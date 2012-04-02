@@ -155,19 +155,19 @@ module Nesta
         end
       end
 
-      def tag_lines_of_haml(text)
-        tagged = (text =~ /^\s*%/)
-        if tagged
+      def add_p_tags_to_haml(text)
+        contains_tags = (text =~ /^\s*%/)
+        if contains_tags
           text
         else
-          text.split(/\r?\n/).inject("") do |accumulator, line|
+          text.split(/\r?\n/).inject('') do |accumulator, line|
             accumulator << "%p #{line}\n"
           end
         end
       end
 
       def convert_to_html(format, scope, text)
-        text = tag_lines_of_haml(text) if @format == :haml
+        text = add_p_tags_to_haml(text) if @format == :haml
         template = Tilt[format].new { text }
         template.render(scope)
       end
