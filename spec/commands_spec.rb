@@ -381,9 +381,15 @@ describe "nesta" do
       should_exist('app.rb')
     end
 
-    it "should create public and view directories" do
+    it "should create public and views directories" do
       should_exist("public/#{@name}")
       should_exist('views')
+    end
+
+    it "should copy the default view templates into views" do
+      %w(layout.haml page.haml master.sass).each do |file|
+        should_exist("views/#{file}")
+      end
     end
   end
 end

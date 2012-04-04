@@ -4,6 +4,9 @@
    the file based caching library that Nesta ships with wasn't updated
    to support it. (Rob Westgeest)
 
+ * The nesta script's theme:create command now copies default templates
+   into a new theme. (Jake Rayson)
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path

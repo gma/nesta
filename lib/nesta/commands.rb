@@ -247,7 +247,10 @@ end
           make_directories
           copy_templates(
             'themes/README.md' => "#{@theme_path}/README.md",
-            'themes/app.rb' => "#{@theme_path}/app.rb"
+            'themes/app.rb' => "#{@theme_path}/app.rb",
+            'themes/views/layout.haml' => "#{@theme_path}/views/layout.haml",
+            'themes/views/page.haml' => "#{@theme_path}/views/page.haml",
+            'themes/views/master.sass' => "#{@theme_path}/views/master.sass"
           )
         end
       end
