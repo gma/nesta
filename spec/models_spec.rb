@@ -350,6 +350,10 @@ describe "Page", :shared => true do
     it "should parse heading correctly" do
       @article.to_html.should have_tag("h1", "My article")
     end
+
+    it "should use heading as link text" do
+      @article.link_text.should == "My article"
+    end
     
     it "should have default read more link text" do
       @article.read_more.should == "Continue reading"
@@ -374,6 +378,7 @@ describe "Page", :shared => true do
       @summary = 'Multiline\n\nsummary'
       @read_more = 'Continue at your leisure'
       @skillz = 'ruby, guitar, bowstaff'
+      @link_text = 'Link to stuff page'
       @article = create_article(:metadata => {
         'date' => @date.gsub('September', 'Sep'),
         'description' => @description,
@@ -383,7 +388,8 @@ describe "Page", :shared => true do
         'read more' => @read_more,
         'skillz' => @skillz,
         'summary' => @summary,
-        'template' => @template
+        'template' => @template,
+        'link text' => @link_text,
       })
     end
 
@@ -458,6 +464,10 @@ describe "Page", :shared => true do
 
     it "should know whether or not it's a draft" do
       @article.should be_draft
+    end
+
+    it "should allow link text to be specified explicitly" do
+      @article.link_text.should == @link_text
     end
   end
   
