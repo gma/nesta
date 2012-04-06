@@ -217,6 +217,10 @@ module Nesta
       markup =~ regex
       Regexp.last_match(1)
     end
+
+    def link_text
+      metadata('link text') || heading
+    end
   
     def title
       if metadata('title')
