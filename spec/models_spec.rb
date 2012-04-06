@@ -292,18 +292,25 @@ describe "Page", :shared => true do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
       create_category(:heading => "Banana", :path => "banana")
+      create_category(:heading => "Cape Anteater", 
+                      :metadata=>{'link text' => 'Aardvark'}, 
+                      :path => "strange-critter")
       @article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
+      @article2 = create_article(
+          :metadata => { "categories" => "apple, strange-critter" })
     end
     
     it "should be possible to list the categories" do
       @article.categories.should have(2).items
       @article.should be_in_category("the-apple")
       @article.should be_in_category("banana")
+      @article.should_not be_in_category("strange-critter")
     end
 
-    it "should sort categories by heading" do
-      @article.categories.first.heading.should == "Apple"
+    it "should sort categories by link text" do
+      @article.categories.first.link_text.should == "Apple"
+      @article2.categories.first.link_text.should == "Aardvark"
     end
     
     it "should not be assigned to non-existant category" do
@@ -480,6 +487,24 @@ describe "Page", :shared => true do
     it "should check filesystem" do
       mock_file_stat(:should_receive, @article.filename, "3 January 2009")
       @article.last_modified.should == Time.parse("3 January 2009")
+    end
+  end
+
+  describe "with no heading" do
+    before(:each) do
+      @no_heading_page = create_page(:path => 'page-with-no-heading')
+    end
+
+    it "should raise a HeadingNotSet exception if you call heading" do
+      lambda do
+        @no_heading_page.heading
+      end.should raise_error(Nesta::HeadingNotSet, /page-with-no-heading/);
+    end
+
+    it "should raise a LinkTextNotSet exception if you call link_text" do
+      lambda do
+        @no_heading_page.link_text
+      end.should raise_error(Nesta::LinkTextNotSet, /page-with-no-heading/);
     end
   end
 end

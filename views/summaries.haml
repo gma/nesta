@@ -5,7 +5,7 @@
         %article
           %header
             %h1
-              %a(href="#{url(page.abspath)}")= page.heading
+              %a(href="#{url(page.abspath)}")= page.link_text
           - if page.summary.nil? || page.summary.empty?
             ~ page.body(self)
           - else
