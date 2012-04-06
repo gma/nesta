@@ -27,13 +27,15 @@ describe "page that can display menus", :shared => true do
     it "should link to top level menu items" do
       do_get
       body.should have_tag(
-        "ul.menu a[@href$=#{@category.abspath}]", Regexp.new(@category.heading))
+        "ul.menu a[@href$=#{@category.abspath}]",
+                           Regexp.new(@category.link_text))
     end
   end
   
   describe "and nested menu configured" do
     before(:each) do
-      @level2 = create_category(:path => "level-2", :heading => "Level 2")
+      @level2 = create_category(:path => "level-2", :heading => "Level 2",
+                                :metadata => {'link text' => "Level 2 link"})
       @level3 = create_category(:path => "level-3", :heading => "Level 3")
       text = <<-EOF
 #{@category.abspath}
@@ -45,7 +47,7 @@ describe "page that can display menus", :shared => true do
 
     it "should display first level of nested sub menus" do
       do_get
-      body.should have_tag("ul.menu li ul li a", Regexp.new(@level2.heading))
+      body.should have_tag("ul.menu li ul li a", Regexp.new(@level2.link_text))
     end
 
     it "should not display nested menus to arbitrary depth" do
@@ -151,7 +153,7 @@ describe "The home page" do
     
     it "should display link to article in h2 tag" do
       body.should have_tag(
-          "h1 a[@href$=#{@article.abspath}]", /^\s*#{@article.heading}$/)
+          "h1 a[@href$=#{@article.abspath}]", /^\s*#{@article.link_text}$/)
     end
     
     it "should display article summary if available" do
@@ -174,11 +176,13 @@ describe "An article" do
     @keywords = 'things, stuff'
     @description = 'Page about stuff'
     @summary = 'Multiline\n\nsummary'
+    @link_text = 'Link to page about stuff'
     @article = create_article(:metadata => {
       'date' => @date.gsub('September', 'Sep'),
       'description' => @description,
       'keywords' => @keywords,
-      'summary' => @summary
+      'summary' => @summary,
+      'link text' => @link_text
     })
   end
   
@@ -211,9 +215,9 @@ describe "An article" do
     body.should have_tag('h1', 'My article')
   end
 
-  it "should use heading for title tag" do
+  it "should use link text for title tag" do
     do_get
-    body.should have_tag('title', 'My article')
+    body.should have_tag('title', "#{@link_text}")
   end
 
   it "should display the date" do
@@ -254,7 +258,7 @@ describe "An article" do
       pending "Hpricot doesn't support HTML5"
       do_get
       body.should have_tag(
-          "nav.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
+          "nav.breadcrumb/a[@href=#{@category.abspath}]", @category.link_text)
     end
   end
 end
@@ -361,7 +365,8 @@ describe "A page" do
         @article = create_article(
           :path => "another-page",
           :heading => "Categorised",
-          :metadata => { :categories => @category.path },
+          :metadata => { :categories => @category.path,
+                         'link text' => 'Categorised link'},
           :content => "Article content"
         )
         @article2 = create_article(
@@ -371,8 +376,8 @@ describe "A page" do
       it "should display links to articles" do
         do_get
         body.should have_tag(
-            "h1 a[@href$='#{@article.abspath}']", /^\s*#{@article.heading}$/)
-        body.should_not have_tag("h3", @article2.heading)
+            "h1 a[@href$='#{@article.abspath}']", /^\s*#{@article.link_text}$/)
+        body.should_not have_tag("h3", @article2.link_text)
       end
 
       it "should display the article heading" do
@@ -418,7 +423,8 @@ describe "A Haml page" do
     create_page(
       :path => "a-page",
       :ext => :haml,
-      :content => "%div= format_date(Date.new(2010, 11, 23))"
+      :content => "%div= format_date(Date.new(2010, 11, 23))",
+      :heading => "A Page"
     )
     get "/a-page"
     body.should have_tag("div", "23 November 2010")
