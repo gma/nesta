@@ -55,6 +55,53 @@ describe "page that can display menus", :shared => true do
       body.should_not have_tag("ul.menu li ul li ul")
     end
   end
+
+  describe "and menu links to home page" do
+    before(:each) do
+      text = <<-EOF
+/
+  #{@category.abspath}
+EOF
+      create_menu(text)
+      template_path = File.expand_path(
+        'templates', File.dirname(File.dirname(__FILE__)))
+      @default_homepage_content = File.read(File.join(template_path, 
+                                                      'index.haml'))
+    end
+
+    it "should use 'Home' as the home page link if not otherwise specified" do
+      create_page(
+        :path => 'index',
+        :ext => :haml,
+        :content => @default_homepage_content)
+      do_get
+      body.should have_tag("ul.menu a[@href=http://example.org/]",
+                           Regexp.new('Home'))
+    end
+    
+    it "should use the heading if it exists" do
+      create_page(
+        :path => 'index',
+        :ext => :haml,
+        :heading => 'My heading',
+        :content => @default_homepage_content)
+      do_get
+      body.should have_tag("ul.menu a[@href=http://example.org/",
+                           Regexp.new('My heading'))
+    end
+
+    it "should use the link text if specified" do
+      create_page(
+        :path => 'index',
+        :ext => :haml,
+        :heading => 'My heading',
+        :content => @default_homepage_content,
+        :metadata => {'link text'=>'My link text'})
+      do_get
+      body.should have_tag("ul.menu a[@href=http://example.org/", 
+                           Regexp.new('My link text'))
+    end
+  end
 end
 
 describe "The layout" do
