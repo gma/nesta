@@ -213,7 +213,7 @@ describe "An article" do
 
   it "should use heading for title tag" do
     do_get
-    body.should have_tag('title', 'My article - My blog')
+    body.should have_tag('title', 'My article')
   end
 
   it "should display the date" do
@@ -255,12 +255,6 @@ describe "An article" do
       do_get
       body.should have_tag(
           "nav.breadcrumb/a[@href=#{@category.abspath}]", @category.heading)
-    end
-    
-    it "should contain category name in page title" do
-      do_get
-      body.should_not have_tag("title", /My blog/)
-      body.should have_tag("title", /- #{@category.heading}$/)
     end
   end
 end

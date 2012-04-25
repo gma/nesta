@@ -221,10 +221,8 @@ module Nesta
     def title
       if metadata('title')
         metadata('title')
-      elsif parent && (! parent.heading.nil?)
-        "#{heading} - #{parent.heading}"
       elsif heading
-        "#{heading} - #{Nesta::Config.title}"
+        heading
       elsif abspath == '/'
         Nesta::Config.title
       end

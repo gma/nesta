@@ -77,9 +77,9 @@ describe "Page", :shared => true do
   end
 
   describe "for home page" do
-    it "should set title to heading and site title" do
+    it "should set title to heading" do
       create_page(:heading => 'Home', :path => 'index')
-      Nesta::Page.find_by_path('/').title.should == 'Home - My blog'
+      Nesta::Page.find_by_path('/').title.should == 'Home'
     end
 
     it "should respect title metadata" do
