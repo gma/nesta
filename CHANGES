@@ -7,6 +7,11 @@
  * The nesta script's theme:create command now copies default templates
    into a new theme. (Jake Rayson)
 
+ * Page titles no longer include the heading from the parent page.
+   Behaviour was a little inconsistent, and it's arguably not a great
+   feature in the first place. Since the Title metadata appeared you can
+   ovverride the page title to something more useful if you need to too.
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
