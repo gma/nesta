@@ -8,6 +8,8 @@ Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
   class MetadataParseError < RuntimeError; end
+  class HeadingNotSet < RuntimeError; end
+  class LinkTextNotSet < RuntimeError; end
 
   class FileModel
     FORMATS = [:mdown, :haml, :textile]
@@ -215,14 +217,20 @@ module Nesta
           /^\s*h1\.\s+(.*)/
         end
       markup =~ regex
-      Regexp.last_match(1)
+      Regexp.last_match(1) or raise HeadingNotSet, "No heading found in page at #{path}"
+    end
+
+    def link_text
+      metadata('link text') || heading
+    rescue HeadingNotSet
+      raise LinkTextNotSet, "Link text could not be determined for page at #{path}"
     end
   
     def title
       if metadata('title')
         metadata('title')
-      elsif heading
-        heading
+      elsif (link_text rescue nil)
+        link_text
       elsif abspath == '/'
         Nesta::Config.title
       end
@@ -272,7 +280,7 @@ module Nesta
       paths = category_strings.map { |specifier| specifier.sub(/:-?\d+$/, '') }
       pages = valid_paths(paths).map { |p| Page.find_by_path(p) }
       pages.sort do |x, y|
-        x.heading.downcase <=> y.heading.downcase
+        x.link_text.downcase <=> y.link_text.downcase
       end
     end
 
@@ -304,7 +312,7 @@ module Nesta
       in_category.sort do |x, y|
         by_priority = y.priority(path) <=> x.priority(path)
         if by_priority == 0
-          x.heading.downcase <=> y.heading.downcase
+          x.link_text.downcase <=> y.link_text.downcase
         else
           by_priority
         end
