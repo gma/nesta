@@ -227,13 +227,10 @@ module Nesta
     end
   
     def title
-      if metadata('title')
-        metadata('title')
-      elsif (link_text rescue nil)
-        link_text
-      elsif abspath == '/'
-        Nesta::Config.title
-      end
+      metadata('title') || link_text
+    rescue LinkTextNotSet
+      return Nesta::Config.title if abspath == '/'
+      raise
     end
 
     def date(format = nil)
