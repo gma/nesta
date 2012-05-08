@@ -7,9 +7,9 @@ Tilt.register Tilt::RDiscountTemplate, 'mdown'
 Tilt.register Tilt::RedcarpetTemplate, 'mdown'
 
 module Nesta
-  class MetadataParseError < RuntimeError; end
   class HeadingNotSet < RuntimeError; end
   class LinkTextNotSet < RuntimeError; end
+  class MetadataParseError < RuntimeError; end
 
   class FileModel
     FORMATS = [:mdown, :haml, :textile]
@@ -217,13 +217,13 @@ module Nesta
           /^\s*h1\.\s+(.*)/
         end
       markup =~ regex
-      Regexp.last_match(1) or raise HeadingNotSet, "No heading found in page at #{path}"
+      Regexp.last_match(1) or raise HeadingNotSet, "No heading found for #{path}"
     end
 
     def link_text
       metadata('link text') || heading
     rescue HeadingNotSet
-      raise LinkTextNotSet, "Link text could not be determined for page at #{path}"
+      raise LinkTextNotSet, "Need to link to #{path}, but can't get link text"
     end
   
     def title
