@@ -1,4 +1,18 @@
-= 0.9.14 / (Unreleased)
+= 0.10.0 / (Unreleased)
+
+ * Added 'Link text' metadata. When working out how to link to your
+   pages from the automatically generated menus and breadcrumbs, Nesta
+   used to use the page's heading. It still does, but if you want to
+   use different words in the menu you can by defining the "Link text"
+   metadata. (Micah Chalmer)
+
+   NOTE: Some existing sites may have pages that don't define a heading.
+   Those sites will not work with Nesta 0.10.0 until they've been
+   upgraded; either add an h1 level heading at the top of your pages
+   (preferred) or define the 'Link text' metadata. If you don't want
+   h1 headings to appear at the top of your web pages, hide them with
+   CSS (this is best for accessibility, and is why Nesta now requires
+   that every page have an h1 tag at the top).
 
  * Sinatra 1.3 changed their public API for configuration/settings, but
    the file based caching library that Nesta ships with wasn't updated
