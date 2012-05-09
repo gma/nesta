@@ -22,9 +22,14 @@
    enable it. Draft pages have also been removed from the sitemap.
    (Suggested by Joshua Mervine, implemented by Graham Ashton)
 
- * Sinatra 1.3 changed their public API for configuration/settings, but
-   the file based caching library that Nesta ships with wasn't updated
-   to support it. (Rob Westgeest)
+ * The built-in file caching (where Nesta could write generated HTML for
+   rendered pages to disk) has been removed. If you'd like to cache
+   pages to disk, use the sinatra-cache gem.
+
+   See http://nestacms.com//docs/deployment/page-caching for more
+   details, and instructions for installing and testing sintra-cache.
+
+   (Graham Ashton)
 
  * The nesta script's theme:create command now copies default templates
    into a new theme. (Jake Rayson)

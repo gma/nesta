@@ -27,7 +27,12 @@ module Nesta
         variable = "NESTA_AUTHOR__#{setting.upcase}"
         ENV[variable] && environment_config[setting] = ENV[variable]
       end
-      environment_config.empty? ? from_yaml("author") : environment_config
+      environment_config.empty? ? from_yaml('author') : environment_config
+    end
+
+    def self.cache
+      Nesta.deprecated('Nesta::Config.cache',
+                       'see http://nestacms.com/docs/deployment/page-caching')
     end
     
     def self.content_path(basename = nil)

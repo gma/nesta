@@ -28,14 +28,6 @@ subtitle: "(change this text in config/config.yml)"
 #
 # disqus_short_name: mysite
 
-# cache
-#     Set it to true if you'd like Nesta to cache your pages in ./public.
-#     Useful if you're deploying Nesta with a proxy server such as Nginx,
-#     but not in the least bit helpful if your pages are dynamic, or you're
-#     deploying Nesta to Heroku.
-#
-cache: false
-
 # content
 #     The root directory where nesta will look for your article files.
 #     Should contain "pages" and "attachments" subdirectories that contain
@@ -63,14 +55,13 @@ content: content
 #
 # read_more: "Continue reading"
 
-# Overriding "cache" and "content" in production is recommended if you're
-# deploying Nesta to your own server (but see the deployment documentation
-# on the Nesta site). Setting google_analytics_code in production is
-# recommended regardless of how you're deploying (if you have a GA account!).
+# Overriding "content" in production is recommended if you're deploying
+# Nesta to your own server (but see the deployment documentation on the
+# Nesta site). Setting google_analytics_code in production is recommended
+# regardless of how you're deploying (if you have a GA # account!).
 #
 # Don't forget to uncomment the "production:" line too...
 
 # production:
-#   cache: true    
 #   content: /var/apps/nesta/shared/content
 #   google_analytics_code: "UA-???????-?"

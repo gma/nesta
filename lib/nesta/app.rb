@@ -4,7 +4,6 @@ require 'sass'
 
 require File.expand_path('../nesta', File.dirname(__FILE__))
 require File.expand_path('env', File.dirname(__FILE__))
-require File.expand_path('cache', File.dirname(__FILE__))
 require File.expand_path('config', File.dirname(__FILE__))
 require File.expand_path('models', File.dirname(__FILE__))
 require File.expand_path('helpers', File.dirname(__FILE__))
@@ -16,16 +15,18 @@ Encoding.default_external = 'utf-8' if RUBY_VERSION =~ /^1.9/
 
 module Nesta
   class App < Sinatra::Base
-    register Sinatra::Cache
-
     set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
-    set :cache_enabled, Config.cache
     set :haml, { :format => :html5 }
 
     helpers Overrides::Renderers
     helpers Navigation::Renderers
     helpers View::Helpers
+
+    def cache(content)
+      Nesta.deprecated('cache', "it's no longer required - remove it from app.rb")
+      content
+    end
 
     before do
       if request.path_info =~ Regexp.new('./$')
@@ -56,7 +57,7 @@ module Nesta
 
     get '/css/:sheet.css' do
       content_type 'text/css', :charset => 'utf-8'
-      cache stylesheet(params[:sheet].to_sym)
+      stylesheet(params[:sheet].to_sym)
     end
 
     get %r{/attachments/([\w/.@-]+)} do |file|
@@ -72,7 +73,7 @@ module Nesta
       content_type :xml, :charset => 'utf-8'
       set_from_config(:title, :subtitle, :author)
       @articles = Page.find_articles.select { |a| a.date }[0..9]
-      cache haml(:atom, :format => :xhtml, :layout => false)
+      haml(:atom, :format => :xhtml, :layout => false)
     end
 
     get '/sitemap.xml' do
@@ -83,7 +84,7 @@ module Nesta
       @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
         (page > latest) ? page : latest
       end
-      cache haml(:sitemap, :format => :xhtml, :layout => false)
+      haml(:sitemap, :format => :xhtml, :layout => false)
     end
 
     get '*' do
@@ -93,7 +94,7 @@ module Nesta
       raise Sinatra::NotFound if @page.nil?
       @title = @page.title
       set_from_page(:description, :keywords)
-      cache haml(@page.template, :layout => @page.layout)
+      haml(@page.template, :layout => @page.layout)
     end
   end
 end

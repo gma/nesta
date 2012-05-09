@@ -6,4 +6,4 @@ module Nesta
   end
 end
 
-require "nesta/plugin"
+require 'nesta/plugin'

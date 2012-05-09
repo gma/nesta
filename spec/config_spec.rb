@@ -22,10 +22,15 @@ describe "Config" do
     end
     
     it "should know how to cope with boolean values" do
-      ENV["NESTA_CACHE"] = "true"
-      Nesta::Config.cache.should be_true
-      ENV["NESTA_CACHE"] = "false"
-      Nesta::Config.cache.should be_false
+      Nesta::Config.settings << 'a_boolean'
+      begin
+        ENV["NESTA_A_BOOLEAN"] = "true"
+        Nesta::Config.a_boolean.should be_true
+        ENV["NESTA_A_BOOLEAN"] = "false"
+        Nesta::Config.a_boolean.should be_false
+      ensure
+        Nesta::Config.settings.pop
+      end
     end
     
     it "should set author hash from ENV" do
