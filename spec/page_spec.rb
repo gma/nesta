@@ -27,8 +27,7 @@ describe "page that can display menus", :shared => true do
     it "should link to top level menu items" do
       do_get
       body.should have_tag(
-        "ul.menu a[@href$=#{@category.abspath}]",
-                           Regexp.new(@category.link_text))
+          "ul.menu a[@href$=#{@category.abspath}]", /#{@category.link_text}/)
     end
   end
   
@@ -75,8 +74,7 @@ EOF
         :ext => :haml,
         :content => @default_homepage_content)
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/]",
-                           Regexp.new('Home'))
+      body.should have_tag("ul.menu a[@href=http://example.org/]", /Home/)
     end
     
     it "should use the heading if it exists" do
@@ -86,8 +84,7 @@ EOF
         :heading => 'My heading',
         :content => @default_homepage_content)
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/",
-                           Regexp.new('My heading'))
+      body.should have_tag("ul.menu a[@href=http://example.org/", /My heading/)
     end
 
     it "should use the link text if specified" do
@@ -98,8 +95,7 @@ EOF
         :content => @default_homepage_content,
         :metadata => {'link text'=>'My link text'})
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/", 
-                           Regexp.new('My link text'))
+      body.should have_tag("ul.menu a[@href=http://example.org/", /My link text/)
     end
   end
 end
