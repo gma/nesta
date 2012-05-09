@@ -24,7 +24,7 @@ module Nesta
           html_class = current_item?(item) ? "current" : nil
           haml_tag :li, :class => html_class do
             haml_tag :a, :<, :href => url(item.abspath) do
-              haml_concat item.link_text
+              haml_concat link_text(item)
             end
           end
         end
@@ -45,16 +45,24 @@ module Nesta
           breadcrumb_ancestors[0...-1].each do |page|
             haml_tag :li do
               haml_tag :a, :<, :href => url(page.abspath) do
-                haml_concat breadcrumb_label(page)
+                haml_concat link_text(page)
               end
             end
           end
-          haml_tag(:li) { haml_concat breadcrumb_label(@page) }
+          haml_tag(:li) { haml_concat link_text(@page) }
         end
       end
 
+      def link_text(page)
+        page.link_text
+      rescue LinkTextNotSet
+        return 'Home' if page.abspath == '/'
+        raise
+      end
+
       def breadcrumb_label(page)
-        (page.abspath == '/') ? 'Home' : page.link_text
+        Nesta.deprecated('breadcrumb_label', 'use link_text')
+        link_text(page)
       end
 
       def current_item?(item)
