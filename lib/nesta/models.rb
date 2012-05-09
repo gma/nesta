@@ -217,13 +217,13 @@ module Nesta
           /^\s*h1\.\s+(.*)/
         end
       markup =~ regex
-      Regexp.last_match(1) or raise HeadingNotSet, "No heading found for #{path}"
+      Regexp.last_match(1) or raise HeadingNotSet, "#{abspath} needs a heading"
     end
 
     def link_text
       metadata('link text') || heading
     rescue HeadingNotSet
-      raise LinkTextNotSet, "Need to link to #{path}, but can't get link text"
+      raise LinkTextNotSet, "Need to link to '#{abspath}' but can't get link text"
     end
   
     def title
