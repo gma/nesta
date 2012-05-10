@@ -74,7 +74,7 @@ EOF
         :ext => :haml,
         :content => @default_homepage_content)
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/]", /Home/)
+      body.should have_tag("ul.menu a[@href='/']", /Home/)
     end
     
     it "should use the heading if it exists" do
@@ -84,7 +84,7 @@ EOF
         :heading => 'My heading',
         :content => @default_homepage_content)
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/", /My heading/)
+      body.should have_tag("ul.menu a[@href='/'", /My heading/)
     end
 
     it "should use the link text if specified" do
@@ -95,7 +95,7 @@ EOF
         :content => @default_homepage_content,
         :metadata => {'link text'=>'My link text'})
       do_get
-      body.should have_tag("ul.menu a[@href=http://example.org/", /My link text/)
+      body.should have_tag("ul.menu a[@href='/'", /My link text/)
     end
   end
 end
