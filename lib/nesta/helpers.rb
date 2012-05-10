@@ -25,7 +25,7 @@ module Nesta
       end
 
       def absolute_urls(text)
-        text.gsub!(/(<a href=['"])\//, '\1' + url('/'))
+        text.gsub!(/(<a href=['"])\//, '\1' + path_to('/', true))
         text
       end
 
@@ -54,7 +54,7 @@ module Nesta
       def local_stylesheet_link_tag(name)
         pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0
-          haml_tag :link, :href => url("/css/#{name}.css"), :rel => "stylesheet"
+          haml_tag :link, :href => path_to("/css/#{name}.css"), :rel => "stylesheet"
         end
       end
 
@@ -68,6 +68,31 @@ module Nesta
 
       def articles_heading
         @page.metadata('articles heading') || "Articles on #{@page.heading}"
+      end
+      
+      # Generates the full path to a given page in the app.
+      # Takes Rack routers and reverse proxies into account.
+      # With Sinatra::Helpers included you could get the same
+      # effect with uri(page_path, false) but this is here to avoid
+      # depending on Sinatra::Helpers.
+      #
+      # If absolute is true, we'll return a full URI.  Note that unlike
+      # Sinatra's uri method, this deaults to false instead of true.
+      def path_to(page_path, absolute = false)
+        host = ''
+        if absolute
+          host << "http#{'s' if request.ssl?}://"
+          if (request.env.include?("HTTP_X_FORWARDED_HOST") or 
+              request.port != (request.ssl? ? 443 : 80))
+            host << request.host_with_port
+          else
+            host << request.host
+          end
+        end
+        uri_parts = [host]
+        uri_parts << request.script_name.to_s if request.script_name
+        uri_parts << page_path
+        File.join(uri_parts)
       end
     end
   end
