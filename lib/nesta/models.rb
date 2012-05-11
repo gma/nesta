@@ -4,7 +4,7 @@ Tilt.register Tilt::MarukuTemplate, 'mdown'
 Tilt.register Tilt::KramdownTemplate, 'mdown'
 Tilt.register Tilt::BlueClothTemplate, 'mdown'
 Tilt.register Tilt::RDiscountTemplate, 'mdown'
-Tilt.register Tilt::RedcarpetTemplate, 'mdown'
+Tilt.register Tilt::RedcarpetTemplate, 'mdown', :tables
 
 
 module Nesta
@@ -118,6 +118,13 @@ module Nesta
       @metadata[key]
     end
     
+    def draft?
+      flagged_as?('draft')
+    end
+
+    def hidden?
+      flagged_as?('hidden') or (draft? && Nesta::App.production?)
+    end
 
 
     def flagged_as?(flag)
@@ -189,18 +196,15 @@ module Nesta
         page.date && page.date < DateTime.now
       end.sort { |x, y| y.date <=> x.date }
     end
-
+    
+    def top_articles(count = 10)
+      Page.find_articles.select { |a| a.date }[0..count-1]
+    end
+  
     def ==(other)
       other.respond_to?(:path) && (self.path == other.path)
     end
 
-    def draft?
-      flagged_as?('draft')
-    end
-
-    def hidden?
-      draft? && Nesta::App.production?
-    end
 
     def heading
       Nesta::Formats[@format].heading(markup)
