@@ -1,6 +1,14 @@
 module Nesta
   module Overrides
     module Renderers
+      
+      def auto(template, options = {}, locals = {})
+        defaults, engine =options[:views].nil? ? Overrides.render_options(template, :haml, :erb, :erubis, :markdown, :sass, :scss, :htmf) :
+            Overrides.render_options_for_path(options[:views],template, :haml, :erb, :erubis, :markdown, :sass, :scss, :htmf)
+        renderer = Sinatra::Templates.instance_method(engine)
+        renderer.bind(self).call(template, defaults.merge(options), locals)
+      end
+      
       def haml(template, options = {}, locals = {})
         defaults, engine = Overrides.render_options(template, :haml)
         super(template, defaults.merge(options), locals)
@@ -47,6 +55,16 @@ module Nesta
         views && File.exist?(File.join(views, "#{template}.#{engine}"))
       end
 
+      def self.render_options_for_path(path, template, *engines)
+        engines.each do |engine|
+          if template_exists?(engine, path, template)
+            return { :views => path }, engine
+          end
+        end
+        
+        [{}, :sass]
+      end
+      
       def self.render_options(template, *engines)
         [local_view_path, theme_view_path, Nesta::Path.local("content/pages")].each do |path|
           engines.each do |engine|
