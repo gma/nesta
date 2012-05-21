@@ -628,6 +628,12 @@ describe "Menu" do
     Nesta::Menu.for_path('/').should == [@page]
   end
 
+  it "should find all items in the 'categories' menu" do
+    create_menu(@page.path, 'categories')
+    Nesta::Menu.full_menu('categories.txt').should == [@page]
+    Nesta::Menu.for_path('/', 'categories.txt').should == [@page]
+  end 
+
   describe "with nested sub menus" do
     before(:each) do
       (2..6).each do |i|
@@ -655,6 +661,16 @@ describe "Menu" do
 
     it "should return part of the tree of menu items" do
       Nesta::Menu.for_path(@page2.path).should == [@page2, [@page3, @page4]]
+    end
+
+    it "should return part of the tree of menu items for categories.txt" do
+      text = <<-EOF
+#{@page2.path}
+  #{@page5.path}
+  #{@page6.path}
+      EOF
+      create_menu(text, 'categories')
+      Nesta::Menu.for_path(@page2.path, 'categories.txt').should == [@page2, [@page5, @page6]]
     end
 
     it "should deem menu for path that isn't in menu to be nil" do
