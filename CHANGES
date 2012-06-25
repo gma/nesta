@@ -26,6 +26,10 @@
    feature in the first place. Since the Title metadata appeared you can
    ovverride the page title to something more useful if you need to too.
 
+ * Breadcrumbs include Microdata for use by search engines. See:
+   http://support.google.com/webmasters/bin/answer.py?hl=en&answer=185417
+   (Sean Schofield)
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
