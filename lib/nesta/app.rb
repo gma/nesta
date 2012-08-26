@@ -59,11 +59,11 @@ module Nesta
       cache stylesheet(params[:sheet].to_sym)
     end
 
-    get %r{/attachments/([\w/.-]+)} do |file|
+    get %r{/attachments/([\w/.-@]+)} do |file|
       file = File.join(Nesta::Config.attachment_path, params[:captures].first)
       if file =~ /\.\.\//
         not_found
-      else 
+      else
         send_file(file, :disposition => nil)
       end
     end
