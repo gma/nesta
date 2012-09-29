@@ -4,6 +4,7 @@ module Nesta
   class Config
     @settings = %w[
       title subtitle theme disqus_short_name cache content google_analytics_code
+      read_more
     ]
     @author_settings = %w[name uri email]
     @yaml = nil
@@ -45,7 +46,11 @@ module Nesta
     def self.yaml_path
       File.expand_path('config/config.yml', Nesta::App.root)
     end
-    
+
+    def self.read_more
+      from_environment('read_more') || from_yaml('read_more') || 'Continue reading'
+    end
+
     def self.from_environment(setting)
       value = ENV["NESTA_#{setting.upcase}"]
       overrides = { "true" => true, "false" => false }
