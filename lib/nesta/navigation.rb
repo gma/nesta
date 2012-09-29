@@ -49,6 +49,11 @@ module Nesta
                   haml_concat link_text(page)
                 end
               end
+              if options[:divider]
+                haml_tag(:span, :<, :itemprop => 'divider', :class => options[:divider_class]) do
+                  haml_concat options[:divider]
+                end
+              end
             end
           end
           haml_tag(:li, :class => options[:active_class]) { haml_concat link_text(@page) }
