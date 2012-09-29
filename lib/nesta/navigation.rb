@@ -51,7 +51,7 @@ module Nesta
               end
             end
           end
-          haml_tag(:li) { haml_concat link_text(@page) }
+          haml_tag(:li, :class => options[:active_class]) { haml_concat link_text(@page) }
         end
       end
 
