@@ -248,7 +248,7 @@ module Nesta
     end
 
     def read_more
-      metadata('read more') || 'Continue reading'
+      metadata('read more') || Nesta::Config.read_more
     end
 
     def summary
