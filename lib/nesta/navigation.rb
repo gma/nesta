@@ -51,7 +51,9 @@ module Nesta
               end
             end
           end
-          haml_tag(:li, :class => current_breadcrumb_class) { haml_concat link_text(@page) }
+          haml_tag(:li, :class => current_breadcrumb_class) do
+            haml_concat link_text(@page)
+          end
         end
       end
 
@@ -72,11 +74,11 @@ module Nesta
       end
 
       def current_menu_item_class
-        "current"
+        'current'
       end
 
       def current_breadcrumb_class
-        ""
+        nil
       end
     end
   end
