@@ -30,6 +30,18 @@
    http://support.google.com/webmasters/bin/answer.py?hl=en&answer=185417
    (Sean Schofield)
 
+ * The menu and breadcrumb helper methods can now generate HTML that
+   identifies the current page. When viewing a page that appears in the
+   menu, its menu item will have the class "current". To change the name
+   of the class, override the Nesta::Navigation::current_menu_item_class
+   method.
+
+   The current page doesn't have a class applied by default. If you want
+   to add a class to style it, override the ::current_breadcrumb_class
+   method (also in the Nesta::Navigation module), returning a string.
+
+   (Pete Gadomski)
+
  * The 'Read more' link text is now configurable. The config key is
    called `read_more`. (Pete Gadomski)
 
