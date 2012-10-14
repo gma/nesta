@@ -30,6 +30,12 @@
    http://support.google.com/webmasters/bin/answer.py?hl=en&answer=185417
    (Sean Schofield)
 
+ * The 'Read more' link text is now configurable. The config key is
+   called `read_more`. (Pete Gadomski)
+
+   See the config.yml template (on GitHub) for more details.
+   https://github.com/gma/nesta/blob/master/templates/config/config.yml
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
