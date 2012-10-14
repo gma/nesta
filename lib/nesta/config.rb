@@ -47,7 +47,8 @@ module Nesta
     end
 
     def self.read_more
-      from_environment('read_more') || from_yaml('read_more') || 'Continue reading'
+      default = 'Continue reading'
+      from_environment('read_more') || from_yaml('read_more') || default
     end
 
     def self.from_environment(setting)

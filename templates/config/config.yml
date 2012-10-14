@@ -55,11 +55,12 @@ content: content
 # google_analytics_code: "UA-???????-?"
 
 # read_more
-#     When the summary of an article is displayed
-#     on the home page, or on a category page, there is a link underneath the
-#     summary that points to the rest of the post. Use this value
-#     to customize the default link text. You can still override
-#     this value on a per-page basis with the 'Read more' metadata key.
+#     When the summary of an article is displayed on the home page, or
+#     on a category page, there is a link underneath the summary that
+#     points to the rest of the post. Use this value to customize the
+#     default link text. You can still override this value on a per-page
+#     basis with the 'Read more' metadata key.
+#
 # read_more: "Continue reading"
 
 # Overriding "cache" and "content" in production is recommended if you're
