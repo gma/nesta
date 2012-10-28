@@ -45,7 +45,12 @@ module Nesta
     def self.yaml_path
       File.expand_path('config/config.yml', Nesta::App.root)
     end
-    
+
+    def self.read_more
+      default = 'Continue reading'
+      from_environment('read_more') || from_yaml('read_more') || default
+    end
+
     def self.from_environment(setting)
       value = ENV["NESTA_#{setting.upcase}"]
       overrides = { "true" => true, "false" => false }
