@@ -14,6 +14,7 @@ GLOBAL OPTIONS
     --help, -h            Display this message.
     --version, -v         Display version number.
     --bash-completion     Output command completion setup for Bash.
+    --zsh-completion      Output command completion setup for Zsh.
 
 COMMANDS
     new <path>            Create a new Nesta project.
@@ -40,6 +41,7 @@ EOF
     def self.parse_command_line
       opts = GetoptLong.new(
         ['--bash-completion', GetoptLong::NO_ARGUMENT],
+        ['--zsh-completion', GetoptLong::NO_ARGUMENT],
         ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
         ['--version', '-v', GetoptLong::NO_ARGUMENT],
@@ -47,9 +49,11 @@ EOF
       )
       options = {}
       opts.each do |opt, arg|
-        case opt 
+        case opt
         when '--bash-completion'
           bash_completion
+        when '--zsh-completion'
+          zsh_completion
         when '--help'
           usage(exitcode=0)
         when '--version'
@@ -104,7 +108,7 @@ EOF
 # Install it with these commands:
 #
 # $ nesta --bash-completion > ~/.nesta-completion.sh
-# $ echo '[ -f ~/.nesta-completion.sh ] && source ~/.nesta-completion.sh' \ 
+# $ echo '[ -f ~/.nesta-completion.sh ] && source ~/.nesta-completion.sh' \
 #       >> ~/.bash_profile
 # $ source ~/.nesta-completion.sh
 
@@ -138,6 +142,58 @@ _nesta() {
     return 0
 }
 complete -F _nesta nesta
+      EOF
+      exit 0
+    end
+
+    def self.zsh_completion
+      puts <<-EOF
+# Zsh completion configuration for the nesta command.
+#
+# Install it with these commands:
+#
+# $ nesta --zsh-completion > <somewhere/in/your/$fpath>/nesta-completion.sh
+#
+# Source form somewhere in your $fpath
+
+#compdef nesta
+
+
+_nesta_content() {
+  content=(`ls content/pages/**/*`)
+}
+
+
+local -a _1st_arguments
+_1st_arguments=(
+  'new:Create a new Nesta project'
+  'edit:Edit a document'
+  'demo\:content:Install example pages in ./content-demo'
+  'theme\:install:Install a theme from a git repository'
+  'theme\:enable:Make the theme active, updating config.yml'
+  'theme\:create:Makes a template for a new theme in ./themes'
+)
+
+local expl
+local -a content
+
+_arguments \
+  '(-h)'{-h,--help}'[Display usage]' \
+  '(-v)'{-v,--version}'[Display Nesta version]' \
+  '(--bash-completion)--bash-completion[Output command for Bash completion]' \
+  '(--zsh-completion)--zsh-completion[Output command for Zsh completion]' \
+  '*:: :->subcmds' && return 0
+
+if (( CURRENT == 1 )); then
+  _describe -t commands "nesta subcommand" _1st_arguments
+  return
+fi
+
+case "$words[1]" in
+  edit)
+    _nesta_content
+    _wanted content expl 'all content' compadd -a content ;;
+esac
       EOF
       exit 0
     end
