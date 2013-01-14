@@ -16,6 +16,7 @@ end
 shared_examples_for "page that can display menus" do
   it "should not display menu by default" do
     do_get
+    last_response.should be_ok
     assert_not_selector "#sidebar ul.menu"
   end
 
@@ -52,6 +53,7 @@ shared_examples_for "page that can display menus" do
 
     it "should not display nested menus to arbitrary depth" do
       do_get
+      last_response.should be_ok
       assert_not_selector "ul.menu li ul li ul"
     end
   end
@@ -114,7 +116,7 @@ describe "The layout" do
   it "should include GA JavaScript if configured" do
     stub_config_key('google_analytics_code', 'UA-1234', :rack_env => true)
     stub_configuration
-    get '/'
+    get "/"
     assert_selector 'script', :content => "'_setAccount', 'UA-1234'"
   end
 end
@@ -179,6 +181,7 @@ describe "The home page" do
     end
 
     it "should not display read more link" do
+      last_response.should be_ok
       assert_not_selector "a", :content => 'continue'
     end
   end
@@ -430,6 +433,7 @@ describe "A page" do
 
     it "should not include Disqus comments by default" do
       do_get
+      last_response.should be_ok
       assert_not_selector '#disqus_thread'
     end
   end
