@@ -4,19 +4,19 @@ require File.expand_path('model_factory', File.dirname(__FILE__))
 shared_examples_for "page with keyword and description" do
   it "should set the keywords meta tag" do
     do_get
-    body.should have_xpath("//meta[@name='keywords'][@content='#{@keywords}']")
+    assert_xpath "//meta[@name='keywords'][@content='#{@keywords}']"
   end
 
   it "should set description meta tag" do
     do_get
-    body.should have_xpath("//meta[@name='description'][@content='#{@description}']")
+    assert_xpath "//meta[@name='description'][@content='#{@description}']"
   end
 end
 
 shared_examples_for "page that can display menus" do
   it "should not display menu by default" do
     do_get
-    body.should_not have_selector("#sidebar ul.menu")
+    assert_not_selector "#sidebar ul.menu"
   end
 
   describe "and simple menu configured" do
@@ -26,7 +26,9 @@ shared_examples_for "page that can display menus" do
 
     it "should link to top level menu items" do
       do_get
-      body.should have_selector "ul.menu a[@href$='#{@category.abspath}']:contains('#{@category.link_text}')"
+      link_text = @category.link_text
+      href = @category.abspath
+      assert_selector "ul.menu a[@href$='#{href}']:contains('#{link_text}')"
     end
   end
 
@@ -45,12 +47,12 @@ shared_examples_for "page that can display menus" do
 
     it "should display first level of nested sub menus" do
       do_get
-      body.should have_selector("ul.menu li ul li a:contains('#{@level2.link_text}')")
+      assert_selector "ul.menu li ul li a:contains('#{@level2.link_text}')"
     end
 
     it "should not display nested menus to arbitrary depth" do
       do_get
-      body.should_not have_selector("ul.menu li ul li ul")
+      assert_not_selector "ul.menu li ul li ul"
     end
   end
 
@@ -73,7 +75,7 @@ EOF
         :ext => :haml,
         :content => @default_homepage_content)
       do_get
-      body.should have_selector("ul.menu a[@href='/']:contains('Home')")
+      assert_selector "ul.menu a[@href='/']:contains('Home')"
     end
 
     it "should use the heading if it exists" do
@@ -83,7 +85,7 @@ EOF
         :heading => 'My heading',
         :content => @default_homepage_content)
       do_get
-      body.should have_selector("ul.menu a[@href='/']:contains('My heading')")
+      assert_selector "ul.menu a[@href='/']:contains('My heading')"
     end
 
     it "should use the link text if specified" do
@@ -94,7 +96,7 @@ EOF
         :content => @default_homepage_content,
         :metadata => {'link text'=>'My link text'})
       do_get
-      body.should have_selector("ul.menu a[@href='/']:contains('My link text')")
+      assert_selector "ul.menu a[@href='/']:contains('My link text')"
     end
   end
 end
@@ -106,14 +108,14 @@ describe "The layout" do
   it "should not include GA JavaScript by default" do
     stub_configuration
     get "/"
-    body.should_not have_selector("script", :content => "'_setAccount', 'UA-1234'")
+    assert_not_selector "script", :content => "'_setAccount', 'UA-1234'"
   end
 
   it "should include GA JavaScript if configured" do
     stub_config_key('google_analytics_code', 'UA-1234', :rack_env => true)
     stub_configuration
     get '/'
-    body.should have_selector('script', :content => "'_setAccount', 'UA-1234'")
+    assert_selector 'script', :content => "'_setAccount', 'UA-1234'"
   end
 end
 
@@ -158,12 +160,12 @@ describe "The home page" do
 
   it "should display site title in hgroup tag" do
     do_get
-    body.should have_selector('hgroup h1', :content => "My blog")
+    assert_selector 'hgroup h1', :content => "My blog"
   end
 
   it "should display site subtitle in hgroup tag" do
     do_get
-    body.should have_selector('hgroup h2', :content => "about stuff")
+    assert_selector 'hgroup h2', :content => "about stuff"
   end
 
   describe "when articles have no summary" do
@@ -173,11 +175,11 @@ describe "The home page" do
     end
 
     it "should display full content of article" do
-      body.should have_selector("p", :content => "Content goes here")
+      assert_selector "p", :content => "Content goes here"
     end
 
     it "should not display read more link" do
-      body.should_not have_selector("a", :content => 'continue')
+      assert_not_selector "a", :content => 'continue'
     end
   end
 
@@ -193,16 +195,17 @@ describe "The home page" do
     end
 
     it "should display link to article in h2 tag" do
-      body.should have_selector(
-          "h1 a[@href$='#{@article.abspath}']:contains('#{@article.link_text}')")
+      link_text = @article.link_text
+      href = @article.abspath
+      assert_selector "h1 a[@href$='#{href}']:contains('#{link_text}')"
     end
 
     it "should display article summary if available" do
-      body.should have_selector('p', :content => @summary.split('\n\n').first)
+      assert_selector 'p', :content => @summary.split('\n\n').first
     end
 
     it "should display read more link" do
-      body.should have_selector("a[@href$='#{@article.abspath}']", :content => @read_more)
+      assert_selector "a[@href$='#{@article.abspath}']", :content => @read_more
     end
   end
 end
@@ -253,22 +256,22 @@ describe "An article" do
 
   it "should display the heading" do
     do_get
-    body.should have_selector('h1', :content => 'My article')
+    assert_selector 'h1', :content => 'My article'
   end
 
   it "should use link text for title tag" do
     do_get
-    body.should have_selector('title', :content => @link_text)
+    assert_selector 'title', :content => @link_text
   end
 
   it "should display the date" do
     do_get
-    body.should have_selector('time', :content => @date)
+    assert_selector 'time', :content => @date
   end
 
   it "should display the content" do
     do_get
-    body.should have_selector('p', :content => 'Content goes here')
+    assert_selector 'p', :content => 'Content goes here'
   end
 
   describe "that is assigned to categories" do
@@ -288,16 +291,15 @@ describe "An article" do
 
     it "should link to each category" do
       do_get
-      body.should have_selector("p.meta") do |categories|
-        categories.should have_selector("a[href='/banana']", :content => "Banana")
-        categories.should have_selector("a[href='/the-apple']", :content => "Apple")
-      end
+      assert_selector "p.meta a[href='/banana']", :content => "Banana"
+      assert_selector "p.meta a[href='/the-apple']", :content => "Apple"
     end
 
     it "should link to a category in breadcrumb" do
       do_get
-      body.should have_selector(
-          "nav.breadcrumb a[href='#{@category.abspath}']", :content => @category.link_text)
+      href = @category.abspath
+      link_text = @category.link_text
+      assert_selector "nav.breadcrumb a[href='#{href}']", :content => link_text
     end
   end
 end
@@ -322,7 +324,7 @@ describe "A page" do
   describe "that doesn't exist" do
     it "should render the 404 page" do
       get "/no-such-page"
-      last_response.should_not be_ok
+      last_response.should be_not_found
     end
   end
 
@@ -361,17 +363,17 @@ describe "A page" do
 
     it "should display the heading" do
       do_get
-      body.should have_selector('h1', :content => @category.heading)
+      assert_selector 'h1', :content => @category.heading
     end
 
     it "should use title metadata to set heading" do
       do_get
-      body.should have_selector('title', :content => @title)
+      assert_selector 'title', :content => @title
     end
 
     it "should display the content" do
       do_get
-      body.should have_selector("p", :content => @content)
+      assert_selector "p", :content => @content
     end
 
     describe "with associated pages" do
@@ -394,8 +396,8 @@ describe "A page" do
 
       it "should list highest priority pages at the top" do
         do_get
-        body.should have_selector('li:nth-child(1) h1 a', :content => 'Category 2')
-        body.should have_selector('li:nth-child(2) h1 a', :content => 'Category 1')
+        assert_selector 'li:nth-child(1) h1 a', :content => 'Category 2'
+        assert_selector 'li:nth-child(2) h1 a', :content => 'Category 1'
       end
     end
 
@@ -414,20 +416,21 @@ describe "A page" do
 
       it "should display links to articles" do
         do_get
-        body.should have_selector(
-            "h1 a[@href$='#{@article.abspath}']", :content => @article.link_text)
-        body.should_not have_selector("h3", :content => @article2.link_text)
+        href = @article.abspath
+        link_text = @article.link_text
+        assert_selector "h1 a[@href$='#{href}']", :content => link_text
+        assert_not_selector "h3", :content => @article2.link_text
       end
 
       it "should display the article heading" do
         do_get
-        body.should have_selector('h1', :content => @articles_heading)
+        assert_selector 'h1', :content => @articles_heading
       end
     end
 
     it "should not include Disqus comments by default" do
       do_get
-      body.should_not have_selector('#disqus_thread')
+      assert_not_selector '#disqus_thread'
     end
   end
 
@@ -439,8 +442,8 @@ describe "A page" do
 
     it "should display Disqus comments" do
       do_get
-      body.should have_selector('#disqus_thread')
-      body.should have_selector('script[@src*="mysite.disqus.com/embed.js"]')
+      assert_selector '#disqus_thread'
+      assert_selector 'script[@src*="mysite.disqus.com/embed.js"]'
     end
   end
 end
@@ -466,7 +469,7 @@ describe "A Haml page" do
       :heading => "A Page"
     )
     get "/a-page"
-    body.should have_selector("div", :content => "23 November 2010")
+    assert_selector "div", :content => "23 November 2010"
   end
 
   it "should access helpers when rendering articles on a category page" do
@@ -483,7 +486,7 @@ describe "A Haml page" do
       :content => "%h1 Second heading\n\n%div= format_date(Date.new(2010, 11, 23))"
     )
     get "/a-page"
-    body.should have_selector("div", :content => "23 November 2010")
+    assert_selector "div", :content => "23 November 2010"
   end
 end
 

@@ -27,36 +27,34 @@ describe "sitemap XML" do
 
   it "should have a urlset tag" do
     namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
-    body.should have_xpath("//urlset[@xmlns='#{namespace}']")
+    assert_xpath "//urlset[@xmlns='#{namespace}']"
   end
 
   it "should reference the home page" do
-    body.should have_xpath("//urlset/url/loc", :content => "http://example.org/")
+    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
   end
 
   it "should configure home page to be checked frequently" do
-    body.should have_xpath("//urlset/url") do |url|
-      url.should have_xpath("loc", :content => "http://example.org/")
-      url.should have_xpath("changefreq", :content => "daily")
-      url.should have_xpath("priority", :content => "1.0")
-    end
+    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
+    assert_xpath "//urlset/url/changefreq", :content => "daily"
+    assert_xpath "//urlset/url/priority", :content => "1.0"
   end
 
   it "should set the homepage lastmod from latest article" do
-    body.should have_xpath("//urlset/url") do |url|
-      url.should have_xpath("loc", :content => "http://example.org/")
-      url.should have_selector("lastmod:contains('2009-01-03T15:10:00')")
-    end
+    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
+    assert_xpath "//urlset/url/lastmod", :content => "2009-01-03T15:10:00"
+  end
+
+  def test_url(path)
+    "http://example.org/#{path}"
   end
 
   it "should reference category pages" do
-    body.should have_xpath(
-        "//urlset/url/loc", :content => "http://example.org/#{@category.path}")
+    assert_xpath "//urlset/url/loc", :content => test_url(@category.path)
   end
 
   it "should reference article pages" do
-    body.should have_xpath(
-        "//urlset/url/loc", :content => "http://example.org/#{@article.path}")
+    assert_xpath "//urlset/url/loc", :content => test_url(@article.path)
   end
 end
 
@@ -78,10 +76,8 @@ describe "sitemap XML lastmod" do
       mock_file_stat(:stub!, path, "3 January 2009, 15:37:01")
     end
     get "/sitemap.xml"
-    body.should have_selector("url") do |url|
-      url.should have_selector("loc:contains('my-article')")
-      url.should have_selector("lastmod:contains('2009-01-03T15:37:01')")
-    end
+    assert_selector("url loc:contains('my-article')")
+    assert_selector("url lastmod:contains('2009-01-03T15:37:01')")
   end
 
   it "should be set to latest page for home page" do
@@ -92,9 +88,7 @@ describe "sitemap XML lastmod" do
       mock_file_stat(:stub!, path, "3 January 2009")
     end
     get "/sitemap.xml"
-    body.should have_selector("url") do |url|
-      url.should have_selector("loc:contains('http://example.org/')")
-      url.should have_selector("lastmod:contains('2009-01-04')")
-    end
+    assert_selector("url loc:contains('http://example.org/')")
+    assert_selector("url lastmod:contains('2009-01-04')")
   end
 end

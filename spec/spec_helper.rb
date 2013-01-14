@@ -71,4 +71,16 @@ module RequestSpecHelper
   def body
     last_response.body
   end
+
+  def assert_xpath(*args)
+    body.should have_xpath(*args)
+  end
+
+  def assert_selector(*args)
+    body.should have_selector(*args)
+  end
+
+  def assert_not_selector(*args)
+    body.should_not have_selector(*args)
+  end
 end
