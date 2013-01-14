@@ -294,25 +294,24 @@ shared_examples_for "Page" do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
       create_category(:heading => "Banana", :path => "banana")
-      create_category(:heading => "Cape Anteater",
-                      :metadata=>{'link text' => 'Aardvark'},
-                      :path => "strange-critter")
       @article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
-      @article2 = create_article(
-          :metadata => { "categories" => "apple, strange-critter" })
     end
 
     it "should be possible to list the categories" do
       @article.categories.should have(2).items
       @article.should be_in_category("the-apple")
       @article.should be_in_category("banana")
-      @article.should_not be_in_category("strange-critter")
+      @article.should_not be_in_category("orange")
     end
 
     it "should sort categories by link text" do
+      create_category(:heading => "Orange",
+                      :metadata => { "link text" => "A citrus fruit" },
+                      :path => "orange")
+      article = create_article(:metadata => { "categories" => "apple, orange" })
       @article.categories.first.link_text.should == "Apple"
-      @article2.categories.first.link_text.should == "Aardvark"
+      article.categories.first.link_text.should == "A citrus fruit"
     end
 
     it "should not be assigned to non-existant category" do
