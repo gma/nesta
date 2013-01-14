@@ -26,10 +26,7 @@ module ModelMatchers
   end
 end
 
-shared_examples_for "Page" do
-  include ModelFactory
-  include ModelMatchers
-
+shared_context "Page testing" do
   def create_page(options)
     super(options.merge(:ext => @extension))
   end
@@ -42,6 +39,11 @@ shared_examples_for "Page" do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
+end
+
+shared_examples_for "Page" do
+  include ModelFactory
+  include ModelMatchers
 
   it "should be findable" do
     create_page(:heading => 'Apple', :path => 'the-apple')
@@ -512,14 +514,7 @@ end
 describe "All types of page" do
   include ModelFactory
 
-  before(:each) do
-    stub_configuration
-  end
-
-  after(:each) do
-    remove_temp_directory
-    Nesta::FileModel.purge_cache
-  end
+  include_context "Page testing"
 
   it "should still return top level menu items" do
     # Page.menu_items is deprecated; we're keeping it for the moment so
@@ -536,18 +531,17 @@ describe "Markdown page" do
 
   before(:each) do
     @extension = :mdown
-    stub_configuration
   end
 
-  after(:each) do
-    remove_temp_directory
-    Nesta::FileModel.purge_cache
-  end
-
+  include_context "Page testing"
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    page = create_page(:path => "a-page", :heading => "First heading", :content => "# Second heading")
+    page = create_page(
+      :path => "a-page",
+      :heading => "First heading",
+      :content => "# Second heading"
+    )
     page.heading.should == "First heading"
   end
 
@@ -559,20 +553,12 @@ end
 
 describe "Haml page" do
   include ModelFactory
+
   before(:each) do
     @extension = :haml
-    stub_configuration
   end
 
-  after(:each) do
-    remove_temp_directory
-    Nesta::FileModel.purge_cache
-  end
-
-  def create_page(options)
-    super(options.merge(:ext => @extension))
-  end
-
+  include_context "Page testing"
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
@@ -609,14 +595,9 @@ describe "Textile page" do
 
   before(:each) do
     @extension = :textile
-    stub_configuration
   end
 
-  after(:each) do
-    remove_temp_directory
-    Nesta::FileModel.purge_cache
-  end
-
+  include_context "Page testing"
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
