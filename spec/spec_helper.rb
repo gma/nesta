@@ -60,10 +60,11 @@ RSpec.configure do |config|
   config.include(ConfigSpecHelper)
   config.include(TempFileHelper)
   config.include(Rack::Test::Methods)
-  include Webrat::Matchers
 end
 
 module RequestSpecHelper
+  include Webrat::Matchers
+
   def app
     Nesta::App
   end

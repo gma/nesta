@@ -27,6 +27,8 @@ module ModelMatchers
 end
 
 shared_context "Page testing" do
+  include Webrat::Matchers
+
   def create_page(options)
     super(options.merge(:ext => @extension))
   end
