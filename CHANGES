@@ -48,6 +48,10 @@
    See the config.yml template (on GitHub) for more details.
    https://github.com/gma/nesta/blob/master/templates/config/config.yml
 
+ * Added the --zsh-completion option to the nesta command, which outputs
+   code that will configure command line completion in Zsh for the nesta
+   command. (Wynn Netherland)
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
