@@ -41,23 +41,23 @@ EOF
     def self.parse_command_line
       opts = GetoptLong.new(
         ['--bash-completion', GetoptLong::NO_ARGUMENT],
-        ['--zsh-completion', GetoptLong::NO_ARGUMENT],
         ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
         ['--version', '-v', GetoptLong::NO_ARGUMENT],
-        ['--vlad', GetoptLong::NO_ARGUMENT]
+        ['--vlad', GetoptLong::NO_ARGUMENT],
+        ['--zsh-completion', GetoptLong::NO_ARGUMENT]
       )
       options = {}
       opts.each do |opt, arg|
         case opt
         when '--bash-completion'
           bash_completion
-        when '--zsh-completion'
-          zsh_completion
         when '--help'
           usage(exitcode=0)
         when '--version'
           version
+        when '--zsh-completion'
+          zsh_completion
         else
           options[opt.sub(/^--/, '')] = arg
         end
