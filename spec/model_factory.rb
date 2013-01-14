@@ -6,7 +6,7 @@ module ModelFactory
     yield(path) if block_given?
     Nesta::Page.new(path)
   end
-  
+
   def create_article(options = {}, &block)
     o = {
       :path => 'article-prefix/my-article',
@@ -18,7 +18,7 @@ module ModelFactory
     }.merge(options)
     create_page(o, &block)
   end
-  
+
   def create_category(options = {}, &block)
     o = {
       :path => 'category-prefix/my-category',
@@ -27,7 +27,7 @@ module ModelFactory
     }.merge(options)
     create_page(o, &block)
   end
-  
+
   def write_menu_item(indent, file, menu_item)
     if menu_item.is_a?(Array)
       indent.sub!(/^/, '  ')
@@ -42,17 +42,17 @@ module ModelFactory
     file = filename(Nesta::Config.content_path, 'menu', :txt)
     File.open(file, 'w') { |file| file.write(menu_text) }
   end
-  
+
   def delete_page(type, permalink, extension)
     file = filename(Nesta::Config.page_path, permalink, extension)
     FileUtils.rm(file)
   end
-  
+
   def create_content_directories
     FileUtils.mkdir_p(Nesta::Config.page_path)
     FileUtils.mkdir_p(Nesta::Config.attachment_path)
   end
-  
+
   def mock_file_stat(method, filename, time)
     stat = mock(:stat)
     stat.stub!(:mtime).and_return(Time.parse(time))
@@ -63,7 +63,7 @@ module ModelFactory
     def filename(directory, basename, extension = :mdown)
       File.join(directory, "#{basename}.#{extension}")
     end
-    
+
     def heading(options)
       prefix = case options[:ext]
         when :haml

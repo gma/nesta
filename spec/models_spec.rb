@@ -26,7 +26,7 @@ module ModelMatchers
   end
 end
 
-describe "Page", :shared => true do
+shared_examples_for "Page" do
   include ModelFactory
   include ModelMatchers
 
@@ -37,12 +37,12 @@ describe "Page", :shared => true do
   before(:each) do
     stub_configuration
   end
-  
+
   after(:each) do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
-  
+
   it "should be findable" do
     create_page(:heading => 'Apple', :path => 'the-apple')
     Nesta::Page.find_all.should have(1).item
@@ -52,7 +52,7 @@ describe "Page", :shared => true do
     create_page(:heading => 'Banana', :path => 'banana')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
-  
+
   it "should find index page by path" do
     create_page(:heading => 'Banana', :path => 'banana/index')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
@@ -102,17 +102,17 @@ describe "Page", :shared => true do
       Nesta::Page.find_by_path('/').abspath.should == '/'
     end
   end
-  
+
   it "should not find nonexistent page" do
     Nesta::Page.find_by_path("no-such-page").should be_nil
   end
-  
+
   it "should ensure file exists on instantiation" do
     lambda {
       Nesta::Page.new("no-such-file")
     }.should raise_error(Sinatra::NotFound)
   end
-  
+
   it "should reload cached files when modified" do
     create_page(:path => "a-page", :heading => "Version 1")
     File.stub!(:mtime).and_return(Time.new - 1)
@@ -177,11 +177,11 @@ describe "Page", :shared => true do
     it "should find articles" do
       @category.articles.should have(2).items
     end
-    
+
     it "should order articles by reverse chronological order" do
       @category.articles.first.path.should == @article.path
     end
-    
+
     it "should find pages" do
       @category.pages.should have(3).items
     end
@@ -189,7 +189,7 @@ describe "Page", :shared => true do
     it "should sort pages by priority" do
       @category.pages.index(@category3).should == 0
     end
-    
+
     it "should order pages by heading if priority not set" do
       pages = @category.pages
       pages.index(@category1).should < pages.index(@category2)
@@ -224,7 +224,7 @@ describe "Page", :shared => true do
       Nesta::Page.find_by_path('foo/in-draft').should be_nil
     end
   end
-  
+
   describe "when finding articles" do
     before(:each) do
       create_article(:heading => "Article 1", :path => "article-1")
@@ -235,25 +235,25 @@ describe "Page", :shared => true do
                      :path => "foo/article-3",
                      :metadata => { "date" => "30 December 2008" })
     end
-    
+
     it "should only find pages with dates" do
       articles = Nesta::Page.find_articles
       articles.size.should > 0
       Nesta::Page.find_articles.each { |page| page.date.should_not be_nil }
     end
-    
+
     it "should return articles in reverse chronological order" do
       article1, article2 = Nesta::Page.find_articles[0..1]
       article1.date.should > article2.date
     end
   end
-  
+
   it "should be able to find parent page" do
     category = create_category(:path => 'parent')
     article = create_article(:path => 'parent/child')
     article.parent.should == category
   end
-    
+
   describe "(with deep index page)" do
     it "should be able to find index parent" do
       home = create_category(:path => 'index', :heading => 'Home')
@@ -292,15 +292,15 @@ describe "Page", :shared => true do
     before(:each) do
       create_category(:heading => "Apple", :path => "the-apple")
       create_category(:heading => "Banana", :path => "banana")
-      create_category(:heading => "Cape Anteater", 
-                      :metadata=>{'link text' => 'Aardvark'}, 
+      create_category(:heading => "Cape Anteater",
+                      :metadata=>{'link text' => 'Aardvark'},
                       :path => "strange-critter")
       @article = create_article(
           :metadata => { "categories" => "banana, the-apple" })
       @article2 = create_article(
           :metadata => { "categories" => "apple, strange-critter" })
     end
-    
+
     it "should be possible to list the categories" do
       @article.categories.should have(2).items
       @article.should be_in_category("the-apple")
@@ -312,24 +312,24 @@ describe "Page", :shared => true do
       @article.categories.first.link_text.should == "Apple"
       @article2.categories.first.link_text.should == "Aardvark"
     end
-    
+
     it "should not be assigned to non-existant category" do
       delete_page(:category, "banana", @extension)
       @article.should_not be_in_category("banana")
     end
   end
-  
+
   it "should set parent to nil when at root" do
     create_category(:path => "top-level").parent.should be_nil
   end
-  
+
   describe "when not assigned to category" do
     it "should have empty category list" do
       article = create_article
       Nesta::Page.find_by_path(article.path).categories.should be_empty
     end
   end
-  
+
   describe "with no content" do
     it "should produce no HTML output" do
       create_article do |path|
@@ -345,7 +345,7 @@ describe "Page", :shared => true do
       create_article
       @article = Nesta::Page.find_all.first
     end
-    
+
     it "should use default layout" do
       @article.layout.should == :layout
     end
@@ -353,28 +353,28 @@ describe "Page", :shared => true do
     it "should use default template" do
       @article.template.should == :page
     end
-    
+
     it "should parse heading correctly" do
-      @article.to_html.should have_tag("h1", "My article")
+      @article.to_html.should have_selector("h1", :content => "My article")
     end
 
     it "should use heading as link text" do
       @article.link_text.should == "My article"
     end
-    
+
     it "should have default read more link text" do
       @article.read_more.should == "Continue reading"
     end
-    
+
     it "should not have description" do
       @article.description.should be_nil
     end
-    
+
     it "should not have keywords" do
       @article.keywords.should be_nil
     end
   end
-  
+
   describe "with metadata" do
     before(:each) do
       @layout = 'my_layout'
@@ -403,63 +403,63 @@ describe "Page", :shared => true do
     it "should override default layout" do
       @article.layout.should == @layout.to_sym
     end
-    
+
     it "should override default template" do
       @article.template.should == @template.to_sym
     end
-    
+
     it "should set permalink to basename of filename" do
       @article.permalink.should == 'my-article'
     end
-    
+
     it "should set path from filename" do
       @article.path.should == 'article-prefix/my-article'
     end
-    
+
     it "should retrieve heading" do
       @article.heading.should == 'My article'
     end
-    
+
     it "should be possible to convert an article to HTML" do
-      @article.to_html.should have_tag("h1", "My article")
+      @article.to_html.should have_selector("h1", :content => "My article")
     end
-    
+
     it "should not include metadata in the HTML" do
-      @article.to_html.should_not have_tag("p", /^Date/)
+      @article.to_html.should_not have_selector("p:contains('Date')")
     end
 
     it "should not include heading in body markup" do
       @article.body_markup.should_not include("My article")
     end
-    
+
     it "should not include heading in body" do
-      @article.body.should_not have_tag("h1", "My article")
+      @article.body.should_not have_selector("h1", :content => "My article")
     end
 
     it "should retrieve description from metadata" do
       @article.description.should == @description
     end
-    
+
     it "should retrieve keywords from metadata" do
       @article.keywords.should == @keywords
     end
-    
+
     it "should retrieve date published from metadata" do
       @article.date.strftime("%d %B %Y").should == @date
     end
-    
+
     it "should retrieve read more link from metadata" do
       @article.read_more.should == @read_more
     end
-    
+
     it "should retrieve summary text from metadata" do
       @article.summary.should match(/#{@summary.split('\n\n').first}/)
     end
-    
+
     it "should treat double newline chars as paragraph break in summary" do
       @article.summary.should match(/#{@summary.split('\n\n').last}/)
     end
-    
+
     it "should allow access to metadata" do
       @article.metadata('skillz').should == @skillz
     end
@@ -477,13 +477,13 @@ describe "Page", :shared => true do
       @article.link_text.should == @link_text
     end
   end
-  
+
   describe "when checking last modification time" do
     before(:each) do
       create_article
       @article = Nesta::Page.find_all.first
     end
-    
+
     it "should check filesystem" do
       mock_file_stat(:should_receive, @article.filename, "3 January 2009")
       @article.last_modified.should == Time.parse("3 January 2009")
@@ -515,12 +515,12 @@ describe "All types of page" do
   before(:each) do
     stub_configuration
   end
-  
+
   after(:each) do
     remove_temp_directory
     Nesta::FileModel.purge_cache
   end
-  
+
   it "should still return top level menu items" do
     # Page.menu_items is deprecated; we're keeping it for the moment so
     # that we don't break themes or code in a local app.rb (just yet).
@@ -532,15 +532,22 @@ describe "All types of page" do
 end
 
 describe "Markdown page" do
+  include ModelFactory
+
   before(:each) do
     @extension = :mdown
+    stub_configuration
+  end
+
+  after(:each) do
+    remove_temp_directory
+    Nesta::FileModel.purge_cache
   end
 
   it_should_behave_like "Page"
 
   it "should set heading from first h1 tag" do
-    page = create_page(
-      :heading => "First heading", :content => "# Second heading")
+    page = create_page(:path => "a-page", :heading => "First heading", :content => "# Second heading")
     page.heading.should == "First heading"
   end
 
@@ -551,8 +558,19 @@ describe "Markdown page" do
 end
 
 describe "Haml page" do
+  include ModelFactory
   before(:each) do
     @extension = :haml
+    stub_configuration
+  end
+
+  after(:each) do
+    remove_temp_directory
+    Nesta::FileModel.purge_cache
+  end
+
+  def create_page(options)
+    super(options.merge(:ext => @extension))
   end
 
   it_should_behave_like "Page"
@@ -587,8 +605,16 @@ describe "Haml page" do
 end
 
 describe "Textile page" do
+  include ModelFactory
+
   before(:each) do
     @extension = :textile
+    stub_configuration
+  end
+
+  after(:each) do
+    remove_temp_directory
+    Nesta::FileModel.purge_cache
   end
 
   it_should_behave_like "Page"

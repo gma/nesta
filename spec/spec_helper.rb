@@ -1,11 +1,9 @@
-require 'rubygems'
-require 'spec'
-require 'spec/interop/test'
+require 'rspec'
 require 'rack/test'
-require 'rspec_hpricot_matchers'
 require 'sinatra'
-
-Test::Unit::TestCase.send :include, Rack::Test::Methods
+require 'test/unit'
+require 'webrat'
+require 'webrat/core/matchers'
 
 module Nesta
   class App < Sinatra::Base
@@ -33,7 +31,7 @@ module ConfigSpecHelper
       @config[key] = value
     end
   end
-  
+
   def stub_configuration(options = {})
     stub_config_key('title', 'My blog', options)
     stub_config_key('subtitle', 'about stuff', options)
@@ -52,24 +50,24 @@ module TempFileHelper
   def remove_temp_directory
     FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
   end
-  
+
   def temp_path(base)
     File.join(TempFileHelper::TEMP_DIR, base)
   end
 end
 
-Spec::Runner.configure do |config|
-  config.include(RspecHpricotMatchers)
-
+RSpec.configure do |config|
   config.include(ConfigSpecHelper)
   config.include(TempFileHelper)
+  config.include(Rack::Test::Methods)
+  include Webrat::Matchers
 end
 
 module RequestSpecHelper
   def app
     Nesta::App
   end
-  
+
   def body
     last_response.body
   end
