@@ -52,6 +52,9 @@
    code that will configure command line completion in Zsh for the nesta
    command. (Wynn Netherland)
 
+ * Updated the test suite from RSpec 1.3 to RSpec 2.
+   (Wynn Netherland, Graham Ashton)
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
