@@ -29,8 +29,9 @@ module Nesta
 
     before do
       if request.path_info =~ Regexp.new('./$')
-        redirect to(request.path_info.sub(Regexp.new('/$'), ''))
+        redirect to(request.path_info.sub(Regexp.new('/$'), '')) and return
       end
+      cache_control :public, :must_revalidate, :max_age => 600 # 10 mins
     end
 
     not_found do
@@ -64,6 +65,7 @@ module Nesta
       if file =~ /\.\.\//
         not_found
       else
+        last_modified File.mtime(file)
         send_file(file, :disposition => nil)
       end
     end
@@ -89,6 +91,7 @@ module Nesta
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
       @page = Nesta::Page.find_by_path(File.join(parts))
       raise Sinatra::NotFound if @page.nil?
+      last_modified @page.mtime
       @title = @page.title
       set_from_page(:description, :keywords)
       cache haml(@page.template, :layout => @page.layout)
