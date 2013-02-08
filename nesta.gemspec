@@ -38,9 +38,6 @@ EOF
   s.add_dependency('sinatra', '~> 1.3')
   s.add_dependency('rack', '~> 1.3')
 
-  # Useful in development
-  s.add_dependency('shotgun', '>= 0.8')
-
   # Test libraries
   s.add_development_dependency('rack-test', '0.6.1')
   s.add_development_dependency('rspec', '~> 2.12.0')
