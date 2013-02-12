@@ -39,7 +39,7 @@ EOF
   s.add_dependency('rack', '~> 1.3')
 
   # Useful in development
-  s.add_dependency('shotgun', '>= 0.8')
+  s.add_development_dependency('mr-sparkle', '>= 0.0.2')
 
   # Test libraries
   s.add_development_dependency('rack-test', '0.6.1')
