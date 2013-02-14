@@ -55,6 +55,8 @@
  * Updated the test suite from RSpec 1.3 to RSpec 2.
    (Wynn Netherland, Graham Ashton)
 
+ * Updated haml dependency from 3.1 to 4.0. (Sergey Alekseev)
+
 = 0.9.13 / (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
@@ -173,7 +175,7 @@
  * Bug fix: The Sinatra app's root directory wasn't set which meant
    that Nesta couldn't always find the ./public directory (such as when
    running on Heroku).
-   
+
    The modifications made in 0.9.6 to make Nesta easier to mount inside
    another Rack application moved Nesta::App.root to the (new)
    Nesta::Env class. In 0.9.6 I forgot to actually set Nesta::App.root
@@ -245,7 +247,7 @@
 
 = 0.9.3 / 18 January 2011
 
- * The route and view for serving the home page (/) has been removed, 
+ * The route and view for serving the home page (/) has been removed,
    and the home page must now be created as an index page in
    content/pages.
 
