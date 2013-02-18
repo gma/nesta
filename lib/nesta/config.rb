@@ -63,11 +63,6 @@ module Nesta
     end
     private_class_method :yaml_exists?
 
-    def self.can_use_yaml?
-      ENV.keys.grep(/^NESTA/).empty? && yaml_exists?
-    end
-    private_class_method :can_use_yaml?
-
     def self.from_yaml(setting)
       self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
       rack_env_conf = self.yaml_conf[Nesta::App.environment.to_s]
