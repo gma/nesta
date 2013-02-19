@@ -119,10 +119,11 @@ shared_examples_for "Page" do
 
   it "should reload cached files when modified" do
     create_page(:path => "a-page", :heading => "Version 1")
-    File.stub!(:mtime).and_return(Time.new - 1)
+    now = Time.now
+    File.stub!(:mtime).and_return(now - 1)
     Nesta::Page.find_by_path("a-page")
     create_page(:path => "a-page", :heading => "Version 2")
-    File.stub!(:mtime).and_return(Time.new)
+    File.stub!(:mtime).and_return(now)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
 
