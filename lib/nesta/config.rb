@@ -2,14 +2,10 @@ require 'yaml'
 
 module Nesta
   class Config
-    # @settings = %w[
-    #   title subtitle theme disqus_short_name cache content google_analytics_code
-    # ]
-    # @author_settings = %w[name uri email]
     @yaml = nil
     
     class << self
-      attr_accessor :yaml_conf #:settings, :author_settings, :yaml_conf
+      attr_accessor :yaml_conf
     end
     
     def self.method_missing(method, *args)
