@@ -55,19 +55,23 @@ module Nesta
       EOF
     end
 
-    get '/css/:sheet.css' do
-      content_type 'text/css', :charset => 'utf-8'
-      cache stylesheet(params[:sheet].to_sym)
-    end
+    if Config.handle_assets
 
-    get %r{/attachments/([\w/.@-]+)} do |file|
-      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
-      if file =~ /\.\.\//
-        not_found
-      else
-        last_modified File.mtime(file)
-        send_file(file, :disposition => nil)
+      get '/css/:sheet.css' do
+        content_type 'text/css', :charset => 'utf-8'
+        cache stylesheet(params[:sheet].to_sym)
       end
+
+      get %r{/attachments/([\w/.@-]+)} do |file|
+        file = File.join(Nesta::Config.attachment_path, params[:captures].first)
+        if file =~ /\.\.\//
+          not_found
+        else
+          last_modified File.mtime(file)
+          send_file(file, :disposition => nil)
+        end
+      end
+
     end
 
     get '/articles.xml' do
