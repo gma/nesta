@@ -38,6 +38,9 @@ EOF
   s.add_dependency('sinatra', '~> 1.3')
   s.add_dependency('rack', '~> 1.3')
 
+  # Useful in development
+  s.add_development_dependency('mr-sparkle', '>= 0.0.2')
+
   # Test libraries
   s.add_development_dependency('rack-test', '0.6.1')
   s.add_development_dependency('rspec', '~> 2.12.0')

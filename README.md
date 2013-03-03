@@ -1,7 +1,5 @@
 # Nesta - a CMS for Ruby Developers
 
-[![Build Status](https://secure.travis-ci.org/gma/nesta.png)](http://travis-ci.org/gma/nesta)
-
 A CMS for small web sites and blogs, written in [Sinatra][frank].
 
 Content can be written in [Markdown][markdown] or [Textile][textile] and
