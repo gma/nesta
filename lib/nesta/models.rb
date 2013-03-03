@@ -117,7 +117,7 @@ module Nesta
     def keywords
       metadata('keywords')
     end
-    
+
     def metadata(key)
       @metadata[key]
     end
@@ -229,7 +229,7 @@ module Nesta
     rescue HeadingNotSet
       raise LinkTextNotSet, "Need to link to '#{abspath}' but can't get link text"
     end
-  
+
     def title
       metadata('title') || link_text
     rescue LinkTextNotSet
@@ -289,7 +289,7 @@ module Nesta
       category_string = category_strings.detect do |string|
         string =~ /^#{category}([,:\s]|$)/
       end
-      category_string && category_string.split(':', 2)[-1].to_i 
+      category_string && category_string.split(':', 2)[-1].to_i
     end
 
     def parent
@@ -317,6 +317,12 @@ module Nesta
         else
           by_priority
         end
+      end
+    end
+
+    def subpages
+      Page.find_all.select do |page|
+        (page != self) && (page.abspath =~ Regexp.new("^#{self.abspath}"))
       end
     end
 

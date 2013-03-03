@@ -67,9 +67,9 @@ module Nesta
       end
 
       def articles_heading
-        @page.metadata('articles heading') || "Articles on #{@page.heading}"
+        @page.metadata('articles heading') || "Articles on #{@page.link_text}"
       end
-      
+
       # Generates the full path to a given page in the app.
       # Takes Rack routers and reverse proxies into account.
       # With Sinatra::Helpers included you could get the same
@@ -82,7 +82,7 @@ module Nesta
         host = ''
         if absolute
           host << "http#{'s' if request.ssl?}://"
-          if (request.env.include?("HTTP_X_FORWARDED_HOST") or 
+          if (request.env.include?("HTTP_X_FORWARDED_HOST") or
               request.port != (request.ssl? ? 443 : 80))
             host << request.host_with_port
           else
