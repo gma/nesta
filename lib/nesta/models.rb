@@ -53,7 +53,7 @@ module Nesta
     end
 
     def self.purge_cache
-      @@cache = {}
+      @@cache.clear
     end
 
     def self.menu_items
@@ -182,11 +182,11 @@ module Nesta
 
     def self.find_by_path(path)
       page = load(path)
-      page && page.hidden? ? nil : page
+      page.nil? || page.hidden? ? nil : page
     end
 
     def self.find_all
-      super.select { |p| ! p.hidden? }
+      super.select(&:visible?)
     end
 
     def self.find_articles
@@ -205,6 +205,10 @@ module Nesta
 
     def hidden?
       draft? && Nesta::App.production?
+    end
+
+    def visible?
+      !hidden?
     end
 
     def heading
