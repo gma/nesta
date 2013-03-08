@@ -35,19 +35,24 @@ module Nesta
       end
     end
 
+    def self.find_file_for_path(path)
+      FORMATS.each do |format|
+        [path, File.join(path, 'index')].each do |basename|
+          filename = model_path("#{basename}.#{format}")
+          return filename if File.exist?(filename)
+        end
+      end
+      nil
+    end
+
     def self.needs_loading?(path, filename)
       @@cache[path].nil? || File.mtime(filename) > @@cache[path].mtime
     end
 
     def self.load(path)
-      FORMATS.each do |format|
-        [path, File.join(path, 'index')].each do |basename|
-          filename = model_path("#{basename}.#{format}")
-          if File.exist?(filename) && needs_loading?(path, filename)
-            @@cache[path] = self.new(filename)
-            break
-          end
-        end
+      filename = find_file_for_path(path)
+      if filename && needs_loading?(path, filename)
+        @@cache[path] = self.new(filename)
       end
       @@cache[path]
     end

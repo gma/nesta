@@ -52,6 +52,15 @@ shared_examples_for "Page" do
     Nesta::Page.find_all.should have(1).item
   end
 
+  it "should return the filename for a path" do
+    create_page(:heading => 'Banana', :path => 'banana')
+    Nesta::Page.find_file_for_path('banana').should =~ /banana.#{@extension}$/
+  end
+
+  it "should return nil for files that don't exist" do
+    Nesta::Page.find_file_for_path('foobar').should be_nil
+  end
+
   it "should find by path" do
     create_page(:heading => 'Banana', :path => 'banana')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
