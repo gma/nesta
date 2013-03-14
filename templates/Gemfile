@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'nesta', '<%= Nesta::VERSION %>'
 <% if @options['vlad'] %>gem 'vlad', '2.1.0'
