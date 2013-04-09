@@ -63,6 +63,13 @@ content: content
 #
 # read_more: "Continue reading"
 
+# sitemap_excludes
+#     Set this to exclude specific paths from your XML sitemap.
+#
+# sitemap_excludes:
+# - /excluded/page/1
+# - /excluded/path/2
+
 # Overriding "cache" and "content" in production is recommended if you're
 # deploying Nesta to your own server (but see the deployment documentation
 # on the Nesta site). Setting google_analytics_code in production is
@@ -71,6 +78,6 @@ content: content
 # Don't forget to uncomment the "production:" line too...
 
 # production:
-#   cache: true    
+#   cache: true
 #   content: /var/apps/nesta/shared/content
 #   google_analytics_code: "UA-???????-?"
