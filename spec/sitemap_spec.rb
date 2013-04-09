@@ -92,3 +92,32 @@ describe "sitemap XML lastmod" do
     assert_selector("url lastmod:contains('2009-01-04')")
   end
 end
+
+describe "sitemap with excludes" do
+  include ModelFactory
+  include RequestSpecHelper
+
+  before(:each) do
+    stub_configuration
+  end
+
+  after(:each) do
+    remove_temp_directory
+    Nesta::FileModel.purge_cache
+  end
+
+  it "should not include pages which are excluded" do
+    create_article(:path => "article-1") do |path|
+      mock_file_stat(:stub!, path, "4 January 2009")
+    end
+    create_article(:path => "article-2") do |path|
+      mock_file_stat(:stub!, path, "3 January 2009")
+    end
+
+    Nesta::Config.stub(:sitemap_excludes).and_return([ '/article-2' ])
+
+    get "/sitemap.xml"
+    body.should_not match /article-2/
+  end
+
+end

@@ -6,6 +6,7 @@
     %priority 1.0
     %lastmod= @last.xmlschema
   - @pages.each do |page|
-    %url
-      %loc= path_to(page.path,true)
-      %lastmod= page.last_modified.xmlschema
+    - unless ::Nesta::Config.sitemap_excludes.include?(page.abspath)
+      %url
+        %loc= path_to(page.path,true)
+        %lastmod= page.last_modified.xmlschema
