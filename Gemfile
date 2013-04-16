@@ -10,4 +10,8 @@ group :development do
   gem 'ZenTest'
 end
 
+group :test do
+  gem 'redcarpet'
+end
+
 # gem (RUBY_VERSION =~ /^1.9/) ? 'ruby-debug19': 'ruby-debug'
