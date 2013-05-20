@@ -2,6 +2,7 @@
 %html(lang="en")
   %head
     %meta(charset="utf-8")
+    %meta(content="width=device-width, initial-scale=1.0" name="viewport")
     - if @description
       %meta(name="description" content=@description)
     - if @keywords
@@ -10,12 +11,13 @@
     %link(href='http://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css')
     <!--[if ! lte IE 6]><!-->
     %link(href="#{path_to('/css/master.css')}" media="screen" rel="stylesheet")
+    - local_stylesheet_link_tag('local')
     <!--<![endif]-->
     /[if lte IE 6]
       %link(rel="stylesheet" href="http://universal-ie6-css.googlecode.com/files/ie6.1.1.css" media="screen, projection")
     /[if lt IE 9]
       %script(src="//html5shim.googlecode.com/svn/trunk/html5.js")
-    - local_stylesheet_link_tag('local')
+    %script(src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js")
     %link(href="#{path_to('/articles.xml')}" rel="alternate" type="application/atom+xml")
     = haml :analytics, :layout => false
   %body
