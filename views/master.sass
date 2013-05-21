@@ -1,143 +1,138 @@
 @import "mixins.sass"
-@import "colors.sass"
-
-// Variables
-
-$content-width: 37em
-
-$border-style: 1px dashed $border-color
-
-// Reset
-
-*
-  margin: 0
-  padding: 0
-
-// Typography
-
-@mixin text-shadow
-  text-shadow: 0 2px 3px #ddd
+@import "normalize"
 
 body
-  font: ($base-font * 1.05) Georgia, serif
-  line-height: $vertical-rhythm
+  font: $size1 "Roboto Slab", serif
+  line-height: 1.6
   color: $base-color
+
+div#container
+  position: relative
+  margin: 0 1em
 
 header[role=banner]
   h1,
   h2
     margin: 0
-    line-height: 1.2em
     font-weight: normal
+
   h1
-    font-size: 327%
-    @include text-shadow
+    margin-top: 0.5em
+    font-size: $size2
+
   h2
     color: $meta-color
-    font-size: 1em
+    font-size: $size0
 
-h1, h2, h3, h4, h5, h6
-  font-family: Georgia, serif
+footer.branding
+  padding-top: 2em
+
++respond-to(medium-screens)
+  div#container
+    margin: 0 auto
+    max-width: $measure
+
++respond-to(wide-screens)
+  div#container
+    max-width: $full-page-width
+
+  div#content
+    float: left
+    width: 37em
+
+  div#sidebar
+    float: right
+    width: $sidebar-width
+
+  footer.branding
+    clear: both
+
+h1, h2, h3, h4
+  margin: 1em 0 0.5em
+
 h1
-  @include adjust-font-size($h1-scale, 0.6, 0.4)
-  font-weight: normal
+  font-size: $size4
 h2
-  @include adjust-font-size($h2-scale, 1.5, 0.5)
-  font-weight: normal
+  font-size: $size3
 h3
-  @include adjust-font-size($h3-scale, 1.5, 0.5)
-  font-weight: normal
+  font-size: $size2
 h4
-  @include adjust-font-size($h4-scale, 2, 0)
+  font-size: $size2
 
 ol,
 p,
 pre,
 ul
-  margin: 0
-  margin-bottom: $base-vertical-margin
+  margin: 0 0 $vertical-margin
 
 li
-  @include adjust-font-size(1, 0, 0)
+  margin: 0
 
 blockquote
-  margin: $base-vertical-margin 0
-  padding: 0 $base-vertical-margin
+  margin: $vertical-margin 0
+  padding: 0 $vertical-margin / 2
+  border-left: 5px solid $tint
   
   font-style: italic
   color: $base-color + #555
   
 pre
-  padding: ($vertical-rhythm / 2) 1em
+  display: block
+  width: auto
+
+  padding: 0.5em
+
+  font-size: $size0
+
   overflow: auto
+  white-space: pre
+
+  code
+    font-size: 1em
+
+code
+  font-size: $size0
 
 img
   border: none
 
 nav.breadcrumb
-  margin-top: $vertical-rhythm
+  margin-top: $vertical-margin
   color: $meta-color
-  padding: 0.5em 0
 
   font-size: 0.909em
 
-// Layout
-
-article, aside, footer, header, nav, section
-  display: block
-
-div#container
-  width: 54em
-  margin: 0 auto
-  padding: 1em 1em 0 1em
-
-  div#content
-    position: relative
-    width: $content-width
-    float: left
-    padding: 1px 0
-
-  div#sidebar
-    width: 12em
-    margin-left: 40em
-    padding: 0 1em
-  
-  footer.branding
-    clear: both
-    color: $meta-color
-    @include adjust-font-size($base-scale)
-    p
-      width: $content-width
-      margin: 0
-      padding: 1em 0
-
-// The visuals
-
-a
-  border-bottom: 1px dotted $link-color
-  text-decoration: none
-  color: $link-color
-  @include transition(color 0.25s 0 ease)
-  &:visited
-    color: $visited-link-color
-    border-bottom-color: $visited-link-color
-  &:hover
-    color: $hover-link-color
-    border-bottom-color: $hover-link-color
-  &:active
-    color: $active-link-color
-    border-bottom-color: $active-link-color
-
-nav.breadcrumb    
   ul
     margin: 0
+    padding: 0
+
   li
     display: inline
     list-style: none
-    &::after
+
+    &::before
       content: " > "
-    &:last-child::after
-      content: ""
+
+    &:last-child
+      display: block
+      margin-left: 1em
+
+      +respond-to(medium-screens)
+        display: inline
+        margin: 0
+
+    &:first-child
+      margin-left: 0
+
+a
+  color: $link-color
+  +transition(color 0.25s 0 ease)
+  &:visited
+    color: $visited-link-color
+  &:hover
+    color: $hover-link-color
+  &:active
+    color: $active-link-color
 
 nav.breadcrumb,
 nav.categories,
@@ -150,51 +145,19 @@ article p.meta
   a:hover
     color: $hover-link-color
 
-nav.categories,
-div.feed,
-article p.meta
-  a
-    border-bottom-color: $background-color
-
-article p.meta
-  a
-    @include transition(border-bottom-color 0.5s 0 ease)
-  a:hover
-    border-bottom-color: $hover-link-color
-
-article h1 a
-  border-bottom: none
-
-body
-  background: $background-color
-  
 article
   img
     max-width: 100%
-    margin-bottom: $base-vertical-margin
-
-  code,
-  pre
-    background-color: $tint
-  code
-    padding: 1px 3px
-  pre
-    border-left: $border-style
-    background-color: $tint
-    code
-      padding: 0
 
   footer
-    border-top: $border-style
     p.meta
-      @include adjust-font-size(0.909, 0.1, 1.9)
       font-style: italic
       color: $meta-color
 
 // Pages of content
 article[role="main"]
-  h1, h2
-    @include text-shadow
+  & > h1
+    font-weight: normal
 
   div#disqus_thread
     img
@@ -207,40 +170,87 @@ section.pages,
 section.articles
   & > ol
     margin-left: 0
+    padding-left: 0
     li
       position: relative
       list-style: none
+
     article
+      h1
+        margin-bottom: 0.2em
+
+        font-size: $size3
+        font-weight: normal
       ol li
         list-style: decimal
       ul li
         list-style: disc
 
-  header[role=main] h1
-    @include adjust-font-size($h1-scale, 1.5, 0.5)
   header h1
-    @include adjust-font-size($h2-scale, 1.5, 0.5)
+    font-size: $size3
 
   article
     h1
-      text-shadow: none
+      a
+        text-decoration: none
     p.read_more
-      @include adjust-font-size(1, 0, 0)
-      margin-top: -$base-vertical-margin
+      font-size: $size1
+      margin: -1em 0 0 0
     footer
       border-top: none
 
-nav.categories
-  h1
-    @include adjust-font-size(1, 2, 0)
+      font-size: $size0
 
-  ul.menu
+section.articles
+  border-top: 2px solid $tint
+
+  &:first-child
+    border-top: none
+
+  & > header h1
+    color: $meta-color
+    font-weight: normal
+
+div#sidebar
+  border-top: 2px solid $tint
+
+  h1
+    font-size: $size3
+
+  ol, ul
+    padding-left: 0
     list-style: none
-    ul
-      list-style: disc
-      margin: 0 0 0 1.25em
-    & > ul
-      @include adjust-font-size(0.909, 0, 0)
+
+    li
+      display: inline
+
+      &::after
+        content: ' / '
+      &:last-child
+        &::after
+          content: ''
+
+  +respond-to(medium-screens)
+    margin-top: 1.4em
+
+    p
+      font-size: $size0
+
+  +respond-to(wide-screens)
+    border-top: none
+
+    color: $meta-color
+
+    h1
+      font-size: $size2
+      font-weight: normal
+
+    ol, ul
+      li
+        display: block
+
+        &::after
+          content: ''
 
 div.feed
-  margin: $base-vertical-margin 0
+  margin: $vertical-margin 0
