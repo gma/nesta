@@ -6,7 +6,6 @@
     %priority 1.0
     %lastmod= @last.xmlschema
   - @pages.each do |page|
-    - next if page.flagged_as?('skip-sitemap')
     %url
       %loc= path_to(page.path,true)
       %lastmod= page.last_modified.xmlschema

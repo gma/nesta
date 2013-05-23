@@ -19,7 +19,7 @@
 
  * Added the skip-sitemap flag, to prevent a page from being listed in
    the XML sitemap. Add 'Flags: skip-sitemap' to the top of your page to
-   enable it.
+   enable it. Draft pages have also been removed from the sitemap.
    (Suggested by Joshua Mervine, implemented by Graham Ashton)
 
  * Sinatra 1.3 changed their public API for configuration/settings, but
