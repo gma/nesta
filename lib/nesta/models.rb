@@ -341,6 +341,10 @@ module Nesta
       Page.find_articles.select { |article| article.categories.include?(self) }
     end
 
+    def receives_comments?
+      ! date.nil?
+    end
+
     private
       def category_strings
         strings = metadata('categories')
