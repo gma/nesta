@@ -304,6 +304,25 @@ describe "An article" do
       link_text = @category.link_text
       assert_selector "nav.breadcrumb a[href='#{href}']", :content => link_text
     end
+
+    it "should not include Disqus comments by default" do
+      do_get
+      last_response.should be_ok
+      assert_not_selector '#disqus_thread'
+    end
+  end
+
+  describe "that is configured to show Disqus comments" do
+    before(:each) do
+      stub_config_key("disqus_short_name", "mysite")
+      @category = create_category
+    end
+
+    it "should display Disqus comments" do
+      do_get
+      assert_selector '#disqus_thread'
+      assert_selector 'script[@src*="mysite.disqus.com/embed.js"]'
+    end
   end
 end
 
@@ -429,25 +448,6 @@ describe "A page" do
         do_get
         assert_selector 'h1', :content => @articles_heading
       end
-    end
-
-    it "should not include Disqus comments by default" do
-      do_get
-      last_response.should be_ok
-      assert_not_selector '#disqus_thread'
-    end
-  end
-
-  describe "that is configured to show Disqus comments" do
-    before(:each) do
-      stub_config_key("disqus_short_name", "mysite")
-      @category = create_category
-    end
-
-    it "should display Disqus comments" do
-      do_get
-      assert_selector '#disqus_thread'
-      assert_selector 'script[@src*="mysite.disqus.com/embed.js"]'
     end
   end
 end
