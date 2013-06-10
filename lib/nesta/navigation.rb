@@ -14,15 +14,17 @@ module Nesta
       end
 
       def display_menu_item(item, options = {})
-        if item.respond_to?(:each)
+        if has_subitems?(item)
           if (options[:levels] - 1) > 0
             haml_tag :li do
               display_menu(item, :levels => (options[:levels] - 1))
             end
           end
         else
-          html_class = current_item?(item) ? current_menu_item_class : nil
-          haml_tag :li, :class => html_class do
+          html_class = []
+          html_class << parent_menu_item_class if parent_item?(item)
+          html_class << current_menu_item_class if current_item?(item)
+          haml_tag :li, :class => html_class.join(' ') do
             haml_tag :a, :<, :href => path_to(item.abspath) do
               haml_concat link_text(item)
             end
@@ -69,12 +71,24 @@ module Nesta
         link_text(page)
       end
 
+      def has_subitems?(item)
+        item.respond_to?(:each)
+      end
+
       def current_item?(item)
         request.path == item.abspath
       end
 
+      def parent_item?(item)
+        !current_item?(item) && request.path =~ Regexp.new("^#{item.abspath}")
+      end
+
       def current_menu_item_class
-        'current'
+        'active'
+      end
+
+      def parent_menu_item_class
+        'parent'
       end
 
       def current_breadcrumb_class

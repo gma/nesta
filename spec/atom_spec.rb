@@ -78,7 +78,7 @@ describe "atom feed" do
     it "should link to the HTML version" do
       url = "http://example.org/#{@article.path}"
       assert_xpath(
-          "//entry/link[@href='#{url}'][@rel='alternate'][@type='text/html']")
+          "//entry/link[@href='#{url}'][@rel='alternate']")
     end
 
     it "should define unique ID" do
@@ -93,7 +93,7 @@ describe "atom feed" do
     end
 
     it "should specify article categories" do
-      assert_xpath("//category[@term='#{@category.permalink}']")
+      assert_xpath("//category[@term='/#{@category.permalink}']")
     end
 
     it "should have article content" do
