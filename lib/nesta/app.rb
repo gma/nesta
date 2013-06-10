@@ -78,12 +78,13 @@ module Nesta
       content_type :xml, :charset => 'utf-8'
       set_from_config(:title, :subtitle, :author)
       @articles = Page.find_articles.select { |a| a.date && !a.draft? }[0..9]
-      last_updated = @articles.map(&:date).max.xmlschema
+      dates = @articles.map(&:date)
+      last_updated = (dates.nil? || dates.empty?) ? Time.now : dates.max.xmlschema
 
       builder do |xml|
         xml.feed :xmlns => "http://www.w3.org/2005/Atom" do
-          xml.title @title
-          xml.subtitle @subtitle
+          xml.title @title, :type=>'text'
+          xml.subtitle @subtitle, :type=>'text'
           xml.generator "Nesta", :uri=>'http://nestacms.com'
           xml.id atom_id
           xml.link :href=>path_to('/articles.xml', true), :rel=>'self'
