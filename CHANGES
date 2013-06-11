@@ -34,11 +34,18 @@
    feature in the first place. Since the Title metadata appeared you can
    ovverride the page title to something more useful if you need to too.
 
- * When commenting via Disqus is configured, comments appeared on every page
-   in earlier versions of Nesta. From now on only pages with a date set
-   (i.e. articles) will display the comment form by default. If you'd
-   like to override this behaviour redefine the Page#receives_comments?
-   method in your app.rb file. (Graham Ashton)
+ * When commenting via Disqus is configured, comments appeared on every
+   page in earlier versions of Nesta. From now on only pages with a date
+   set (i.e. articles) will display the comment form by default. If
+   you've copied the comments.haml template into your ./views folder (or
+   into a theme) you'll need to modify it slightly. See the `if`
+   statement in the latest version.
+
+   If you'd actually like comments to appear on every page of your site,
+   redefine the Page#receives_comments? method in your app.rb file, so
+   that it returns `true`.
+
+   (Graham Ashton)
 
  * Breadcrumbs include Microdata for use by search engines. See:
    http://support.google.com/webmasters/bin/answer.py?hl=en&answer=185417
