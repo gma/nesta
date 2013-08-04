@@ -40,3 +40,16 @@ the files in `content/pages` (see the [Writing content][content] docs
 for full instructions).
 
 [content]: http://nestacms.com/docs/creating-content
+
+## Support
+
+There's plenty of information on <http://nestacms.com>, but if you want to talk
+to somebody, [get on the mailing list][].
+
+[get on the mailing list]: http://nestacms.com/support
+
+Like Nesta? You can follow [@nestacms][] on Twitter, and find the author
+at [@grahamashton][].
+
+[@grahamashton]: http://twitter.com/grahamashton
+[@nestacms]: http://twitter.com/nestacms
