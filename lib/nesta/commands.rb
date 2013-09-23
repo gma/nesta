@@ -30,6 +30,14 @@ module Nesta
         templates.each { |src, dest| copy_template(src, dest) }
       end
 
+      def views_path
+        File.expand_path('../../views', File.dirname(__FILE__))
+      end
+
+      def copy_views(dest)
+        FileUtils.cp_r(views_path, dest)
+      end
+
       def update_config_yaml(pattern, replacement)
         configured = false
         File.open(Nesta::Config.yaml_path, 'r+') do |file|
@@ -114,6 +122,7 @@ module Nesta
           templates['config/deploy.rb'] = "#{@path}/config/deploy.rb"
         end
         copy_templates(templates)
+        copy_views(@path) if @options['with-views-dir']
         create_repository if @options['git']
       end
     end

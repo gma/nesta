@@ -28,6 +28,7 @@ COMMANDS
 OPTIONS FOR new
     --git                 Create a new git repository for the project.
     --vlad                Include config/deploy.rb.
+    --with-views-dir      Copy nesta views to project
 
 EOF
       exit exitcode
@@ -44,6 +45,7 @@ EOF
         ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
         ['--version', '-v', GetoptLong::NO_ARGUMENT],
+        ['--with-views-dir', GetoptLong::NO_ARGUMENT],
         ['--vlad', GetoptLong::NO_ARGUMENT],
         ['--zsh-completion', GetoptLong::NO_ARGUMENT]
       )
