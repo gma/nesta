@@ -13,6 +13,13 @@ describe "sitemap XML" do
     @article = create_article do |path|
       mock_file_stat(:stub!, path, "3 Jan 2009, 15:10")
     end
+    skipped_page_definition = {
+      :path => 'unlisted-page',
+      :metadata => { 'flags' => 'skip-sitemap' }
+    }
+    @skipped = create_page(skipped_page_definition) do |path|
+      mock_file_stat(:stub!, path, "3 Jan 2009, 15:07")
+    end
     get "/sitemap.xml"
   end
 
@@ -55,6 +62,10 @@ describe "sitemap XML" do
 
   it "should reference article pages" do
     assert_xpath "//urlset/url/loc", :content => test_url(@article.path)
+  end
+
+  it "should not include pages that have the skip-sitemap flag set" do
+    assert_not_xpath "//urlset/url/loc", :content => test_url(@skipped.path)
   end
 end
 

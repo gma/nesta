@@ -77,7 +77,9 @@ module Nesta
 
     get '/sitemap.xml' do
       content_type :xml, :charset => 'utf-8'
-      @pages = Page.find_all
+      @pages = Page.find_all.reject do |page|
+        page.draft? or page.flagged_as?('skip-sitemap')
+      end
       @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
         (page > latest) ? page : latest
       end

@@ -1,39 +1,64 @@
 // Default ratios between font sizes; used to maintain the type hierarchy.
 // http://www.markboulton.co.uk/journal/comments/five-simple-steps-to-better-typography-part-4
 
-$h1-scale: 2.18
-$h2-scale: 1.64
-$h3-scale: 1.45
-$h4-scale: 1.18
+$size5: 2.18em
+$size4: 1.64em
+$size3: 1.45em
+$size2: 1.18em
+$size1: 1em
+$size0: 0.88em
 
-// Variables used in calculations used to maintain vertical rhythm.
-// http://webtypography.net/Rhythm_and_Proportion/Vertical_Motion/2.2.2/
+$vertical-margin: 1.5em
 
-$base-scale: 0.88
-$base-font: $base-scale * 1em
-$vertical-rhythm: 1.75em
-$base-vertical-margin: 1.75em
+// Colour settings
 
-@mixin adjust-font-size($scale, $top-weight: 1, $bottom-weight: 1)
-  $average-margin: $base-vertical-margin / $scale
-  margin-top: $average-margin * $top-weight
-  margin-bottom: $average-margin * $bottom-weight
-  
-  $line-height: $vertical-rhythm / $scale
-  @if $line-height < 1
-    line-height: $line-height * 2
-  @else
-    line-height: $line-height
+$base-color: #313126
+$tint: #EEEEC6
+$border-color: #D7C28B
+$link-color: #4786fd
+$visited-link-color: darken($link-color, 5%)
+$hover-link-color: darken($link-color, 15%)
+$active-link-color: darken($link-color, 20%)
+$nav-link-color: desaturate(lighten($link-color, 10%), 25%)
+$meta-color: #87877D
 
-  font-size: 100% * $scale
+@function empx($em, $base: 16px)
+  @return ($em / 1em) * $base
 
-@mixin border-radius($radius)
+// Layout settings
+
+$measure: empx(36em)
+$gutter: empx(6em)
+$sidebar-width: empx(14em)
+$full-page-width: $measure + $gutter + $sidebar-width
+
+$max-handheld-width: 400px
+$min-medium-width: $measure + empx(1em)
+$min-wide-width: $full-page-width + empx(4em)
+
+// Mixin
+
+=border-radius($radius)
   -webkit-border-radius: $radius
   -moz-border-radius: $radius
   border-radius: $radius
 
-@mixin transition($definition)
+=transition($definition)
   -moz-transition: $definition
   -o-transition: $definition
   -webkit-transition: $definition
   transition: $definition
+
+=respond-to($media)
+  @if $media == handhelds
+    @media only screen and (max-width: $max-handheld-width)
+      @content
+  @else if $media == medium-screens
+    @media only screen and (min-width: $min-medium-width)
+      @content
+  @else if $media == only-medium-screens
+    @media only screen and (min-width: $min-medium-width) and (max-width: $min-wide-width - 1px)
+      @content
+  @else if $media == wide-screens
+    @media only screen and (min-width: $min-wide-width)
+      @content

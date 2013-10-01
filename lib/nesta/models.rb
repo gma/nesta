@@ -13,7 +13,8 @@ module Nesta
 
   class FileModel
     FORMATS = [:mdown, :haml, :textile]
-    @@cache = {}
+    @@page_cache = {}
+    @@filename_cache = {}
 
     attr_reader :filename, :mtime
 
@@ -35,25 +36,35 @@ module Nesta
       end
     end
 
-    def self.needs_loading?(path, filename)
-      @@cache[path].nil? || File.mtime(filename) > @@cache[path].mtime
-    end
-
-    def self.load(path)
-      FORMATS.each do |format|
-        [path, File.join(path, 'index')].each do |basename|
-          filename = model_path("#{basename}.#{format}")
-          if File.exist?(filename) && needs_loading?(path, filename)
-            @@cache[path] = self.new(filename)
-            break
+    def self.find_file_for_path(path)
+      if ! @@filename_cache.has_key?(path)
+        FORMATS.each do |format|
+          [path, File.join(path, 'index')].each do |basename|
+            filename = model_path("#{basename}.#{format}")
+            if File.exist?(filename)
+              @@filename_cache[path] = filename
+              break
+            end
           end
         end
       end
-      @@cache[path]
+      @@filename_cache[path]
+    end
+
+    def self.needs_loading?(path, filename)
+      @@page_cache[path].nil? || File.mtime(filename) > @@page_cache[path].mtime
+    end
+
+    def self.load(path)
+      if (filename = find_file_for_path(path)) && needs_loading?(path, filename)
+        @@page_cache[path] = self.new(filename)
+      end
+      @@page_cache[path]
     end
 
     def self.purge_cache
-      @@cache = {}
+      @@page_cache = {}
+      @@filename_cache = {}
     end
 
     def self.menu_items
@@ -318,6 +329,10 @@ module Nesta
 
     def articles
       Page.find_articles.select { |article| article.categories.include?(self) }
+    end
+
+    def receives_comments?
+      ! date.nil?
     end
 
     private

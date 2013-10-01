@@ -29,15 +29,15 @@ module Nesta
     end
 
     def self.load_local_app
-      require Nesta::Path.local("app")
-    rescue LoadError
+      app_file = Nesta::Path.local('app.rb')
+      require app_file if File.exist?(app_file)
     end
     
     def self.load_theme_app
       if Nesta::Config.theme
-        require Nesta::Path.themes(Nesta::Config.theme, "app")
+        app_file = Nesta::Path.themes(Nesta::Config.theme, 'app.rb')
+        require app_file if File.exist?(app_file)
       end
-    rescue LoadError
     end
 
     private

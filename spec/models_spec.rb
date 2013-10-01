@@ -52,6 +52,15 @@ shared_examples_for "Page" do
     Nesta::Page.find_all.should have(1).item
   end
 
+  it "should return the filename for a path" do
+    create_page(:heading => 'Banana', :path => 'banana')
+    Nesta::Page.find_file_for_path('banana').should =~ /banana.#{@extension}$/
+  end
+
+  it "should return nil for files that don't exist" do
+    Nesta::Page.find_file_for_path('foobar').should be_nil
+  end
+
   it "should find by path" do
     create_page(:heading => 'Banana', :path => 'banana')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
@@ -119,10 +128,11 @@ shared_examples_for "Page" do
 
   it "should reload cached files when modified" do
     create_page(:path => "a-page", :heading => "Version 1")
-    File.stub!(:mtime).and_return(Time.new - 1)
+    now = Time.now
+    File.stub!(:mtime).and_return(now - 1)
     Nesta::Page.find_by_path("a-page")
     create_page(:path => "a-page", :heading => "Version 2")
-    File.stub!(:mtime).and_return(Time.new)
+    File.stub!(:mtime).and_return(now)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
 

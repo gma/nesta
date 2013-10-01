@@ -1,5 +1,8 @@
 = 0.10.0 / (Unreleased)
 
+ * Upgraded the default theme to a responsive design, using Google's
+   Roboto Slab web font. (Graham Ashton)
+
  * Added 'Link text' metadata. When working out how to link to your
    pages from the automatically generated menus and breadcrumbs, Nesta
    uses the page's heading. It still does, but if you want to use
@@ -14,6 +17,11 @@
    CSS (this is the best approach for accessibility), or define the
    "Link text" metadata.
 
+ * Added the skip-sitemap flag, to prevent a page from being listed in
+   the XML sitemap. Add 'Flags: skip-sitemap' to the top of your page to
+   enable it. Draft pages have also been removed from the sitemap.
+   (Suggested by Joshua Mervine, implemented by Graham Ashton)
+
  * Sinatra 1.3 changed their public API for configuration/settings, but
    the file based caching library that Nesta ships with wasn't updated
    to support it. (Rob Westgeest)
@@ -25,6 +33,19 @@
    Behaviour was a little inconsistent, and it's arguably not a great
    feature in the first place. Since the Title metadata appeared you can
    ovverride the page title to something more useful if you need to too.
+
+ * When commenting via Disqus is configured, comments appeared on every
+   page in earlier versions of Nesta. From now on only pages with a date
+   set (i.e. articles) will display the comment form by default. If
+   you've copied the comments.haml template into your ./views folder (or
+   into a theme) you'll need to modify it slightly. See the `if`
+   statement in the latest version.
+
+   If you'd actually like comments to appear on every page of your site,
+   redefine the Page#receives_comments? method in your app.rb file, so
+   that it returns `true`.
+
+   (Graham Ashton)
 
  * Breadcrumbs include Microdata for use by search engines. See:
    http://support.google.com/webmasters/bin/answer.py?hl=en&answer=185417
@@ -54,6 +75,9 @@
 
  * Updated the test suite from RSpec 1.3 to RSpec 2.
    (Wynn Netherland, Graham Ashton)
+
+ * Reduced the amount of I/O required to load a page with some judicious
+   in memory caching of filenames. Expect a speed boost! (Graham Ashton)
 
 = 0.9.13 / (3 March 2012)
 
