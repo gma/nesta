@@ -106,11 +106,11 @@ module Nesta
     end
 
     def layout
-      (metadata('layout') || 'layout').to_sym
+      metadata('layout', default:'layout').to_sym
     end
 
     def template
-      (metadata('template') || 'page').to_sym
+      metadata('template', default:'page').to_sym
     end
 
     def to_html(scope = nil)
@@ -128,14 +128,23 @@ module Nesta
     def keywords
       metadata('keywords')
     end
-    
-    def metadata(key)
-      @metadata[key]
+
+    def metadata(key, opts={})
+      recursive = (opts[:recursive] === true ? true : false)
+      if @metadata.keys.include?(key.to_s.downcase)
+        return @metadata[key]
+      elsif recursive && !parent.nil?
+        return parent.metadata(key, opts)
+      end
+      opts[:default] # nil if not set
     end
 
     def flagged_as?(flag)
-      flags = metadata('flags')
-      flags && flags.split(',').map { |name| name.strip }.include?(flag)
+      flags.include?(flag)
+    end
+
+    def flags
+      @flags ||= metadata('flags', default:'').split(',').map(&:strip)
     end
 
     def parse_metadata(first_paragraph)
@@ -236,7 +245,7 @@ module Nesta
     rescue HeadingNotSet
       raise LinkTextNotSet, "Need to link to '#{abspath}' but can't get link text"
     end
-  
+
     def title
       metadata('title') || link_text
     rescue LinkTextNotSet
@@ -296,21 +305,28 @@ module Nesta
       category_string = category_strings.detect do |string|
         string =~ /^#{category}([,:\s]|$)/
       end
-      category_string && category_string.split(':', 2)[-1].to_i 
+      category_string && category_string.split(':', 2)[-1].to_i
     end
 
     def parent
-      if abspath == '/'
-        nil
-      else
-        parent_path = File.dirname(path)
-        while parent_path != '.' do
-          parent = Page.load(parent_path)
-          return parent unless parent.nil?
-          parent_path = File.dirname(parent_path)
+      @parent ||= begin
+        if abspath == '/'
+          nil
+        else
+          parent_path = File.dirname(path)
+          while parent_path != '.' do
+            parent = Page.load(parent_path)
+            return parent unless parent.nil?
+            parent_path = File.dirname(parent_path)
+          end
+          Page.load('index')
         end
-        Page.load('index')
       end
+    end
+
+    def parents
+      return [] if parent.nil?
+      parent.parents << self
     end
 
     def pages
