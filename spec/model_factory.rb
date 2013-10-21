@@ -38,8 +38,8 @@ module ModelFactory
     end
   end
 
-  def create_menu(menu_text)
-    file = filename(Nesta::Config.content_path, 'menu', :txt)
+  def create_menu(menu_text, filename='menu')
+    file = filename(Nesta::Config.content_path, filename, :txt)
     File.open(file, 'w') { |file| file.write(menu_text) }
   end
 

@@ -356,9 +356,9 @@ module Nesta
   class Menu
     INDENT = " " * 2
 
-    def self.full_menu
+    def self.full_menu filename='menu.txt'
       menu = []
-      menu_file = Nesta::Config.content_path('menu.txt')
+      menu_file = Nesta::Config.content_path(filename)
       if File.exist?(menu_file)
         File.open(menu_file) { |file| append_menu_item(menu, file, 0) }
       end
@@ -369,12 +369,12 @@ module Nesta
       full_menu.reject { |item| item.is_a?(Array) }
     end
 
-    def self.for_path(path)
+    def self.for_path(path, filename='menu.txt')
       path.sub!(Regexp.new('^/'), '')
       if path.empty?
-        full_menu
+        full_menu filename
       else
-        find_menu_item_by_path(full_menu, path)
+        find_menu_item_by_path(full_menu(filename), path)
       end
     end
 

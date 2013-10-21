@@ -86,6 +86,12 @@ module Nesta
       cache haml(:sitemap, :format => :xhtml, :layout => false)
     end
 
+    Nesta::Plugin.load_local_plugins
+    Nesta::Plugin.initialize_plugins
+
+    # Load the 'catchall' route last which gives plugins a chance to register
+    # routes if need be
+    #
     get '*' do
       set_common_variables
       parts = params[:splat].map { |p| p.sub(/\/$/, '') }
@@ -97,6 +103,3 @@ module Nesta
     end
   end
 end
-
-Nesta::Plugin.load_local_plugins
-Nesta::Plugin.initialize_plugins
