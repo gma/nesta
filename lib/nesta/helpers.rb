@@ -25,7 +25,7 @@ module Nesta
       end
 
       def absolute_urls(text)
-        text.gsub!(/(<a href=['"])\//, '\1' + path_to('/', true))
+        text.gsub!(/(<a href=['"])\//, '\1' + path_to('/', :uri => true))
         text
       end
 
@@ -70,17 +70,21 @@ module Nesta
         @page.metadata('articles heading') || "Articles on #{@page.heading}"
       end
       
-      # Generates the full path to a given page in the app.
-      # Takes Rack routers and reverse proxies into account.
-      # With Sinatra::Helpers included you could get the same
-      # effect with uri(page_path, false) but this is here to avoid
-      # depending on Sinatra::Helpers.
+      # Generates the full path to a given page, taking Rack routers and
+      # reverse proxies into account.
       #
-      # If absolute is true, we'll return a full URI.  Note that unlike
-      # Sinatra's uri method, this deaults to false instead of true.
-      def path_to(page_path, absolute = false)
+      # Takes an options hash with a single option called `uri`. Set it
+      # to `true` if you'd like the publicly accessible URI for the
+      # path, rather than just the path relative to the site's root URI.
+      # The default is `false`.
+      #
+      #   path_to(page.abspath, :uri => true)
+      #
+      def path_to(page_path, options = {})
+        defaults = { absolute: false }
+        options = defaults.merge(options)
         host = ''
-        if absolute
+        if options[:uri]
           host << "http#{'s' if request.ssl?}://"
           if (request.env.include?("HTTP_X_FORWARDED_HOST") or 
               request.port != (request.ssl? ? 443 : 80))
