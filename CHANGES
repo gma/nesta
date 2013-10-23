@@ -6,8 +6,8 @@
  * Added 'Link text' metadata. When working out how to link to your
    pages from the automatically generated menus and breadcrumbs, Nesta
    uses the page's heading. It still does, but if you want to use
-   different words in the menu you can override it by defining the
-   "Link text" metadata. (Micah Chalmer)
+   different words when linking to the page in breadcrumbs or in the
+   menu you can by defining the "Link text" metadata. (Micah Chalmer)
 
    NOTE: Some existing sites may have pages that don't define a heading.
    Those sites will not work with Nesta 0.10.0 until they've been
