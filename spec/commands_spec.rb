@@ -169,7 +169,8 @@ describe "nesta" do
 
   describe "edit" do
     before(:each) do
-      Nesta::Config.stub!(:content_path).and_return('content')
+      Nesta::App.stub!(:root).and_return(@project_path)
+      stub_config_key('content','content')
       @page_path = 'path/to/page.mdown'
       @command = Nesta::Commands::Edit.new(@page_path)
       @command.stub!(:system)
@@ -177,7 +178,7 @@ describe "nesta" do
 
     it "should launch the editor" do
       ENV['EDITOR'] = 'vi'
-      full_path = File.join('content/pages', @page_path)
+      full_path = File.join(@project_path, 'content/pages', @page_path)
       @command.should_receive(:system).with(ENV['EDITOR'], full_path)
       @command.execute
     end
