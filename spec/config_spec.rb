@@ -63,5 +63,10 @@ describe "Config" do
       stub_config_key('content', 'rack_env/path', :rack_env => true)
       Nesta::Config.content.should == 'rack_env/path'
     end
+
+    it "should allow arbitrary config settings" do
+      stub_config_key('just_any_key', 'will work')
+      Nesta::Config.just_any_key.should == 'will work'
+    end
   end
 end
