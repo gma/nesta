@@ -18,8 +18,8 @@ require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 module ConfigSpecHelper
   def stub_yaml_config
     @config = {}
-    Nesta::Config.stub!(:yaml_exists?).and_return(true)
-    Nesta::Config.stub!(:yaml_conf).and_return(@config)
+    Nesta::Config.stub(:yaml_exists?).and_return(true)
+    Nesta::Config.stub(:yaml_conf).and_return(@config)
   end
 
   def stub_config_key(key, value, options = {})

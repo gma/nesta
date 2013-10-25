@@ -63,7 +63,7 @@ describe "nesta" do
     describe "--git" do
       before(:each) do
         @command = Nesta::Commands::New.new(@project_path, 'git' => '')
-        @command.stub!(:system)
+        @command.stub(:system)
       end
 
       it "should create a .gitignore file" do
@@ -111,13 +111,13 @@ describe "nesta" do
     before(:each) do
       @config_path = project_path('config/config.yml')
       FileUtils.mkdir_p(File.dirname(@config_path))
-      Nesta::Config.stub!(:yaml_path).and_return(@config_path)
+      Nesta::Config.stub(:yaml_path).and_return(@config_path)
       create_config_yaml('content: path/to/content')
-      Nesta::App.stub!(:root).and_return(@project_path)
+      Nesta::App.stub(:root).and_return(@project_path)
       @repo_url = 'git://github.com/gma/nesta-demo-content.git'
       @demo_path = project_path('content-demo')
       @command = Nesta::Commands::Demo::Content.new
-      @command.stub!(:system)
+      @command.stub(:system)
     end
 
     it "should clone the repository" do
@@ -169,10 +169,10 @@ describe "nesta" do
 
   describe "edit" do
     before(:each) do
-      Nesta::Config.stub!(:content_path).and_return('content')
+      Nesta::Config.stub(:content_path).and_return('content')
       @page_path = 'path/to/page.mdown'
       @command = Nesta::Commands::Edit.new(@page_path)
-      @command.stub!(:system)
+      @command.stub(:system)
     end
 
     it "should launch the editor" do
@@ -185,7 +185,7 @@ describe "nesta" do
     it "should not try and launch an editor if environment not setup" do
       ENV.delete('EDITOR')
       @command.should_not_receive(:system)
-      $stderr.stub!(:puts)
+      $stderr.stub(:puts)
       @command.execute
     end
   end
@@ -199,7 +199,7 @@ describe "nesta" do
       Dir.mkdir(@plugins_path)
       Dir.chdir(@plugins_path)
       @command = Nesta::Commands::Plugin::Create.new(@name)
-      @command.stub!(:system)
+      @command.stub(:system)
     end
 
     after(:each) do
@@ -270,8 +270,8 @@ describe "nesta" do
       @theme_dir = 'themes/mine'
       FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
       @command = Nesta::Commands::Theme::Install.new(@repo_url)
-      @command.stub!(:enable)
-      @command.stub!(:system)
+      @command.stub(:enable)
+      @command.stub(:system)
     end
 
     after(:each) do
@@ -301,7 +301,7 @@ describe "nesta" do
         @other_theme_dir = 'themes/mytheme'
         FileUtils.mkdir_p(File.join(@other_theme_dir, '.git'))
         @command = Nesta::Commands::Theme::Install.new(@repo_url)
-        @command.stub!(:enable)
+        @command.stub(:enable)
       end
 
       after(:each) do
@@ -319,7 +319,7 @@ describe "nesta" do
   describe "theme:enable" do
     before(:each) do
       config = temp_path('config.yml')
-      Nesta::Config.stub!(:yaml_path).and_return(config)
+      Nesta::Config.stub(:yaml_path).and_return(config)
       @name = 'mytheme'
       @command = Nesta::Commands::Theme::Enable.new(@name)
     end
@@ -362,7 +362,7 @@ describe "nesta" do
     end
 
     before(:each) do
-      Nesta::App.stub!(:root).and_return(TempFileHelper::TEMP_DIR)
+      Nesta::App.stub(:root).and_return(TempFileHelper::TEMP_DIR)
       @name = 'my-new-theme'
       Nesta::Commands::Theme::Create.new(@name).execute
     end

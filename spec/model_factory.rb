@@ -54,8 +54,8 @@ module ModelFactory
   end
 
   def mock_file_stat(method, filename, time)
-    stat = mock(:stat)
-    stat.stub!(:mtime).and_return(Time.parse(time))
+    stat = double(:stat)
+    stat.stub(:mtime).and_return(Time.parse(time))
     File.send(method, :stat).with(filename).and_return(stat)
   end
 

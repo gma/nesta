@@ -129,10 +129,10 @@ shared_examples_for "Page" do
   it "should reload cached files when modified" do
     create_page(:path => "a-page", :heading => "Version 1")
     now = Time.now
-    File.stub!(:mtime).and_return(now - 1)
+    File.stub(:mtime).and_return(now - 1)
     Nesta::Page.find_by_path("a-page")
     create_page(:path => "a-page", :heading => "Version 2")
-    File.stub!(:mtime).and_return(now)
+    File.stub(:mtime).and_return(now)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
 
@@ -227,7 +227,7 @@ shared_examples_for "Page" do
         'categories' => @category.path,
         'flags' => 'draft'
       })
-      Nesta::App.stub!(:production?).and_return(true)
+      Nesta::App.stub(:production?).and_return(true)
     end
 
     it "should not find assigned drafts" do

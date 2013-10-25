@@ -8,17 +8,17 @@ describe "sitemap XML" do
   before(:each) do
     stub_configuration
     @category = create_category do |path|
-      mock_file_stat(:stub!, path, "3 Jan 2009, 15:07")
+      mock_file_stat(:stub, path, "3 Jan 2009, 15:07")
     end
     @article = create_article do |path|
-      mock_file_stat(:stub!, path, "3 Jan 2009, 15:10")
+      mock_file_stat(:stub, path, "3 Jan 2009, 15:10")
     end
     skipped_page_definition = {
       :path => 'unlisted-page',
       :metadata => { 'flags' => 'skip-sitemap' }
     }
     @skipped = create_page(skipped_page_definition) do |path|
-      mock_file_stat(:stub!, path, "3 Jan 2009, 15:07")
+      mock_file_stat(:stub, path, "3 Jan 2009, 15:07")
     end
     get "/sitemap.xml"
   end
@@ -84,7 +84,7 @@ describe "sitemap XML lastmod" do
 
   it "should be set for file based page" do
     create_article do |path|
-      mock_file_stat(:stub!, path, "3 January 2009, 15:37:01")
+      mock_file_stat(:stub, path, "3 January 2009, 15:37:01")
     end
     get "/sitemap.xml"
     assert_selector("url loc:contains('my-article')")
@@ -93,10 +93,10 @@ describe "sitemap XML lastmod" do
 
   it "should be set to latest page for home page" do
     create_article(:path => "article-1") do |path|
-      mock_file_stat(:stub!, path, "4 January 2009")
+      mock_file_stat(:stub, path, "4 January 2009")
     end
     create_article(:path => "article-2") do |path|
-      mock_file_stat(:stub!, path, "3 January 2009")
+      mock_file_stat(:stub, path, "3 January 2009")
     end
     get "/sitemap.xml"
     assert_selector("url loc:contains('http://example.org/')")
