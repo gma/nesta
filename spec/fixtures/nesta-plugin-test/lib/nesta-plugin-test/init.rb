@@ -2,9 +2,7 @@ module Nesta
   module Plugin
     module Test
       module Helpers
-        helpers do
-          # If your plugin needs any helper methods, add them here...
-        end
+        # If your plugin needs any helper methods, add them here...
       end
     end
   end
