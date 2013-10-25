@@ -8,7 +8,7 @@ module Nesta
     #
     # Put your assets in themes/<%= @name %>/public/<%= @name %>.
     #
-    # use Rack::Static, :urls => ["/<%= @name %>"], :root => "themes/<%= @name %>/public"
+    # use Rack::Static, urls: ["/<%= @name %>"], root: "themes/<%= @name %>/public"
 
     helpers do
       # Add new helpers here.

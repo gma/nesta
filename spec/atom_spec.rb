@@ -41,14 +41,14 @@ describe "atom feed" do
   end
 
   it "should have title and subtitle" do
-    assert_xpath("//feed/title[@type='text']", :content => "My blog")
-    assert_xpath("//feed/subtitle[@type='text']", :content => "about stuff")
+    assert_xpath("//feed/title[@type='text']", content: "My blog")
+    assert_xpath("//feed/subtitle[@type='text']", content: "about stuff")
   end
 
   it "should include the author details" do
-    assert_xpath("//feed/author/name", :content => "Fred Bloggs")
-    assert_xpath("//feed/author/uri", :content => "http://fredbloggs.com")
-    assert_xpath("//feed/author/email", :content => "fred@fredbloggs.com")
+    assert_xpath("//feed/author/name", content: "Fred Bloggs")
+    assert_xpath("//feed/author/uri", content: "http://fredbloggs.com")
+    assert_xpath("//feed/author/email", content: "fred@fredbloggs.com")
   end
 
   describe "for article" do
@@ -58,13 +58,13 @@ describe "atom feed" do
       @category = create_category
       11.times do |i|
         @articles << create_article(
-          :heading => "Article #{i + 1}",
-          :path => "article-#{i + 1}",
-          :metadata => {
+          heading: "Article #{i + 1}",
+          path: "article-#{i + 1}",
+          metadata: {
             "categories" => @category.path,
             "date" => "#{i + 1} January 2009"
           },
-          :content => "Blah blah\n\n## #{@heading}\n\n[link](/foo)"
+          content: "Blah blah\n\n## #{@heading}\n\n[link](/foo)"
         )
       end
       @article = @articles.last
@@ -72,7 +72,7 @@ describe "atom feed" do
     end
 
     it "should set title" do
-      assert_xpath("//entry/title", :content => "Article 11")
+      assert_xpath("//entry/title", content: "Article 11")
     end
 
     it "should link to the HTML version" do
@@ -84,12 +84,12 @@ describe "atom feed" do
     it "should define unique ID" do
       assert_xpath(
         "//entry/id",
-        :content => "tag:example.org,2009-01-11:#{@article.abspath}"
+        content: "tag:example.org,2009-01-11:#{@article.abspath}"
       )
     end
 
     it "should specify date published" do
-      assert_xpath("//entry/published", :content => "2009-01-11T00:00:00+00:00")
+      assert_xpath("//entry/published", content: "2009-01-11T00:00:00+00:00")
     end
 
     it "should specify article categories" do
@@ -113,13 +113,13 @@ describe "atom feed" do
     end
 
     it "should list the latest 10 articles" do
-      assert_selector("entry", :count => 10)
+      assert_selector("entry", count: 10)
     end
   end
 
   describe "page with no date" do
     before(:each) do
-      create_category(:path => "no-date")
+      create_category(path: "no-date")
       get "/articles.xml"
     end
 
@@ -130,12 +130,12 @@ describe "atom feed" do
 
   describe "article with atom ID" do
     it "should use pre-defined ID" do
-      create_article(:metadata => {
+      create_article(metadata: {
         "date" => "1 January 2009",
         "atom id" => "use-this-id"
       })
       get "/articles.xml"
-      assert_xpath("//entry/id", :content => "use-this-id")
+      assert_xpath("//entry/id", content: "use-this-id")
     end
   end
 end

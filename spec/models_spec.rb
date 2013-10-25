@@ -30,7 +30,7 @@ shared_context "Page testing" do
   include Webrat::Matchers
 
   def create_page(options)
-    super(options.merge(:ext => @extension))
+    super(options.merge(ext: @extension))
   end
 
   before(:each) do
@@ -48,12 +48,12 @@ shared_examples_for "Page" do
   include ModelMatchers
 
   it "should be findable" do
-    create_page(:heading => 'Apple', :path => 'the-apple')
+    create_page(heading: 'Apple', path: 'the-apple')
     Nesta::Page.find_all.should have(1).item
   end
 
   it "should return the filename for a path" do
-    create_page(:heading => 'Banana', :path => 'banana')
+    create_page(heading: 'Banana', path: 'banana')
     Nesta::Page.find_file_for_path('banana').should =~ /banana.#{@extension}$/
   end
 
@@ -62,24 +62,24 @@ shared_examples_for "Page" do
   end
 
   it "should find by path" do
-    create_page(:heading => 'Banana', :path => 'banana')
+    create_page(heading: 'Banana', path: 'banana')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
   it "should find index page by path" do
-    create_page(:heading => 'Banana', :path => 'banana/index')
+    create_page(heading: 'Banana', path: 'banana/index')
     Nesta::Page.find_by_path('banana').heading.should == 'Banana'
   end
 
   it "should respond to #parse_metadata, returning hash of key/value" do
-    page = create_page(:heading => 'Banana', :path => 'banana')
+    page = create_page(heading: 'Banana', path: 'banana')
     metadata = page.parse_metadata('My key: some value')
     metadata['my key'].should == 'some value'
   end
 
   it "should be parseable if metadata is invalid" do
     dodgy_metadata = "Key: value\nKey without value\nAnother key: value"
-    create_page(:heading => 'Banana', :path => 'banana') do |path|
+    create_page(heading: 'Banana', path: 'banana') do |path|
       text = File.read(path)
       File.open(path, 'w') do |file|
         file.puts(dodgy_metadata)
@@ -91,27 +91,27 @@ shared_examples_for "Page" do
 
   describe "for home page" do
     it "should set title to heading" do
-      create_page(:heading => 'Home', :path => 'index')
+      create_page(heading: 'Home', path: 'index')
       Nesta::Page.find_by_path('/').title.should == 'Home'
     end
 
     it "should respect title metadata" do
-      create_page(:path => 'index', :metadata => { 'title' => 'Specific title' })
+      create_page(path: 'index', metadata: { 'title' => 'Specific title' })
       Nesta::Page.find_by_path('/').title.should == 'Specific title'
     end
 
     it "should set title to site title by default" do
-      create_page(:path => 'index')
+      create_page(path: 'index')
       Nesta::Page.find_by_path('/').title.should == 'My blog'
     end
 
     it "should set permalink to empty string" do
-      create_page(:path => 'index')
+      create_page(path: 'index')
       Nesta::Page.find_by_path('/').permalink.should == ''
     end
 
     it "should set abspath to /" do
-      create_page(:path => 'index')
+      create_page(path: 'index')
       Nesta::Page.find_by_path('/').abspath.should == '/'
     end
   end
@@ -127,23 +127,23 @@ shared_examples_for "Page" do
   end
 
   it "should reload cached files when modified" do
-    create_page(:path => "a-page", :heading => "Version 1")
+    create_page(path: "a-page", heading: "Version 1")
     now = Time.now
     File.stub(:mtime).and_return(now - 1)
     Nesta::Page.find_by_path("a-page")
-    create_page(:path => "a-page", :heading => "Version 2")
+    create_page(path: "a-page", heading: "Version 2")
     File.stub(:mtime).and_return(now)
     Nesta::Page.find_by_path("a-page").heading.should == "Version 2"
   end
 
   it "should have default priority of 0 in category" do
-    page = create_page(:metadata => { 'categories' => 'some-page' })
+    page = create_page(metadata: { 'categories' => 'some-page' })
     page.priority('some-page').should == 0
     page.priority('another-page').should be_nil
   end
 
   it "should read priority from category metadata" do
-    page = create_page(:metadata => {
+    page = create_page(metadata: {
       'categories' => ' some-page:1, another-page , and-another :-1 '
     })
     page.priority('some-page').should == 1
@@ -154,37 +154,37 @@ shared_examples_for "Page" do
   describe "with assigned pages" do
     before(:each) do
       @category = create_category
-      create_article(:heading => 'Article 1', :path => 'article-1')
+      create_article(heading: 'Article 1', path: 'article-1')
       create_article(
-        :heading => 'Article 2',
-        :path => 'article-2',
-        :metadata => {
+        heading: 'Article 2',
+        path: 'article-2',
+        metadata: {
           'date' => '30 December 2008',
           'categories' => @category.path
         }
       )
       @article = create_article(
-        :heading => 'Article 3',
-        :path => 'article-3',
-        :metadata => {
+        heading: 'Article 3',
+        path: 'article-3',
+        metadata: {
           'date' => '31 December 2008',
           'categories' => @category.path
         }
       )
       @category1 = create_category(
-        :path => 'category-1',
-        :heading => 'Category 1',
-        :metadata => { 'categories' => @category.path }
+        path: 'category-1',
+        heading: 'Category 1',
+        metadata: { 'categories' => @category.path }
       )
       @category2 = create_category(
-        :path => 'category-2',
-        :heading => 'Category 2',
-        :metadata => { 'categories' => @category.path }
+        path: 'category-2',
+        heading: 'Category 2',
+        metadata: { 'categories' => @category.path }
       )
       @category3 = create_category(
-        :path => 'category-3',
-        :heading => 'Category 3',
-        :metadata => { 'categories' => "#{@category.path}:1" }
+        path: 'category-3',
+        heading: 'Category 3',
+        metadata: { 'categories' => "#{@category.path}:1" }
       )
     end
 
@@ -211,9 +211,9 @@ shared_examples_for "Page" do
 
     it "should not find pages scheduled in the future" do
       future_date = (Time.now + 172800).strftime("%d %B %Y")
-      article = create_article(:heading => "Article 4",
-                               :path => "foo/article-4",
-                               :metadata => { "date" => future_date })
+      article = create_article(heading: "Article 4",
+                               path: "foo/article-4",
+                               metadata: { "date" => future_date })
       Nesta::Page.find_articles.detect{|a| a == article}.should be_nil
     end
   end
@@ -221,9 +221,9 @@ shared_examples_for "Page" do
   describe "with pages in draft" do
     before(:each) do
       @category = create_category
-      @draft = create_page(:heading => 'Forthcoming content',
-                           :path => 'foo/in-draft',
-                           :metadata => {
+      @draft = create_page(heading: 'Forthcoming content',
+                           path: 'foo/in-draft',
+                           metadata: {
         'categories' => @category.path,
         'flags' => 'draft'
       })
@@ -241,13 +241,13 @@ shared_examples_for "Page" do
 
   describe "when finding articles" do
     before(:each) do
-      create_article(:heading => "Article 1", :path => "article-1")
-      create_article(:heading => "Article 2",
-                     :path => "article-2",
-                     :metadata => { "date" => "31 December 2008" })
-      create_article(:heading => "Article 3",
-                     :path => "foo/article-3",
-                     :metadata => { "date" => "30 December 2008" })
+      create_article(heading: "Article 1", path: "article-1")
+      create_article(heading: "Article 2",
+                     path: "article-2",
+                     metadata: { "date" => "31 December 2008" })
+      create_article(heading: "Article 3",
+                     path: "foo/article-3",
+                     metadata: { "date" => "30 December 2008" })
     end
 
     it "should only find pages with dates" do
@@ -263,51 +263,51 @@ shared_examples_for "Page" do
   end
 
   it "should be able to find parent page" do
-    category = create_category(:path => 'parent')
-    article = create_article(:path => 'parent/child')
+    category = create_category(path: 'parent')
+    article = create_article(path: 'parent/child')
     article.parent.should == category
   end
 
   describe "(with deep index page)" do
     it "should be able to find index parent" do
-      home = create_category(:path => 'index', :heading => 'Home')
-      category = create_category(:path => 'parent')
+      home = create_category(path: 'index', heading: 'Home')
+      category = create_category(path: 'parent')
       category.parent.should == home
       home.parent.should be_nil
     end
 
     it "should be able to find parent of index" do
-      category = create_category(:path => "parent")
-      index = create_category(:path => "parent/child/index")
+      category = create_category(path: "parent")
+      index = create_category(path: "parent/child/index")
       index.parent.should == category
     end
 
     it "should be able to find permalink of index" do
-      index = create_category(:path => "parent/child/index")
+      index = create_category(path: "parent/child/index")
       index.permalink.should == 'child'
     end
   end
 
   describe "(with missing nested page)" do
     it "should consider grandparent to be parent" do
-      grandparent = create_category(:path => 'grandparent')
-      child = create_category(:path => 'grandparent/parent/child')
+      grandparent = create_category(path: 'grandparent')
+      child = create_category(path: 'grandparent/parent/child')
       child.parent.should == grandparent
     end
 
     it "should consider grandparent home page to be parent" do
-      home = create_category(:path => 'index')
-      child = create_category(:path => 'parent/child')
+      home = create_category(path: 'index')
+      child = create_category(path: 'parent/child')
       child.parent.should == home
     end
   end
 
   describe "when assigned to categories" do
     before(:each) do
-      create_category(:heading => "Apple", :path => "the-apple")
-      create_category(:heading => "Banana", :path => "banana")
+      create_category(heading: "Apple", path: "the-apple")
+      create_category(heading: "Banana", path: "banana")
       @article = create_article(
-          :metadata => { "categories" => "banana, the-apple" })
+          metadata: { "categories" => "banana, the-apple" })
     end
 
     it "should be possible to list the categories" do
@@ -318,10 +318,10 @@ shared_examples_for "Page" do
     end
 
     it "should sort categories by link text" do
-      create_category(:heading => "Orange",
-                      :metadata => { "link text" => "A citrus fruit" },
-                      :path => "orange")
-      article = create_article(:metadata => { "categories" => "apple, orange" })
+      create_category(heading: "Orange",
+                      metadata: { "link text" => "A citrus fruit" },
+                      path: "orange")
+      article = create_article(metadata: { "categories" => "apple, orange" })
       @article.categories.first.link_text.should == "Apple"
       article.categories.first.link_text.should == "A citrus fruit"
     end
@@ -333,7 +333,7 @@ shared_examples_for "Page" do
   end
 
   it "should set parent to nil when at root" do
-    create_category(:path => "top-level").parent.should be_nil
+    create_category(path: "top-level").parent.should be_nil
   end
 
   describe "when not assigned to category" do
@@ -368,7 +368,7 @@ shared_examples_for "Page" do
     end
 
     it "should parse heading correctly" do
-      @article.to_html.should have_selector("h1", :content => "My article")
+      @article.to_html.should have_selector("h1", content: "My article")
     end
 
     it "should use heading as link text" do
@@ -399,7 +399,7 @@ shared_examples_for "Page" do
       @read_more = 'Continue at your leisure'
       @skillz = 'ruby, guitar, bowstaff'
       @link_text = 'Link to stuff page'
-      @article = create_article(:metadata => {
+      @article = create_article(metadata: {
         'date' => @date.gsub('September', 'Sep'),
         'description' => @description,
         'flags' => 'draft, orange',
@@ -434,7 +434,7 @@ shared_examples_for "Page" do
     end
 
     it "should be possible to convert an article to HTML" do
-      @article.to_html.should have_selector("h1", :content => "My article")
+      @article.to_html.should have_selector("h1", content: "My article")
     end
 
     it "should not include metadata in the HTML" do
@@ -446,7 +446,7 @@ shared_examples_for "Page" do
     end
 
     it "should not include heading in body" do
-      @article.body.should_not have_selector("h1", :content => "My article")
+      @article.body.should_not have_selector("h1", content: "My article")
     end
 
     it "should retrieve description from metadata" do
@@ -505,7 +505,7 @@ shared_examples_for "Page" do
 
   describe "with no heading" do
     before(:each) do
-      @no_heading_page = create_page(:path => 'page-with-no-heading')
+      @no_heading_page = create_page(path: 'page-with-no-heading')
     end
 
     it "should raise a HeadingNotSet exception if you call heading" do
@@ -530,8 +530,8 @@ describe "All types of page" do
   it "should still return top level menu items" do
     # Page.menu_items is deprecated; we're keeping it for the moment so
     # that we don't break themes or code in a local app.rb (just yet).
-    page1 = create_category(:path => "page-1")
-    page2 = create_category(:path => "page-2")
+    page1 = create_category(path: "page-1")
+    page2 = create_category(path: "page-2")
     create_menu([page1.path, page2.path].join("\n"))
     Nesta::Page.menu_items.should == [page1, page2]
   end
@@ -549,15 +549,15 @@ describe "Markdown page" do
 
   it "should set heading from first h1 tag" do
     page = create_page(
-      :path => "a-page",
-      :heading => "First heading",
-      :content => "# Second heading"
+      path: "a-page",
+      heading: "First heading",
+      content: "# Second heading"
     )
     page.heading.should == "First heading"
   end
 
   it "should ignore trailing # characters in headings" do
-    article = create_article(:heading => 'With trailing #')
+    article = create_article(heading: 'With trailing #')
     article.heading.should == 'With trailing'
   end
 end
@@ -574,27 +574,27 @@ describe "Haml page" do
 
   it "should set heading from first h1 tag" do
     page = create_page(
-      :path => "a-page",
-      :heading => "First heading",
-      :content => "%h1 Second heading"
+      path: "a-page",
+      heading: "First heading",
+      content: "%h1 Second heading"
     )
     page.heading.should == "First heading"
   end
 
   it "should wrap <p> tags around one line summary text" do
     page = create_page(
-      :path => "a-page",
-      :heading => "First para",
-      :metadata => { "Summary" => "Wrap me" }
+      path: "a-page",
+      heading: "First para",
+      metadata: { "Summary" => "Wrap me" }
     )
     page.summary.should include("<p>Wrap me</p>")
   end
 
   it "should wrap <p> tags around multiple lines of summary text" do
     page = create_page(
-      :path => "a-page",
-      :heading => "First para",
-      :metadata => { "Summary" => 'Wrap me\nIn paragraph tags' }
+      path: "a-page",
+      heading: "First para",
+      metadata: { "Summary" => 'Wrap me\nIn paragraph tags' }
     )
     page.summary.should include("<p>Wrap me</p>")
     page.summary.should include("<p>In paragraph tags</p>")
@@ -613,9 +613,9 @@ describe "Textile page" do
 
   it "should set heading from first h1 tag" do
     page = create_page(
-      :path => "a-page",
-      :heading => "First heading",
-      :content => "h1. Second heading"
+      path: "a-page",
+      heading: "First heading",
+      content: "h1. Second heading"
     )
     page.heading.should == "First heading"
   end
@@ -626,7 +626,7 @@ describe "Menu" do
 
   before(:each) do
     stub_configuration
-    @page = create_page(:path => "page-1")
+    @page = create_page(path: "page-1")
   end
 
   after(:each) do
@@ -649,7 +649,7 @@ describe "Menu" do
   describe "with nested sub menus" do
     before(:each) do
       (2..6).each do |i|
-        instance_variable_set("@page#{i}", create_page(:path => "page-#{i}"))
+        instance_variable_set("@page#{i}", create_page(path: "page-#{i}"))
       end
       text = <<-EOF
 #{@page.path}

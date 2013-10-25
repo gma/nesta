@@ -17,7 +17,7 @@ module Nesta
   class App < Sinatra::Base
     set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
-    set :haml, { :format => :html5 }
+    set :haml, { format: :html5 }
 
     helpers Overrides::Renderers
     helpers Navigation::Renderers
@@ -48,7 +48,7 @@ module Nesta
     Overrides.load_theme_app
 
     get '/robots.txt' do
-      content_type 'text/plain', :charset => 'utf-8'
+      content_type 'text/plain', charset: 'utf-8'
       <<-EOF
 # robots.txt
 # See http://en.wikipedia.org/wiki/Robots_exclusion_standard
@@ -56,7 +56,7 @@ module Nesta
     end
 
     get '/css/:sheet.css' do
-      content_type 'text/css', :charset => 'utf-8'
+      content_type 'text/css', charset: 'utf-8'
       stylesheet(params[:sheet].to_sym)
     end
 
@@ -65,26 +65,26 @@ module Nesta
       if file =~ /\.\.\//
         not_found
       else
-        send_file(file, :disposition => nil)
+        send_file(file, disposition: nil)
       end
     end
 
     get '/articles.xml' do
-      content_type :xml, :charset => 'utf-8'
+      content_type :xml, charset: 'utf-8'
       set_from_config(:title, :subtitle, :author)
       @articles = Page.find_articles.select { |a| a.date }[0..9]
-      haml(:atom, :format => :xhtml, :layout => false)
+      haml(:atom, format: :xhtml, layout: false)
     end
 
     get '/sitemap.xml' do
-      content_type :xml, :charset => 'utf-8'
+      content_type :xml, charset: 'utf-8'
       @pages = Page.find_all.reject do |page|
         page.draft? or page.flagged_as?('skip-sitemap')
       end
       @last = @pages.map { |page| page.last_modified }.inject do |latest, page|
         (page > latest) ? page : latest
       end
-      haml(:sitemap, :format => :xhtml, :layout => false)
+      haml(:sitemap, format: :xhtml, layout: false)
     end
 
     get '*' do
@@ -94,7 +94,7 @@ module Nesta
       raise Sinatra::NotFound if @page.nil?
       @title = @page.title
       set_from_page(:description, :keywords)
-      haml(@page.template, :layout => @page.layout)
+      haml(@page.template, layout: @page.layout)
     end
   end
 end

@@ -25,7 +25,7 @@ module Nesta
       end
 
       def absolute_urls(text)
-        text.gsub!(/(<a href=['"])\//, '\1' + path_to('/', :uri => true))
+        text.gsub!(/(<a href=['"])\//, '\1' + path_to('/', uri: true))
         text
       end
 
@@ -54,7 +54,7 @@ module Nesta
       def local_stylesheet_link_tag(name)
         pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0
-          haml_tag :link, :href => path_to("/css/#{name}.css"), :rel => "stylesheet"
+          haml_tag :link, href: path_to("/css/#{name}.css"), rel: "stylesheet"
         end
       end
 
@@ -63,7 +63,7 @@ module Nesta
       end
 
       def article_summaries(articles)
-        haml(:summaries, :layout => false, :locals => { :pages => articles })
+        haml(:summaries, layout: false, locals: { pages: articles })
       end
 
       def articles_heading
@@ -78,7 +78,7 @@ module Nesta
       # path, rather than just the path relative to the site's root URI.
       # The default is `false`.
       #
-      #   path_to(page.abspath, :uri => true)
+      #   path_to(page.abspath, uri: true)
       #
       def path_to(page_path, options = {})
         defaults = { absolute: false }

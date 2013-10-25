@@ -36,7 +36,7 @@ module ConfigSpecHelper
     stub_config_key('title', 'My blog', options)
     stub_config_key('subtitle', 'about stuff', options)
     stub_config_key(
-        'content', temp_path('content'), options.merge(:rack_env => true))
+        'content', temp_path('content'), options.merge(rack_env: true))
   end
 end
 
@@ -48,7 +48,7 @@ module TempFileHelper
   end
 
   def remove_temp_directory
-    FileUtils.rm_r(TempFileHelper::TEMP_DIR, :force => true)
+    FileUtils.rm_r(TempFileHelper::TEMP_DIR, force: true)
   end
 
   def temp_path(base)

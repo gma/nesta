@@ -66,7 +66,7 @@ describe "Config" do
     
     it "should override top level settings with RACK_ENV specific settings" do
       stub_config_key('content', 'general/path')
-      stub_config_key('content', 'rack_env/path', :rack_env => true)
+      stub_config_key('content', 'rack_env/path', rack_env: true)
       Nesta::Config.content.should == 'rack_env/path'
     end
   end

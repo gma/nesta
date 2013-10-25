@@ -14,8 +14,8 @@ describe "sitemap XML" do
       mock_file_stat(:stub, path, "3 Jan 2009, 15:10")
     end
     skipped_page_definition = {
-      :path => 'unlisted-page',
-      :metadata => { 'flags' => 'skip-sitemap' }
+      path: 'unlisted-page',
+      metadata: { 'flags' => 'skip-sitemap' }
     }
     @skipped = create_page(skipped_page_definition) do |path|
       mock_file_stat(:stub, path, "3 Jan 2009, 15:07")
@@ -38,18 +38,18 @@ describe "sitemap XML" do
   end
 
   it "should reference the home page" do
-    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
+    assert_xpath "//urlset/url/loc", content: "http://example.org/"
   end
 
   it "should configure home page to be checked frequently" do
-    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
-    assert_xpath "//urlset/url/changefreq", :content => "daily"
-    assert_xpath "//urlset/url/priority", :content => "1.0"
+    assert_xpath "//urlset/url/loc", content: "http://example.org/"
+    assert_xpath "//urlset/url/changefreq", content: "daily"
+    assert_xpath "//urlset/url/priority", content: "1.0"
   end
 
   it "should set the homepage lastmod from latest article" do
-    assert_xpath "//urlset/url/loc", :content => "http://example.org/"
-    assert_xpath "//urlset/url/lastmod", :content => "2009-01-03T15:10:00"
+    assert_xpath "//urlset/url/loc", content: "http://example.org/"
+    assert_xpath "//urlset/url/lastmod", content: "2009-01-03T15:10:00"
   end
 
   def test_url(path)
@@ -57,15 +57,15 @@ describe "sitemap XML" do
   end
 
   it "should reference category pages" do
-    assert_xpath "//urlset/url/loc", :content => test_url(@category.path)
+    assert_xpath "//urlset/url/loc", content: test_url(@category.path)
   end
 
   it "should reference article pages" do
-    assert_xpath "//urlset/url/loc", :content => test_url(@article.path)
+    assert_xpath "//urlset/url/loc", content: test_url(@article.path)
   end
 
   it "should not include pages that have the skip-sitemap flag set" do
-    assert_not_xpath "//urlset/url/loc", :content => test_url(@skipped.path)
+    assert_not_xpath "//urlset/url/loc", content: test_url(@skipped.path)
   end
 end
 
@@ -92,10 +92,10 @@ describe "sitemap XML lastmod" do
   end
 
   it "should be set to latest page for home page" do
-    create_article(:path => "article-1") do |path|
+    create_article(path: "article-1") do |path|
       mock_file_stat(:stub, path, "4 January 2009")
     end
-    create_article(:path => "article-2") do |path|
+    create_article(path: "article-2") do |path|
       mock_file_stat(:stub, path, "3 January 2009")
     end
     get "/sitemap.xml"

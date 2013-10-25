@@ -49,7 +49,7 @@ module Nesta
         [local_view_path, theme_view_path].each do |path|
           engines.each do |engine|
             if template_exists?(engine, path, template)
-              return { :views => path }, engine
+              return { views: path }, engine
             end
           end
         end

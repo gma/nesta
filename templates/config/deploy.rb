@@ -38,10 +38,10 @@ namespace :vlad do
   # using a different app server in the call to Vlad.load in Rakefile.
   #
   desc "Deploy the code and restart the server"
-  task :deploy => [:update, :start_app]
+  task deploy: [:update, :start_app]
 
   # If you use bundler to manage the installation of gems on your server
   # you can use this definition of the deploy task instead:
   #
-  # task :deploy => [:update, :bundle, :start_app]
+  # task deploy: [:update, :bundle, :start_app]
 end

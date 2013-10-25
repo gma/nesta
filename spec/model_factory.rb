@@ -9,10 +9,10 @@ module ModelFactory
 
   def create_article(options = {}, &block)
     o = {
-      :path => 'article-prefix/my-article',
-      :heading => 'My article',
-      :content => 'Content goes here',
-      :metadata => {
+      path: 'article-prefix/my-article',
+      heading: 'My article',
+      content: 'Content goes here',
+      metadata: {
         'date' => '29 December 2008'
       }.merge(options.delete(:metadata) || {})
     }.merge(options)
@@ -21,9 +21,9 @@ module ModelFactory
 
   def create_category(options = {}, &block)
     o = {
-      :path => 'category-prefix/my-category',
-      :heading => 'My category',
-      :content => 'Content goes here'
+      path: 'category-prefix/my-category',
+      heading: 'My category',
+      content: 'Content goes here'
     }.merge(options)
     create_page(o, &block)
   end

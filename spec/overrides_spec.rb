@@ -7,8 +7,8 @@ describe "Rendering" do
 
   def create_fixture(type, name, content)
     base_path = {
-      :local => Nesta::Path.local,
-      :theme => Nesta::Path.themes(@theme)
+      local: Nesta::Path.local,
+      theme: Nesta::Path.themes(@theme)
     }[type]
     path = File.join(base_path, name)
     @fixtures << path

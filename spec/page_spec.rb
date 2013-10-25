@@ -35,9 +35,9 @@ shared_examples_for "page that can display menus" do
 
   describe "and nested menu configured" do
     before(:each) do
-      @level2 = create_category(:path => "level-2", :heading => "Level 2",
-                                :metadata => {'link text' => "Level 2 link"})
-      @level3 = create_category(:path => "level-3", :heading => "Level 3")
+      @level2 = create_category(path: "level-2", heading: "Level 2",
+                                metadata: {'link text' => "Level 2 link"})
+      @level3 = create_category(path: "level-3", heading: "Level 3")
       text = <<-EOF
 #{@category.abspath}
   #{@level2.abspath}
@@ -73,30 +73,30 @@ EOF
 
     it "should use 'Home' as the home page link if not otherwise specified" do
       create_page(
-        :path => 'index',
-        :ext => :haml,
-        :content => @default_homepage_content)
+        path: 'index',
+        ext: :haml,
+        content: @default_homepage_content)
       do_get
       assert_selector "ul.menu a[@href='/']:contains('Home')"
     end
 
     it "should use the heading if it exists" do
       create_page(
-        :path => 'index',
-        :ext => :haml,
-        :heading => 'My heading',
-        :content => @default_homepage_content)
+        path: 'index',
+        ext: :haml,
+        heading: 'My heading',
+        content: @default_homepage_content)
       do_get
       assert_selector "ul.menu a[@href='/']:contains('My heading')"
     end
 
     it "should use the link text if specified" do
       create_page(
-        :path => 'index',
-        :ext => :haml,
-        :heading => 'My heading',
-        :content => @default_homepage_content,
-        :metadata => {'link text'=>'My link text'})
+        path: 'index',
+        ext: :haml,
+        heading: 'My heading',
+        content: @default_homepage_content,
+        metadata: {'link text'=>'My link text'})
       do_get
       assert_selector "ul.menu a[@href='/']:contains('My link text')"
     end
@@ -110,14 +110,14 @@ describe "The layout" do
   it "should not include GA JavaScript by default" do
     stub_configuration
     get "/"
-    assert_not_selector "script", :content => "'_setAccount', 'UA-1234'"
+    assert_not_selector "script", content: "'_setAccount', 'UA-1234'"
   end
 
   it "should include GA JavaScript if configured" do
-    stub_config_key('google_analytics_code', 'UA-1234', :rack_env => true)
+    stub_config_key('google_analytics_code', 'UA-1234', rack_env: true)
     stub_configuration
     get "/"
-    assert_selector 'script', :content => "'_setAccount', 'UA-1234'"
+    assert_selector 'script', content: "'_setAccount', 'UA-1234'"
   end
 end
 
@@ -130,10 +130,10 @@ describe "The home page" do
     template_path = File.expand_path(
         'templates', File.dirname(File.dirname(__FILE__)))
     create_category(
-      :path => 'index',
-      :ext => :haml,
-      :heading => 'Home',
-      :content => File.read(File.join(template_path, 'index.haml'))
+      path: 'index',
+      ext: :haml,
+      heading: 'Home',
+      content: File.read(File.join(template_path, 'index.haml'))
     )
     create_category
   end
@@ -162,12 +162,12 @@ describe "The home page" do
 
   it "should display site title in hgroup tag" do
     do_get
-    assert_selector 'hgroup h1', :content => "My blog"
+    assert_selector 'hgroup h1', content: "My blog"
   end
 
   it "should display site subtitle in hgroup tag" do
     do_get
-    assert_selector 'hgroup h2', :content => "about stuff"
+    assert_selector 'hgroup h2', content: "about stuff"
   end
 
   describe "when articles have no summary" do
@@ -177,12 +177,12 @@ describe "The home page" do
     end
 
     it "should display full content of article" do
-      assert_selector "p", :content => "Content goes here"
+      assert_selector "p", content: "Content goes here"
     end
 
     it "should not display read more link" do
       last_response.should be_ok
-      assert_not_selector "a", :content => 'continue'
+      assert_not_selector "a", content: 'continue'
     end
   end
 
@@ -190,7 +190,7 @@ describe "The home page" do
     before(:each) do
       @summary = 'Multiline\n\nsummary'
       @read_more = "Continue at your leisure"
-      @article = create_article(:metadata => {
+      @article = create_article(metadata: {
         "summary" => @summary,
         "read more" => @read_more
       })
@@ -204,11 +204,11 @@ describe "The home page" do
     end
 
     it "should display article summary if available" do
-      assert_selector 'p', :content => @summary.split('\n\n').first
+      assert_selector 'p', content: @summary.split('\n\n').first
     end
 
     it "should display read more link" do
-      assert_selector "a[@href$='#{@article.abspath}']", :content => @read_more
+      assert_selector "a[@href$='#{@article.abspath}']", content: @read_more
     end
   end
 end
@@ -224,7 +224,7 @@ describe "An article" do
     @description = 'Page about stuff'
     @summary = 'Multiline\n\nsummary'
     @link_text = 'Link to page about stuff'
-    @article = create_article(:metadata => {
+    @article = create_article(metadata: {
       'date' => @date.gsub('September', 'Sep'),
       'description' => @description,
       'keywords' => @keywords,
@@ -259,31 +259,31 @@ describe "An article" do
 
   it "should display the heading" do
     do_get
-    assert_selector 'h1', :content => 'My article'
+    assert_selector 'h1', content: 'My article'
   end
 
   it "should use link text for title tag" do
     do_get
-    assert_selector 'title', :content => @link_text
+    assert_selector 'title', content: @link_text
   end
 
   it "should display the date" do
     do_get
-    assert_selector 'time', :content => @date
+    assert_selector 'time', content: @date
   end
 
   it "should display the content" do
     do_get
-    assert_selector 'p', :content => 'Content goes here'
+    assert_selector 'p', content: 'Content goes here'
   end
 
   describe "that is assigned to categories" do
     before(:each) do
-      create_category(:heading => 'Apple', :path => 'the-apple')
-      @category = create_category(:heading => 'Banana', :path => 'banana')
+      create_category(heading: 'Apple', path: 'the-apple')
+      @category = create_category(heading: 'Banana', path: 'banana')
       @article = create_article(
-        :path => "#{@category.path}/article",
-        :metadata => { 'categories' => 'banana, the-apple' }
+        path: "#{@category.path}/article",
+        metadata: { 'categories' => 'banana, the-apple' }
       )
     end
 
@@ -294,15 +294,15 @@ describe "An article" do
 
     it "should link to each category" do
       do_get
-      assert_selector "p.meta a[href='/banana']", :content => "Banana"
-      assert_selector "p.meta a[href='/the-apple']", :content => "Apple"
+      assert_selector "p.meta a[href='/banana']", content: "Banana"
+      assert_selector "p.meta a[href='/the-apple']", content: "Apple"
     end
 
     it "should link to a category in breadcrumb" do
       do_get
       href = @category.abspath
       link_text = @category.link_text
-      assert_selector "nav.breadcrumb a[href='#{href}']", :content => link_text
+      assert_selector "nav.breadcrumb a[href='#{href}']", content: link_text
     end
 
     it "should not include Disqus comments by default" do
@@ -358,8 +358,8 @@ describe "A page" do
       @keywords = "things, stuff"
       @articles_heading = "Posts about this stuff"
       @category = create_category(
-        :content => "# My category\n\n#{@content}",
-        :metadata => {
+        content: "# My category\n\n#{@content}",
+        metadata: {
           'title' => @title,
           'description' => @description,
           'keywords' => @keywords,
@@ -385,32 +385,32 @@ describe "A page" do
 
     it "should display the heading" do
       do_get
-      assert_selector 'h1', :content => @category.heading
+      assert_selector 'h1', content: @category.heading
     end
 
     it "should use title metadata to set heading" do
       do_get
-      assert_selector 'title', :content => @title
+      assert_selector 'title', content: @title
     end
 
     it "should display the content" do
       do_get
-      assert_selector "p", :content => @content
+      assert_selector "p", content: @content
     end
 
     describe "with associated pages" do
       before(:each) do
         @category1 = create_category(
-          :path => 'category1',
-          :heading => 'Category 1',
-          :metadata => {
+          path: 'category1',
+          heading: 'Category 1',
+          metadata: {
             'categories' => 'category-prefix/my-category:-1'
           }
         )
         @category2 = create_category(
-          :path => 'category2',
-          :heading => 'Category 2',
-          :metadata => {
+          path: 'category2',
+          heading: 'Category 2',
+          metadata: {
             'categories' => 'category-prefix/my-category:1'
           }
         )
@@ -418,35 +418,35 @@ describe "A page" do
 
       it "should list highest priority pages at the top" do
         do_get
-        assert_selector 'li:nth-child(1) h1 a', :content => 'Category 2'
-        assert_selector 'li:nth-child(2) h1 a', :content => 'Category 1'
+        assert_selector 'li:nth-child(1) h1 a', content: 'Category 2'
+        assert_selector 'li:nth-child(2) h1 a', content: 'Category 1'
       end
     end
 
     describe "with associated articles" do
       before(:each) do
         @article = create_article(
-          :path => "another-page",
-          :heading => "Categorised",
-          :metadata => { :categories => @category.path,
+          path: "another-page",
+          heading: "Categorised",
+          metadata: { categories: @category.path,
                          'link text' => 'Categorised link'},
-          :content => "Article content"
+          content: "Article content"
         )
         @article2 = create_article(
-          :path => "second-article", :heading => "Second article")
+          path: "second-article", heading: "Second article")
       end
 
       it "should display links to articles" do
         do_get
         href = @article.abspath
         link_text = @article.link_text
-        assert_selector "h1 a[@href$='#{href}']", :content => link_text
-        assert_not_selector "h3", :content => @article2.link_text
+        assert_selector "h1 a[@href$='#{href}']", content: link_text
+        assert_not_selector "h3", content: @article2.link_text
       end
 
       it "should display the article heading" do
         do_get
-        assert_selector 'h1', :content => @articles_heading
+        assert_selector 'h1', content: @articles_heading
       end
     end
   end
@@ -467,30 +467,30 @@ describe "A Haml page" do
 
   it "should be able to access helper methods" do
     create_page(
-      :path => "a-page",
-      :ext => :haml,
-      :content => "%div= format_date(Date.new(2010, 11, 23))",
-      :heading => "A Page"
+      path: "a-page",
+      ext: :haml,
+      content: "%div= format_date(Date.new(2010, 11, 23))",
+      heading: "A Page"
     )
     get "/a-page"
-    assert_selector "div", :content => "23 November 2010"
+    assert_selector "div", content: "23 November 2010"
   end
 
   it "should access helpers when rendering articles on a category page" do
     category = create_page(
-      :path => "a-page",
-      :heading => "First heading",
-      :content => "Blah blah"
+      path: "a-page",
+      heading: "First heading",
+      content: "Blah blah"
     )
     create_article(
-      :path => "an-article",
-      :ext => :haml,
-      :heading => "First heading",
-      :metadata => { :categories => category.path },
-      :content => "%h1 Second heading\n\n%div= format_date(Date.new(2010, 11, 23))"
+      path: "an-article",
+      ext: :haml,
+      heading: "First heading",
+      metadata: { categories: category.path },
+      content: "%h1 Second heading\n\n%div= format_date(Date.new(2010, 11, 23))"
     )
     get "/a-page"
-    assert_selector "div", :content => "23 November 2010"
+    assert_selector "div", content: "23 November 2010"
   end
 end
 
