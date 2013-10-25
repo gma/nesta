@@ -2,6 +2,8 @@ require 'yaml'
 
 module Nesta
   class Config
+    class NotDefined < RuntimeError; end
+
     @settings = %w[
       title subtitle theme disqus_short_name cache content google_analytics_code
     ]
@@ -14,11 +16,20 @@ module Nesta
     
     def self.fetch(key)
       setting = key.to_s
-      from_environment(setting) || from_yaml(setting)
+      from_environment(setting) || from_yaml(setting) ||
+          (raise NotDefined.new(setting))
     end
 
     def self.method_missing(method, *args)
-      settings.include?(method.to_s) ? fetch(method) : super
+      if settings.include?(method.to_s)
+        begin
+          fetch(method)
+        rescue NotDefined
+          nil
+        end
+      else
+        super
+      end
     end
     
     def self.author

@@ -87,5 +87,11 @@ describe "Config" do
       Nesta::Config.fetch('my_setting').should == 'value in YAML'
       Nesta::Config.fetch(:my_setting).should == 'value in YAML'
     end
+
+    it "should throw an error when retrieved if they don't exist" do
+      lambda {
+        Nesta::Config.fetch('who me?')
+      }.should raise_error(Nesta::Config::NotDefined)
+    end
   end
 end
