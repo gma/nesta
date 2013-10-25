@@ -12,13 +12,13 @@ module Nesta
       attr_accessor :settings, :author_settings, :yaml_conf
     end
     
+    def self.fetch(key)
+      setting = key.to_s
+      from_environment(setting) || from_yaml(setting)
+    end
+
     def self.method_missing(method, *args)
-      setting = method.to_s
-      if settings.include?(setting)
-        from_environment(setting) || from_yaml(setting)
-      else
-        super
-      end
+      settings.include?(method.to_s) ? fetch(method) : super
     end
     
     def self.author

@@ -30,6 +30,7 @@ describe "Config" do
         Nesta::Config.a_boolean.should be_false
       ensure
         Nesta::Config.settings.pop
+        ENV.delete('NESTA_A_BOOLEAN')
       end
     end
     
@@ -67,6 +68,24 @@ describe "Config" do
       stub_config_key('content', 'general/path')
       stub_config_key('content', 'rack_env/path', :rack_env => true)
       Nesta::Config.content.should == 'rack_env/path'
+    end
+  end
+
+  describe 'user defined config variables' do
+    it 'should be retrieved from ENV' do
+      ENV['NESTA_MY_SETTING'] = 'value in ENV'
+      begin
+        Nesta::Config.fetch('my_setting').should == 'value in ENV'
+        Nesta::Config.fetch(:my_setting).should == 'value in ENV'
+      ensure
+        ENV.delete('NESTA_MY_SETTING')
+      end
+    end
+
+    it 'should be retrieved from YAML' do
+      stub_config_key('my_setting', 'value in YAML')
+      Nesta::Config.fetch('my_setting').should == 'value in YAML'
+      Nesta::Config.fetch(:my_setting).should == 'value in YAML'
     end
   end
 end
