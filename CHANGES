@@ -1,5 +1,8 @@
 = 0.10.0 / (Unreleased)
 
+ * Support for Ruby 1.8 has been dropped. Ruby 1.9.3 or above is
+   recommended.
+
  * Upgraded the default theme to a responsive design, using Google's
    Roboto Slab web font. (Graham Ashton)
 
