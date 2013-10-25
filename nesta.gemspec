@@ -33,7 +33,7 @@ EOF
 
   s.add_dependency('haml', '~> 3.1')
   s.add_dependency('sass', '~> 3.1')
-  s.add_dependency('rdiscount', '~> 1.6')
+  s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sinatra', '~> 1.4')
   s.add_dependency('rack', '~> 1.3')
