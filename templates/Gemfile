@@ -5,7 +5,7 @@ gem 'nesta', '<%= Nesta::VERSION %>'
 gem 'vlad-git', '2.2.0'<% end %>
 
 group :development do
-  gem 'shotgun'
+  gem 'mr-sparkle'
 end
 
 # gem 'debugger'
