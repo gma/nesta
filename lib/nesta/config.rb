@@ -5,7 +5,14 @@ module Nesta
     class NotDefined < KeyError; end
 
     @settings = %w[
-      title subtitle theme disqus_short_name cache content google_analytics_code
+      cache
+      content
+      disqus_short_name
+      google_analytics_code
+      read_more
+      subtitle
+      theme
+      title
     ]
     @author_settings = %w[name uri email]
     @yaml = nil
@@ -65,13 +72,7 @@ module Nesta
     end
 
     def self.read_more
-      from_environment('read_more')
-    rescue NotDefined
-      begin
-        from_yaml('read_more')
-      rescue NotDefined
-        'Continue reading'
-      end
+      fetch('read_more', 'Continue reading')
     end
 
     def self.from_environment(setting)

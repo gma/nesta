@@ -41,6 +41,15 @@ describe "Config" do
         ENV.delete('NESTA_A_BOOLEAN')
       end
     end
+
+    it 'should return configured value for "Read more"' do
+      ENV['NESTA_READ_MORE'] = 'Read on'
+      begin
+        Nesta::Config.read_more.should == 'Read on'
+      ensure
+        ENV.delete('NESTA_READ_MORE')
+      end
+    end
     
     it "should set author hash from ENV" do
       name = "Name from ENV"
