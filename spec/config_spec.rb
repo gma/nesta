@@ -88,8 +88,8 @@ describe "Config" do
     end
   end
 
-  describe 'user defined config variables' do
-    it 'should be retrieved from ENV' do
+  describe 'Nesta::Config.fetch' do
+    it 'should be retrieve settings from environment' do
       ENV['NESTA_MY_SETTING'] = 'value in ENV'
       begin
         Nesta::Config.fetch('my_setting').should == 'value in ENV'
@@ -99,28 +99,28 @@ describe "Config" do
       end
     end
 
-    it 'should be retrieved from YAML' do
+    it 'should retrieved settings from YAML' do
       stub_config_key('my_setting', 'value in YAML')
       Nesta::Config.fetch('my_setting').should == 'value in YAML'
       Nesta::Config.fetch(:my_setting).should == 'value in YAML'
     end
 
-    it "should throw an error when retrieved if they don't exist" do
+    it "should throw NotDefined if a setting isn't defined" do
       lambda {
-        Nesta::Config.fetch('who me?')
+        Nesta::Config.fetch('no such setting')
       }.should raise_error(Nesta::Config::NotDefined)
     end
 
-    it "should allow default value to be specified when they don't exist" do
-      Nesta::Config.fetch('who me?', 'yes you').should == 'yes you'
+    it 'should allow default values to be set' do
+      Nesta::Config.fetch('no such setting', 'default').should == 'default'
     end
 
     it 'should cope with non-truthy boolean values' do
-      ENV['NESTA_FALSY'] = 'false'
+      ENV['NESTA_SETTING'] = 'false'
       begin
-        Nesta::Config.fetch('falsy').should == false
+        Nesta::Config.fetch('setting').should == false
       ensure
-        ENV.delete('NESTA_FALSY')
+        ENV.delete('NESTA_SETTING')
       end
     end
   end

@@ -101,18 +101,14 @@ module Nesta
     private_class_method :from_hash
 
     def self.from_yaml(setting)
-      if can_use_yaml?
-        self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
-        env_config = self.yaml_conf[Nesta::App.environment.to_s] || {}
-        begin
-          from_hash(env_config, setting)
-        rescue NotDefined
-          from_hash(self.yaml_conf, setting)
-        end
+      raise NotDefined.new(setting) unless can_use_yaml?
+      self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
+      env_config = self.yaml_conf.fetch(Nesta::App.environment.to_s, {})
+      begin
+        from_hash(env_config, setting)
+      rescue NotDefined
+        from_hash(self.yaml_conf, setting)
       end
-    rescue Errno::ENOENT  # config file not found
-      raise unless Nesta::App.environment == :test
-      nil
     end
     private_class_method :from_yaml
     
