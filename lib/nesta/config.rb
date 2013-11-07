@@ -2,7 +2,7 @@ require 'yaml'
 
 module Nesta
   class Config
-    class NotDefined < RuntimeError; end
+    class NotDefined < KeyError; end
 
     @settings = %w[
       title subtitle theme disqus_short_name cache content google_analytics_code
