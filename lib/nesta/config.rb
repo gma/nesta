@@ -14,10 +14,14 @@ module Nesta
       attr_accessor :settings, :author_settings, :yaml_conf
     end
     
-    def self.fetch(key)
+    def self.fetch(key, *args)
       setting = key.to_s
-      from_environment(setting) || from_yaml(setting) ||
-          (raise NotDefined.new(setting))
+      value = from_environment(setting) || from_yaml(setting)
+      if value.nil?
+        args.empty? && (raise NotDefined.new(setting)) || (return args.first)
+      else
+        return value
+      end
     end
 
     def self.method_missing(method, *args)

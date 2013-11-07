@@ -93,5 +93,9 @@ describe "Config" do
         Nesta::Config.fetch('who me?')
       }.should raise_error(Nesta::Config::NotDefined)
     end
+
+    it "should allow default value to be specified when they don't exist" do
+      Nesta::Config.fetch('who me?', 'yes you').should == 'yes you'
+    end
   end
 end
