@@ -17,6 +17,12 @@
    value in the `NESTA_MY_SETTING` variable can be returned by
    calling `Nesta::Config.fetch(:my_setting)`.
 
+   If the setting you're trying to read isn't defined a NotDefined
+   exception (a subclass of KeyError) will be raised. Similarly to
+   Ruby's Hash#fetch method, you can avoid the exception by specifying a
+   second argument (such as nil) that will be returned if the setting
+   isn't defined.
+
    (Sean Redmond, Graham Ashton)
 
  * Added 'Link text' metadata. When working out how to link to your

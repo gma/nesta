@@ -13,24 +13,20 @@ module Nesta
     class << self
       attr_accessor :settings, :author_settings, :yaml_conf
     end
-    
-    def self.fetch(key, *args)
-      setting = key.to_s
-      value = from_environment(setting) || from_yaml(setting)
-      if value.nil?
-        args.empty? && (raise NotDefined.new(setting)) || (return args.first)
-      else
-        return value
+
+    def self.fetch(key, *default)
+      from_environment(key.to_s)
+    rescue NotDefined
+      begin
+        from_yaml(key.to_s)
+      rescue NotDefined
+        default.empty? && raise || (return default.first)
       end
     end
 
     def self.method_missing(method, *args)
       if settings.include?(method.to_s)
-        begin
-          fetch(method)
-        rescue NotDefined
-          nil
-        end
+        fetch(method, nil)
       else
         super
       end
@@ -43,6 +39,8 @@ module Nesta
         ENV[variable] && environment_config[setting] = ENV[variable]
       end
       environment_config.empty? ? from_yaml('author') : environment_config
+    rescue NotDefined
+      nil
     end
 
     def self.cache
@@ -67,12 +65,20 @@ module Nesta
     end
 
     def self.read_more
-      default = 'Continue reading'
-      from_environment('read_more') || from_yaml('read_more') || default
+      from_environment('read_more')
+    rescue NotDefined
+      begin
+        from_yaml('read_more')
+      rescue NotDefined
+        'Continue reading'
+      end
     end
 
     def self.from_environment(setting)
-      value = ENV["NESTA_#{setting.upcase}"]
+      value = ENV.fetch("NESTA_#{setting.upcase}")
+    rescue KeyError
+      raise NotDefined.new(setting)
+    else
       overrides = { "true" => true, "false" => false }
       overrides.has_key?(value) ? overrides[value] : value
     end
@@ -88,11 +94,20 @@ module Nesta
     end
     private_class_method :can_use_yaml?
 
+    def self.from_hash(hash, setting)
+      hash.fetch(setting) { raise NotDefined.new(setting) }
+    end
+    private_class_method :from_hash
+
     def self.from_yaml(setting)
       if can_use_yaml?
         self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
-        rack_env_conf = self.yaml_conf[Nesta::App.environment.to_s]
-        (rack_env_conf && rack_env_conf[setting]) || self.yaml_conf[setting]
+        env_config = self.yaml_conf[Nesta::App.environment.to_s] || {}
+        begin
+          from_hash(env_config, setting)
+        rescue NotDefined
+          from_hash(self.yaml_conf, setting)
+        end
       end
     rescue Errno::ENOENT  # config file not found
       raise unless Nesta::App.environment == :test

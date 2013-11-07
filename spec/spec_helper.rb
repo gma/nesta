@@ -24,7 +24,7 @@ module ConfigSpecHelper
 
   def stub_config_key(key, value, options = {})
     stub_yaml_config unless @config
-    if options[:rack_env]
+    if options[:for_environment]
       @config['test'] ||= {}
       @config['test'][key] = value
     else

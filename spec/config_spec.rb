@@ -4,6 +4,14 @@ describe "Config" do
   after(:each) do
     ENV.keys.each { |variable| ENV.delete(variable) if variable =~ /NESTA_/ }
   end
+
+  it 'should return default value for "Read more"' do
+    Nesta::Config.read_more.should == 'Continue reading'
+  end
+
+  it 'should return nil for author when not defined' do
+    Nesta::Config.author.should == nil
+  end
   
   describe "when settings defined in ENV" do
     before(:each) do
@@ -64,9 +72,9 @@ describe "Config" do
       Nesta::Config.author["email"].should be_nil
     end
     
-    it "should override top level settings with RACK_ENV specific settings" do
+    it "should override top level settings with environment specific settings" do
       stub_config_key('content', 'general/path')
-      stub_config_key('content', 'rack_env/path', rack_env: true)
+      stub_config_key('content', 'rack_env/path', for_environment: true)
       Nesta::Config.content.should == 'rack_env/path'
     end
   end
@@ -96,6 +104,15 @@ describe "Config" do
 
     it "should allow default value to be specified when they don't exist" do
       Nesta::Config.fetch('who me?', 'yes you').should == 'yes you'
+    end
+
+    it 'should cope with non-truthy boolean values' do
+      ENV['NESTA_FALSY'] = 'false'
+      begin
+        Nesta::Config.fetch('falsy').should == false
+      ensure
+        ENV.delete('NESTA_FALSY')
+      end
     end
   end
 end
