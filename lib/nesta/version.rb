@@ -1,3 +1,3 @@
 module Nesta
-  VERSION = '0.9.13'
+  VERSION = '0.10.0.rc1'
 end
