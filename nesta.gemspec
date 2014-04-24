@@ -43,7 +43,7 @@ EOF
 
   # Test libraries
   s.add_development_dependency('rack-test', '0.6.1')
-  s.add_development_dependency('rspec', '~> 2.12.0')
+  s.add_development_dependency('rspec', '~> 2.14.0')
   s.add_development_dependency('test-unit', '1.2.3')
   s.add_development_dependency('webrat', '~> 0.7.3')
 end
