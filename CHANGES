@@ -1,10 +1,35 @@
-= 0.10.0 / (Unreleased)
-
- * Support for Ruby 1.8 has been dropped. Ruby 1.9.3 or above is
-   recommended.
+= 0.10.0 / (25 April 2014)
 
  * Upgraded the default theme to a responsive design, using Google's
    Roboto Slab web font. (Graham Ashton)
+
+ * Reduced the amount of I/O required to load a page with some judicious
+   in memory caching of filenames. Expect a speed boost! (Graham Ashton)
+
+ * Added 'Link text' metadata. When working out how to link to your
+   pages from the automatically generated menus and breadcrumbs, Nesta
+   uses the page's heading. It still does, but if you want to use
+   different words when linking to the page in breadcrumbs or in the
+   menu you can by defining the "Link text" metadata. (Micah Chalmer)
+
+   NOTE: Some existing sites may have pages that don't define a heading.
+   Those sites will not work with Nesta 0.10.0 until they've been
+   upgraded; either add an h1 level heading at the top of your pages
+   (preferred) or define the 'Link text' metadata. If you don't want
+   h1 headings to appear at the top of your web pages, hide them with
+   CSS (this is the best approach for accessibility), or define the
+   "Link text" metadata.
+
+ * The text used in the 'Read more' link is now configurable in config.yml.
+   The config key is called `read_more`. (Pete Gadomski)
+
+   See the config.yml template (on GitHub) for more details.
+   https://github.com/gma/nesta/blob/master/templates/config/config.yml
+
+ * Added the skip-sitemap flag, to prevent a page from being listed in
+   the XML sitemap. Add 'Flags: skip-sitemap' to the top of your page to
+   enable it. Draft pages have also been removed from the sitemap.
+   (Suggested by Joshua Mervine, implemented by Graham Ashton)
 
  * Added support for user-defined config settings in config.yml.
    If you've ever wanted to add config settings to config.yml and then
@@ -25,30 +50,11 @@
 
    (Sean Redmond, Graham Ashton)
 
- * Added 'Link text' metadata. When working out how to link to your
-   pages from the automatically generated menus and breadcrumbs, Nesta
-   uses the page's heading. It still does, but if you want to use
-   different words when linking to the page in breadcrumbs or in the
-   menu you can by defining the "Link text" metadata. (Micah Chalmer)
-
-   NOTE: Some existing sites may have pages that don't define a heading.
-   Those sites will not work with Nesta 0.10.0 until they've been
-   upgraded; either add an h1 level heading at the top of your pages
-   (preferred) or define the 'Link text' metadata. If you don't want
-   h1 headings to appear at the top of your web pages, hide them with
-   CSS (this is the best approach for accessibility), or define the
-   "Link text" metadata.
-
- * Added the skip-sitemap flag, to prevent a page from being listed in
-   the XML sitemap. Add 'Flags: skip-sitemap' to the top of your page to
-   enable it. Draft pages have also been removed from the sitemap.
-   (Suggested by Joshua Mervine, implemented by Graham Ashton)
-
  * The built-in file caching (where Nesta could write generated HTML for
    rendered pages to disk) has been removed. If you'd like to cache
    pages to disk, use the sinatra-cache gem.
 
-   See http://nestacms.com//docs/deployment/page-caching for more
+   See http://nestacms.com/docs/deployment/page-caching for more
    details, and instructions for installing and testing sintra-cache.
 
    (Graham Ashton)
@@ -56,10 +62,15 @@
  * The nesta script's theme:create command now copies default templates
    into a new theme. (Jake Rayson)
 
+ * Added the --zsh-completion option to the nesta command, which outputs
+   code that will configure command line completion in Zsh for the nesta
+   command. (Wynn Netherland)
+
  * Page titles no longer include the heading from the parent page.
    Behaviour was a little inconsistent, and it's arguably not a great
    feature in the first place. Since the Title metadata appeared you can
    ovverride the page title to something more useful if you need to too.
+   (Graham Ashton)
 
  * When commenting via Disqus is configured, comments appeared on every
    page in earlier versions of Nesta. From now on only pages with a date
@@ -90,21 +101,26 @@
 
    (Pete Gadomski)
 
- * The 'Read more' link text is now configurable. The config key is
-   called `read_more`. (Pete Gadomski)
+ * Version 0.9.13 used Sinatra's `url` helper method to generate links
+   to pages on the site. When these pages were cached by proxy servers
+   the hostname in the URL could be set incorrectly, as it would be
+   determined from the HTTP headers (see issue #103 for more details).
 
-   See the config.yml template (on GitHub) for more details.
-   https://github.com/gma/nesta/blob/master/templates/config/config.yml
+   The solution was to link to pages on the current site using an
+   absolute path, rather than a full URL. The `path_to` helper was added,
+   and used in place of Sinatra's `url` helper method.
 
- * Added the --zsh-completion option to the nesta command, which outputs
-   code that will configure command line completion in Zsh for the nesta
-   command. (Wynn Netherland)
+   (Micah Chalmer)
 
  * Updated the test suite from RSpec 1.3 to RSpec 2.
    (Wynn Netherland, Graham Ashton)
 
- * Reduced the amount of I/O required to load a page with some judicious
-   in memory caching of filenames. Expect a speed boost! (Graham Ashton)
+ * Support for Ruby 1.8 has been dropped. Ruby 1.9.3 or above is
+   recommended.
+
+ * There were also plenty of small bug fixes that didn't make it into
+   this list. See GitHub for the full list of commits.
+   https://github.com/gma/nesta/compare/v0.9.13...v0.10.0
 
 = 0.9.13 / (3 March 2012)
 
@@ -133,7 +149,7 @@
    than removed, but if you try and load Nesta's helpers in a Rails app
    url_for breaks Rails's rendering. (Max Sadrieh, Graham Ashton)
 
- * The Page class has a new method; body_markup. Ir can be overridden by
+ * The Page class has a new method; body_markup. It can be overridden by
    a plugin, and is used by the foldable plugin. (Micah Chalmer)
 
  * The `current_item?` helper has been created in `Nesta::Navigation`.
