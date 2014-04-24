@@ -4,7 +4,7 @@ PATH
     nesta (0.10.0)
       RedCloth (~> 4.2)
       haml (~> 3.1)
-      rack (~> 1.3)
+      rack (>= 1.3)
       rdiscount (~> 2.1)
       sass (~> 3.1)
       sinatra (~> 1.4)
