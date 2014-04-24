@@ -81,8 +81,6 @@ module Nesta
       #   path_to(page.abspath, uri: true)
       #
       def path_to(page_path, options = {})
-        defaults = { absolute: false }
-        options = defaults.merge(options)
         host = ''
         if options[:uri]
           host << "http#{'s' if request.ssl?}://"
