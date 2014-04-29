@@ -56,7 +56,7 @@ describe "nesta" do
 
       it "should add a Gemfile" do
         should_exist('Gemfile')
-        gemfile_source.should match(/gem 'nesta', '#{Nesta::VERSION}'/)
+        gemfile_source.should match(/gem 'nesta'/)
       end
     end
 
