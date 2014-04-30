@@ -48,6 +48,8 @@ shared_examples_for "page that can display menus" do
 
     it "should display first level of nested sub menus" do
       do_get
+      puts @level2.link_text
+      puts last_response.body
       assert_selector "ul.menu li ul li a:contains('#{@level2.link_text}')"
     end
 

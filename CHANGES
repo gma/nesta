@@ -1,3 +1,16 @@
+= 1.0.0 / (Unreleased)
+
+ * The helper methods that generate the HTML for the menu was generating too
+   many <li> tags for deeply nested menus. Rather than include a menu item and
+   its sub menu inside a single <li> tag (i.e. a link, followed by a <ul> tag
+   containing the sub menu), it was putting the sub menu inside an <li> tag of
+   its own.
+
+   This feels symantically incorrect; better to include a <ul> inside the <li>
+   tag that contains the sub menu's parent menu item.
+
+   (Graham Ashton)
+
 = 0.10.0 / (25 April 2014)
 
  * Upgraded the default theme to a responsive design, using Google's
