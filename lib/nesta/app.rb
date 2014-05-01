@@ -23,11 +23,6 @@ module Nesta
     helpers Navigation::Renderers
     helpers View::Helpers
 
-    def cache(content)
-      Nesta.deprecated('cache', "it's no longer required - remove it from app.rb")
-      content
-    end
-
     before do
       if request.path_info =~ Regexp.new('./$')
         redirect to(request.path_info.sub(Regexp.new('/$'), ''))
