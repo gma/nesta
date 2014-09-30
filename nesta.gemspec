@@ -32,6 +32,7 @@ EOF
   s.require_paths = ["lib"]
 
   s.add_dependency('haml', '>= 3.1')
+  s.add_dependency('haml-contrib', '>= 1.0')
   s.add_dependency('sass', '>= 3.1')
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
