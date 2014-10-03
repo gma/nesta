@@ -116,6 +116,18 @@ shared_examples_for "Page" do
     end
   end
 
+  it "should provide metadata defaults" do
+    create_page(:path => 'meta1')
+    Nesta::Page.find_by_path('meta1').metadata('nonexistant', :default => 'foo').should == 'foo'
+  end
+
+  it "should provide recursive metadata search" do
+    create_page(:path => 'meta', :metadata => {'foo' => 'bar'})
+    create_page(:path => 'meta/page')
+    Nesta::Page.find_by_path('meta/page').metadata('foo').should be_nil
+    Nesta::Page.find_by_path('meta/page').metadata('foo', :recursive => true).should == 'bar'
+  end
+
   it "should not find nonexistent page" do
     Nesta::Page.find_by_path("no-such-page").should be_nil
   end
