@@ -199,6 +199,9 @@ describe "nesta" do
       Dir.mkdir(@plugins_path)
       Dir.chdir(@plugins_path)
       @command = Nesta::Commands::Plugin::Create.new(@name)
+      @namespace_path = @command.namespace_path(@gem_name)
+      @init_path = File.join(@plugins_path, @gem_name, 'lib', @namespace_path)
+      FileUtils.makedirs(@init_path)
       @command.stub(:system)
     end
 
@@ -208,45 +211,37 @@ describe "nesta" do
     end
 
     it "should create a new gem prefixed with nesta-plugin" do
+      @command.stub(:specify_gem_dependency)
       @command.should_receive(:system).with('bundle', 'gem', @gem_name)
-      begin
-        @command.execute
-      rescue Errno::ENOENT
-        # This test is only concerned with running bundle gem; ENOENT
-        # errors are raised because we didn't create a real gem.
-      end
+      @command.execute
     end
 
     describe "after gem created" do
       def create_gem_file(*components)
         path = File.join(@plugins_path, @gem_name, *components)
-        FileUtils.makedirs(File.dirname(path))
         File.open(path, 'w') { |f| yield f if block_given? }
         path
       end
 
+      def lib_path(*parts)
+        File.join(@gem_name, 'lib', *parts)
+      end
+
       before(:each) do
-        @required_file = create_gem_file('lib', "#{@gem_name}.rb")
-        @init_file = create_gem_file('lib', @gem_name, 'init.rb')
         @gem_spec = create_gem_file("#{@gem_name}.gemspec") do |file|
           file.puts "  # specify any dependencies here; for example:"
           file.puts "end"
         end
-      end
-
-      after(:each) do
-        FileUtils.rm(@required_file)
-        FileUtils.rm(@init_file)
+        @command.execute
       end
 
       it "should create the ruby file loaded on require" do
-        @command.execute
-        File.read(@required_file).should include('Plugin.register(__FILE__)')
+        required_path = lib_path("#{@namespace_path}.rb")
+        File.read(required_path).should include(%Q{Plugin.register("#{@namespace_path}")})
       end
 
       it "should create a default init.rb file" do
-        @command.execute
-        init = File.read(@init_file)
+        init = File.read(File.join(@init_path, 'init.rb'))
         boilerplate = <<-EOF
     module My::Feature
       module Helpers
@@ -256,10 +251,8 @@ describe "nesta" do
       end
 
       it "should specify plugin gem's dependencies" do
-        @command.execute
         text = File.read(@gem_spec)
-        text.should include('gem.add_dependency("nesta", ">= 0.9.11")')
-        text.should include('gem.add_development_dependency("rake")')
+        text.should include('spec.add_dependency "nesta", ">= 0.9.11"')
       end
     end
   end

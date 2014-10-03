@@ -158,9 +158,14 @@ module Nesta
           name.nil? && (raise UsageError.new('name not specified'))
           @name = name
           @gem_name = "nesta-plugin-#{name}"
+          @namespace_path = namespace_path(@gem_name)
           if File.exist?(@gem_name)
             raise RuntimeError.new("#{@gem_name} already exists")
           end
+        end
+
+        def namespace_path(name)
+          name.tr('-', '/')
         end
 
         def lib_path(*parts)
@@ -168,18 +173,18 @@ module Nesta
         end
 
         def modify_required_file
-          File.open(lib_path("#{@gem_name}.rb"), 'w') do |file|
+          File.open(lib_path("#{@namespace_path}.rb"), 'w') do |file|
             file.write <<-EOF
-require "#{@gem_name}/version"
+require "#{@namespace_path}/version"
 
-Nesta::Plugin.register(__FILE__)
+Nesta::Plugin.register("#{@namespace_path}")
             EOF
           end
         end
 
         def modify_init_file
           module_name = @name.split('-').map { |name| name.capitalize }.join('::')
-          File.open(lib_path(@gem_name, 'init.rb'), 'w') do |file|
+          File.open(lib_path(@namespace_path, 'init.rb'), 'w') do |file|
             file.puts <<-EOF
 module Nesta
   module Plugin
@@ -204,8 +209,7 @@ end
             output = ''
             file.each_line do |line|
               if line =~ /^end/
-                output << '  gem.add_dependency("nesta", ">= 0.9.11")' + "\n"
-                output << '  gem.add_development_dependency("rake")' + "\n"
+                output << '  spec.add_dependency "nesta", ">= 0.9.11"' + "\n"
               end
               output << line
             end
