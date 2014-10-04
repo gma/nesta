@@ -1,6 +1,43 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 require File.expand_path("../lib/nesta/commands", File.dirname(__FILE__))
 
+shared_examples "a command" do
+  it "should be of the right type" do
+    command.should be_kind_of(Nesta::Commands::Command)
+  end
+
+  it "should respond to run message" do
+    command.should respond_to(:run)
+  end
+end
+
+describe Nesta::Commands::Command do
+  let(:command) { (Class.new { include Nesta::Commands::Command }).new }
+
+  describe "#run" do
+    it "should execute system commands" do
+      command.should_receive(:system).with('ls').and_return(true)
+      command.run('ls')
+    end
+
+    context "when system command not found" do
+      it "should raise a RuntimeError" do
+        command.stub(:system).and_return(false)
+        $?.stub(:exitstatus).and_return(127)
+        expect { command.run('ls') }.to raise_error(RuntimeError, "ls command not found")
+      end
+    end
+
+    context "when system command fails" do
+      it "should raise a RuntimeError" do
+        command.stub(:system).and_return(false)
+        $?.stub(:exitstatus).and_return(0)
+        expect { command.run('ls') }.to raise_error(RuntimeError, "ls failed with exit status 0")
+      end
+    end
+  end
+end
+
 describe "nesta" do
   before(:each) do
     create_temp_directory
@@ -34,7 +71,12 @@ describe "nesta" do
 
     describe "without options" do
       before(:each) do
-        Nesta::Commands::New.new(@project_path).execute
+        @command = Nesta::Commands::New.new(@project_path)
+        @command.execute
+      end
+
+      it_should_behave_like "a command" do
+        let(:command) { @command }
       end
 
       it "should create the content directories" do
@@ -63,7 +105,7 @@ describe "nesta" do
     describe "--git" do
       before(:each) do
         @command = Nesta::Commands::New.new(@project_path, 'git' => '')
-        @command.stub(:system)
+        @command.stub(:system).and_return(true)
       end
 
       it "should create a .gitignore file" do
@@ -117,7 +159,11 @@ describe "nesta" do
       @repo_url = 'git://github.com/gma/nesta-demo-content.git'
       @demo_path = project_path('content-demo')
       @command = Nesta::Commands::Demo::Content.new
-      @command.stub(:system)
+      @command.stub(:system).and_return(true)
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     it "should clone the repository" do
@@ -172,7 +218,11 @@ describe "nesta" do
       Nesta::Config.stub(:content_path).and_return('content')
       @page_path = 'path/to/page.mdown'
       @command = Nesta::Commands::Edit.new(@page_path)
-      @command.stub(:system)
+      @command.stub(:system).and_return(true)
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     it "should launch the editor" do
@@ -199,12 +249,16 @@ describe "nesta" do
       Dir.mkdir(@plugins_path)
       Dir.chdir(@plugins_path)
       @command = Nesta::Commands::Plugin::Create.new(@name)
-      @command.stub(:system)
+      @command.stub(:system).and_return(true)
     end
 
     after(:each) do
       Dir.chdir(@working_dir)
       FileUtils.rm_r(@plugins_path)
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     it "should create a new gem prefixed with nesta-plugin" do
@@ -270,12 +324,16 @@ describe "nesta" do
       @theme_dir = 'themes/mine'
       FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
       @command = Nesta::Commands::Theme::Install.new(@repo_url)
+      @command.stub(:system).and_return(true)
       @command.stub(:enable)
-      @command.stub(:system)
     end
 
     after(:each) do
       FileUtils.rm_r(@theme_dir)
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     it "should clone the repository" do
@@ -302,6 +360,7 @@ describe "nesta" do
         FileUtils.mkdir_p(File.join(@other_theme_dir, '.git'))
         @command = Nesta::Commands::Theme::Install.new(@repo_url)
         @command.stub(:enable)
+        @command.stub(:system).and_return(true)
       end
 
       after(:each) do
@@ -322,6 +381,10 @@ describe "nesta" do
       Nesta::Config.stub(:yaml_path).and_return(config)
       @name = 'mytheme'
       @command = Nesta::Commands::Theme::Enable.new(@name)
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     shared_examples_for "command that configures the theme" do
@@ -364,7 +427,12 @@ describe "nesta" do
     before(:each) do
       Nesta::App.stub(:root).and_return(TempFileHelper::TEMP_DIR)
       @name = 'my-new-theme'
-      Nesta::Commands::Theme::Create.new(@name).execute
+      @command = Nesta::Commands::Theme::Create.new(@name)
+      @command.execute
+    end
+
+    it_should_behave_like "a command" do
+      let(:command) { @command }
     end
 
     it "should create the theme directory" do
