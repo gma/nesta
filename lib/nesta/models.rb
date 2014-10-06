@@ -286,10 +286,7 @@ module Nesta
 
     def categories
       paths = category_strings.map { |specifier| specifier.sub(/:-?\d+$/, '') }
-      pages = valid_paths(paths).map { |p| Page.find_by_path(p) }
-      pages.sort do |x, y|
-        x.link_text.downcase <=> y.link_text.downcase
-      end
+      valid_paths(paths).map { |p| Page.find_by_path(p) }
     end
 
     def priority(category)
@@ -309,6 +306,7 @@ module Nesta
           return parent unless parent.nil?
           parent_path = File.dirname(parent_path)
         end
+        return categories.first unless categories.empty?
         Page.load('index')
       end
     end

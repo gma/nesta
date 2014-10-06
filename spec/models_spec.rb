@@ -317,15 +317,6 @@ shared_examples_for "Page" do
       @article.should_not be_in_category("orange")
     end
 
-    it "should sort categories by link text" do
-      create_category(heading: "Orange",
-                      metadata: { "link text" => "A citrus fruit" },
-                      path: "orange")
-      article = create_article(metadata: { "categories" => "apple, orange" })
-      @article.categories.first.link_text.should == "Apple"
-      article.categories.first.link_text.should == "A citrus fruit"
-    end
-
     it "should not be assigned to non-existant category" do
       delete_page(:category, "banana", @extension)
       @article.should_not be_in_category("banana")

@@ -450,6 +450,22 @@ describe "A page" do
       end
     end
   end
+
+  describe "with associated categories" do
+    it "should link to the first assigned category in breadcrumb" do
+      category1 = create_category(path: 'category1', heading: 'Category 1')
+      create_category(path: 'category2', heading: 'Category 2')
+      @category = create_page(
+        path: "a-page",
+        heading: "A Page",
+        metadata: { 'categories' => 'category1, category2' }
+      )
+      do_get
+      href = category1.abspath
+      link_text = category1.link_text
+      assert_selector "nav.breadcrumb a[href='#{href}']", content: link_text
+    end
+  end
 end
 
 describe "A Haml page" do
