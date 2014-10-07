@@ -1,5 +1,36 @@
 require 'spec_helper'
 
+describe Nesta::Plugin do
+  describe "#register" do
+    before(:each) do
+      Nesta::Plugin.loaded.clear
+    end
+
+    context "with an absolute file path" do
+      it "should load plugin" do
+        Nesta::Plugin.register('/path/to/nesta-plugin-test.rb')
+        Nesta::Plugin.loaded.size.should == 1
+        Nesta::Plugin.loaded.last.should == 'nesta-plugin-test'
+      end
+    end
+
+    context "with a namespace path" do
+      it "should load plugin" do
+        namespace_path = 'nesta/plugin/test'
+        Nesta::Plugin.register(namespace_path)
+        Nesta::Plugin.loaded.size.should == 1
+        Nesta::Plugin.loaded.last.should == namespace_path
+      end
+    end
+
+    context "an invalid plugin name" do
+      it "should raise an error" do
+        expect { Nesta::Plugin.register('test') }.to raise_error(RuntimeError)
+      end
+    end
+  end
+end
+
 describe "Plugin gem loading" do
   include ConfigSpecHelper
 

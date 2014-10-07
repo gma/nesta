@@ -6,10 +6,12 @@ module Nesta
     self.loaded ||= []
 
     def self.register(path)
-      name = File.basename(path, '.rb')
+      # Maintain compatibility with plugins that pass filename
+      path = File.basename(path, '.rb') if path.end_with? '.rb'
       prefix = 'nesta-plugin-'
-      name.start_with?(prefix) || raise("Plugin names must match '#{prefix}*'")
-      self.loaded << name
+      plugin_name = path.tr('/', '-')
+      plugin_name.start_with?(prefix) || raise("Plugin names must match '#{prefix}*'")
+      self.loaded << path
     end
 
     def self.initialize_plugins
