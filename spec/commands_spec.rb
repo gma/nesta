@@ -1,6 +1,29 @@
 require File.expand_path("spec_helper", File.dirname(__FILE__))
 require File.expand_path("../lib/nesta/commands", File.dirname(__FILE__))
 
+class TestCommand
+  include Nesta::Commands::Command
+end
+
+describe "Nesta::Commands::Command.run_process" do
+  before do
+    @stderr = $stderr
+    $stderr = File.new('/dev/null', 'w')
+  end
+
+  after do
+    $stderr.close
+    $stderr = @stderr
+  end
+
+  it 'can run an external process and catch errors' do
+    TestCommand.new.run_process('ls / >/dev/null')
+    expect {
+      TestCommand.new.run_process('ls /no-such-file 2>/dev/null')
+    }.to raise_error(SystemExit)
+  end
+end
+
 describe "nesta" do
   before(:each) do
     create_temp_directory
@@ -63,7 +86,7 @@ describe "nesta" do
     describe "--git" do
       before(:each) do
         @command = Nesta::Commands::New.new(@project_path, 'git' => '')
-        @command.stub(:system)
+        @command.stub(:run_process)
       end
 
       it "should create a .gitignore file" do
@@ -72,13 +95,13 @@ describe "nesta" do
       end
 
       it "should create a git repo" do
-        @command.should_receive(:system).with('git', 'init')
+        @command.should_receive(:run_process).with('git', 'init')
         @command.execute
       end
 
       it "should commit the blank project" do
-        @command.should_receive(:system).with('git', 'add', '.')
-        @command.should_receive(:system).with(
+        @command.should_receive(:run_process).with('git', 'add', '.')
+        @command.should_receive(:run_process).with(
             'git', 'commit', '-m', 'Initial commit')
         @command.execute
       end
@@ -117,11 +140,11 @@ describe "nesta" do
       @repo_url = 'git://github.com/gma/nesta-demo-content.git'
       @demo_path = project_path('content-demo')
       @command = Nesta::Commands::Demo::Content.new
-      @command.stub(:system)
+      @command.stub(:run_process)
     end
 
     it "should clone the repository" do
-      @command.should_receive(:system).with(
+      @command.should_receive(:run_process).with(
           'git', 'clone', @repo_url, @demo_path)
       @command.execute
     end
@@ -137,7 +160,8 @@ describe "nesta" do
       end
 
       it "should update the repository" do
-        @command.should_receive(:system).with('git', 'pull', 'origin', 'master')
+        @command.should_receive(:run_process).with(
+            'git', 'pull', 'origin', 'master')
         @command.execute
       end
     end
@@ -172,19 +196,19 @@ describe "nesta" do
       Nesta::Config.stub(:content_path).and_return('content')
       @page_path = 'path/to/page.mdown'
       @command = Nesta::Commands::Edit.new(@page_path)
-      @command.stub(:system)
+      @command.stub(:run_process)
     end
 
     it "should launch the editor" do
       ENV['EDITOR'] = 'vi'
       full_path = File.join('content/pages', @page_path)
-      @command.should_receive(:system).with(ENV['EDITOR'], full_path)
+      @command.should_receive(:run_process).with(ENV['EDITOR'], full_path)
       @command.execute
     end
 
     it "should not try and launch an editor if environment not setup" do
       ENV.delete('EDITOR')
-      @command.should_not_receive(:system)
+      @command.should_not_receive(:run_process)
       $stderr.stub(:puts)
       @command.execute
     end
@@ -199,7 +223,7 @@ describe "nesta" do
       Dir.mkdir(@plugins_path)
       Dir.chdir(@plugins_path)
       @command = Nesta::Commands::Plugin::Create.new(@name)
-      @command.stub(:system)
+      @command.stub(:run_process)
     end
 
     after(:each) do
@@ -208,7 +232,7 @@ describe "nesta" do
     end
 
     it "should create a new gem prefixed with nesta-plugin" do
-      @command.should_receive(:system).with('bundle', 'gem', @gem_name)
+      @command.should_receive(:run_process).with('bundle', 'gem', @gem_name)
       begin
         @command.execute
       rescue Errno::ENOENT
@@ -271,7 +295,7 @@ describe "nesta" do
       FileUtils.mkdir_p(File.join(@theme_dir, '.git'))
       @command = Nesta::Commands::Theme::Install.new(@repo_url)
       @command.stub(:enable)
-      @command.stub(:system)
+      @command.stub(:run_process)
     end
 
     after(:each) do
@@ -279,7 +303,7 @@ describe "nesta" do
     end
 
     it "should clone the repository" do
-      @command.should_receive(:system).with(
+      @command.should_receive(:run_process).with(
           'git', 'clone', @repo_url, @theme_dir)
       @command.execute
     end
@@ -309,7 +333,7 @@ describe "nesta" do
       end
 
       it "should use the basename as theme dir" do
-        @command.should_receive(:system).with(
+        @command.should_receive(:run_process).with(
             'git', 'clone', @repo_url, @other_theme_dir)
         @command.execute
       end

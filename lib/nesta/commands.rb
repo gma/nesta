@@ -11,6 +11,19 @@ module Nesta
     class UsageError < RuntimeError; end
 
     module Command
+      def run_process(*args)
+        system(*args)
+        if ! $?.success?
+          message = if $?.exitstatus == 127
+                      "#{args[0]} not found"
+                    else
+                      "'#{args.join(' ')}' failed with status #{$?.exitstatus}"
+                    end
+          $stderr.puts "Error: #{message}"
+          exit 1
+        end
+      end
+
       def fail(message)
         $stderr.puts "Error: #{message}"
         exit 1
@@ -62,7 +75,7 @@ module Nesta
       rescue IndexError
         $stderr.puts "No editor: set EDITOR environment variable"
       else
-        system(editor, @filename)
+        run_process(editor, @filename)
       end
     end
 
@@ -95,9 +108,9 @@ module Nesta
           File.open('.gitignore', 'w') do |file|
             file.puts %w[._* .*.swp .bundle .DS_Store .sass-cache].join("\n")
           end
-          system('git', 'init')
-          system('git', 'add', '.')
-          system('git', 'commit', '-m', 'Initial commit')
+          run_process('git', 'init')
+          run_process('git', 'add', '.')
+          run_process('git', 'commit', '-m', 'Initial commit')
         end
       end
 
@@ -130,9 +143,9 @@ module Nesta
           repository = 'git://github.com/gma/nesta-demo-content.git'
           path = Nesta::Path.local(@dir)
           if File.exist?(path)
-            FileUtils.cd(path) { system('git', 'pull', 'origin', 'master') }
+            FileUtils.cd(path) { run_process('git', 'pull', 'origin', 'master') }
           else
-            system('git', 'clone', repository, path)
+            run_process('git', 'clone', repository, path)
           end
         end
 
@@ -153,6 +166,8 @@ module Nesta
 
     module Plugin
       class Create
+        include Command
+
         def initialize(*args)
           name = args.shift
           name.nil? && (raise UsageError.new('name not specified'))
@@ -216,11 +231,11 @@ end
         end
 
         def execute
-          system('bundle', 'gem', @gem_name)
+          run_process('bundle', 'gem', @gem_name)
           modify_required_file
           modify_init_file
           specify_gem_dependency
-          Dir.chdir(@gem_name) { system('git', 'add', '.') }
+          Dir.chdir(@gem_name) { run_process('git', 'add', '.') }
         end
       end
     end
@@ -267,7 +282,7 @@ end
         end
 
         def execute
-          system('git', 'clone', @url, "themes/#{@name}")
+          run_process('git', 'clone', @url, "themes/#{@name}")
           FileUtils.rm_r(File.join("themes/#{@name}", '.git'))
           enable
         end
