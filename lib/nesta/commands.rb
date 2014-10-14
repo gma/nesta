@@ -16,6 +16,16 @@ module Nesta
         exit 1
       end
 
+      def run(*command)
+        return if system(*command)
+        exit_status = $?.exitstatus
+        if exit_status == 127
+          raise RuntimeError.new("#{command.first} command not found")
+        else
+          raise RuntimeError.new("#{command.join(" ")} failed with exit status #{exit_status}")
+        end
+      end
+
       def template_root
         File.expand_path('../../templates', File.dirname(__FILE__))
       end
@@ -62,7 +72,7 @@ module Nesta
       rescue IndexError
         $stderr.puts "No editor: set EDITOR environment variable"
       else
-        system(editor, @filename)
+        run(editor, @filename)
       end
     end
 
@@ -95,9 +105,9 @@ module Nesta
           File.open('.gitignore', 'w') do |file|
             file.puts %w[._* .*.swp .bundle .DS_Store .sass-cache].join("\n")
           end
-          system('git', 'init')
-          system('git', 'add', '.')
-          system('git', 'commit', '-m', 'Initial commit')
+          run('git', 'init')
+          run('git', 'add', '.')
+          run('git', 'commit', '-m', 'Initial commit')
         end
       end
 
@@ -130,9 +140,9 @@ module Nesta
           repository = 'git://github.com/gma/nesta-demo-content.git'
           path = Nesta::Path.local(@dir)
           if File.exist?(path)
-            FileUtils.cd(path) { system('git', 'pull', 'origin', 'master') }
+            FileUtils.cd(path) { run('git', 'pull', 'origin', 'master') }
           else
-            system('git', 'clone', repository, path)
+            run('git', 'clone', repository, path)
           end
         end
 
@@ -153,6 +163,8 @@ module Nesta
 
     module Plugin
       class Create
+        include Command
+
         def initialize(*args)
           name = args.shift
           name.nil? && (raise UsageError.new('name not specified'))
@@ -180,7 +192,7 @@ Nesta::Plugin.register(__FILE__)
         def modify_init_file
           module_name = @name.split('-').map { |name| name.capitalize }.join('::')
           File.open(lib_path(@gem_name, 'init.rb'), 'w') do |file|
-            file.puts <<-EOF
+            file.write <<-EOF
 module Nesta
   module Plugin
     module #{module_name}
@@ -216,11 +228,11 @@ end
         end
 
         def execute
-          system('bundle', 'gem', @gem_name)
+          run('bundle', 'gem', @gem_name)
           modify_required_file
           modify_init_file
           specify_gem_dependency
-          Dir.chdir(@gem_name) { system('git', 'add', '.') }
+          Dir.chdir(@gem_name) { run('git', 'add', '.') }
         end
       end
     end
@@ -267,7 +279,7 @@ end
         end
 
         def execute
-          system('git', 'clone', @url, "themes/#{@name}")
+          run('git', 'clone', @url, "themes/#{@name}")
           FileUtils.rm_r(File.join("themes/#{@name}", '.git'))
           enable
         end
