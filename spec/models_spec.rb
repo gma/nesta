@@ -626,7 +626,7 @@ describe "Menu" do
   end
 
   it "should find top level menu items" do
-    text = [@page.path, "no-such-page"].join("\n")
+    text = ["no-such-page", @page.path].join("\n")
     create_menu(text)
     Nesta::Menu.top_level.should == [@page]
   end
@@ -647,6 +647,8 @@ describe "Menu" do
   #{@page2.path}
     #{@page3.path}
     #{@page4.path}
+    "no-such-page"
+"another-missing-page"
 #{@page5.path}
   #{@page6.path}
       EOF
