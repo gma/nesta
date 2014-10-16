@@ -382,15 +382,15 @@ module Nesta
       rescue EOFError
       else
         page = Page.load(path.strip)
+        current_depth = path.scan(INDENT).size
         if page
-          current_depth = path.scan(INDENT).size
           if current_depth > depth
             sub_menu_for_depth(menu, depth) << [page]
           else
             sub_menu_for_depth(menu, current_depth) << page
           end
-          append_menu_item(menu, file, current_depth)
         end
+        append_menu_item(menu, file, current_depth)
       end
 
       def self.sub_menu_for_depth(menu, depth)
