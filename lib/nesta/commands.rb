@@ -131,6 +131,25 @@ module Nesta
       end
     end
 
+    class Server
+      include Command
+
+      def initialize(*args)
+        @options = args.pop || {}
+      end
+
+      def port
+        @options['port']
+      end
+
+      def execute
+        trap('INT') { exit 1 }
+        cmd = ['bundle', 'exec', 'mr-sparkle']
+        cmd << '--' << '--port' << port if port
+        run_process(*cmd)
+      end
+    end
+
     module Demo
       class Content
         include Command

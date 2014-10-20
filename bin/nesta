@@ -24,10 +24,14 @@ COMMANDS
     theme:install <url>   Install a theme from a git repository.
     theme:enable <name>   Make the theme active, updating config.yml.
     theme:create <name>   Makes a template for a new theme in ./themes.
+    server                Start the development server.
 
 OPTIONS FOR new
     --git                 Create a new git repository for the project.
     --vlad                Include config/deploy.rb.
+
+OPTIONS FOR server
+    --port                Listen on the specified TCP port, default is 8080.
 
 EOF
       exit exitcode
@@ -43,6 +47,7 @@ EOF
         ['--bash-completion', GetoptLong::NO_ARGUMENT],
         ['--git', GetoptLong::NO_ARGUMENT],
         ['--help', '-h', GetoptLong::NO_ARGUMENT],
+        ['--port', GetoptLong::OPTIONAL_ARGUMENT],
         ['--version', '-v', GetoptLong::NO_ARGUMENT],
         ['--vlad', GetoptLong::NO_ARGUMENT],
         ['--zsh-completion', GetoptLong::NO_ARGUMENT]
