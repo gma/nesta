@@ -416,4 +416,25 @@ describe "nesta" do
       end
     end
   end
+
+  describe "server" do
+    describe "without options" do
+      it "should start the development server" do
+        command = Nesta::Commands::Server.new
+        command.stub(:run_process)
+        command.should_receive(:run_process).with('bundle', 'exec', 'mr-sparkle')
+        command.execute
+      end
+    end
+
+    describe "--port" do
+      it "should start the development server on specified port" do
+        command = Nesta::Commands::Server.new('', 'port' => '8888')
+        command.stub(:run_process)
+        params = ['bundle', 'exec', 'mr-sparkle', '--', '--port', '8888']
+        command.should_receive(:run_process).with(*params)
+        command.execute
+      end
+    end
+  end
 end
