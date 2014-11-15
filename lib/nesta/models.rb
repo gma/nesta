@@ -1,10 +1,10 @@
 require 'time'
 
-Tilt.register Tilt::MarukuTemplate, 'mdown'
-Tilt.register Tilt::KramdownTemplate, 'mdown'
-Tilt.register Tilt::BlueClothTemplate, 'mdown'
-Tilt.register Tilt::RDiscountTemplate, 'mdown'
-Tilt.register Tilt::RedcarpetTemplate, 'mdown'
+Tilt.register Tilt::MarukuTemplate, 'mdown', 'md'
+Tilt.register Tilt::KramdownTemplate, 'mdown', 'md'
+Tilt.register Tilt::BlueClothTemplate, 'mdown', 'md'
+Tilt.register Tilt::RDiscountTemplate, 'mdown', 'md'
+Tilt.register Tilt::RedcarpetTemplate, 'mdown', 'md'
 
 module Nesta
   class HeadingNotSet < RuntimeError; end
@@ -12,7 +12,7 @@ module Nesta
   class MetadataParseError < RuntimeError; end
 
   class FileModel
-    FORMATS = [:mdown, :haml, :textile]
+    FORMATS = [:mdown, :md, :haml, :textile]
     @@page_cache = {}
     @@filename_cache = {}
 
@@ -128,7 +128,7 @@ module Nesta
     def keywords
       metadata('keywords')
     end
-    
+
     def metadata(key)
       @metadata[key]
     end
@@ -220,7 +220,7 @@ module Nesta
 
     def heading
       regex = case @format
-        when :mdown
+        when :mdown, :md
           /^#\s*(.*?)(\s*#+|$)/
         when :haml
           /^\s*%h1\s+(.*)/
@@ -236,7 +236,7 @@ module Nesta
     rescue HeadingNotSet
       raise LinkTextNotSet, "Need to link to '#{abspath}' but can't get link text"
     end
-  
+
     def title
       metadata('title') || link_text
     rescue LinkTextNotSet
@@ -271,7 +271,7 @@ module Nesta
 
     def body_markup
       case @format
-        when :mdown
+        when :mdown, :md
           markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
         when :haml
           markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
@@ -293,7 +293,7 @@ module Nesta
       category_string = category_strings.detect do |string|
         string =~ /^#{category}([,:\s]|$)/
       end
-      category_string && category_string.split(':', 2)[-1].to_i 
+      category_string && category_string.split(':', 2)[-1].to_i
     end
 
     def parent
