@@ -531,25 +531,50 @@ end
 describe "Markdown page" do
   include ModelFactory
 
-  before(:each) do
-    @extension = :mdown
+  context "mdown extension" do
+    before(:each) do
+      @extension = :mdown
+    end
+
+    include_context "Page testing"
+    it_should_behave_like "Page"
+
+    it "should set heading from first h1 tag" do
+      page = create_page(
+        path: "a-page",
+        heading: "First heading",
+        content: "# Second heading"
+      )
+      page.heading.should == "First heading"
+    end
+
+    it "should ignore trailing # characters in headings" do
+      article = create_article(heading: 'With trailing #')
+      article.heading.should == 'With trailing'
+    end
   end
 
-  include_context "Page testing"
-  it_should_behave_like "Page"
+  context "md extension" do
+    before(:each) do
+      @extension = :md
+    end
 
-  it "should set heading from first h1 tag" do
-    page = create_page(
-      path: "a-page",
-      heading: "First heading",
-      content: "# Second heading"
-    )
-    page.heading.should == "First heading"
-  end
+    include_context "Page testing"
+    it_should_behave_like "Page"
 
-  it "should ignore trailing # characters in headings" do
-    article = create_article(heading: 'With trailing #')
-    article.heading.should == 'With trailing'
+    it "should set heading from first h1 tag" do
+      page = create_page(
+        path: "a-page",
+        heading: "First heading",
+        content: "# Second heading"
+      )
+      page.heading.should == "First heading"
+    end
+
+    it "should ignore trailing # characters in headings" do
+      article = create_article(heading: 'With trailing #')
+      article.heading.should == 'With trailing'
+    end
   end
 end
 
