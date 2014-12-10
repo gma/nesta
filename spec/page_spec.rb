@@ -110,14 +110,14 @@ describe "The layout" do
   it "should not include GA JavaScript by default" do
     stub_configuration
     get "/"
-    assert_not_selector "script", content: "'_setAccount', 'UA-1234'"
+    assert_not_selector "script", content: "ga('create', 'UA-1234'"
   end
 
   it "should include GA JavaScript if configured" do
     stub_config_key('google_analytics_code', 'UA-1234', rack_env: true)
     stub_configuration
     get "/"
-    assert_selector 'script', content: "'_setAccount', 'UA-1234'"
+    assert_selector 'script', content: "ga('create', 'UA-1234'"
   end
 end
 
