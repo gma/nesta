@@ -91,7 +91,7 @@ module Nesta
     private_class_method :yaml_exists?
 
     def self.can_use_yaml?
-      ENV.keys.grep(/^NESTA/).empty? && yaml_exists?
+      yaml_exists?
     end
     private_class_method :can_use_yaml?
 
