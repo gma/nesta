@@ -18,10 +18,10 @@ describe "Config" do
       @title = "Title from ENV"
       ENV["NESTA_TITLE"] = @title
     end
-    
-    it "should never try and access config.yml" do
+
+    it "should fallback to config.yml" do
       stub_config_key("subtitle", "Subtitle in YAML file")
-      Nesta::Config.subtitle.should be_nil
+      Nesta::Config.subtitle.should == "Subtitle in YAML file"
     end
 
     it "should override config.yml" do
