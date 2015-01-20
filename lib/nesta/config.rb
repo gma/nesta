@@ -90,18 +90,13 @@ module Nesta
     end
     private_class_method :yaml_exists?
 
-    def self.can_use_yaml?
-      yaml_exists?
-    end
-    private_class_method :can_use_yaml?
-
     def self.from_hash(hash, setting)
       hash.fetch(setting) { raise NotDefined.new(setting) }
     end
     private_class_method :from_hash
 
     def self.from_yaml(setting)
-      raise NotDefined.new(setting) unless can_use_yaml?
+      raise NotDefined.new(setting) unless yaml_exists?
       self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
       env_config = self.yaml_conf.fetch(Nesta::App.environment.to_s, {})
       begin
