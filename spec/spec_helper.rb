@@ -89,3 +89,26 @@ module RequestSpecHelper
     body.should_not have_selector(*args)
   end
 end
+
+shared_context "temporary working directory" do
+  before(:each) do
+    create_temp_directory
+    @project_path = temp_path('mysite.com')
+  end
+  
+  after(:each) do
+    remove_temp_directory
+  end
+  
+  def project_path(path)
+    File.join(@project_path, path)
+  end
+
+  def should_exist(file)
+    File.exist?(project_path(file)).should be_true
+  end
+
+  def create_config_yaml(text)
+    File.open(Nesta::Config.yaml_path, 'w') { |f| f.puts(text) }
+  end
+end
