@@ -20,60 +20,78 @@ module Nesta
           File.join(@gem_name, 'lib', *parts)
         end
 
-        def modify_required_file
-          File.open(lib_path("#{@gem_name}.rb"), 'w') do |file|
-            file.write <<-EOF
-require "#{@gem_name}/version"
+        # def modify_required_file
+          # File.open(lib_path("#{@gem_name}.rb"), 'w') do |file|
+            # file.write <<-EOF
+# require "#{@gem_name}/version"
 
-Nesta::Plugin.register(__FILE__)
-            EOF
-          end
+# Nesta::Plugin.register(__FILE__)
+            # EOF
+          # end
+        # end
+
+        # def modify_init_file
+          # module_name = @name.split('-').map { |name| name.capitalize }.join('::')
+          # File.open(lib_path(@gem_name, 'init.rb'), 'w') do |file|
+            # file.puts <<-EOF
+# module Nesta
+  # module Plugin
+    # module #{module_name}
+      # module Helpers
+        # # If your plugin needs any helper methods, add them here...
+      # end
+    # end
+  # end
+
+  # class App
+    # helpers Nesta::Plugin::#{module_name}::Helpers
+  # end
+# end
+            # EOF
+          # end
+        # end
+
+        # def specify_gem_dependency
+          # gemspec = File.join(@gem_name, "#{@gem_name}.gemspec")
+          # File.open(gemspec, 'r+') do |file|
+            # output = ''
+            # file.each_line do |line|
+              # if line =~ /^end/
+                # output << '  gem.add_dependency("nesta", ">= 0.9.11")' + "\n"
+                # output << '  gem.add_development_dependency("rake")' + "\n"
+              # end
+              # output << line
+            # end
+            # file.pos = 0
+            # file.print(output)
+            # file.truncate(file.pos)
+          # end
+        # end
+
+        def module_name
+          @name.split('-').map { |name| name.capitalize }.join('::')
         end
 
-        def modify_init_file
-          module_name = @name.split('-').map { |name| name.capitalize }.join('::')
-          File.open(lib_path(@gem_name, 'init.rb'), 'w') do |file|
-            file.puts <<-EOF
-module Nesta
-  module Plugin
-    module #{module_name}
-      module Helpers
-        # If your plugin needs any helper methods, add them here...
-      end
-    end
-  end
-
-  class App
-    helpers Nesta::Plugin::#{module_name}::Helpers
-  end
-end
-            EOF
-          end
+        def make_directories
+          FileUtils.mkdir_p(File.join(@gem_name, 'lib', @gem_name))
         end
 
-        def specify_gem_dependency
-          gemspec = File.join(@gem_name, "#{@gem_name}.gemspec")
-          File.open(gemspec, 'r+') do |file|
-            output = ''
-            file.each_line do |line|
-              if line =~ /^end/
-                output << '  gem.add_dependency("nesta", ">= 0.9.11")' + "\n"
-                output << '  gem.add_development_dependency("rake")' + "\n"
-              end
-              output << line
-            end
-            file.pos = 0
-            file.print(output)
-            file.truncate(file.pos)
-          end
+        def gem_path(path)
+          File.join(@gem_name, path)
         end
 
         def execute
-          run_process('bundle', 'gem', @gem_name)
-          modify_required_file
-          modify_init_file
-          specify_gem_dependency
-          Dir.chdir(@gem_name) { run_process('git', 'add', '.') }
+          make_directories
+          copy_templates(
+            'plugins/gitignore' => gem_path('.gitignore'),
+            'plugins/plugin.gemspec' => gem_path("#{@gem_name}.gemspec"),
+            'plugins/Gemfile' => gem_path('Gemfile'),
+            'plugins/lib/required.rb' => gem_path("lib/#{@gem_name}.rb")
+          )
+          # modify_required_file
+          # modify_init_file
+          # specify_gem_dependency
+          # Dir.chdir(@gem_name) { run_process('git', 'add', '.') }
         end
       end
     end
