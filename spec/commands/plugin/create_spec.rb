@@ -57,7 +57,9 @@ describe 'nesta:plugin:create' do
     should_exist('Gemfile')
   end
 
-  it 'creates Rakefile that helps with packaging the gem'
+  it 'creates Rakefile that helps with packaging the gem' do
+    should_exist("Rakefile")
+  end
 
   it 'creates default folder for Ruby files' do
     code_directory = File.join(@gem_name, 'lib', @gem_name)

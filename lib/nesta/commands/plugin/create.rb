@@ -64,6 +64,7 @@ module Nesta
             'plugins/lib/required.rb' => gem_path("lib/#{@gem_name}.rb"),
             'plugins/lib/version.rb' => gem_path("lib/#{@gem_name}/version.rb"),
             'plugins/lib/init.rb' => gem_path("lib/#{@gem_name}/init.rb"),
+            'plugins/Rakefile' => gem_path('Rakefile')
           )
           Dir.chdir(@gem_name) do
             run_process('git', 'init')
