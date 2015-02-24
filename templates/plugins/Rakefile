@@ -1,0 +1,56 @@
+def version
+  contents = File.read(File.join(File.dirname(__FILE__), "lib", name, "version.rb"))
+  contents.match(/VERSION = "([0-9a-z\.]+)".*$/)
+  $1
+end
+
+def name
+  "<%= @gem_name %>"
+end
+
+def built_gem_path
+  Dir[File.join(File.dirname(__FILE__), "pkg", "#{name}-*.gem")].sort_by{|f| File.mtime(f)}.last
+end
+
+def already_tagged?
+  `git tag`.split(/\n/).include?("v#{version}")
+end
+
+desc "Build #{name}-#{version}.gem into the pkg directory."
+task 'build' do
+  `gem build -V #{File.join(File.dirname(__FILE__), "#{name}.gemspec")}`
+  FileUtils.mkdir_p(File.join(File.dirname(__FILE__), "pkg"))
+  gem = Dir[File.join(File.dirname(__FILE__), "#{name}-*.gem")].sort_by{|f| File.mtime(f)}.last
+  FileUtils.mv(gem, 'pkg')
+  puts "#{name} #{version} built to #{built_gem_path}."
+end
+
+desc "Build and install #{name}-#{version}.gem into system gems."
+task 'install' => 'build' do
+  `gem install '#{built_gem_path}' --local`
+end
+
+desc "Create tag v#{version} and build and push #{name}-#{version}.gem to Rubygems\n" \
+     "To prevent publishing in Rubygems use `gem_push=no rake release`"
+task 'release' => ['build', 'release:guard_clean',
+                   'release:source_control_push', 'release:rubygem_push'] do
+end
+
+task 'release:guard_clean' do
+  if !system("git diff --exit-code") || !system("git diff-index --quiet --cached HEAD")
+    puts "There are files that need to be committed first."
+    exit(1)
+  end
+end
+
+task 'release:source_control_push' do
+  unless already_tagged?
+    `git tag -a -m "Version #{version}" v#{version}`
+    `git push`
+    `git push --tags`
+  end
+end
+
+task 'release:rubygem_push' do
+  `gem push e#{built_gem_path}`
+end
