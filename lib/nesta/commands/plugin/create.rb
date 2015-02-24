@@ -86,7 +86,9 @@ module Nesta
             'plugins/gitignore' => gem_path('.gitignore'),
             'plugins/plugin.gemspec' => gem_path("#{@gem_name}.gemspec"),
             'plugins/Gemfile' => gem_path('Gemfile'),
-            'plugins/lib/required.rb' => gem_path("lib/#{@gem_name}.rb")
+            'plugins/lib/required.rb' => gem_path("lib/#{@gem_name}.rb"),
+            'plugins/lib/version.rb' => gem_path("lib/#{@gem_name}/version.rb"),
+            'plugins/Rakefile' => gem_path('Rakefile')
           )
           # modify_required_file
           # modify_init_file
