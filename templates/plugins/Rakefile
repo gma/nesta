@@ -10,7 +10,8 @@ def name
 end
 
 def built_gem_path
-  Dir[File.join(File.dirname(__FILE__), "pkg", "#{name}-*.gem")].sort_by{|f| File.mtime(f)}.last
+  gem_packages = File.join(File.dirname(__FILE__), "pkg", "#{name}-*.gem")
+  Dir[gem_packages].sort_by { |file| File.mtime(file) }.last
 end
 
 def already_tagged?
