@@ -1,6 +1,7 @@
 def version
-  contents = File.read(File.join(File.dirname(__FILE__), "lib", name, "version.rb"))
-  contents.match(/VERSION = "([0-9a-z\.]+)".*$/)
+  version_file = File.join(File.dirname(__FILE__), "lib", name, "version.rb")
+  contents = File.read(version_file)
+  contents.match(/VERSION = ['"]([0-9a-z.-]+)['"].*$/)
   $1
 end
 
