@@ -54,5 +54,5 @@ task 'release:source_control_push' do
 end
 
 task 'release:rubygem_push' do
-  `gem push e#{built_gem_path}`
+  `gem push #{built_gem_path}`
 end
