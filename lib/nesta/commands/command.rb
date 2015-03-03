@@ -27,7 +27,7 @@ module Nesta
 
       def copy_template(src, dest)
         FileUtils.mkdir_p(File.dirname(dest))
-        template = ERB.new(File.read(File.join(template_root, src)))
+        template = ERB.new(File.read(File.join(template_root, src)), nil, "-")
         File.open(dest, 'w') { |file| file.puts template.result(binding) }
       end
 
