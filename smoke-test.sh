@@ -63,7 +63,6 @@ run_tests()
 build_and_install()
 {
     echo rm -f pkg/$(gem_file)
-    run_with_ruby bundle install
     run_with_ruby bundle exec rake install
 }
 
