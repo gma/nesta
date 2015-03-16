@@ -5,10 +5,12 @@
 # Ruby.
 #
 # It assumes you've got the relevant versions of Ruby installed locally
-# via rbenv.
+# via chruby.
 
 
-RUBIES="1.9.3-p392 2.0.0-p353 2.1.0 2.1.1"
+source /usr/local/opt/chruby/share/chruby/chruby.sh
+
+RUBIES="ruby-2.0.0-p451 ruby-2.1.3 ruby-2.2.1"
 
 
 ## Functions
@@ -36,27 +38,33 @@ gem_file()
     echo "nesta-$(nesta_version).gem"
 }
 
+run_with_ruby()
+{
+    chruby-exec $RUBY_VERSION -- $@
+}
+
 get_ruby()
 {
-    # Why not just use RUBY_VERSION? Because tmux can prevent rbenv from
-    # changing the local version if the RBENV_VERSION variable is set in
-    # another session. If we don't notice we'll think we've been testing
-    # Nesta under multiple versions, but in fact we'll just have been
-    # testing it under the same copy of Ruby every time.
-    ruby --version | cut -f 2 -d ' '
+    # Why not just use RUBY_VERSION? Because tmux can prevent child
+    # processes from changing the local version if the RBENV_VERSION
+    # variable is set in another session. If we don't notice we'll think
+    # we've been testing Nesta under multiple versions, but in fact
+    # we'll just have been testing it under the same copy of Ruby every
+    # time.
+    run_with_ruby ruby --version | cut -f 2 -d ' '
 }
 
 run_tests()
 {
-    bundle install
-    bundle exec rake spec
+    run_with_ruby bundle install
+    run_with_ruby bundle exec rake spec
 }
 
 build_and_install()
 {
     echo rm -f pkg/$(gem_file)
-    bundle install
-    bundle exec rake install
+    run_with_ruby bundle install
+    run_with_ruby bundle exec rake install
 }
 
 site_folder()
@@ -66,15 +74,15 @@ site_folder()
 
 create_and_test_new_site()
 {
-    bundle exec nesta new $(site_folder)
+    run_with_ruby bundle exec nesta new $(site_folder)
     cd $(site_folder)
     echo "gem 'haml-contrib'" >> Gemfile
-    bundle install
-    bundle exec nesta demo:content
+    run_with_ruby bundle install
+    run_with_ruby bundle exec nesta demo:content
 
     log "Starting server in $(site_folder)"
     set +e
-    bundle exec mr-sparkle
+    run_with_ruby bundle exec mr-sparkle
     set -e
 
     cd - >/dev/null
@@ -85,10 +93,9 @@ create_and_test_new_site()
 ## Main program
 
 set -e
-[ -n "$DEBUG" ] && set -x
+[ "$DEBUG" ] && set -x
 
 for RUBY_VERSION in $RUBIES; do
-    rbenv local $RUBY_VERSION
     log "Rebuilding nesta gem with Ruby $(get_ruby)"
 
     run_tests
