@@ -76,7 +76,6 @@ create_and_test_new_site()
 {
     run_with_ruby bundle exec nesta new $(site_folder)
     cd $(site_folder)
-    echo "gem 'haml-contrib'" >> Gemfile
     run_with_ruby bundle install
     run_with_ruby bundle exec nesta demo:content
 
