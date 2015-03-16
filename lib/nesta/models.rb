@@ -113,7 +113,7 @@ module Nesta
       (metadata('template') || 'page').to_sym
     end
 
-    def to_html(scope = nil)
+    def to_html(scope = Object.new)
       convert_to_html(@format, scope, markup)
     end
 
@@ -265,7 +265,7 @@ module Nesta
     def summary
       if summary_text = metadata("summary")
         summary_text.gsub!('\n', "\n")
-        convert_to_html(@format, nil, summary_text)
+        convert_to_html(@format, Object.new, summary_text)
       end
     end
 
@@ -280,7 +280,7 @@ module Nesta
       end
     end
 
-    def body(scope = nil)
+    def body(scope = Object.new)
       convert_to_html(@format, scope, body_markup)
     end
 
