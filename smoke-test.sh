@@ -10,7 +10,7 @@
 
 source /usr/local/opt/chruby/share/chruby/chruby.sh
 
-RUBIES="ruby-2.0.0-p451 ruby-2.1.3 ruby-2.2.1"
+RUBIES="ruby-2.0.0-p598 ruby-2.1.5 ruby-2.2.1"
 
 
 ## Functions
