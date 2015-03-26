@@ -1,3 +1,8 @@
+= 0.11.1 / (26 March 2015)
+
+ * Tighten dependency on Tilt, as version 2.x is incompatible.
+   (Graham Ashton)
+
 = 0.11.0 / (16 March 2015)
 
  * Allow Haml pages to use the built-in Markdown filter again, by
