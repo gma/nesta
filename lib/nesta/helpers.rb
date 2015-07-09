@@ -42,6 +42,20 @@ module Nesta
         end
       end
 
+      # Returns the current page's heading or the site's title, if we
+      # don't have a current page, or the page doesn't have a heading
+      # defined.
+      #
+      # Useful in templates that generate links to social sharing sites,
+      # which need a suitable description for the page being shared or
+      # bookmarked.
+      #
+      def heading_or_site_title
+        @page && @page.heading
+      rescue Nesta::HeadingNotSet
+        @title
+      end
+
       def format_date(date)
         date.strftime("%d %B %Y")
       end
