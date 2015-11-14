@@ -67,11 +67,6 @@ module Nesta
       @@filename_cache = {}
     end
 
-    def self.menu_items
-      Nesta.deprecated('Page.menu_items', 'see Menu.top_level and Menu.for_path')
-      Menu.top_level
-    end
-
     def initialize(filename)
       @filename = filename
       @format = filename.split('.').last.to_sym
