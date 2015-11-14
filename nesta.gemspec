@@ -49,4 +49,5 @@ EOF
   s.add_development_dependency('rspec', '~> 2.14.0')
   s.add_development_dependency('test-unit', '1.2.3')
   s.add_development_dependency('webrat', '~> 0.7.3')
+  s.add_development_dependency('rake')
 end

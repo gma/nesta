@@ -92,6 +92,7 @@ DEPENDENCIES
   minitest (~> 5.9.0)
   mr-sparkle (>= 0.0.2)
   nesta!
+  rake
   rspec (~> 2.14.0)
   test-unit (= 1.2.3)
   webrat (~> 0.7.3)
