@@ -13,3 +13,5 @@ require File.expand_path('../lib/nesta/app', File.dirname(__FILE__))
 require_relative 'support/model_factory'
 require_relative 'support/temporary_files'
 require_relative 'support/test_configuration'
+
+Nesta::App.environment = 'test'
