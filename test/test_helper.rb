@@ -15,3 +15,12 @@ require_relative 'support/temporary_files'
 require_relative 'support/test_configuration'
 
 Nesta::App.environment = 'test'
+
+class Minitest::Test
+  def with_app_root(path, &block)
+    original, Nesta::App.root = Nesta::App.root, path
+    yield
+  ensure
+    Nesta::App.root = original
+  end
+end

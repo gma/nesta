@@ -1,13 +1,6 @@
 require 'test_helper'
 
 describe Nesta::Path do
-  def with_app_root(path, &block)
-    original, Nesta::App.root = Nesta::App.root, path
-    yield
-  ensure
-    Nesta::App.root = original
-  end
-
   def root
     '/path/to/site/on/filesystem'
   end
