@@ -20,6 +20,9 @@ module Nesta
     def teardown
       Capybara.reset_sessions!
       Capybara.use_default_driver
+
+      remove_temp_directory
+      Nesta::FileModel.purge_cache
     end
 
     def assert_has_xpath(query, options = {})
