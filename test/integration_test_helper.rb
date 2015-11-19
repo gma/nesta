@@ -40,5 +40,21 @@ module Nesta
         fail message
       end
     end
+
+    def assert_has_css(query, options = {})
+      if ! page.has_css?(query, options)
+        message = "not found in page: '#{query}'"
+        message << ", #{options.inspect}" unless options.empty?
+        fail message
+      end
+    end
+
+    def assert_has_no_css(query, options = {})
+      if ! page.has_no_css?(query, options)
+        message = "found in page: '#{query}'"
+        message << ", #{options.inspect}" unless options.empty?
+        fail message
+      end
+    end
   end
 end
