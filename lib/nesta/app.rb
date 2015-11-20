@@ -55,13 +55,9 @@ module Nesta
       stylesheet(params[:sheet].to_sym)
     end
 
-    get %r{/attachments/([\w/.@-]+)} do |file|
-      file = File.join(Nesta::Config.attachment_path, params[:captures].first)
-      if file =~ /\.\.\//
-        not_found
-      else
-        send_file(file, disposition: nil)
-      end
+    get '/attachments/*' do |path|
+      filename = File.join(Nesta::Config.attachment_path, path)
+      send_file(filename, disposition: nil)
     end
 
     get '/articles.xml' do
