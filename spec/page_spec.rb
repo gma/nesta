@@ -31,6 +31,12 @@ shared_examples_for "page that can display menus" do
       href = @category.abspath
       assert_selector "ul.menu a[@href$='#{href}']:contains('#{link_text}')"
     end
+
+    it "should add current class to a top level menu item" do
+      get @category.abspath
+      link_text = @category.link_text
+      assert_selector "ul.menu li[@class='current']:contains('#{link_text}')"
+    end
   end
 
   describe "and nested menu configured" do
@@ -49,6 +55,12 @@ shared_examples_for "page that can display menus" do
     it "should display first level of nested sub menus" do
       do_get
       assert_selector "ul.menu li ul li a:contains('#{@level2.link_text}')"
+    end
+
+    it "should add current class to a nested menu item" do
+      get @level2.abspath
+      link_text = @level2.link_text
+      assert_selector "ul.menu li[@class='current']:contains('#{link_text}')"
     end
 
     it "should not display nested menus to arbitrary depth" do
@@ -99,6 +111,15 @@ EOF
         metadata: {'link text'=>'My link text'})
       do_get
       assert_selector "ul.menu a[@href='/']:contains('My link text')"
+    end
+  end
+
+  describe "and Nesta is mapped to /path" do
+    it "should add current class to a selected menu item" do
+      create_menu(@category.path)
+      get @category.abspath, {}, 'SCRIPT_NAME' => '/path'
+      link_text = @category.link_text
+      assert_selector "ul.menu li[@class='current']:contains('#{link_text}')"
     end
   end
 end
