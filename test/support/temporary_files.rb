@@ -10,4 +10,24 @@ module TemporaryFiles
   def temp_path(base)
     File.join(TemporaryFiles::TEMP_DIR, base)
   end
+
+  def project_root
+    temp_path('mysite.com')
+  end
+
+  def project_path(path)
+    File.join(project_root, path)
+  end
+
+  def in_temporary_project(*args, &block)
+    FileUtils.mkdir_p(File.join(project_root, 'config'))
+    File.open(File.join(project_root, 'config', 'config.yml'), 'w').close
+    Dir.chdir(project_root) { yield }
+  ensure
+    remove_temp_directory
+  end
+
+  def assert_exists_in_project(path)
+    assert File.exist?(project_path(path)), "#{path} should exist"
+  end
 end

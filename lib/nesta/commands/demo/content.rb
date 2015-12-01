@@ -6,17 +6,21 @@ module Nesta
       class Content
         include Command
 
+        @demo_repository = 'git://github.com/gma/nesta-demo-content.git'
+        class << self
+          attr_accessor :demo_repository
+        end
+
         def initialize(*args)
           @dir = 'content-demo'
         end
 
         def clone_or_update_repository
-          repository = 'git://github.com/gma/nesta-demo-content.git'
           path = Nesta::Path.local(@dir)
           if File.exist?(path)
             FileUtils.cd(path) { run_process('git', 'pull', 'origin', 'master') }
           else
-            run_process('git', 'clone', repository, path)
+            run_process('git', 'clone', self.class.demo_repository, path)
           end
         end
 
