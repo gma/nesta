@@ -1,5 +1,7 @@
 require 'time'
 
+require 'rdiscount'
+
 Tilt.register Tilt::MarukuTemplate, 'mdown', 'md'
 Tilt.register Tilt::KramdownTemplate, 'mdown', 'md'
 Tilt.register Tilt::BlueClothTemplate, 'mdown', 'md'
