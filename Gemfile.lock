@@ -15,6 +15,8 @@ GEM
   remote: http://rubygems.org/
   specs:
     RedCloth (4.2.9)
+    ansi (1.5.0)
+    builder (3.2.2)
     byebug (9.0.5)
     capybara (2.5.0)
       mime-types (>= 1.16)
@@ -38,6 +40,11 @@ GEM
     mime-types (2.6.2)
     mini_portile (0.6.2)
     minitest (5.9.0)
+    minitest-reporters (1.1.10)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     mr-sparkle (0.3.0)
       listen (~> 1.0)
       rb-fsevent (>= 0.9)
@@ -66,6 +73,7 @@ GEM
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.6)
+    ruby-progressbar (1.8.1)
     sass (3.4.13)
     sinatra (1.4.5)
       rack (~> 1.4)
@@ -92,6 +100,7 @@ DEPENDENCIES
   byebug
   capybara (~> 2.5.0)
   minitest (~> 5.9.0)
+  minitest-reporters
   mr-sparkle (>= 0.0.2)
   nesta!
   rake
