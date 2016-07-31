@@ -5,9 +5,6 @@ Bundler.require(:default, :test)
 
 Bundler::GemHelper.install_tasks
 
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec)
-
 namespace :test do
   task :set_load_path do
     $LOAD_PATH.unshift File.expand_path('test')
