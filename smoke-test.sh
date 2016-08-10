@@ -57,7 +57,7 @@ get_ruby()
 run_tests()
 {
     run_with_ruby bundle install
-    run_with_ruby bundle exec rake spec
+    run_with_ruby bundle exec rake test
 }
 
 build_and_install()
