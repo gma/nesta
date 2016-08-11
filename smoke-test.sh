@@ -10,7 +10,7 @@
 
 source /usr/local/opt/chruby/share/chruby/chruby.sh
 
-RUBIES="ruby-2.0.0-p598 ruby-2.1.5 ruby-2.2.1"
+RUBIES="ruby-2.2.5 ruby-2.3.1"
 
 
 ## Functions
@@ -57,7 +57,7 @@ get_ruby()
 run_tests()
 {
     run_with_ruby bundle install
-    run_with_ruby bundle exec rake spec
+    run_with_ruby bundle exec rake test
 }
 
 build_and_install()

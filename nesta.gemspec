@@ -44,8 +44,9 @@ EOF
   s.add_development_dependency('mr-sparkle', '>= 0.0.2')
 
   # Test libraries
-  s.add_development_dependency('rack-test', '0.6.1')
-  s.add_development_dependency('rspec', '~> 2.14.0')
-  s.add_development_dependency('test-unit', '1.2.3')
-  s.add_development_dependency('webrat', '~> 0.7.3')
+  s.add_development_dependency('byebug')
+  s.add_development_dependency('capybara', '~> 2.5.0')
+  s.add_development_dependency('minitest', '~> 5.9.0')
+  s.add_development_dependency('minitest-reporters')
+  s.add_development_dependency('rake')
 end

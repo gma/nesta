@@ -1,3 +1,8 @@
+= Unreleased
+
+ * Port the test suite from RSpec and Webrat to Minitest and Capybara.
+   (Graham Ashton)
+
 = 0.11.1 / (26 March 2015)
 
  * Tighten dependency on Tilt, as version 2.x is incompatible.
@@ -288,7 +293,7 @@
  * Bug fix: The Sinatra app's root directory wasn't set which meant
    that Nesta couldn't always find the ./public directory (such as when
    running on Heroku).
-   
+
    The modifications made in 0.9.6 to make Nesta easier to mount inside
    another Rack application moved Nesta::App.root to the (new)
    Nesta::Env class. In 0.9.6 I forgot to actually set Nesta::App.root
@@ -360,7 +365,7 @@
 
 = 0.9.3 / 18 January 2011
 
- * The route and view for serving the home page (/) has been removed, 
+ * The route and view for serving the home page (/) has been removed,
    and the home page must now be created as an index page in
    content/pages.
 

@@ -15,20 +15,33 @@ GEM
   remote: http://rubygems.org/
   specs:
     RedCloth (4.2.9)
-    diff-lcs (1.2.5)
+    ansi (1.5.0)
+    builder (3.2.2)
+    byebug (9.0.5)
+    capybara (2.5.0)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
     ffi (1.9.8)
     haml (4.0.6)
       tilt
     haml-contrib (1.0.0.1)
       haml (>= 3.2.0.alpha.13)
-    hoe (3.13.1)
-      rake (>= 0.8, < 11.0)
     kgio (2.9.3)
     listen (1.3.1)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
+    mime-types (2.6.2)
     mini_portile (0.6.2)
+    minitest (5.9.0)
+    minitest-reporters (1.1.10)
+      ansi
+      builder
+      minitest (>= 5.0)
+      ruby-progressbar
     mr-sparkle (0.3.0)
       listen (~> 1.0)
       rb-fsevent (>= 0.9)
@@ -49,38 +62,28 @@ GEM
     rb-kqueue (0.2.3)
       ffi (>= 0.5.0)
     rdiscount (2.1.8)
-    rspec (2.14.1)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
-    rspec-core (2.14.8)
-    rspec-expectations (2.14.5)
-      diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.14.6)
+    ruby-progressbar (1.8.1)
     sass (3.4.13)
     sinatra (1.4.5)
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    test-unit (1.2.3)
-      hoe (>= 1.5.1)
     tilt (1.4.1)
     unicorn (4.8.3)
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
-    webrat (0.7.3)
-      nokogiri (>= 1.2.0)
-      rack (>= 1.0)
-      rack-test (>= 0.5.3)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
+  capybara (~> 2.5.0)
+  minitest (~> 5.9.0)
+  minitest-reporters
   mr-sparkle (>= 0.0.2)
   nesta!
-  rack-test (= 0.6.1)
-  rspec (~> 2.14.0)
-  test-unit (= 1.2.3)
-  webrat (~> 0.7.3)
+  rake

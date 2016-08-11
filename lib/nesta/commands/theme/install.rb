@@ -7,21 +7,23 @@ module Nesta
         include Command
 
         def initialize(*args)
-          url = args.shift
+          @url = args.shift
+          @url.nil? && (raise UsageError.new('URL not specified'))
           options = args.shift || {}
-          url.nil? && (raise UsageError.new('URL not specified'))
-          @url = url
-          @name = File.basename(url, '.git').sub(/nesta-theme-/, '')
+        end
+
+        def theme_name
+          File.basename(@url, '.git').sub(/nesta-theme-/, '')
         end
 
         def execute
-          run_process('git', 'clone', @url, "themes/#{@name}")
-          FileUtils.rm_r(File.join("themes/#{@name}", '.git'))
+          run_process('git', 'clone', @url, "themes/#{theme_name}")
+          FileUtils.rm_r(File.join("themes/#{theme_name}", '.git'))
           enable
         end
 
         def enable
-          Enable.new(@name).execute
+          Enable.new(theme_name).execute
         end
       end
     end

@@ -1,5 +1,7 @@
 require 'time'
 
+require 'rdiscount'
+
 Tilt.register Tilt::MarukuTemplate, 'mdown', 'md'
 Tilt.register Tilt::KramdownTemplate, 'mdown', 'md'
 Tilt.register Tilt::BlueClothTemplate, 'mdown', 'md'
@@ -79,16 +81,20 @@ module Nesta
       @mtime = File.mtime(filename)
     end
 
+    def ==(other)
+      other.respond_to?(:path) && (self.path == other.path)
+    end
+
     def index_page?
       @filename =~ /\/?index\.\w+$/
     end
 
     def abspath
-      page_path = @filename.sub(Nesta::Config.page_path, '')
+      file_path = @filename.sub(self.class.model_path, '')
       if index_page?
-        File.dirname(page_path)
+        File.dirname(file_path)
       else
-        File.join(File.dirname(page_path), File.basename(page_path, '.*'))
+        File.join(File.dirname(file_path), File.basename(file_path, '.*'))
       end
     end
 
@@ -199,10 +205,6 @@ module Nesta
       find_all.select do |page|
         page.date && page.date < DateTime.now
       end.sort { |x, y| y.date <=> x.date }
-    end
-
-    def ==(other)
-      other.respond_to?(:path) && (self.path == other.path)
     end
 
     def draft?
