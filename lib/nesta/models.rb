@@ -15,7 +15,7 @@ module Nesta
 
   class FileModel
     FORMATS = [:mdown, :md, :haml, :textile]
-    @@page_cache = {}
+    @@model_cache = {}
     @@filename_cache = {}
 
     attr_reader :filename, :mtime
@@ -54,18 +54,18 @@ module Nesta
     end
 
     def self.needs_loading?(path, filename)
-      @@page_cache[path].nil? || File.mtime(filename) > @@page_cache[path].mtime
+      @@model_cache[path].nil? || File.mtime(filename) > @@model_cache[path].mtime
     end
 
     def self.load(path)
       if (filename = find_file_for_path(path)) && needs_loading?(path, filename)
-        @@page_cache[path] = self.new(filename)
+        @@model_cache[path] = self.new(filename)
       end
-      @@page_cache[path]
+      @@model_cache[path]
     end
 
     def self.purge_cache
-      @@page_cache = {}
+      @@model_cache = {}
       @@filename_cache = {}
     end
 
