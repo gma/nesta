@@ -1,4 +1,4 @@
-- if ! @menu_items.empty?
+- unless @menu_items.empty?
   %nav.categories
     %h1 Articles by category
     - display_menu(@menu_items, :class => "menu")
