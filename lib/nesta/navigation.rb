@@ -60,7 +60,7 @@ module Nesta
       def link_text(page)
         page.link_text
       rescue LinkTextNotSet
-        return 'Home' if page.abspath == '/'
+        return root_link_name if page.abspath == '/'
         raise
       end
 
@@ -79,6 +79,10 @@ module Nesta
 
       def current_breadcrumb_class
         nil
+      end
+
+      def root_link_name
+        'Home'
       end
     end
   end
