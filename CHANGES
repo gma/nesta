@@ -1,5 +1,7 @@
 = Unreleased
 
+ * Upgrade to Sinatra 2 and Rack 2. (Graham Ashton)
+
  * Port the test suite from RSpec and Webrat to Minitest and Capybara.
    (Graham Ashton)
 
