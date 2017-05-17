@@ -12,7 +12,7 @@ describe Nesta::Config do
   end
 
   it 'returns nil for author when not defined' do
-    assert_equal nil, Nesta::Config.author
+    assert_nil Nesta::Config.author
   end
 
   describe 'when settings defined in ENV' do

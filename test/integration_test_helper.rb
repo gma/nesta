@@ -1,4 +1,5 @@
-require 'capybara'
+require 'capybara/dsl'
+
 require_relative 'test_helper'
 
 module Nesta

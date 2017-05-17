@@ -39,12 +39,12 @@ EOF
   s.add_dependency('tilt', '~> 2.0')
 
   # Useful in development
-  s.add_development_dependency('mr-sparkle', '>= 0.0.2')
+  s.add_development_dependency('mr-sparkle')
 
   # Test libraries
   s.add_development_dependency('byebug')
-  s.add_development_dependency('capybara', '~> 2.5.0')
-  s.add_development_dependency('minitest', '~> 5.9.0')
+  s.add_development_dependency('capybara', '~> 2.0')
+  s.add_development_dependency('minitest', '~> 5.0')
   s.add_development_dependency('minitest-reporters')
   s.add_development_dependency('rake')
 end
