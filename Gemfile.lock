@@ -14,7 +14,7 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    RedCloth (4.2.9)
+    RedCloth (4.3.2)
     ansi (1.5.0)
     builder (3.2.2)
     byebug (9.0.5)
