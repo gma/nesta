@@ -12,7 +12,7 @@ PATH
       tilt (~> 1.4)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     RedCloth (4.3.2)
     ansi (1.5.0)
