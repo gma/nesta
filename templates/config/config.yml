@@ -8,7 +8,7 @@ subtitle: "(change this text in config/config.yml)"
 # Atom feed. Specify at least one of name, uri or email, and Nesta will
 # include it in your feed. See the Atom spec for more info:
 #
-# http://www.atomenabled.org/developers/syndication/atom-format-spec.php#element.feed
+# https://tools.ietf.org/html/rfc4287#section-4.1.1
 #
 # author:
 #   name: Your Name
