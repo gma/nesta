@@ -3,6 +3,9 @@
  * Port the test suite from RSpec and Webrat to Minitest and Capybara.
    (Graham Ashton)
 
+ * Upgrade from tilt 1.4 to 2.0, to silence Ruby warnings produced
+   by Ruby 2.4. (Graham Ashton)
+
 = 0.11.1 / (26 March 2015)
 
  * Tighten dependency on Tilt, as version 2.x is incompatible.
