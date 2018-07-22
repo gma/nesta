@@ -7,8 +7,14 @@
 # It assumes you've got the relevant versions of Ruby installed locally
 # via chruby.
 
-
-source /usr/local/opt/chruby/share/chruby/chruby.sh
+if [ -d /usr/local/share/chruby ]; then
+    source /usr/local/share/chruby/chruby.sh
+elif [ -d /usr/local/opt/chruby/share/chruby ]; then
+    source /usr/local/opt/chruby/share/chruby/chruby.sh
+else
+    echo "ERROR: Can't find chruby.sh" 1>&2
+    exit 1
+fi
 
 RUBIES="ruby-2.2.5 ruby-2.3.1"
 
