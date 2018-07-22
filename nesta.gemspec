@@ -38,7 +38,7 @@ EOF
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sass', '>= 3.1')
   s.add_dependency('sinatra', '~> 1.4')
-  s.add_dependency('tilt', '~> 1.4')
+  s.add_dependency('tilt', '~> 2.0')
 
   # Useful in development
   s.add_development_dependency('mr-sparkle', '>= 0.0.2')
