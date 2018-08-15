@@ -70,7 +70,7 @@ module Nesta
       end
 
       def current_item?(item)
-        request.path == item.abspath
+        request.path_info == item.abspath
       end
 
       def current_menu_item_class

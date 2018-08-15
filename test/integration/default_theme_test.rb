@@ -75,6 +75,34 @@ describe 'Default theme' do
         assert_has_no_css "ul.menu a:contains('#{level3.link_text}')"
       end
     end
+
+    def create_page_and_menu
+      model = create(:page)
+      create_menu(model.path)
+      model
+    end
+
+    it "highlights current page's menu item" do
+      with_temp_content_directory do
+        model = create_page_and_menu
+        visit model.path
+        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+      end
+    end
+
+    it "highlights current page's menu item when app mounted at /prefix" do
+      Capybara.app = Rack::Builder.new do
+        map '/prefix' do
+          run Nesta::App.new
+        end
+      end
+
+      with_temp_content_directory do
+        model = create_page_and_menu
+        visit "/prefix/#{model.path}"
+        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+      end
+    end
   end
 
   it 'only displays read more link for summarised pages' do
