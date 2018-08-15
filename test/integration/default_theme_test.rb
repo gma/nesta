@@ -52,22 +52,56 @@ describe 'Default theme' do
     end
   end
 
-  it 'displays first two levels of menu items' do
-    with_temp_content_directory do
-      level1, level2, level3 = (0..2).map { create(:page) }
-      text = "%s\n  %s\n    %s\n" % [level1, level2, level3].map(&:abspath)
-      create_menu(text)
-      visit '/'
-      assert_has_css "ul.menu li a:contains('#{level1.link_text}')"
-      assert_has_css "ul.menu li ul li a:contains('#{level2.link_text}')"
-      assert_has_no_css "ul.menu a:contains('#{level3.link_text}')"
+  describe 'menus' do
+    def create_pages_in_menu
+      pages
     end
-  end
 
-  it "doesn't include markup for menu if menu not configured" do
-    with_temp_content_directory do
-      visit '/'
-      assert_has_no_css 'ul.menu'
+    it "doesn't include menu markup if menu not configured" do
+      with_temp_content_directory do
+        visit '/'
+        assert_has_no_css 'ul.menu'
+      end
+    end
+
+    it 'only displays first two levels of menu items' do
+      with_temp_content_directory do
+        level1, level2, level3 = (0..2).map { create(:page) }
+        text = "%s\n  %s\n    %s\n" % [level1, level2, level3].map(&:abspath)
+        create_menu(text)
+        visit '/'
+        assert_has_css "ul.menu li a:contains('#{level1.link_text}')"
+        assert_has_css "ul.menu li ul li a:contains('#{level2.link_text}')"
+        assert_has_no_css "ul.menu a:contains('#{level3.link_text}')"
+      end
+    end
+
+    def create_page_and_menu
+      model = create(:page)
+      create_menu(model.path)
+      model
+    end
+
+    it "highlights current page's menu item" do
+      with_temp_content_directory do
+        model = create_page_and_menu
+        visit model.path
+        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+      end
+    end
+
+    it "highlights current page's menu item when app mounted at /prefix" do
+      Capybara.app = Rack::Builder.new do
+        map '/prefix' do
+          run Nesta::App.new
+        end
+      end
+
+      with_temp_content_directory do
+        model = create_page_and_menu
+        visit "/prefix/#{model.path}"
+        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+      end
     end
   end
 
