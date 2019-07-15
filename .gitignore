@@ -1,4 +1,5 @@
 *.gem
+.env
 .*.swp
 .DS_Store
 ._*
