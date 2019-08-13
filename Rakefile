@@ -15,11 +15,11 @@ namespace :test do
   end
 
   task units: :set_load_path do
-    load_tests('unit')
+    load_tests('unit/**')
   end
 
   task integrations: :set_load_path do
-    load_tests('integration')
+    load_tests('integration/**')
   end
 end
 
