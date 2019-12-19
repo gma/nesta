@@ -50,7 +50,7 @@ GEM
       unicorn (>= 4.5)
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
-    rack (1.6.8)
+    rack (1.6.12)
     rack-protection (1.5.5)
       rack
     rack-test (0.6.1)
