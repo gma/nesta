@@ -74,7 +74,7 @@ GEM
       tilt (>= 1.3, < 3)
     temple (0.8.2)
     tilt (2.0.10)
-    unicorn (5.5.3)
+    unicorn (5.5.4)
       kgio (~> 2.6)
       raindrops (~> 0.7)
     xpath (2.1.0)
