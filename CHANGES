@@ -6,6 +6,8 @@
  * Upgrade from tilt 1.4 to 2.0, to silence Ruby warnings produced
    by Ruby 2.4. (Graham Ashton)
 
+ * Replace the deprecated sass gem with sassc. (Brad Weslake)
+
 = 0.11.1 / (26 March 2015)
 
  * Tighten dependency on Tilt, as version 2.x is incompatible.
