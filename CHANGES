@@ -1,5 +1,8 @@
 = Unreleased
 
+ * Stop running the test suite under Ruby 2.3 and 2.4, both of which
+   have reached end-of-life. (Graham Ashton)
+
  * Silence deprecation warnings produced under Ruby 2.7. (Graham Ashton)
 
  * Upgrade to Sinatra 2 and Rack 2. (Graham Ashton)
