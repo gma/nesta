@@ -31,20 +31,20 @@ EOF
 
   s.add_dependency('haml', '>= 3.1')
   s.add_dependency('haml-contrib', '>= 1.0')
-  s.add_dependency('rack', '>= 1.3')
+  s.add_dependency('rack', '~> 2.0')
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sassc', '>= 2.2')
-  s.add_dependency('sinatra', '~> 1.4')
+  s.add_dependency('sinatra', '~> 2.0')
   s.add_dependency('tilt', '~> 2.0')
 
   # Useful in development
-  s.add_development_dependency('mr-sparkle', '>= 0.0.2')
+  s.add_development_dependency('mr-sparkle')
 
   # Test libraries
   s.add_development_dependency('byebug')
-  s.add_development_dependency('capybara', '~> 2.5.0')
-  s.add_development_dependency('minitest', '~> 5.9.0')
+  s.add_development_dependency('capybara', '~> 2.0')
+  s.add_development_dependency('minitest', '~> 5.0')
   s.add_development_dependency('minitest-reporters')
   s.add_development_dependency('rake')
 end

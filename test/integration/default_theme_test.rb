@@ -175,7 +175,7 @@ describe 'Default theme' do
       with_temp_content_directory do
         article = create(:article)
         visit article.path
-        assert_has_css 'time', article.date
+        assert_has_css "time[datetime='#{article.date}']"
       end
     end
 

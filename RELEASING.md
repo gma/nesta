@@ -10,13 +10,12 @@ the steps:
 2. Update the `CHANGES` file with a summary of significant changes since
    the previous release.
 
-3. Update the versions of Ruby used in `.travis.yml` and
-   `smoke-test.sh`. If not, commit and push. Verify that all relevant
-   versions of Ruby have been installed locally, with `chruby`.
+3. Check the versions of Ruby used in `.travis.yml` are up to date. If new
+   Ruby versions need testing, update the config and re-run the Travis build.
 
-4. Run `smoke-test.sh`.
+4. Generate a new site with the `nesta` command, install the demo content,
+   check that it runs okay locally.
 
-5. Once you're confident the freshly generated sites work okay in the
-   previous step, run `rake release`.
+5. If everything seems fine, run `rake release`.
 
 6. Publish an announcement blog post and email the list.
