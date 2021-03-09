@@ -39,7 +39,7 @@ GEM
       rb-inotify (>= 0.9)
       rb-kqueue (>= 0.2)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.0)
     minitest (5.14.1)
     minitest-reporters (1.4.2)
       ansi
@@ -53,9 +53,11 @@ GEM
       unicorn (>= 4.5)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.1)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     public_suffix (4.0.5)
+    racc (1.5.2)
     rack (2.2.3)
     rack-protection (2.0.8.1)
       rack
