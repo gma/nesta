@@ -1,11 +1,9 @@
-require File.expand_path('../command', File.dirname(__FILE__))
+require File.expand_path('../../config_file', File.dirname(__FILE__))
 
 module Nesta
   module Commands
     module Theme
       class Enable
-        include Command
-
         def initialize(*args)
           name = args.shift
           options = args.shift || {}
@@ -14,7 +12,7 @@ module Nesta
         end
 
         def execute(process)
-          update_config_yaml(/^\s*#?\s*theme:.*/, "theme: #{@name}")
+          Nesta::ConfigFile.new.set_value('theme', @name)
         end
       end
     end

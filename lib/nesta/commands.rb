@@ -13,3 +13,9 @@ require File.expand_path('commands/new', File.dirname(__FILE__))
 require File.expand_path('commands/plugin', File.dirname(__FILE__))
 require File.expand_path('commands/template', File.dirname(__FILE__))
 require File.expand_path('commands/theme', File.dirname(__FILE__))
+
+module Nesta
+  module Commands
+    class UsageError < RuntimeError; end
+  end
+end

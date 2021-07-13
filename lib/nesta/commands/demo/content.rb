@@ -1,11 +1,9 @@
-require File.expand_path('../command', File.dirname(__FILE__))
+require File.expand_path('../../config_file', File.dirname(__FILE__))
 
 module Nesta
   module Commands
     module Demo
       class Content
-        include Command
-
         @demo_repository = 'git://github.com/gma/nesta-demo-content.git'
         class << self
           attr_accessor :demo_repository
@@ -48,7 +46,7 @@ module Nesta
         def execute(process)
           clone_or_update_repository(process)
           configure_git_to_ignore_repo
-          update_config_yaml(/^\s*#?\s*content:.*/, "content: #{@dir}")
+          Nesta::ConfigFile.new.set_value('content', @dir)
         end
       end
     end
