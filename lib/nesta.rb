@@ -6,4 +6,4 @@ module Nesta
   end
 end
 
-require 'nesta/plugin'
+require File.expand_path('nesta/plugin', File.dirname(__FILE__))
