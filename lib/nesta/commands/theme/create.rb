@@ -22,13 +22,15 @@ module Nesta
 
         def execute
           make_directories
-          copy_templates(
+          {
             'themes/README.md' => "#{@theme_path}/README.md",
             'themes/app.rb' => "#{@theme_path}/app.rb",
             'themes/views/layout.haml' => "#{@theme_path}/views/layout.haml",
             'themes/views/page.haml' => "#{@theme_path}/views/page.haml",
             'themes/views/master.sass' => "#{@theme_path}/views/master.sass"
-          )
+          }.each do |src, dest|
+            Nesta::Commands::Template.new(src).copy_to(dest, binding)
+          end
         end
       end
     end

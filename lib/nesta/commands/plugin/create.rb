@@ -56,7 +56,7 @@ module Nesta
 
         def execute
           make_directories
-          copy_templates(
+          {
             'plugins/README.md' => gem_path('README.md'),
             'plugins/gitignore' => gem_path('.gitignore'),
             'plugins/plugin.gemspec' => gem_path("#{@gem_name}.gemspec"),
@@ -65,7 +65,9 @@ module Nesta
             'plugins/lib/version.rb' => gem_path("lib/#{@gem_name}/version.rb"),
             'plugins/lib/init.rb' => gem_path("lib/#{@gem_name}/init.rb"),
             'plugins/Rakefile' => gem_path('Rakefile')
-          )
+          }.each do |src, dest|
+            Nesta::Commands::Template.new(src).copy_to(dest, binding)
+          end
           Dir.chdir(@gem_name) do
             run_process('git', 'init')
             run_process('git', 'add', '.')

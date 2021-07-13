@@ -20,20 +20,6 @@ module Nesta
         exit 1
       end
 
-      def template_root
-        File.expand_path('../../../templates', File.dirname(__FILE__))
-      end
-
-      def copy_template(src, dest)
-        FileUtils.mkdir_p(File.dirname(dest))
-        template = ERB.new(File.read(File.join(template_root, src)), nil, "-")
-        File.open(dest, 'w') { |file| file.puts template.result(binding) }
-      end
-
-      def copy_templates(templates)
-        templates.each { |src, dest| copy_template(src, dest) }
-      end
-
       def update_config_yaml(pattern, replacement)
         configured = false
         File.open(Nesta::Config.yaml_path, 'r+') do |file|

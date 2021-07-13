@@ -49,7 +49,9 @@ module Nesta
         if @options['vlad']
           templates['config/deploy.rb'] = "#{@path}/config/deploy.rb"
         end
-        copy_templates(templates)
+        templates.each do |src, dest|
+          Nesta::Commands::Template.new(src).copy_to(dest, binding)
+        end
         create_repository if @options['git']
       end
     end
