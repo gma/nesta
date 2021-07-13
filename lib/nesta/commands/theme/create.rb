@@ -1,11 +1,7 @@
-require File.expand_path('../command', File.dirname(__FILE__))
-
 module Nesta
   module Commands
     module Theme
       class Create
-        include Command
-
         def initialize(*args)
           name = args.shift
           options = args.shift || {}
@@ -22,7 +18,7 @@ module Nesta
           FileUtils.mkdir_p(File.join(@theme_path, 'views'))
         end
 
-        def execute
+        def execute(process)
           make_directories
           {
             'themes/README.md' => "#{@theme_path}/README.md",

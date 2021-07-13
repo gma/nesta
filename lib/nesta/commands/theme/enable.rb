@@ -13,7 +13,7 @@ module Nesta
           @name = name
         end
 
-        def execute
+        def execute(process)
           update_config_yaml(/^\s*#?\s*theme:.*/, "theme: #{@name}")
         end
       end

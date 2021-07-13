@@ -13,9 +13,15 @@ describe 'nesta theme:enable' do
     remove_temp_directory
   end
 
+  def process_stub
+    Object.new.tap do |stub|
+      def stub.run(*args); end
+    end
+  end
+
   it 'enables the theme' do
     Dir.chdir(project_root) do
-      Nesta::Commands::Theme::Enable.new('theme-name').execute
+      Nesta::Commands::Theme::Enable.new('theme-name').execute(process_stub)
       assert_match /^theme: theme-name/, File.read('config/config.yml')
     end
   end

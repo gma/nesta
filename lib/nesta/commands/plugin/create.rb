@@ -1,11 +1,7 @@
-require File.expand_path('../command', File.dirname(__FILE__))
-
 module Nesta
   module Commands
     module Plugin
       class Create
-        include Command
-
         def initialize(*args)
           name = args.shift
           name.nil? && (raise UsageError.new('name not specified'))
@@ -54,7 +50,7 @@ module Nesta
           File.join(@gem_name, path)
         end
 
-        def execute
+        def execute(process)
           make_directories
           {
             'plugins/README.md' => gem_path('README.md'),
@@ -69,8 +65,8 @@ module Nesta
             Nesta::Commands::Template.new(src).copy_to(dest, binding)
           end
           Dir.chdir(@gem_name) do
-            run_process('git', 'init')
-            run_process('git', 'add', '.')
+            process.run('git', 'init')
+            process.run('git', 'add', '.')
           end
         end
 

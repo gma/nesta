@@ -1,10 +1,6 @@
-require File.expand_path('command', File.dirname(__FILE__))
-
 module Nesta
   module Commands
     class New
-      include Command
-
       def initialize(*args)
         path = args.shift
         options = args.shift || {}
@@ -26,18 +22,18 @@ module Nesta
         @options['vlad']
       end
 
-      def create_repository
+      def create_repository(process)
         FileUtils.cd(@path) do
           File.open('.gitignore', 'w') do |file|
             file.puts %w[._* .*.swp .bundle .DS_Store .sass-cache].join("\n")
           end
-          run_process('git', 'init')
-          run_process('git', 'add', '.')
-          run_process('git', 'commit', '-m', 'Initial commit')
+          process.run('git', 'init')
+          process.run('git', 'add', '.')
+          process.run('git', 'commit', '-m', 'Initial commit')
         end
       end
 
-      def execute
+      def execute(process)
         make_directories
         templates = {
           'config.ru' => "#{@path}/config.ru",
@@ -52,7 +48,7 @@ module Nesta
         templates.each do |src, dest|
           Nesta::Commands::Template.new(src).copy_to(dest, binding)
         end
-        create_repository if @options['git']
+        create_repository(process) if @options['git']
       end
     end
   end

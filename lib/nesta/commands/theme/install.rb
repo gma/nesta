@@ -1,11 +1,7 @@
-require File.expand_path('../command', File.dirname(__FILE__))
-
 module Nesta
   module Commands
     module Theme
       class Install
-        include Command
-
         def initialize(*args)
           @url = args.shift
           @url.nil? && (raise UsageError.new('URL not specified'))
@@ -16,14 +12,14 @@ module Nesta
           File.basename(@url, '.git').sub(/nesta-theme-/, '')
         end
 
-        def execute
-          run_process('git', 'clone', @url, "themes/#{theme_name}")
-          FileUtils.rm_r(File.join("themes/#{theme_name}", '.git'))
-          enable
+        def execute(process)
+          process.run('git', 'clone', @url, "themes/#{theme_name}")
+          FileUtils.rm_rf(File.join("themes/#{theme_name}", '.git'))
+          enable(process)
         end
 
-        def enable
-          Enable.new(theme_name).execute
+        def enable(process)
+          Enable.new(theme_name).execute(process)
         end
       end
     end

@@ -9,13 +9,13 @@ describe 'nesta edit' do
   end
 
   it 'launches the editor' do
-    ENV['EDITOR'] = 'touch'
+    ENV['EDITOR'] = 'vi'
     edited_file = 'path/to/page.md'
+    process = Minitest::Mock.new
+    process.expect(:run, true, [ENV['EDITOR'], /#{edited_file}$/])
     with_temp_content_directory do
-      FileUtils.mkdir_p(Nesta::Config.page_path(File.dirname(edited_file)))
       command = Nesta::Commands::Edit.new(edited_file)
-      command.execute
-      assert File.exist?(Nesta::Config.page_path(edited_file)), 'editor not run'
+      command.execute(process)
     end
   end
 end

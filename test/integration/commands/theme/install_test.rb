@@ -1,8 +1,5 @@
 require 'test_helper'
-require_relative '../../../support/silence_commands_during_tests'
 require_relative '../../../../lib/nesta/commands'
-
-Nesta::Commands::Theme::Install.send(:include, SilenceCommandsDuringTests)
 
 describe 'nesta theme:install' do
   include TemporaryFiles
@@ -27,23 +24,30 @@ describe 'nesta theme:install' do
     remove_temp_directory
   end
 
+  def process_stub
+    Object.new.tap do |stub|
+      def stub.run(*args); end
+    end
+  end
+
   it 'clones the repository' do
+    process = Minitest::Mock.new
+    process.expect(:run, true, ['git', 'clone', repo_url, "themes/#{theme_name}"])
     in_temporary_project do
-      Nesta::Commands::Theme::Install.new(repo_url).execute
-      assert File.directory?(theme_dir), 'theme not cloned'
+      Nesta::Commands::Theme::Install.new(repo_url).execute(process)
     end
   end
 
   it "removes the theme's .git directory" do
     in_temporary_project do
-      Nesta::Commands::Theme::Install.new(repo_url).execute
+      Nesta::Commands::Theme::Install.new(repo_url).execute(process_stub)
       refute File.exist?("#{theme_dir}/.git"), '.git folder found'
     end
   end
 
   it 'enables the freshly installed theme' do
     in_temporary_project do
-      Nesta::Commands::Theme::Install.new(repo_url).execute
+      Nesta::Commands::Theme::Install.new(repo_url).execute(process_stub)
       assert_match /theme: #{theme_name}/, File.read('config/config.yml')
     end
   end

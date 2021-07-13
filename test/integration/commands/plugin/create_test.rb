@@ -24,13 +24,16 @@ describe 'nesta plugin:create' do
     "nesta-plugin-#{plugin_name}"
   end
 
+  def process_stub
+    Object.new.tap do |stub|
+      def stub.run(*args); end
+    end
+  end
+
   def create_plugin(&block)
     Dir.chdir(working_directory) do
       command = Nesta::Commands::Plugin::Create.new(plugin_name)
-      command.stub(:run_process, nil) do
-        command.execute
-        yield
-      end
+      command.execute(process_stub)
     end
   end
 

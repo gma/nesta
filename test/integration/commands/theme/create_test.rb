@@ -16,9 +16,15 @@ describe 'nesta theme:create' do
     remove_temp_directory
   end
 
+  def process_stub
+    Object.new.tap do |stub|
+      def stub.run(*args); end
+    end
+  end
+
   it 'creates default files in the theme directory' do
     Dir.chdir(project_root) do
-      Nesta::Commands::Theme::Create.new('theme-name').execute
+      Nesta::Commands::Theme::Create.new('theme-name').execute(process_stub)
     end
     assert_exists_in_project theme_path('README.md')
     assert_exists_in_project theme_path('app.rb')
@@ -26,7 +32,7 @@ describe 'nesta theme:create' do
 
   it 'copies default view templates into views directory' do
     Dir.chdir(project_root) do
-      Nesta::Commands::Theme::Create.new('theme-name').execute
+      Nesta::Commands::Theme::Create.new('theme-name').execute(process_stub)
     end
     %w(layout.haml page.haml master.sass).each do |template|
       assert_exists_in_project theme_path("views/#{template}")

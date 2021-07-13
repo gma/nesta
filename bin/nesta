@@ -91,7 +91,7 @@ EOF
       rescue NameError
         usage
       else
-        command_cls.new(ARGV[0], options).execute
+        command_cls.new(ARGV[0], options).execute(Nesta::Process.new)
       end
     rescue RuntimeError => e
       $stderr.puts "ERROR: #{e}"

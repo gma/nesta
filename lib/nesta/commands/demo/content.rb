@@ -15,12 +15,12 @@ module Nesta
           @dir = 'content-demo'
         end
 
-        def clone_or_update_repository
+        def clone_or_update_repository(process)
           path = Nesta::Path.local(@dir)
           if File.exist?(path)
-            FileUtils.cd(path) { run_process('git', 'pull', 'origin', 'master') }
+            FileUtils.cd(path) { process.run('git', 'pull', 'origin', 'master') }
           else
-            run_process('git', 'clone', self.class.demo_repository, path)
+            process.run('git', 'clone', self.class.demo_repository, path)
           end
         end
 
@@ -45,8 +45,8 @@ module Nesta
           end
         end
 
-        def execute
-          clone_or_update_repository
+        def execute(process)
+          clone_or_update_repository(process)
           configure_git_to_ignore_repo
           update_config_yaml(/^\s*#?\s*content:.*/, "content: #{@dir}")
         end

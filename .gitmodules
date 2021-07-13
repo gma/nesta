@@ -1,6 +1,0 @@
-[submodule "test/fixtures/demo-content.git"]
-	path = test/fixtures/demo-content.git
-	url = https://github.com/gma/nesta-demo-content.git
-[submodule "test/fixtures/nesta-theme-test"]
-	path = test/fixtures/nesta-theme-test.git
-	url = https://github.com/gma/nesta-theme-test.git

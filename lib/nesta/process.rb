@@ -1,16 +1,12 @@
 module Nesta
   class Process
-    def initialize(*args)
-      @args = args
-    end
-
-    def run
-      system(*@args)
+    def run(*args)
+      system(*args)
       if ! $?.success?
         message = if $?.exitstatus == 127
-                    "#{@args[0]} not found"
+                    "#{args[0]} not found"
                   else
-                    "'#{@args.join(' ')}' failed with status #{$?.exitstatus}"
+                    "'#{args.join(' ')}' failed with status #{$?.exitstatus}"
                   end
         fail(message)
       end

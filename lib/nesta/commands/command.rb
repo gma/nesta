@@ -5,10 +5,6 @@ module Nesta
     class UsageError < RuntimeError; end
 
     module Command
-      def run_process(*args)
-        Nesta::Process.new(*args).run
-      end
-
       def update_config_yaml(pattern, replacement)
         configured = false
         File.open(Nesta::Config.yaml_path, 'r+') do |file|
