@@ -1,23 +1,12 @@
+require File.expand_path('../process', File.dirname(__FILE__))
+
 module Nesta
   module Commands
     class UsageError < RuntimeError; end
 
     module Command
       def run_process(*args)
-        system(*args)
-        if ! $?.success?
-          message = if $?.exitstatus == 127
-                      "#{args[0]} not found"
-                    else
-                      "'#{args.join(' ')}' failed with status #{$?.exitstatus}"
-                    end
-          fail(message)
-        end
-      end
-
-      def fail(message)
-        $stderr.puts "Error: #{message}"
-        exit 1
+        Nesta::Process.new(*args).run
       end
 
       def update_config_yaml(pattern, replacement)

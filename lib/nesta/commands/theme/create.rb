@@ -12,7 +12,9 @@ module Nesta
           name.nil? && (raise UsageError.new('name not specified'))
           @name = name
           @theme_path = Nesta::Path.themes(@name)
-          fail("#{@theme_path} already exists") if File.exist?(@theme_path)
+          if File.exist?(@theme_path)
+            Nesta::Process.new.fail("Error: #{@theme_path} already exists")
+          end
         end
 
         def make_directories

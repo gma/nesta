@@ -1,18 +1,15 @@
 require 'test_helper'
-require_relative '../../lib/nesta/commands'
+require_relative '../../lib/nesta/process'
 
-class TestCommand
-  include Nesta::Commands::Command
-end
-
-describe 'Nesta::Commands::Command' do
-  describe '#run_process' do
+describe 'Nesta::Process' do
+  describe '#run' do
     it 'catches errors when running external processes' do
-      TestCommand.new.run_process('ls / >/dev/null')
+      process = Nesta::Process.new
+      process.run('ls / >/dev/null')
       begin
         stderr, $stderr = $stderr, File.open('/dev/null', 'w')
         assert_raises(SystemExit) do
-          TestCommand.new.run_process('ls no-such-file 2>/dev/null')
+          process.run('ls no-such-file 2>/dev/null')
         end
       ensure
         $stderr.close
