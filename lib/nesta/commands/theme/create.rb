@@ -9,7 +9,7 @@ module Nesta
           @name = name
           @theme_path = Nesta::Path.themes(@name)
           if File.exist?(@theme_path)
-            Nesta::SystemCommand.new.fail("Error: #{@theme_path} already exists")
+            Nesta.fail_with("#{@theme_path} already exists")
           end
         end
 

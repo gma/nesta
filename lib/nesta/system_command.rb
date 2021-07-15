@@ -8,13 +8,8 @@ module Nesta
                   else
                     "'#{args.join(' ')}' failed with status #{$?.exitstatus}"
                   end
-        fail(message)
+        Nesta.fail_with(message)
       end
-    end
-
-    def fail(message)
-      $stderr.puts "Error: #{message}"
-      exit 1
     end
   end
 end

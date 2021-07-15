@@ -7,7 +7,7 @@ describe 'Nesta::SystemCommand' do
       command = Nesta::SystemCommand.new
       command.run('ls / >/dev/null')
       begin
-        stderr, $stderr = $stderr, File.open('/dev/null', 'w')
+        stderr, $stderr = $stderr, StringIO.new
         assert_raises(SystemExit) do
           command.run('ls no-such-file 2>/dev/null')
         end
