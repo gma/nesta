@@ -1,5 +1,5 @@
 module Nesta
-  class Process
+  class SystemCommand
     def run(*args)
       system(*args)
       if ! $?.success?
