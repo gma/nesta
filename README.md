@@ -1,6 +1,6 @@
 # Nesta - a CMS for Ruby Developers
 
-A CMS for small web sites and blogs, written in [Sinatra][frank].
+A file-based CMS for web sites and blogs, written in [Sinatra][frank].
 
 Content can be written in [Markdown][markdown] or [Textile][textile] and
 stored in text files (though you can also use Haml if you need to add
