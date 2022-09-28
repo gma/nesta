@@ -1,3 +1,29 @@
+= 0.13.0 / (28 September 2022)
+
+ * Update dependencies in order to support Ruby 3.0 and above.
+   (Graham Ashton)
+
+ * Upgrade multiple dependencies to fix security vulnerabilities.
+   (Graham Ashton)
+
+ * Switch Git repository URLs to HTTPS (fixes the demo:content command).
+   (Graham Ashton)
+
+ * Update dependency on Haml; Nesta currently requires a version lower
+   than 6.0. (Graham Ashton)
+
+ * Refactor: Extracted logic for running external processes into
+   a new `Nesta::SystemCommand` class. (Graham Ashton)
+
+ * Refactor: Created a new `Nesta::Commands::Template` class for
+   commands that create files from templates. (Graham Ashton)
+
+ * Refactor: Move logic for editing the config file from within Nesta's
+   commands into new `Nesta::ConfigFile` class. (Graham Ashton)
+
+ * Stopped the test suite from executing external commands during tests.
+   (Graham Ashton)
+
 = 0.12.0 / (30 June 2020)
 
  * Upgrade to Sinatra 2 and Rack 2. (Graham Ashton)
