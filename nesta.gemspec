@@ -29,7 +29,7 @@ EOF
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  s.add_dependency('haml', '>= 3.1')
+  s.add_dependency('haml', '>= 3.1', '< 6.0')
   s.add_dependency('haml-contrib', '>= 1.0')
   s.add_dependency('rack', '~> 2.0')
   s.add_dependency('rdiscount', '~> 2.1')
