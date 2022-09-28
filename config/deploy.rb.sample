@@ -1,5 +1,5 @@
 set :application, "nesta"
-set :repository, "git://github.com/gma/nesta.git"
+set :repository, "https://github.com/gma/nesta.git"
 
 # Set :user if you want to connect (via ssh) to your server using a
 # different username. You will also need to include the user in :domain

@@ -53,13 +53,13 @@ describe 'nesta theme:install' do
   end
 
   it 'determines name of theme from name of repository' do
-    url = 'git://foobar.com/path/to/nesta-theme-the-name.git'
+    url = 'https://foobar.com/path/to/nesta-theme-the-name.git'
     command = Nesta::Commands::Theme::Install.new(url)
     assert_equal 'the-name', command.theme_name
   end
 
   it "falls back to name of repo when theme name doesn't match correct format" do
-    url = 'git://foobar.com/path/to/mytheme.git'
+    url = 'https://foobar.com/path/to/mytheme.git'
     command = Nesta::Commands::Theme::Install.new(url)
     assert_equal 'mytheme', command.theme_name
   end

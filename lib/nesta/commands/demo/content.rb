@@ -4,7 +4,7 @@ module Nesta
   module Commands
     module Demo
       class Content
-        @demo_repository = 'git://github.com/gma/nesta-demo-content.git'
+        @demo_repository = 'https://github.com/gma/nesta-demo-content.git'
         class << self
           attr_accessor :demo_repository
         end
