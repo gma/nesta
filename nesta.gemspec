@@ -35,7 +35,7 @@ EOF
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sassc', '>= 2.2')
-  s.add_dependency('sinatra', '~> 2.0')
+  s.add_dependency('sinatra', '>= 2', '< 4')
   s.add_dependency('tilt', '~> 2.0')
 
   # Useful in development
