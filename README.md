@@ -53,6 +53,8 @@ on Twitter, and on [the blog][].
 [@nestacms]: http://twitter.com/nestacms
 [the blog]: http://nestacms.com/blog
 
+![Tests](https://github.com/gma/nesta/actions/workflows/tests.yml/badge.svg)
+
 ## Contributing
 
 If you want to add a new feature, I recommend that you file an issue to discuss
