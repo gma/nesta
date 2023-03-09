@@ -31,7 +31,7 @@ EOF
 
   s.add_dependency('haml', '>= 3.1', '< 6.0')
   s.add_dependency('haml-contrib', '>= 1.0')
-  s.add_dependency('rack', '~> 2.0')
+  s.add_dependency('rack', '~> 2')
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sassc', '>= 2.2')
