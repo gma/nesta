@@ -3,6 +3,11 @@
  * Update multiple dependencies to fix security vulnerabilities; see commit
    history for details. (Graham Ashton)
 
+ * Rename Nesta::Overrides module to Nesta::View::Renderers. When we upgrade
+   to Sinatra 3 some of the code in this module will no longer override
+   Sinatra's built-in behaviour, as Sinatra no longer supports Sass. In that
+   context, this rename just made sense. (Graham Ashton)
+
 = 0.13.0 / (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.

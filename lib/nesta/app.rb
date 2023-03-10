@@ -8,7 +8,7 @@ require File.expand_path('config', File.dirname(__FILE__))
 require File.expand_path('models', File.dirname(__FILE__))
 require File.expand_path('helpers', File.dirname(__FILE__))
 require File.expand_path('navigation', File.dirname(__FILE__))
-require File.expand_path('overrides', File.dirname(__FILE__))
+require File.expand_path('renderers', File.dirname(__FILE__))
 require File.expand_path('path', File.dirname(__FILE__))
 
 Encoding.default_external = 'utf-8' if RUBY_VERSION =~ /^1.9/
@@ -19,9 +19,9 @@ module Nesta
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :haml, { format: :html5 }
 
-    helpers Overrides::Renderers
-    helpers Navigation::Renderers
     helpers View::Helpers
+    helpers View::Renderers
+    helpers Navigation::Renderers
 
     before do
       if request.path_info =~ Regexp.new('./$')
@@ -39,8 +39,8 @@ module Nesta
       haml(:error)
     end unless Nesta::App.development?
 
-    Overrides.load_local_app
-    Overrides.load_theme_app
+    Nesta::View.load_local_app
+    Nesta::View.load_theme_app
 
     get '/robots.txt' do
       content_type 'text/plain', charset: 'utf-8'

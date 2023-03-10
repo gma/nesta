@@ -1,6 +1,6 @@
 require 'integration_test_helper'
 
-describe 'Overriding files in gem and themes' do
+describe 'Overriding Sinatra rendering methods' do
   include Nesta::IntegrationTest
 
   def in_nesta_project(config = {}, &block)
@@ -37,7 +37,7 @@ describe 'Overriding files in gem and themes' do
     it 'loads app.rb from configured theme' do
       in_nesta_project('theme' => theme_name) do
         create_app_file(:theme)
-        Nesta::Overrides.load_theme_app
+        Nesta::View.load_theme_app
         assert Object.const_get(:FROM_THEME), 'should load app.rb in theme'
       end
     end
@@ -45,9 +45,9 @@ describe 'Overriding files in gem and themes' do
     it 'loads both local and theme app.rb files' do
       in_nesta_project('theme' => theme_name) do
         create_app_file(:local)
-        Nesta::Overrides.load_local_app
+        Nesta::View.load_local_app
         create_app_file(:theme)
-        Nesta::Overrides.load_theme_app
+        Nesta::View.load_theme_app
         assert Object.const_get(:FROM_THEME), 'should load app.rb in theme'
         assert Object.const_get(:FROM_LOCAL), 'should load local app.rb'
       end
