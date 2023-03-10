@@ -4,16 +4,31 @@ module Nesta
       def find_template(views, name, engine, &block)
         user_paths = [
           Nesta::Overrides.local_view_path,
-          Nesta::Overrides.theme_view_path
-        ].compact
-        user_paths.append(views).flatten.each do |path|
+          Nesta::Overrides.theme_view_path,
+          views
+        ].flatten.compact
+        user_paths.each do |path|
           super(path, name, engine, &block)
         end
       end
 
+      def scss(template, options = {}, locals = {})
+        find_template(Nesta::App.settings.views, template, Tilt::ScssTemplate) do |file|
+          return Tilt.new(file).render if File.exist?(file)
+        end
+        raise IOError, "SCSS template not found: #{template}"
+      end
+
+      def sass(template, options = {}, locals = {})
+        find_template(Nesta::App.settings.views, template, Tilt::SassTemplate) do |file|
+          return Tilt.new(file).render if File.exist?(file)
+        end
+        raise IOError, "Sass template not found: #{template}"
+      end
+
       def stylesheet(template, options = {}, locals = {})
         scss(template, options, locals)
-      rescue Errno::ENOENT
+      rescue IOError
         sass(template, options, locals)
       end
     end

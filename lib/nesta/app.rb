@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'haml'
-require 'sassc'
 
 require File.expand_path('../nesta', File.dirname(__FILE__))
 require File.expand_path('env', File.dirname(__FILE__))
