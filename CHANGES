@@ -3,6 +3,9 @@
  * Replace Nesta's custom template-locating code with Sinatra's #find_template
    method. (Graham Ashton, suggested by Lilith River)
 
+ * Update multiple dependencies to fix security vulnerabilities; see commit
+   history for details. (Graham Ashton)
+
 = 0.13.0 / (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.
