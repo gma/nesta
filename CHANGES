@@ -1,3 +1,8 @@
+= 0.14.0 / (Unreleased)
+
+ * Update multiple dependencies to fix security vulnerabilities; see commit
+   history for details. (Graham Ashton)
+
 = 0.13.0 / (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.
