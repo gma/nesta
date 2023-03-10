@@ -1,3 +1,5 @@
+require 'tilt'
+
 module Nesta
   module View
     module Renderers
@@ -12,19 +14,15 @@ module Nesta
       end
 
       def scss(template, options = {}, locals = {})
-        defaults, engine = Nesta::View.render_options(template, :scss)
-        super(template, defaults.merge(options), locals)
+        Tilt.new(View::find_template(template, options, :scss)).render
       end
 
       def sass(template, options = {}, locals = {})
-        defaults, engine = Nesta::View.render_options(template, :sass)
-        super(template, defaults.merge(options), locals)
+        Tilt.new(View::find_template(template, options, :sass)).render
       end
 
       def stylesheet(template, options = {}, locals = {})
-        defaults, engine = Nesta::View.render_options(template, :sass, :scss)
-        renderer = Sinatra::Templates.instance_method(engine)
-        renderer.bind(self).call(template, defaults.merge(options), locals)
+        Tilt.new(View::find_template(template, options, :sass, :scss)).render
       end
     end
 
@@ -40,13 +38,23 @@ module Nesta
       end
     end
 
+    def self.find_template(template, options, *engines)
+      defaults, engine = Nesta::View.render_options(template, *engines)
+      views_path = defaults.merge(options)[:views]
+      Nesta::View.template_path(engine, views_path, template)
+    end
+
     private
+      def self.template_path(engine, views, template)
+        File.join(views, "#{template}.#{engine}")
+      end
+
       def self.template_exists?(engine, views, template)
-        views && File.exist?(File.join(views, "#{template}.#{engine}"))
+        views && File.exist?(template_path(engine, views, template))
       end
 
       def self.render_options(template, *engines)
-        [local_view_path, theme_view_path].each do |path|
+        [local_view_path, theme_view_path, Nesta::App.views].each do |path|
           engines.each do |engine|
             if template_exists?(engine, path, template)
               return { views: path }, engine

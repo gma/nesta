@@ -1,5 +1,14 @@
 = 0.14.0 / (Unreleased)
 
+ * Sass and SCSS files are now rendered with Dart Sass (the main implementation
+   of Sass). We had been using the (now deprecated) libsass library.
+
+   Sass has changed a bit since libsass was current, so you may need to make
+   some small changes to your stylesheets. Documentation that should help with
+   those changes can be found here:
+
+   https://sass-lang.com/documentation/breaking-changes
+
  * Update multiple dependencies to fix security vulnerabilities; see commit
    history for details. (Graham Ashton)
 
