@@ -75,7 +75,7 @@ describe 'Overriding files in gem and themes' do
       end
     end
 
-    it 'renders stylesheet in the the gem if no others found' do
+    it 'renders stylesheet in the gem if no others found' do
       in_nesta_project do
         visit '/css/master.css'
         assert_equal 200, page.status_code
