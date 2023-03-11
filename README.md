@@ -44,8 +44,8 @@ full instructions).
 ## Support
 
 There's plenty of information on <http://nestacms.com>. If you need some
-help with anything feel free to file an issue, or contact me (@grahamashton)
-on Twitter.
+help with anything feel free to file an issue, or contact me on Mastodon
+(@gma@hachyderm.io) or Twitter (@grahamashton).
 
 If you like Nesta you can keep up with developments by following [@nestacms][]
 on Twitter, and on [the blog][].
