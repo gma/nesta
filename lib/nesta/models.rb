@@ -380,45 +380,44 @@ module Nesta
       end
     end
 
-    private
-      def self.append_menu_item(menu, file, depth)
-        path = file.readline
-      rescue EOFError
-      else
-        page = Page.load(path.strip)
-        current_depth = path.scan(INDENT).size
-        if page
-          if current_depth > depth
-            sub_menu_for_depth(menu, depth) << [page]
-          else
-            sub_menu_for_depth(menu, current_depth) << page
-          end
-        end
-        append_menu_item(menu, file, current_depth)
-      end
-
-      def self.sub_menu_for_depth(menu, depth)
-        sub_menu = menu
-        depth.times { sub_menu = sub_menu[-1] }
-        sub_menu
-      end
-
-      def self.find_menu_item_by_path(menu, path)
-        item = menu.detect do |item|
-          item.respond_to?(:path) && (item.path == path)
-        end
-        if item
-          subsequent = menu[menu.index(item) + 1]
-          item = [item]
-          item << subsequent if subsequent.respond_to?(:each)
+    private_class_method def self.append_menu_item(menu, file, depth)
+      path = file.readline
+    rescue EOFError
+    else
+      page = Page.load(path.strip)
+      current_depth = path.scan(INDENT).size
+      if page
+        if current_depth > depth
+          sub_menu_for_depth(menu, depth) << [page]
         else
-          sub_menus = menu.select { |menu_item| menu_item.respond_to?(:each) }
-          sub_menus.each do |sub_menu|
-            item = find_menu_item_by_path(sub_menu, path)
-            break if item
-          end
+          sub_menu_for_depth(menu, current_depth) << page
         end
-        item
       end
+      append_menu_item(menu, file, current_depth)
+    end
+
+    private_class_method def self.sub_menu_for_depth(menu, depth)
+      sub_menu = menu
+      depth.times { sub_menu = sub_menu[-1] }
+      sub_menu
+    end
+
+    private_class_method def self.find_menu_item_by_path(menu, path)
+      item = menu.detect do |item|
+        item.respond_to?(:path) && (item.path == path)
+      end
+      if item
+        subsequent = menu[menu.index(item) + 1]
+        item = [item]
+        item << subsequent if subsequent.respond_to?(:each)
+      else
+        sub_menus = menu.select { |menu_item| menu_item.respond_to?(:each) }
+        sub_menus.each do |sub_menu|
+          item = find_menu_item_by_path(sub_menu, path)
+          break if item
+        end
+      end
+      item
+    end
   end
 end
