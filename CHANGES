@@ -1,3 +1,8 @@
+= 0.14.0 / (Unreleased)
+
+ * Replace Nesta's custom template-locating code with Sinatra's #find_template
+   method. (Graham Ashton, suggested by Lilith River)
+
 = 0.13.0 / (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.
