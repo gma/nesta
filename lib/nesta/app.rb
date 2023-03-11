@@ -17,6 +17,7 @@ module Nesta
     set :root, Nesta::Env.root
     set :views, File.expand_path('../../views', File.dirname(__FILE__))
     set :haml, { format: :html5 }
+    set :public_folder, 'public'
 
     helpers Overrides::Renderers
     helpers Navigation::Renderers

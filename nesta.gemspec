@@ -32,6 +32,7 @@ EOF
   s.add_dependency('haml', '>= 3.1', '< 6.0')
   s.add_dependency('haml-contrib', '>= 1.0')
   s.add_dependency('rack', '~> 2')
+  s.add_dependency('rake')
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sass-embedded', '~> 1.58')
@@ -46,5 +47,4 @@ EOF
   s.add_development_dependency('capybara', '~> 2.0')
   s.add_development_dependency('minitest', '~> 5.0')
   s.add_development_dependency('minitest-reporters')
-  s.add_development_dependency('rake')
 end

@@ -24,6 +24,7 @@ COMMANDS
     theme:install <url>   Install a theme from a git repository.
     theme:enable <name>   Make the theme active, updating config.yml.
     theme:create <name>   Makes a template for a new theme in ./themes.
+    build [path]          Build static copy of site (path defaults to ./dist)
 
 OPTIONS FOR new
     --git                 Create a new git repository for the project.
@@ -118,7 +119,7 @@ _nesta() {
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-    opts="new 'demo:content' edit 'plugin:create' 'theme:install' 'theme:enable' 'theme:create'"
+    opts="new 'demo:content' edit 'plugin:create' 'theme:install' 'theme:enable' 'theme:create' build"
 
     case "${cur}" in
         theme:*)
@@ -172,6 +173,7 @@ _1st_arguments=(
   'theme\:install:Install a theme from a git repository'
   'theme\:enable:Make the theme active, updating config.yml'
   'theme\:create:Makes a template for a new theme in ./themes'
+  'build\:Build static copy of site'
 )
 
 local expl

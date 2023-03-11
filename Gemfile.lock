@@ -6,6 +6,7 @@ PATH
       haml (>= 3.1, < 6.0)
       haml-contrib (>= 1.0)
       rack (~> 2)
+      rake
       rdiscount (~> 2.1)
       sass-embedded (~> 1.58)
       sinatra (~> 2.0)
@@ -100,7 +101,6 @@ DEPENDENCIES
   minitest-reporters
   mr-sparkle
   nesta!
-  rake
 
 BUNDLED WITH
    2.4.6
