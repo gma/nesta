@@ -28,27 +28,37 @@ module Nesta
         end
       end
 
-      def initialize(*args)
-        @build_dir = args.shift || DEFAULT_DESTINATION
-        if @build_dir == Nesta::App.settings.public_folder
-          raise RuntimeError.new("#{@build_dir} is already used, for assets")
+      class SiteContent
+        def initialize(build_dir)
+          @build_dir = build_dir
+          @app = Nesta::App.new
         end
-        @app = Nesta::App.new
-      end
 
-      def set_app_root
-        root = ::File.expand_path('.')
-        ['Gemfile', ].each do |expected|
-          if ! File.exist?(File.join(root, 'config', 'config.yml'))
-            message = "is this a Nesta site? (expected './#{expected}')"
-            raise RuntimeError, message
+        def set_app_root
+          root = ::File.expand_path('.')
+          ['Gemfile', ].each do |expected|
+            if ! File.exist?(File.join(root, 'config', 'config.yml'))
+              message = "is this a Nesta site? (expected './#{expected}')"
+              raise RuntimeError, message
+            end
+          end
+          Nesta::App.root = root
+        end
+
+        def render_pages
+          set_app_root
+          Nesta::Page.find_all.each do |page|
+            target = HtmlFile.new(@build_dir, page).filename
+            source = page.filename
+            task = Rake::FileTask.define_task(target => source) do
+              http_code, markup = render_page(page, target)
+              save_markup(target, markup)
+            end
+            task.invoke
           end
         end
-        Nesta::App.root = root
-      end
 
-      def render_page(page, html_path)
-        http_code, headers, body = @app.call(
+        def rack_environment(page)
           {
             'REQUEST_METHOD' => 'GET',
             'SCRIPT_NAME' => '',
@@ -60,29 +70,32 @@ module Nesta
             'rack.input' => StringIO.new,
             'rack.errors' => STDERR
           }
-        )
-        if http_code != 200
-          raise RuntimeError, "Can't render #{html_path} from #{page.filename}"
         end
-        puts "Rendered #{html_path}: #{http_code}"
-        [http_code, body.join]
+
+        def render_page(page, html_path)
+          http_code, headers, body = @app.call(rack_environment(page))
+          if http_code != 200
+            raise RuntimeError, "Can't render #{html_path} from #{page.filename}"
+          end
+          puts "Rendered #{html_path}: #{http_code}"
+          [http_code, body.join]
+        end
+
+        def save_markup(filename, content)
+          FileUtils.mkdir_p(File.dirname(filename))
+          open(filename, 'w') { |output| output.puts(content) }
+        end
       end
 
-      def save_markup(filename, content)
-        FileUtils.mkdir_p(File.dirname(filename))
-        open(filename, 'w') { |output| output.puts(content) }
+      def initialize(*args)
+        @build_dir = args.shift || DEFAULT_DESTINATION
+        if @build_dir == Nesta::App.settings.public_folder
+          raise RuntimeError.new("#{@build_dir} is already used, for assets")
+        end
       end
 
       def execute(process)
-        set_app_root
-        Nesta::Page.find_all.each do |page|
-          html_file = HtmlFile.new(@build_dir, page)
-          task = Rake::FileTask.define_task(html_file.filename => page.filename) do
-            http_code, markup = render_page(page, html_file.filename)
-            save_markup(html_file.filename, markup)
-          end
-          task.invoke
-        end
+        SiteContent.new(@build_dir).render_pages
       end
     end
   end
