@@ -94,8 +94,28 @@ module Nesta
         end
       end
 
+      def copy_assets
+        public_folder = Nesta::App.settings.public_folder
+        assets = Rake::FileList["#{public_folder}/**/*"]
+        assets.exclude('~*')
+        assets.exclude do |f|
+          File.directory?(f)
+        end
+        assets.each do |source|
+          dest = File.join(@build_dir, source.sub(/^#{public_folder}\//, ''))
+          task = Rake::FileTask.define_task(dest => source) do
+            dest_dir = File.dirname(dest)
+            FileUtils.mkdir_p(dest_dir) unless Dir.exist?(dest_dir)
+            FileUtils.cp(source, dest_dir)
+            puts "Copied #{source} to #{dest}"
+          end
+          task.invoke
+        end
+      end
+
       def execute(process)
         SiteContent.new(@build_dir).render_pages
+        copy_assets
       end
     end
   end
