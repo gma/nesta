@@ -13,6 +13,17 @@ module Nesta
         @app = Nesta::App.new
       end
 
+      def set_app_root
+        root = ::File.expand_path('.')
+        ['Gemfile', ].each do |expected|
+          if ! File.exist?(File.join(root, 'config', 'config.yml'))
+            message = "is this a Nesta site? (expected './#{expected}')"
+            raise RuntimeError, message
+          end
+        end
+        Nesta::App.root = root
+      end
+
       def page_shares_path_with_directory?(dir, base_without_ext)
         Dir.exist?(File.join(dir, base_without_ext))
       end
@@ -56,6 +67,7 @@ module Nesta
       end
 
       def execute(process)
+        set_app_root
         Nesta::Page.find_all.each do |page|
           html_file = html_filename(page)
           task = Rake::FileTask.define_task(html_file => page.filename) do
