@@ -17,7 +17,9 @@ module Nesta
 
       def execute(process)
         logger = Proc.new { |message| puts message }
-        Nesta::Static::SiteContent.new(@build_dir, logger).render_pages
+        site = Nesta::Static::SiteContent.new(@build_dir, logger)
+        site.render_pages
+        site.render_not_found
         Nesta::Static::Assets.new(@build_dir, logger).copy
       end
     end
