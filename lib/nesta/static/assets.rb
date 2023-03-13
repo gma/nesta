@@ -3,8 +3,13 @@ require 'rake'
 module Nesta
   module Static
     class Assets
-      def initialize(build_dir)
+      def initialize(build_dir, logger = nil)
         @build_dir = build_dir
+        @logger = logger
+      end
+
+      def log(message)
+        @logger.call(message) if @logger
       end
 
       def public_assets(public_folder)
@@ -24,7 +29,7 @@ module Nesta
             dest_dir = File.dirname(dest)
             FileUtils.mkdir_p(dest_dir) unless Dir.exist?(dest_dir)
             FileUtils.cp(source, dest_dir)
-            puts "Copied #{source} to #{dest}"
+            log("Copied #{source} to #{dest}")
           end
           task.invoke
         end

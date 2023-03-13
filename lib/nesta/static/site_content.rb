@@ -5,9 +5,14 @@ require_relative './html_file'
 module Nesta
   module Static
     class SiteContent
-      def initialize(build_dir)
+      def initialize(build_dir, logger = nil)
         @build_dir = build_dir
+        @logger = logger
         @app = Nesta::App.new
+      end
+
+      def log(message)
+        @logger.call(message) if @logger
       end
 
       def set_app_root
@@ -53,7 +58,7 @@ module Nesta
         if http_code != 200
           raise RuntimeError, "Can't render #{html_path} from #{page.filename}"
         end
-        puts "Rendered #{html_path}: #{http_code}"
+        log("Rendered #{html_path}: #{http_code}")
         [http_code, body.join]
       end
 
