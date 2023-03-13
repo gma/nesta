@@ -23,6 +23,10 @@
 
        some_value: <%= ENV.fetch('NESTA_VARIABLE') %>
 
+ * During a tidy up of the config file code, the `yaml_conf` attribute on
+   the Nesta::Config class has been renamed to `config`. This is unlikely
+   to affect you, but if it does just change the name. (Graham Ashton)
+
  * Support for loading plugins from a local directory (which was deprecated
    in version 0.9.10) has been removed. (Graham Ashton)
 

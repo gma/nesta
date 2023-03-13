@@ -14,14 +14,19 @@ module Nesta
       title
     ]
     @author_settings = %w[name uri email]
-    @yaml = nil
     
     class << self
-      attr_accessor :settings, :author_settings, :yaml_conf
+      attr_accessor :settings, :author_settings, :config
     end
 
-    def self.fetch(key, *default)
-      from_yaml(key.to_s)
+    def self.fetch(setting, *default)
+      setting = setting.to_s
+      self.config ||= self.read_config_file(setting)
+      env_config = self.config.fetch(Nesta::App.environment.to_s, {})
+      env_config.fetch(
+        setting,
+        self.config.fetch(setting) { raise NotDefined.new(setting) }
+      )
     rescue NotDefined
       default.empty? && raise || (return default.first)
     end
@@ -33,58 +38,41 @@ module Nesta
         super
       end
     end
-    
-    def self.author
-      from_yaml('author')
-    rescue NotDefined
-      nil
-    end
 
-    def self.content_path(basename = nil)
-      get_path(content, basename)
-    end
-    
-    def self.page_path(basename = nil)
-      get_path(File.join(content_path, "pages"), basename)
-    end
-    
-    def self.attachment_path(basename = nil)
-      get_path(File.join(content_path, "attachments"), basename)
-    end
-    
-    def self.yaml_path
-      File.expand_path('config/config.yml', Nesta::App.root)
+    def self.author
+      fetch('author', nil)
     end
 
     def self.read_more
       fetch('read_more', 'Continue reading')
     end
 
-    def self.yaml_exists?
-      File.exist?(yaml_path)
+    def self.yaml_path
+      File.expand_path('config/config.yml', Nesta::App.root)
     end
-    private_class_method :yaml_exists?
 
-    def self.from_hash(hash, setting)
-      hash.fetch(setting) { raise NotDefined.new(setting) }
+    def self.read_config_file(setting)
+      self.config ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
+    rescue Errno::ENOENT
+      raise NotDefined.new(setting)
     end
-    private_class_method :from_hash
+    private_class_method :read_config_file
 
-    def self.from_yaml(setting)
-      raise NotDefined.new(setting) unless yaml_exists?
-      self.yaml_conf ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
-      env_config = self.yaml_conf.fetch(Nesta::App.environment.to_s, {})
-      begin
-        from_hash(env_config, setting)
-      rescue NotDefined
-        from_hash(self.yaml_conf, setting)
-      end
-    end
-    private_class_method :from_yaml
-    
     def self.get_path(dirname, basename)
       basename.nil? ? dirname : File.join(dirname, basename)
     end
     private_class_method :get_path
+
+    def self.content_path(basename = nil)
+      get_path(content, basename)
+    end
+
+    def self.page_path(basename = nil)
+      get_path(File.join(content_path, "pages"), basename)
+    end
+
+    def self.attachment_path(basename = nil)
+      get_path(File.join(content_path, "attachments"), basename)
+    end
   end
 end
