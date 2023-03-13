@@ -21,13 +21,9 @@ module Nesta
     end
 
     def self.fetch(key, *default)
-      from_environment(key.to_s)
+      from_yaml(key.to_s)
     rescue NotDefined
-      begin
-        from_yaml(key.to_s)
-      rescue NotDefined
-        default.empty? && raise || (return default.first)
-      end
+      default.empty? && raise || (return default.first)
     end
 
     def self.method_missing(method, *args)
@@ -39,12 +35,7 @@ module Nesta
     end
     
     def self.author
-      environment_config = {}
-      %w[name uri email].each do |setting|
-        variable = "NESTA_AUTHOR__#{setting.upcase}"
-        ENV[variable] && environment_config[setting] = ENV[variable]
-      end
-      environment_config.empty? ? from_yaml('author') : environment_config
+      from_yaml('author')
     rescue NotDefined
       nil
     end
@@ -69,16 +60,6 @@ module Nesta
       fetch('read_more', 'Continue reading')
     end
 
-    def self.from_environment(setting)
-      value = ENV.fetch("NESTA_#{setting.upcase}")
-    rescue KeyError
-      raise NotDefined.new(setting)
-    else
-      overrides = { "true" => true, "false" => false }
-      overrides.has_key?(value) ? overrides[value] : value
-    end
-    private_class_method :from_environment
-    
     def self.yaml_exists?
       File.exist?(yaml_path)
     end
