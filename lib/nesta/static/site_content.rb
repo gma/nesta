@@ -32,7 +32,7 @@ module Nesta
           target = HtmlFile.new(@build_dir, page).filename
           source = page.filename
           task = Rake::FileTask.define_task(target => source) do
-            save_markup(target, render_page(page.abspath, source, target))
+            save_markup(target, render_page(page.abspath, target, source))
           end
           task.invoke
         end
@@ -42,8 +42,13 @@ module Nesta
         path_info = '/404'
         source = 'no-such-file.md'
         target = File.join(@build_dir, '404.html')
-        markup = render_page(path_info, source, target, expected_code: 404)
+        markup = render_page(path_info, target, source, expected_code: 404)
         save_markup(target, markup)
+      end
+
+      def render_sitemap
+        filename = File.join(@build_dir, 'sitemap.xml')
+        save_markup(filename, render_page('/sitemap.xml', filename, 'site'))
       end
 
       def rack_environment(abspath)
@@ -60,10 +65,10 @@ module Nesta
         }
       end
 
-      def render_page(abspath, content_path, html_path, expected_code: 200)
+      def render_page(abspath, filename, description, expected_code: 200)
         http_code, headers, body = @app.call(rack_environment(abspath))
         if http_code != expected_code
-          raise RuntimeError, "Can't render #{html_path} from #{content_path}"
+          raise RuntimeError, "Can't render #{filename} from #{description}"
         end
         body.join
       end
