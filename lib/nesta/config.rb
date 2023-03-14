@@ -13,6 +13,7 @@ module Nesta
       author
       content
       disqus_short_name
+      domain
       google_analytics_code
       read_more
       subtitle

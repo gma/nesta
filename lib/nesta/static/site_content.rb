@@ -5,8 +5,9 @@ require_relative './html_file'
 module Nesta
   module Static
     class SiteContent
-      def initialize(build_dir, logger = nil)
+      def initialize(build_dir, domain, logger = nil)
         @build_dir = build_dir
+        @domain = domain
         @logger = logger
         @app = Nesta::App.new
         set_app_root
@@ -32,7 +33,7 @@ module Nesta
           target = HtmlFile.new(@build_dir, page).filename
           source = page.filename
           task = Rake::FileTask.define_task(target => source) do
-            save_markup(target, render_page(page.abspath, target, source))
+            save_markup(target, render(page.abspath, target, source))
           end
           task.invoke
         end
@@ -42,13 +43,13 @@ module Nesta
         path_info = '/404'
         source = 'no-such-file.md'
         target = File.join(@build_dir, '404.html')
-        markup = render_page(path_info, target, source, expected_code: 404)
+        markup = render(path_info, target, source, expected_code: 404)
         save_markup(target, markup)
       end
 
       def render_sitemap
         filename = File.join(@build_dir, 'sitemap.xml')
-        save_markup(filename, render_page('/sitemap.xml', filename, 'site'))
+        save_markup(filename, render('/sitemap.xml', filename, 'site'))
       end
 
       def rack_environment(abspath)
@@ -57,7 +58,7 @@ module Nesta
           'SCRIPT_NAME' => '',
           'PATH_INFO' => abspath,
           'QUERY_STRING' => '',
-          'SERVER_NAME' => 'localhost',
+          'SERVER_NAME' => @domain,
           'SERVER_PROTOCOL' => 'https',
           'rack.url_scheme' => 'https',
           'rack.input' => StringIO.new,
@@ -65,7 +66,7 @@ module Nesta
         }
       end
 
-      def render_page(abspath, filename, description, expected_code: 200)
+      def render(abspath, filename, description, expected_code: 200)
         http_code, headers, body = @app.call(rack_environment(abspath))
         if http_code != expected_code
           raise RuntimeError, "Can't render #{filename} from #{description}"
