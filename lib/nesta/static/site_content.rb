@@ -13,21 +13,6 @@ module Nesta
         set_app_root
       end
 
-      def log(message)
-        @logger.call(message) if @logger
-      end
-
-      def set_app_root
-        root = ::File.expand_path('.')
-        ['Gemfile', ].each do |expected|
-          if ! File.exist?(File.join(root, 'config', 'config.yml'))
-            message = "is this a Nesta site? (expected './#{expected}')"
-            raise RuntimeError, message
-          end
-        end
-        Nesta::App.root = root
-      end
-
       def render_pages
         Nesta::Page.find_all.each do |page|
           target = HtmlFile.new(@build_dir, page).filename
@@ -59,6 +44,23 @@ module Nesta
       def render_sitemap
         filename = File.join(@build_dir, 'sitemap.xml')
         save_markup(filename, render('/sitemap.xml', filename, 'site'))
+      end
+
+      private
+
+      def log(message)
+        @logger.call(message) if @logger
+      end
+
+      def set_app_root
+        root = ::File.expand_path('.')
+        ['Gemfile', ].each do |expected|
+          if ! File.exist?(File.join(root, 'config', 'config.yml'))
+            message = "is this a Nesta site? (expected './#{expected}')"
+            raise RuntimeError, message
+          end
+        end
+        Nesta::App.root = root
       end
 
       def rack_environment(abspath)
