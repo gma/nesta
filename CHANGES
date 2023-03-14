@@ -15,6 +15,23 @@
  * Update multiple dependencies to fix security vulnerabilities; see commit
    history for details. (Graham Ashton)
 
+ * Built-in support for configuring Nesta via environment variables has been
+   dropped. (Graham Ashton)
+
+   Should you still want to configure Nesta via the environment you can
+   use Erb in `config.yml`, like this:
+
+       some_value: <%= ENV.fetch('NESTA_VARIABLE') %>
+
+ * During a tidy up of the config file code, the `yaml_conf` attribute on
+   the Nesta::Config class has been renamed to `config`. This is unlikely
+   to affect you, but if it does just change the name. (Graham Ashton)
+
+ * The `yaml_path` attribute on the Nesta::Config class has been moved
+   to `Nesta::ConfigFile.path`. Again, I can't imagine why anybody would
+   have written code that used it, but it's a breaking change so I'm
+   mentioning it. (Graham Ashton)
+
  * Support for loading plugins from a local directory (which was deprecated
    in version 0.9.10) has been removed. (Graham Ashton)
 
