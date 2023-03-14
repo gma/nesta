@@ -18,7 +18,7 @@ describe 'Atom feed' do
     it "uses Atom's XML namespace" do
       with_temp_content_directory do
         visit_feed
-        assert_has_xpath '//feed[@xmlns="http://www.w3.org/2005/Atom"]'
+        assert_has_xpath '//feed[@xmlns="https://www.w3.org/2005/Atom"]'
       end
     end
 

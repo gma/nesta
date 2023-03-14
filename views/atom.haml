@@ -1,7 +1,7 @@
 !!! XML
-%feed(xmlns='http://www.w3.org/2005/Atom')
+%feed(xmlns='https://www.w3.org/2005/Atom')
   %title(type='text')= @title
-  %generator(uri='http://nestacms.com') Nesta
+  %generator(uri='https://nestacms.com') Nesta
   %id= atom_id
   %link(href="#{path_to('/articles.xml', :uri => true)}" rel='self')
   %link(href="#{path_to('/', :uri => true)}" rel='alternate')
