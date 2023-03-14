@@ -1,8 +1,6 @@
 module Nesta
   def self.deprecated(name, message)
-    if Nesta::App.environment != :test
-      $stderr.puts "DEPRECATION WARNING: #{name} is deprecated; #{message}"
-    end
+    $stderr.puts "DEPRECATION WARNING: #{name} is deprecated; #{message}"
   end
 
   def self.fail_with(message)

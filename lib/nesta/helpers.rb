@@ -60,11 +60,6 @@ module Nesta
         date.strftime("%d %B %Y")
       end
 
-      def local_stylesheet?
-        Nesta.deprecated('local_stylesheet?', 'use local_stylesheet_link_tag')
-        File.exist?(File.expand_path('views/local.sass', Nesta::App.root))
-      end
-
       def local_stylesheet_link_tag(name)
         pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0

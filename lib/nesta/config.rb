@@ -5,7 +5,6 @@ module Nesta
     class NotDefined < KeyError; end
 
     @settings = %w[
-      cache
       content
       disqus_short_name
       google_analytics_code
@@ -50,11 +49,6 @@ module Nesta
       nil
     end
 
-    def self.cache
-      Nesta.deprecated('Nesta::Config.cache',
-                       'see http://nestacms.com/docs/deployment/page-caching')
-    end
-    
     def self.content_path(basename = nil)
       get_path(content, basename)
     end

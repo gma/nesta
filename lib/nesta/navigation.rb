@@ -64,11 +64,6 @@ module Nesta
         raise
       end
 
-      def breadcrumb_label(page)
-        Nesta.deprecated('breadcrumb_label', 'use link_text')
-        link_text(page)
-      end
-
       def current_item?(item)
         request.path_info == item.abspath
       end

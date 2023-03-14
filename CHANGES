@@ -15,6 +15,15 @@
  * Update multiple dependencies to fix security vulnerabilities; see commit
    history for details. (Graham Ashton)
 
+ * Support for loading plugins from a local directory (which was deprecated
+   in version 0.9.10) has been removed. (Graham Ashton)
+
+ * The local_stylesheet? helper method (deprecated in 0.9.1) has been
+   removed. (Graham Ashton)
+
+ * The breadcrumb_label helper method (deprecated in 0.9.3) has been removed.
+   (Graham Ashton)
+
 = 0.13.0 / (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.
