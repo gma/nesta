@@ -44,6 +44,23 @@ describe 'SiteContent' do
     end
   end
 
+  it 'renders Atom feed' do
+    build_dir = 'dist'
+    domain = 'mysite.com'
+
+    in_temporary_project do
+      with_temp_content_directory do
+        article = create(:article)
+        Nesta::Static::SiteContent.new(build_dir, domain).render_atom_feed
+
+        xml_file = File.join(build_dir, 'articles.xml')
+        xml = open(xml_file).read
+
+        assert xml.include?("<link href='https://#{domain + article.abspath}'")
+      end
+    end
+  end
+
   it 'includes domain name in sitemap' do
     build_dir = 'dist'
     domain = 'mysite.com'

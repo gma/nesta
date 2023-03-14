@@ -21,6 +21,7 @@ module Nesta
         site = Nesta::Static::SiteContent.new(@build_dir, @domain, logger)
         site.render_pages
         site.render_not_found
+        site.render_atom_feed
         site.render_sitemap
         Nesta::Static::Assets.new(@build_dir, logger).copy
       end

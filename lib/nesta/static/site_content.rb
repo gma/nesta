@@ -47,6 +47,15 @@ module Nesta
         save_markup(target, markup)
       end
 
+      def render_atom_feed
+        filename = 'articles.xml'
+        path_info = "/#{filename}"
+        description = 'Atom feed'
+        target = File.join(@build_dir, filename)
+        markup = render(path_info, target, description)
+        save_markup(target, markup)
+      end
+
       def render_sitemap
         filename = File.join(@build_dir, 'sitemap.xml')
         save_markup(filename, render('/sitemap.xml', filename, 'site'))
