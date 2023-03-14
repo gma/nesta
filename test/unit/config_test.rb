@@ -3,6 +3,16 @@ require 'test_helper'
 describe Nesta::Config do
   include TestConfiguration
 
+  it 'cannot be instantiated directly' do
+    assert_raises(NoMethodError) { Nesta::Config.new }
+  end
+
+  it 'exposes settings at the class level' do
+    Nesta::Config::SETTINGS.each do |setting|
+      assert Nesta::Config.respond_to?(setting), "should respond to '#{setting}'"
+    end
+  end
+
   it 'defines default value for "Read more"' do
     assert_equal 'Continue reading', Nesta::Config.read_more
   end

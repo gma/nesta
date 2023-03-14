@@ -1,10 +1,16 @@
+require 'singleton'
 require 'yaml'
+
+require_relative './config_file'
 
 module Nesta
   class Config
+    include Singleton
+
     class NotDefined < KeyError; end
 
-    @settings = %w[
+    SETTINGS = %w[
+      author
       content
       disqus_short_name
       google_analytics_code
@@ -13,50 +19,49 @@ module Nesta
       theme
       title
     ]
-    @author_settings = %w[name uri email]
-    
+
     class << self
-      attr_accessor :settings, :author_settings, :config
+      extend Forwardable
+      def_delegators *[:instance, :fetch].concat(SETTINGS.map(&:to_sym))
     end
 
-    def self.fetch(setting, *default)
+    attr_accessor :config
+
+    def fetch(setting, *default)
       setting = setting.to_s
-      self.config ||= self.read_config_file(setting)
-      env_config = self.config.fetch(Nesta::App.environment.to_s, {})
+      self.config ||= read_config_file(setting)
+      env_config = config.fetch(Nesta::App.environment.to_s, {})
       env_config.fetch(
         setting,
-        self.config.fetch(setting) { raise NotDefined.new(setting) }
+        config.fetch(setting) { raise NotDefined.new(setting) }
       )
     rescue NotDefined
       default.empty? && raise || (return default.first)
     end
 
-    def self.method_missing(method, *args)
-      if settings.include?(method.to_s)
+    def method_missing(method, *args)
+      if SETTINGS.include?(method.to_s)
         fetch(method, nil)
       else
         super
       end
     end
 
-    def self.author
-      fetch('author', nil)
+    def respond_to_missing?(method, include_private = false)
+      SETTINGS.include?(method.to_s) || super
     end
 
-    def self.read_more
+    def read_more
       fetch('read_more', 'Continue reading')
     end
 
-    def self.yaml_path
-      File.expand_path('config/config.yml', Nesta::App.root)
-    end
+    private
 
-    def self.read_config_file(setting)
-      self.config ||= YAML::load(ERB.new(IO.read(yaml_path)).result)
+    def read_config_file(setting)
+      YAML::load(ERB.new(IO.read(Nesta::ConfigFile.path)).result)
     rescue Errno::ENOENT
       raise NotDefined.new(setting)
     end
-    private_class_method :read_config_file
 
     def self.get_path(dirname, basename)
       basename.nil? ? dirname : File.join(dirname, basename)

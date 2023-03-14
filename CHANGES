@@ -27,6 +27,11 @@
    the Nesta::Config class has been renamed to `config`. This is unlikely
    to affect you, but if it does just change the name. (Graham Ashton)
 
+ * The `yaml_path` attribute on the Nesta::Config class has been moved
+   to `Nesta::ConfigFile.path`. Again, I can't imagine why anybody would
+   have written code that used it, but it's a breaking change so I'm
+   mentioning it. (Graham Ashton)
+
  * Support for loading plugins from a local directory (which was deprecated
    in version 0.9.10) has been removed. (Graham Ashton)
 

@@ -2,7 +2,7 @@ module TestConfiguration
   include TemporaryFiles
 
   def stub_config(config, &block)
-    Nesta::Config.stub(:config, config) do
+    Nesta::Config.instance.stub(:config, config) do
       yield
     end
   end

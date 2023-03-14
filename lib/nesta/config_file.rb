@@ -1,11 +1,15 @@
 module Nesta
   class ConfigFile
+    def self.path
+      File.expand_path('config/config.yml', Nesta::App.root)
+    end
+
     def set_value(key, value)
       pattern = /^\s*#?\s*#{key}:.*/
       replacement = "#{key}: #{value}"
 
       configured = false
-      File.open(Nesta::Config.yaml_path, 'r+') do |file|
+      File.open(self.class.path, 'r+') do |file|
         output = ''
         file.each_line do |line|
           if configured
