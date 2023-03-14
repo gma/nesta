@@ -89,5 +89,4 @@ module Nesta
   end
 end
 
-Nesta::Plugin.load_local_plugins
 Nesta::Plugin.initialize_plugins
