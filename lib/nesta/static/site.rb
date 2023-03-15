@@ -4,7 +4,7 @@ require_relative './html_file'
 
 module Nesta
   module Static
-    class SiteContent
+    class Site
       def initialize(build_dir, domain, logger = nil)
         @build_dir = build_dir
         @domain = domain

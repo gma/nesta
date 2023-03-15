@@ -1,7 +1,7 @@
 require 'rake'
 
 require_relative '../static/assets'
-require_relative '../static/site_content'
+require_relative '../static/site'
 
 module Nesta
   module Commands
@@ -24,7 +24,7 @@ module Nesta
 
       def execute(process)
         logger = Proc.new { |message| puts message }
-        site = Nesta::Static::SiteContent.new(@build_dir, @domain, logger)
+        site = Nesta::Static::Site.new(@build_dir, @domain, logger)
         site.render_pages
         site.render_not_found
         site.render_atom_feed
