@@ -8,19 +8,6 @@ module Nesta
         @logger = logger
       end
 
-      def log(message)
-        @logger.call(message) if @logger
-      end
-
-      def public_assets(public_folder)
-        Rake::FileList["#{public_folder}/**/*"].tap do |assets|
-          assets.exclude('~*')
-          assets.exclude do |f|
-            File.directory?(f)
-          end
-        end
-      end
-
       def copy
         public_folder = Nesta::App.settings.public_folder
         public_assets(public_folder).each do |source|
@@ -32,6 +19,21 @@ module Nesta
             log("Copied #{source} to #{dest}")
           end
           task.invoke
+        end
+      end
+
+      private
+
+      def log(message)
+        @logger.call(message) if @logger
+      end
+
+      def public_assets(public_folder)
+        Rake::FileList["#{public_folder}/**/*"].tap do |assets|
+          assets.exclude('~*')
+          assets.exclude do |f|
+            File.directory?(f)
+          end
         end
       end
     end
