@@ -77,5 +77,17 @@ content: content
 # domain name so that it can generate the correct URLs in sitemap.xml,
 # and in your Atom feed.
 #
+# The templated_assets setting is a list of the things that Nesta
+# generates for you, other from all the page in your content directory.
+# The example below is for a site that has two stylesheets, both of
+# which are converted from .sass or .scss files in your ./views folder.
+#
+# If you're not using Sass and are just editing CSS files directly, you
+# can keep them in your ./public folder and Nesta's build command will
+# find them automatically.
+#
 # build:
 #   domain: yourdomain.com
+#   templated_assets:
+#     - /css/master.css
+#     - /css/local.css

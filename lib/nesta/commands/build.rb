@@ -29,6 +29,7 @@ module Nesta
         site.render_not_found
         site.render_atom_feed
         site.render_sitemap
+        site.render_templated_assets
         Nesta::Static::Assets.new(@build_dir, logger).copy
       end
     end

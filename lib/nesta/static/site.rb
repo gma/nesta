@@ -46,6 +46,13 @@ module Nesta
         save_markup(filename, render('/sitemap.xml', filename, 'site'))
       end
 
+      def render_templated_assets
+        Nesta::Config.build.fetch('templated_assets', []).each do |path|
+          filename = File.join(@build_dir, path)
+          save_markup(filename, render(path, filename, path))
+        end
+      end
+
       private
 
       def log(message)
@@ -88,7 +95,7 @@ module Nesta
       def save_markup(filename, content)
         FileUtils.mkdir_p(File.dirname(filename))
         if (! File.exist?(filename)) || (open(filename, 'r').read != content)
-          open(filename, 'w') { |output| output.puts(content) }
+          open(filename, 'w') { |output| output.write(content) }
           log("Rendered #{filename}")
         end
       end

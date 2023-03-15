@@ -77,4 +77,28 @@ describe 'Site' do
       end
     end
   end
+
+  it "renders the user's list of templated assets" do
+    build_dir = 'dist'
+    css_path = '/css/styles.css'
+    build_config = {}
+
+    in_temporary_project do
+      stub_config('build' => { 'templated_assets' => [css_path] }) do
+        views = File.join(project_root, 'views')
+        FileUtils.mkdir_p(views)
+        open(File.join(views, 'styles.sass'), 'w') do |sass|
+          sass.write("p\n  font-size: 1em\n")
+        end
+
+        site = Nesta::Static::Site.new(build_dir, 'mysite.com')
+        site.render_templated_assets
+
+        css_file = File.join(build_dir, css_path)
+        assert_exists_in_project(css_file)
+
+        assert_equal open(css_file).read, "p {\n  font-size: 1em;\n}"
+      end
+    end
+  end
 end
