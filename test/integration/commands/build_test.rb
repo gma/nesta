@@ -26,4 +26,28 @@ describe 'nesta build' do
       end
     end
   end
+
+  it 'reads domain name from config file' do
+    domain = 'mysite.com'
+
+    in_temporary_project do
+      stub_config('build' => { 'domain' => domain }) do
+        command = Nesta::Commands::Build.new('output_dir')
+
+        assert_equal domain, command.domain
+      end
+    end
+  end
+
+  it 'overrides domain name if set on command line' do
+    domain = 'mysite.com'
+
+    in_temporary_project do
+      stub_config('build' => { 'domain' => 'ignored.com' }) do
+        command = Nesta::Commands::Build.new('output_dir', 'domain' => domain)
+
+        assert_equal domain, command.domain
+      end
+    end
+  end
 end

@@ -4,13 +4,6 @@
 title: "My Site"
 subtitle: "(change this text in config/config.yml)"
 
-# If you're building your site statically (with the `nesta build` command)
-# then you can either set the `domain` key here, or specify it on the
-# command line with the `--domain` switch. The setting isn't used if
-# you're serving your pages dynamically, with a running server.
-#
-# domain: mysite.com
-
 # You should really specify your content's author when generating an
 # Atom feed. Specify at least one of name, uri or email, and Nesta will
 # include it in your feed. See the Atom spec for more info:
@@ -19,7 +12,7 @@ subtitle: "(change this text in config/config.yml)"
 #
 # author:
 #   name: Your Name
-#   uri: https://yourhomepage.com
+#   uri: https://yourdomain.com
 #   email: you@yourdomain.com
 
 # You can stick with the default look and feel, or use a theme. Themes are
@@ -72,3 +65,17 @@ content: content
 # production:
 #   content: /var/apps/nesta/shared/content
 #   google_analytics_code: "UA-???????-?"
+
+# The following settings control the behaviour of the `nesta build`
+# command, which is used to generate a "static" version of your site.
+# It's optional, but allows you to deploy your site on hosting providers
+# that serve pre-prepared HTML and CSS files (instead of generating them
+# in real-time with a web server).
+#
+# You can either set the `domain` key here, or specify it on the command
+# line with the `--domain` switch. Nesta needs to know your site's
+# domain name so that it can generate the correct URLs in sitemap.xml,
+# and in your Atom feed.
+#
+# build:
+#   domain: yourdomain.com

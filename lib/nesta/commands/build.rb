@@ -8,12 +8,18 @@ module Nesta
     class Build
       DEFAULT_DESTINATION = "dist"
 
+      attr_accessor :domain
+
       def initialize(build_dir = nil, options = {})
         @build_dir = build_dir || DEFAULT_DESTINATION
         if @build_dir == Nesta::App.settings.public_folder
           raise RuntimeError.new("#{@build_dir} is already used, for assets")
         end
-        @domain = options['domain'] || Nesta::Config.fetch(:domain, 'localhost')
+        @domain = options['domain'] || configured_domain_name
+      end
+
+      def configured_domain_name
+        Nesta::Config.build.fetch('domain', 'localhost')
       end
 
       def execute(process)

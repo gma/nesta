@@ -11,6 +11,7 @@ module Nesta
 
     SETTINGS = %w[
       author
+      build
       content
       disqus_short_name
       domain
@@ -42,7 +43,7 @@ module Nesta
 
     def method_missing(method, *args)
       if SETTINGS.include?(method.to_s)
-        fetch(method, nil)
+        fetch(method.to_s, nil)
       else
         super
       end
@@ -50,6 +51,10 @@ module Nesta
 
     def respond_to_missing?(method, include_private = false)
       SETTINGS.include?(method.to_s) || super
+    end
+
+    def build
+      fetch('build', {})
     end
 
     def read_more
