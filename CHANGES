@@ -1,5 +1,35 @@
 = 0.14.0 / (Unreleased)
 
+ * Nesta can now be used as a Static Site Generator (SSG) with its new
+   `nesta build` command! Server Side Rendering (SSR) is still supported,
+   as is development with a local web server.
+
+   Back in the days when Heroku allowed us to deploy Nesta on their
+   platform for free, there really didn't seem to be any point in
+   converting a site to a bunch of static HTML and CSS files. If you
+   enabled the appropriate HTTP cache-control headers, Heroku would
+   automatically cache an entire site in memory, so there was no real
+   performance benefit. That's why Nesta never had SSG support, even
+   though everybody seemed to think it was cool.
+
+   But Heroku is not free any more. And there's a wide choice of hosting
+   platforms for static site generators. So why not?
+
+   See the docs for full details, but in short:
+
+   - If you run `bundle exec nesta build`, Nesta will generate a static
+     copy of your site in a ./dist directory.
+
+   - You might want to add ./dist to your .gitignore file.
+
+   - There are a couple of new config settings in config.yml.
+
+   - You can configure hosting platforms like Netlify, AWS Amplify,
+     Vercel (and others) to redeploy your site by running the build
+     command when you push changes to your git repository.
+
+   This was fun to implement. (Graham Ashton)
+
  * Sass and SCSS files are now rendered with Dart Sass (the main implementation
    of Sass). We had been using the (now deprecated) libsass library.
 
