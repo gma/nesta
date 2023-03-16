@@ -22,7 +22,7 @@ module TemporaryFiles
   def in_temporary_project(*args, &block)
     FileUtils.mkdir_p(File.join(project_root, 'config'))
     File.open(File.join(project_root, 'config', 'config.yml'), 'w').close
-    Dir.chdir(project_root) { yield }
+    Dir.chdir(project_root) { yield project_root }
   ensure
     remove_temp_directory
   end
