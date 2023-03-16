@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Graham Ashton"]
   s.email       = ["graham@effectif.com"]
-  s.homepage    = "http://nestacms.com"
+  s.homepage    = "https://nestacms.com"
   s.summary     = %q{Ruby CMS, written in Sinatra}
   s.description = <<-EOF
 Nesta is a lightweight Content Management System, written in Ruby using

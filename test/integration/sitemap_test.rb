@@ -31,7 +31,7 @@ describe 'XML sitemap' do
 
   it 'has a urlset tag' do
     for_site_with_page do
-      namespace = 'http://www.sitemaps.org/schemas/sitemap/0.9'
+      namespace = 'https://www.sitemaps.org/schemas/sitemap/0.9'
       assert_has_xpath "//urlset[@xmlns='#{namespace}']"
     end
   end
