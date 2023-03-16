@@ -30,7 +30,7 @@ module Nesta
         site.render_atom_feed
         site.render_sitemap
         site.render_templated_assets
-        Nesta::Static::Assets.new(@build_dir, logger).copy
+        Nesta::Static::Assets.new(@build_dir, logger).copy_public_folder
       end
     end
   end

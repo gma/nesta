@@ -11,7 +11,7 @@ describe 'Assets' do
 
   it 'is happy if public directory not present' do
     in_temporary_project do |project_root|
-      Nesta::Static::Assets.new('dist').copy
+      Nesta::Static::Assets.new('dist').copy_public_folder
     end
   end
 
@@ -24,7 +24,7 @@ describe 'Assets' do
       FileUtils.mkdir_p(File.dirname(File.join(public_path, asset_path)))
       open(File.join(public_path, asset_path), 'w')
 
-      Nesta::Static::Assets.new(build_dir).copy
+      Nesta::Static::Assets.new(build_dir).copy_public_folder
 
       assert_exists_in_project File.join(build_dir, asset_path)
     end

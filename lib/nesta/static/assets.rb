@@ -8,7 +8,7 @@ module Nesta
         @logger = logger
       end
 
-      def copy
+      def copy_public_folder
         public_folder = Nesta::App.settings.public_folder
         public_assets(public_folder).each do |source|
           dest = File.join(@build_dir, source.sub(/^#{public_folder}\//, ''))
