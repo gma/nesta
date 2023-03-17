@@ -25,7 +25,8 @@ module Nesta
       def create_repository(process)
         FileUtils.cd(@path) do
           File.open('.gitignore', 'w') do |file|
-            file.puts %w[._* .*.swp .bundle .DS_Store .sass-cache].join("\n")
+            lines = %w[._* .*.swp .bundle .DS_Store .sass-cache dist]
+            file.puts lines.join("\n")
           end
           process.run('git', 'init')
           process.run('git', 'add', '.')

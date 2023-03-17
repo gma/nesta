@@ -12,7 +12,7 @@ subtitle: "(change this text in config/config.yml)"
 #
 # author:
 #   name: Your Name
-#   uri: https://yourhomepage.com
+#   uri: https://yourdomain.com
 #   email: you@yourdomain.com
 
 # You can stick with the default look and feel, or use a theme. Themes are
@@ -65,3 +65,29 @@ content: content
 # production:
 #   content: /var/apps/nesta/shared/content
 #   google_analytics_code: "UA-???????-?"
+
+# The following settings control the behaviour of the `nesta build`
+# command, which is used to generate a "static" version of your site.
+# It's optional, but allows you to deploy your site on hosting providers
+# that serve pre-prepared HTML and CSS files (instead of generating them
+# in real-time with a web server).
+#
+# You can either set the `domain` key here, or specify it on the command
+# line with the `--domain` switch. Nesta needs to know your site's
+# domain name so that it can generate the correct URLs in sitemap.xml,
+# and in your Atom feed.
+#
+# The templated_assets setting is a list of the things that Nesta
+# generates for you, other from all the page in your content directory.
+# The example below is for a site that has two stylesheets, both of
+# which are converted from .sass or .scss files in your ./views folder.
+#
+# If you're not using Sass and are just editing CSS files directly, you
+# can keep them in your ./public folder and Nesta's build command will
+# find them automatically.
+#
+# build:
+#   domain: yourdomain.com
+#   templated_assets:
+#     - /css/master.css
+#     - /css/local.css
