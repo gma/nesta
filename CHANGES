@@ -1,4 +1,4 @@
-= 0.14.0 / (Unreleased)
+= 0.14.0 / (23 March 2023)
 
  * Nesta can now be used as a Static Site Generator (SSG) with its new
    `nesta build` command! Server Side Rendering (SSR) is still supported,
