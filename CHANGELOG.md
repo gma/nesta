@@ -1,11 +1,13 @@
-= 0.15.0 / (Unreleased)
+# Changelog
+
+## 0.15.0 (Unreleased)
 
  * Upgrade to Sinatra 3. (Graham Ashton)
 
  * The models.rb file has been long and unnecessarily hard to navigate
    for too long. (Graham Ashton, suggested by Lilith River)
 
-= 0.14.0 / (23 March 2023)
+## 0.14.0 (23 March 2023)
 
  * Nesta can now be used as a Static Site Generator (SSG) with its new
    `nesta build` command! Server Side Rendering (SSR) is still supported,
@@ -78,7 +80,7 @@
  * The breadcrumb_label helper method (deprecated in 0.9.3) has been removed.
    (Graham Ashton)
 
-= 0.13.0 / (28 September 2022)
+## 0.13.0 (28 September 2022)
 
  * Update dependencies in order to support Ruby 3.0 and above.
    (Graham Ashton)
@@ -104,7 +106,7 @@
  * Stopped the test suite from executing external commands during tests.
    (Graham Ashton)
 
-= 0.12.0 / (30 June 2020)
+## 0.12.0 (30 June 2020)
 
  * Upgrade to Sinatra 2 and Rack 2. (Graham Ashton)
 
@@ -120,12 +122,12 @@
  * Stop running the test suite under Ruby 2.3 and 2.4, both of which
    have reached end-of-life. (Graham Ashton)
 
-= 0.11.1 / (26 March 2015)
+## 0.11.1 (26 March 2015)
 
  * Tighten dependency on Tilt, as version 2.x is incompatible.
    (Graham Ashton)
 
-= 0.11.0 / (16 March 2015)
+## 0.11.0 (16 March 2015)
 
  * Allow Haml pages to use the built-in Markdown filter again, by
    including the haml-contrib gem.
@@ -168,7 +170,7 @@
 
  * Support for Ruby 2.2. (Graham Ashton)
 
-= 0.10.0 / (25 April 2014)
+## 0.10.0 (25 April 2014)
 
  * Upgraded the default theme to a responsive design, using Google's
    Roboto Slab web font. (Graham Ashton)
@@ -292,7 +294,7 @@
    this list. See GitHub for the full list of commits.
    https://github.com/gma/nesta/compare/v0.9.13...v0.10.0
 
-= 0.9.13 / (3 March 2012)
+## 0.9.13 (3 March 2012)
 
  * The nesta script has a new command; edit. You can pass it the path
    to a file within your content/pages folder and it will open the file
@@ -350,9 +352,9 @@
  * Bug fix: Summaries on Haml pages were not marked up as paragraphs.
    See #75.
 
-= 0.9.12 / (Released then pulled, due to rubygems [still] being a total mess)
+## 0.9.12 (Released then pulled, due to rubygems [still] being a total mess)
 
-= 0.9.11 / (22 September 2011)
+## 0.9.11 (22 September 2011)
 
  * Use Tilt to render the Markdown, Textile and Haml in content/pages.
    RDiscount is now the default Markdown processor. To continue using
@@ -379,7 +381,7 @@
    within the content folder by crafting a relative path containing
    the string '../' (Louis Nyffenegger).
 
-= 0.9.10 / (9 September 2011)
+## 0.9.10 (9 September 2011)
 
  * Load Nesta plugins from gems. Any gem whose name begins with
    nesta-plugin- can be used in a project by adding it to the project's
@@ -397,7 +399,7 @@
    the Sass rendering engine by default, which allows it to find .sass
    files within the gem if no matching files are found locally.
 
-= 0.9.9 / (24 August 2011)
+## 0.9.9 (24 August 2011)
 
  * Bug fix: What a debacle this is turning into. The new Nesta::Env
    class must be required before the code in 'nesta/app' is loaded.
@@ -405,7 +407,7 @@
    via config.ru. Running Nesta any other way lead to an immediate
    crash.
 
-= 0.9.8 / (22 August 2011)
+## 0.9.8 (22 August 2011)
 
  * Bug fix: The Sinatra app's root directory wasn't set which meant
    that Nesta couldn't always find the ./public directory (such as when
@@ -416,12 +418,12 @@
    Nesta::Env class. In 0.9.6 I forgot to actually set Nesta::App.root
    as well, which was a big mistake. Whoops.
 
-= 0.9.7 / (19 August 2011)
+## 0.9.7 (19 August 2011)
 
  * No code changes from 0.9.6; version number increased to allow new gem
    to be deployed to rubygems.org.
 
-= 0.9.6 / (18 August 2011) [never released due to packaging bug]
+## 0.9.6 (18 August 2011) [never released due to packaging bug]
 
  * Nesta no longer cares whether you write your Sass stylesheets in the
    original indented Sass format or the default SCSS syntax (which is a
@@ -447,7 +449,7 @@
    Nesta::App.root would be before requiring nesta/app. Fixed by
    creating Nesta::Env and moving root to there instead.
 
-= 0.9.5 / (1 May 2011)
+## 0.9.5 (1 May 2011)
 
  * Added --version option to nesta command (Christopher Lindblom).
 
@@ -473,14 +475,14 @@
    within Haml templates. See https://github.com/gma/nesta/pull/18
    (Carl Furrow).
 
-= 0.9.4 / 18 February 2011
+## 0.9.4 (18 February 2011)
 
  * Updated the link colours in the default theme.
 
  * Set the default encoding to UTF-8. Without it Heroku would sometimes
    fail to render pages (issue 14).
 
-= 0.9.3 / 18 January 2011
+## 0.9.3 (18 January 2011)
 
  * The route and view for serving the home page (/) has been removed,
    and the home page must now be created as an index page in
@@ -522,7 +524,7 @@
  * Bug fix: Don't output empty <li> tags for nested submenus that are
    beneath the requested number of levels.
 
-= 0.9.2 / 10 January 2011
+## 0.9.2 (10 January 2011)
 
  * Made the FileModel.metadata method public, to allow for custom
    metadata at the top of each page. (Wynn Netherland)
@@ -532,7 +534,7 @@
 
  * Added templates required by `nesta theme:create`.
 
-= 0.9.1 / 31 December 2010
+## 0.9.1 (31 December 2010)
 
  * Re-implemented the default theme, using semantic HTML5 and
    Andy Clarke's Universal Internet Explorer 6 CSS. Named the previous
@@ -545,15 +547,16 @@
  * Moved the navigation helpers into the Nesta::Navigation::Renderers
    module.
 
-= 0.9.0 / 20 December 2010
+## 0.9.0 (20 December 2010)
 
  * Packaged Nesta as a gem for the first time, instead of as a template
    site that can be cloned, edited and deployed. Added the `nesta`
    command for generating new sites and managing themes.
 
-= Previous versions / from 26 November 2008
+## Previous versions (from 26 November 2008)
 
  * Prior to 0.9.0 Nesta was distributed as a git repository that could
    be forked, edited and deployed. The only change log for these
-   versions is the Git commit history.
+   versions is the commit history:
+
    https://github.com/gma/nesta/commits/master
