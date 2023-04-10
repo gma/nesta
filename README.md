@@ -1,4 +1,4 @@
-# Nesta - a file-based CMS and Static Site Generator
+# Lightweight file-based CMS and Static Site Generator
 
 Nesta is a lightweight CMS for building content sites and blogs, written in
 [Sinatra].
