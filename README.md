@@ -1,34 +1,37 @@
-# Nesta - a CMS for Ruby Developers
+# Nesta - a file-based CMS and Static Site Generator
 
-A file-based CMS for web sites and blogs, written in [Sinatra][frank].
+Nesta is a lightweight CMS for building content sites and blogs, written in
+[Sinatra].
 
-Content can be written in [Markdown][markdown] or [Textile][textile] and
-stored in text files (though you can also use Haml if you need to add
-some HTML to your pages). There's no database; write your content in
-your editor. Publish by pushing to a git repository.
+Content can be written in [Markdown] or [Textile], stored in text files on your
+computer. There is no database.
 
-[frank]: http://www.sinatrarb.com/ "Sinatra"
-[markdown]: http://daringfireball.net/projects/markdown/
-[textile]: http://textism.com/tools/textile/
+You do your writing in your text editor.
+
+Publish by pushing your changes to a git repository that's setup to deploy your
+changes to the web.
+
+[Sinatra]: http://www.sinatrarb.com/ "Sinatra"
+[Markdown]: http://daringfireball.net/projects/markdown/
+[Textile]: http://textism.com/tools/textile/
 
 ## Installation
 
-Begin by installing the gem:
+Begin by [installing Ruby], then the Nesta gem:
 
     $ gem install nesta
 
-Then use the `nesta` command to generate a new site:
+Use the `nesta` command to generate a new site:
 
-    $ nesta new mysite.com --git
+    $ nesta new mysite.com --git  # a git repo is optional, but recommended
 
 Install a few dependencies, and you're away:
 
     $ cd mysite.com
     $ bundle
 
-You'll find basic configuration options for your site in
-`config/config.yml`. The defaults will work, but you'll want to tweak it
-before you go very far.
+You'll find configuration options for your site in `config/config.yml`. The
+defaults will work, but you'll want to tweak it before you go very far.
 
 That's it - you can launch a local web server in development mode using
 mr-sparkle...
@@ -39,7 +42,14 @@ mr-sparkle...
 the files in `content/pages` (see the [docs on writing content][] for
 full instructions).
 
-[docs on writing content]: http://nestacms.com/docs/creating-content
+You can either [deploy it] behind a web server, or build a static version of
+your site:
+
+    $ nesta build  # but see config.yml for related settings
+
+[installing Ruby]: https://www.ruby-lang.org/en/documentation/installation/
+[docs on writing content]: http://nestacms.com/docs/creating-content/
+[deploy it]: https://nestacms.com/docs/deployment/
 
 ## Support
 
