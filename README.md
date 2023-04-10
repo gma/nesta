@@ -39,8 +39,8 @@ mr-sparkle...
     $ bundle exec mr-sparkle config.ru
 
 ...then point your web browser at http://localhost:8080. Start editing
-the files in `content/pages` (see the [docs on writing content][] for
-full instructions).
+the files in `content/pages` (see the [docs on writing content] for full
+instructions).
 
 You can either [deploy it] behind a web server, or build a static version of
 your site:
@@ -55,25 +55,27 @@ your site:
 
 There's plenty of information on <http://nestacms.com>. If you need some
 help with anything feel free to file an issue, or contact me on Mastodon
-(@gma@hachyderm.io) or Twitter (@grahamashton).
+([@gma@hachyderm.io]) or Twitter ([@grahamashton]).
 
-If you like Nesta you can keep up with developments by following [@nestacms][]
-on Twitter, and on [the blog][].
+If you like Nesta you can keep up with developments by following [@nestacms]
+on Twitter, and on [the blog].
 
-[@nestacms]: http://twitter.com/nestacms
-[the blog]: http://nestacms.com/blog
+[@gma@hachyderm.io]: https://hachyderm.io/@gma
+[@grahamashton]: https://twitter.com/grahamashton
+[@nestacms]: https://twitter.com/nestacms
+[the blog]: https://nestacms.com/blog
 
 ![Tests](https://github.com/gma/nesta/actions/workflows/tests.yml/badge.svg)
 
 ## Contributing
 
-If you want to add a new feature, I recommend that you file an issue to discuss
-it before you start coding. I'm likely to suggest that we implement it as a
-[plugin][] (to keep Nesta itself lean and simple), so you might save yourself
-some time if we chat about a good approach before you start.
+If you want to add a new feature, please [create an issue] to discuss it before
+you start coding. I might suggest that we implement it as a [plugin] (to keep
+Nesta itself lean and simple), or be able to chip in with ideas on how to
+approach it.
 
-[plugin]: http://nestacms.com/docs/plugins
+[create an issue]: https://github.com/gma/nesta/issues/new
+[plugin]: https://nestacms.com/docs/plugins
 
--- Graham ([@grahamashton][] on Twitter).
+-- Graham
 
-[@grahamashton]: http://twitter.com/grahamashton
