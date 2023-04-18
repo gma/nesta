@@ -55,7 +55,7 @@ GEM
       unicorn (>= 4.5)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.14.2)
+    nokogiri (1.14.3)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     public_suffix (5.0.1)
