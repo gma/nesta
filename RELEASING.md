@@ -10,7 +10,7 @@ the steps:
    the version number in `Gemfile.lock` to be updated too, so regenerate
    it now and check them in together.
 
-3. Update the `CHANGES` file with a summary of significant changes since
+3. Update the `CHANGLOG.md` file with a summary of significant changes since
    the previous release.
 
 4. Commit these changes with a commit message of 'Bump version to <version>'
