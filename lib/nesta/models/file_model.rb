@@ -7,7 +7,6 @@ end
 
 register_template_handler :MarukuTemplate, 'mdown', 'md'
 register_template_handler :KramdownTemplate, 'mdown', 'md'
-register_template_handler :BlueClothTemplate, 'mdown', 'md'
 register_template_handler :RDiscountTemplate, 'mdown', 'md'
 register_template_handler :RedcarpetTemplate, 'mdown', 'md'
 

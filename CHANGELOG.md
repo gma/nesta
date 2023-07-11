@@ -7,6 +7,18 @@
  * The models.rb file has been long and unnecessarily hard to navigate
    for too long. (Graham Ashton, suggested by Lilith River)
 
+ * Remove support for the BlueCloth markdown library. Nesta uses Tilt
+   for rendering Markdown, and BlueCloth support has been removed in
+   Tilt 2.2.0. See rtomayko/tilt#382 for details.
+
+   If your site uses BlueCloth, remove your call to `Tilt.prefer`,
+   and Nesta will use its default Markdown processor. See Nesta's docs
+   on [configuring the Markdown processor] for more details.
+
+   [configuring the Markdown processor]: https://nestacms.com/docs/creating-content/changing-the-markdown-processor
+
+   (Graham Ashton)
+
 ## 0.14.0 (23 March 2023)
 
  * Nesta can now be used as a Static Site Generator (SSG) with its new
