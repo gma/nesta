@@ -4,8 +4,9 @@
 
  * Upgrade to Sinatra 3. (Graham Ashton)
 
- * The models.rb file has been long and unnecessarily hard to navigate
-   for too long. (Graham Ashton, suggested by Lilith River)
+ * The `models.rb` file has been long and unnecessarily hard to navigate
+   for too long. It has been split up into multiple files, one for each
+   class. (Graham Ashton, suggested by Lilith River)
 
  * Remove support for the BlueCloth markdown library. Nesta uses Tilt
    for rendering Markdown, and BlueCloth support has been removed in
