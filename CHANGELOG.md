@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.15.0 (Unreleased)
+## 0.15.0 (11 July 2023)
 
  * Upgrade to Sinatra 3. (Graham Ashton)
 

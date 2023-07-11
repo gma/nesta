@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nesta (0.14.0)
+    nesta (0.15.0)
       RedCloth (~> 4.2)
       haml (>= 3.1, < 6.0)
       haml-contrib (>= 1.0)
