@@ -12,23 +12,9 @@ module Nesta
         end
       end
 
-      def scss(template, options = {}, locals = {})
-        find_template(Nesta::App.settings.views, template, Tilt::ScssTemplate) do |file|
-          return Tilt.new(file).render if File.exist?(file)
-        end
-        raise IOError, "SCSS template not found: #{template}"
-      end
-
-      def sass(template, options = {}, locals = {})
-        find_template(Nesta::App.settings.views, template, Tilt::SassTemplate) do |file|
-          return Tilt.new(file).render if File.exist?(file)
-        end
-        raise IOError, "Sass template not found: #{template}"
-      end
-
       def stylesheet(template, options = {}, locals = {})
         scss(template, options, locals)
-      rescue IOError
+      rescue Errno::ENOENT
         sass(template, options, locals)
       end
     end
