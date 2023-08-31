@@ -9,8 +9,8 @@ PATH
       rake
       rdiscount (~> 2.1)
       sass-embedded (~> 1.58)
-      sinatra (~> 3.0)
-      tilt (~> 2.0)
+      sinatra (~> 3.1)
+      tilt (~> 2.1)
 
 GEM
   remote: https://rubygems.org/
@@ -61,8 +61,8 @@ GEM
     public_suffix (5.0.1)
     racc (1.6.2)
     rack (2.2.6.4)
-    rack-protection (3.0.5)
-      rack
+    rack-protection (3.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rack-test (2.0.2)
       rack (>= 1.3)
     raindrops (0.20.1)
@@ -78,10 +78,10 @@ GEM
     sass-embedded (1.58.3)
       google-protobuf (~> 3.21)
       rake (>= 10.0.0)
-    sinatra (3.0.5)
+    sinatra (3.1.0)
       mustermann (~> 3.0)
       rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.0.5)
+      rack-protection (= 3.1.0)
       tilt (~> 2.0)
     temple (0.10.0)
     tilt (2.1.0)
