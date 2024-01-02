@@ -4,6 +4,10 @@
 
  * Upgrade to Sinatra 3.1. (なつき)
 
+ * Tilt renderers (e.g. for Markdown, Haml, or Textile) are now configurable.
+   See #146 for details.
+   (Graham Ashton)
+
 ## 0.15.0 (11 July 2023)
 
  * Upgrade to Sinatra 3. (Graham Ashton)

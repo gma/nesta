@@ -184,8 +184,12 @@ module Nesta
 
     def convert_to_html(format, scope, text)
       text = add_p_tags_to_haml(text) if @format == :haml
-      template = Tilt[format].new { text }
+      template = Tilt[format].new(renderer_config(@format)) { text }
       template.render(scope)
+    end
+
+    def renderer_config(format)
+      {}
     end
   end
 end
