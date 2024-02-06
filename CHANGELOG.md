@@ -8,6 +8,10 @@
    See #146 for details.
    (Graham Ashton)
 
+ * Drop support for Ruby 2.7, which is no longer supported by Nokogiri,
+   which is one of Nesta's dependencies. This is understandable; Ruby
+   2.7 reached end-of-life in March 2023. (Graham Ashton)
+
 ## 0.15.0 (11 July 2023)
 
  * Upgrade to Sinatra 3. (Graham Ashton)
