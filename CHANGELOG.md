@@ -5,8 +5,7 @@
  * Upgrade to Sinatra 3.1. (なつき)
 
  * Tilt renderers (e.g. for Markdown, Haml, or Textile) are now configurable.
-   See #146 for details.
-   (Graham Ashton)
+   See #146 for details. (Graham Ashton)
 
  * Drop support for Ruby 2.7, which is no longer supported by Nokogiri,
    which is one of Nesta's dependencies. This is understandable; Ruby
