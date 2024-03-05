@@ -5,7 +5,7 @@ PATH
       RedCloth (~> 4.2)
       haml (>= 3.1, < 6.0)
       haml-contrib (>= 1.0)
-      rack (~> 2)
+      rack (>= 2, < 4)
       rake
       rdiscount (~> 2.1)
       sass-embedded (~> 1.58)
@@ -60,7 +60,7 @@ GEM
       racc (~> 1.4)
     public_suffix (5.0.1)
     racc (1.7.3)
-    rack (2.2.6.4)
+    rack (2.2.8.1)
     rack-protection (3.1.0)
       rack (~> 2.2, >= 2.2.4)
     rack-test (2.0.2)
