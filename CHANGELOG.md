@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+ * Update Google Analytics JS code to GA4. (Matthew Bass)
+
  * Upgrade to Sinatra 3.1. (なつき)
 
  * Tilt renderers (e.g. for Markdown, Haml, or Textile) are now configurable.

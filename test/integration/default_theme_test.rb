@@ -33,7 +33,7 @@ describe 'Default theme' do
   end
 
   it 'includes Google Analytics JavaScript when configured' do
-    analytics_code = { 'google_analytics_code' => 'UA-1234' }
+    analytics_code = { 'google_analytics_code' => 'G-1234' }
     stub_config(temp_content.merge('test' => analytics_code)) do
       visit '/'
       assert_nil all('script').find { |s| s[:src].match /analytics\.js/ }

@@ -44,7 +44,7 @@ content: content
 #     scroll down a bit to set it in production even if you're not deploying
 #     to your own server.
 #
-# google_analytics_code: "UA-???????-?"
+# google_analytics_code: "G-??????????"
 
 # read_more
 #     When the summary of an article is displayed on the home page, or
@@ -64,7 +64,7 @@ content: content
 
 # production:
 #   content: /var/apps/nesta/shared/content
-#   google_analytics_code: "UA-???????-?"
+#   google_analytics_code: "G-??????????"
 
 # The following settings control the behaviour of the `nesta build`
 # command, which is used to generate a "static" version of your site.
