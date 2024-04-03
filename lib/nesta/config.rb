@@ -33,10 +33,11 @@ module Nesta
       setting = setting.to_s
       self.config ||= read_config_file(setting)
       env_config = config.fetch(Nesta::App.environment.to_s, {})
-      env_config.fetch(
-        setting,
-        config.fetch(setting) { raise NotDefined.new(setting) }
-      )
+      env_config.fetch(setting) do
+        config.fetch(setting) do
+          raise NotDefined.new(setting)
+        end
+      end
     rescue NotDefined
       default.empty? && raise || (return default.first)
     end
