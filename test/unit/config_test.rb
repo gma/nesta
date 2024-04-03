@@ -38,6 +38,12 @@ describe Nesta::Config do
     end
   end
 
+  it 'returns environment specific settings' do
+    stub_config('test' => { 'content' => 'rack_env_specific/path'}) do
+      assert_equal 'rack_env_specific/path', Nesta::Config.content
+    end
+  end
+
   it 'overrides top level settings with environment specific settings' do
     config = {
       'content' => 'general/path',
