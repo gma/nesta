@@ -11,6 +11,10 @@
    which is one of Nesta's dependencies. This is understandable; Ruby
    2.7 reached end-of-life in March 2023. (Graham Ashton)
 
+ * Bug fix: Config variables that were defined for an environment (test,
+   dev, production), but for which there was no default, were always read
+   as nil. (Matthew Bass)
+
 ## 0.15.0 (11 July 2023)
 
  * Upgrade to Sinatra 3. (Graham Ashton)
