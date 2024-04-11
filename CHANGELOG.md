@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.16.0 (11 April 2024)
 
  * Update Google Analytics JS code to GA4. (Matthew Bass)
 
