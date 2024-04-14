@@ -69,12 +69,12 @@ on Twitter, and on [the blog].
 
 ## Contributing
 
-If you want to add a new feature, please [create an issue] to discuss it before
-you start coding. I might suggest that we implement it as a [plugin] (to keep
-Nesta itself lean and simple), or be able to chip in with ideas on how to
-approach it.
+If you want to add a new feature, consider [creating an issue] so we can
+have a chat before you start coding. I might be able to chip in with ideas on
+how to approach it, or suggest that we implement it as a [plugin] (to keep Nesta
+itself lean and simple).
 
-[create an issue]: https://github.com/gma/nesta/issues/new
+[creating an issue]: https://github.com/gma/nesta/issues/new
 [plugin]: https://nestacms.com/docs/plugins
 
 -- Graham
