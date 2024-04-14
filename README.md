@@ -54,15 +54,11 @@ your site:
 ## Support
 
 There's plenty of information on <http://nestacms.com>. If you need some
-help with anything feel free to file an issue, or contact me on Mastodon
-([@gma@hachyderm.io]) or Twitter ([@grahamashton]).
+help with anything feel free to [file an issue], or contact me on Mastodon
+([@gma@hachyderm.io]).
 
-If you like Nesta you can keep up with developments by following [@nestacms]
-on Twitter, and on [the blog].
-
+[file an issue]: https://github.com/gma/nesta/issues/new
 [@gma@hachyderm.io]: https://hachyderm.io/@gma
-[@grahamashton]: https://twitter.com/grahamashton
-[@nestacms]: https://twitter.com/nestacms
 [the blog]: https://nestacms.com/blog
 
 ![Tests](https://github.com/gma/nesta/actions/workflows/tests.yml/badge.svg)
