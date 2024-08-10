@@ -86,7 +86,7 @@ describe 'Default theme' do
       with_temp_content_directory do
         model = create_page_and_menu
         visit model.path
-        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+        assert_has_css "ul.menu li.current:contains('#{model.link_text}')"
       end
     end
 
@@ -100,7 +100,7 @@ describe 'Default theme' do
       with_temp_content_directory do
         model = create_page_and_menu
         visit "/prefix/#{model.path}"
-        assert_has_css "ul.menu li[class='current']:contains('#{model.link_text}')"
+        assert_has_css "ul.menu li.current:contains('#{model.link_text}')"
       end
     end
   end
