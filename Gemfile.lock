@@ -29,7 +29,7 @@ GEM
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
     ffi (1.15.5)
-    google-protobuf (3.22.2)
+    google-protobuf (3.25.5)
     haml (5.2.2)
       temple (>= 0.8.0)
       tilt
