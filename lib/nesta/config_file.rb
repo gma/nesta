@@ -10,7 +10,7 @@ module Nesta
 
       configured = false
       File.open(self.class.path, 'r+') do |file|
-        output = ''
+        output = []
         file.each_line do |line|
           if configured
             output << line
@@ -21,7 +21,7 @@ module Nesta
         end
         output << "#{replacement}\n" unless configured
         file.pos = 0
-        file.print(output)
+        file.print(output.join("\n"))
         file.truncate(file.pos)
       end
     end

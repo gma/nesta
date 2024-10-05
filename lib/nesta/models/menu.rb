@@ -16,7 +16,7 @@ module Nesta
     end
 
     def self.for_path(path)
-      path.sub!(Regexp.new('^/'), '')
+      path = path.sub(Regexp.new('^/'), '')
       if path.empty?
         full_menu
       else

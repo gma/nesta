@@ -90,7 +90,7 @@ module Nesta
       #   path_to(page.abspath, uri: true)
       #
       def path_to(page_path, options = {})
-        host = ''
+        host = []
         if options[:uri]
           host << "http#{'s' if request.ssl?}://"
           if (request.env.include?("HTTP_X_FORWARDED_HOST") or 
@@ -100,7 +100,7 @@ module Nesta
             host << request.host
           end
         end
-        uri_parts = [host]
+        uri_parts = [host.join('')]
         uri_parts << request.script_name.to_s if request.script_name
         uri_parts << page_path
         File.join(uri_parts)

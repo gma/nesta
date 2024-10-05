@@ -35,11 +35,11 @@ module Nesta
             indent_levels << indent_level
           end
 
-          ''.tap do |code|
-            lines.each_with_index do |line, i|
-              code << '  ' * (indent_levels[i] + 2) + line
-            end
+          code = []
+          lines.each_with_index do |line, i|
+            code << '  ' * (indent_levels[i] + 2) + line
           end
+          code.join("\n")
         end
 
         def make_directories
