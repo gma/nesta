@@ -19,6 +19,9 @@
    - https://sass-lang.com/documentation/breaking-changes/color-functions/
    - https://sass-lang.com/documentation/breaking-changes/import/
 
+   This update has also forced us to drop support for Ruby 3.0, which is no
+   longer supported by the sass-embedded gem.
+
    (Graham Ashton)
 
 ## 0.16.0 (11 April 2024)
