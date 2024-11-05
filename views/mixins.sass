@@ -12,14 +12,16 @@ $vertical-margin: 1.5em
 
 // Colour settings
 
+@use "sass:color"
+
 $base-color: #313126
 $tint: #EEEEC6
 $border-color: #D7C28B
 $link-color: #4786fd
-$visited-link-color: darken($link-color, 5%)
-$hover-link-color: darken($link-color, 15%)
-$active-link-color: darken($link-color, 20%)
-$nav-link-color: desaturate(lighten($link-color, 10%), 25%)
+$visited-link-color: color.adjust($link-color, $lightness: -5%)
+$hover-link-color: color.adjust($link-color, $lightness: -15%)
+$active-link-color: color.adjust($link-color, $lightness: -20%)
+$nav-link-color: color.scale(color.adjust($link-color, $lightness: 10%), $saturation: -25%)
 $meta-color: #87877D
 
 @function empx($em, $base: 16px)

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.17.0 (Unreleased)
+
+ * Update Sass parser to sass-embedded 1.80, which (due to changes in CSS 4)
+   deprecates the global colour functions and the @import statement. Any Sass
+   code that uses these features will need updating before Dart Sass 3.0 is
+   released. The Sass maintainers are saying we've got about two years.
+
+   In the meantime Sass will print deprecation warnings, some of which give
+   hints on how you might update your code.
+
+   See the Nesta commit history for an example of the kind of changes that are
+   required, and these pages for more details:
+
+   - https://sass-lang.com/documentation/breaking-changes/color-functions/
+   - https://sass-lang.com/documentation/breaking-changes/import/
+
+   (Graham Ashton)
+
 ## 0.16.0 (11 April 2024)
 
  * Update Google Analytics JS code to GA4. (Matthew Bass)

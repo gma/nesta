@@ -1,5 +1,7 @@
-@import "mixins.sass"
-@import "normalize"
+@use "sass:color"
+
+@use "mixins" as *
+@use "normalize"
 
 body
   font: $size1 "Roboto Slab", serif
@@ -74,7 +76,7 @@ blockquote
   border-left: 5px solid $tint
   
   font-style: italic
-  color: adjust-color($base-color, $red: 55, $green: 55, $blue: 55)
+  color: color.adjust($base-color, $red: 55, $green: 55, $blue: 55)
   
 pre
   display: block
