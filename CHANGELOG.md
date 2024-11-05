@@ -2,6 +2,9 @@
 
 ## 0.17.0 (Unreleased)
 
+ * Update Sinatra to verion 4.0, to fix a vulnerability. This has also
+   required a jump to Rack 3. (Graham Ashton)
+
  * Update Sass parser to sass-embedded 1.80, which (due to changes in CSS 4)
    deprecates the global colour functions and the @import statement. Any Sass
    code that uses these features will need updating before Dart Sass 3.0 is

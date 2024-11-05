@@ -31,12 +31,12 @@ EOF
 
   s.add_dependency('haml', '>= 3.1', '< 6.0')
   s.add_dependency('haml-contrib', '>= 1.0')
-  s.add_dependency('rack', '~> 2')
+  s.add_dependency('rack', '~> 3')
   s.add_dependency('rake')
   s.add_dependency('rdiscount', '~> 2.1')
   s.add_dependency('RedCloth', '~> 4.2')
   s.add_dependency('sass-embedded', '~> 1.58')
-  s.add_dependency('sinatra', '~> 3.1')
+  s.add_dependency('sinatra', '~> 4.0')
   s.add_dependency('tilt', '~> 2.1')
 
   # Useful in development
