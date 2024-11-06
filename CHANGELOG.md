@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.17.0 (Unreleased)
+## 0.17.0 (6 November 2024)
 
  * Update Sinatra to verion 4.0, to fix a vulnerability. This has also
    required a jump to Rack 3. (Graham Ashton)
