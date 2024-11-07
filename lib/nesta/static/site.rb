@@ -61,8 +61,8 @@ module Nesta
 
       def set_app_root
         root = ::File.expand_path('.')
-        ['Gemfile', ].each do |expected|
-          if ! File.exist?(File.join(root, 'config', 'config.yml'))
+        ['Gemfile', File.join('config', 'config.yml')].each do |expected|
+          if ! File.exist?(File.join(root, expected))
             message = "is this a Nesta site? (expected './#{expected}')"
             raise RuntimeError, message
           end

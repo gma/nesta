@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module TemporaryFiles
   TEMP_DIR = File.expand_path('tmp', File.join(File.dirname(__FILE__), '..'))
 
@@ -21,7 +23,8 @@ module TemporaryFiles
 
   def in_temporary_project(*args, &block)
     FileUtils.mkdir_p(File.join(project_root, 'config'))
-    File.open(File.join(project_root, 'config', 'config.yml'), 'w').close
+    FileUtils.touch(File.join(project_root, 'Gemfile'))
+    FileUtils.touch(File.join(project_root, 'config', 'config.yml'))
     Dir.chdir(project_root) { yield project_root }
   ensure
     remove_temp_directory
