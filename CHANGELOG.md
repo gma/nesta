@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.18.0 (Unreleased)
+
+* Update Sinatra to 4.1, to fix a vulnerability. (Graham Ashton)
+
 ## 0.17.0 (6 November 2024)
 
  * Update Sinatra to verion 4.0, to fix a vulnerability. This has also
