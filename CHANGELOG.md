@@ -2,7 +2,13 @@
 
 ## 0.18.0 (Unreleased)
 
-* Update Sinatra to 4.1, to fix a vulnerability. (Graham Ashton)
+* Update Sinatra to 4.1, to fix a vulnerability.
+
+  Note that this is the same security alert that I believed I was fixing when I
+  released Nesta 0.17.0. In actual fact, at that point the latest version of
+  Sinatra (4.0.0) didn't yet include a fix.
+
+  (Graham Ashton)
 
 ## 0.17.0 (6 November 2024)
 
