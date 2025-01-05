@@ -1,15 +1,13 @@
 # File Based CMS and Static Site Generator
 
 Nesta is a lightweight CMS for building content sites and blogs, written in
-[Sinatra].
+Ruby using the [Sinatra] web framework.
 
-Content can be written in [Markdown] or [Textile], stored in text files on your
-computer. There is no database.
-
-You do your writing in your text editor.
-
-Publish by pushing your changes to a git repository that's setup to deploy your
-changes to the web.
+- Write your content in [Markdown] or [Textile], in your text editor (drop into
+  HTML or Haml if you need more control)
+- Files are stored in text files on your hard drive (there is no database)
+- Publish changes by putting these files online (Git recommended, not required)
+- Deploy either as a static site (SSG) or by rendering HTML on the server (SSR)
 
 [Sinatra]: http://www.sinatrarb.com/ "Sinatra"
 [Markdown]: http://daringfireball.net/projects/markdown/
@@ -33,19 +31,18 @@ Install a few dependencies, and you're away:
 You'll find configuration options for your site in `config/config.yml`. The
 defaults will work, but you'll want to tweak it before you go very far.
 
-That's it - you can launch a local web server in development mode using
-mr-sparkle...
+That's it — you can launch a local web server in development mode using the
+`mr-sparkle` dev server:
 
     $ bundle exec mr-sparkle config.ru
 
-...then point your web browser at http://localhost:8080. Start editing
-the files in `content/pages` (see the [docs on writing content] for full
-instructions).
+Point your web browser at http://localhost:8080. Start editing the files in
+`content/pages` (see the [docs on writing content] for full instructions).
 
 You can either [deploy it] behind a web server, or build a static version of
 your site:
 
-    $ nesta build  # but see config.yml for related settings
+    $ nesta build  # but see config.yml for build settings
 
 [installing Ruby]: https://www.ruby-lang.org/en/documentation/installation/
 [docs on writing content]: http://nestacms.com/docs/creating-content/
@@ -53,7 +50,7 @@ your site:
 
 ## Support
 
-There's plenty of information on <http://nestacms.com>. If you need some
+There's plenty of information on <https://nestacms.com>. If you need some
 help with anything feel free to [file an issue], or contact me on Mastodon
 ([@gma@hachyderm.io]).
 
