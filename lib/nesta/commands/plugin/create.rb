@@ -21,7 +21,6 @@ module Nesta
         end
 
         def nested_module_definition_with_version
-          indent_level = 2
           indent_with = '  '
 
           lines = module_names.map { |name| "module #{name}\n" }
