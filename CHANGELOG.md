@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.19.0 (Unreleased)
+
+* Fix whitespace in version.rb when generating new plugins. (Graham Ashton)
+
 ## 0.18.0 (19 November 2024)
 
 * Update Sinatra to 4.1, to fix a vulnerability.

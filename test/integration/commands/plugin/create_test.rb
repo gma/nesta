@@ -34,6 +34,7 @@ describe 'nesta plugin:create' do
     Dir.chdir(working_directory) do
       command = Nesta::Commands::Plugin::Create.new(plugin_name)
       command.execute(process_stub)
+      block.call
     end
   end
 

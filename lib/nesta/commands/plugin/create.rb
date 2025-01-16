@@ -23,14 +23,14 @@ module Nesta
         def nested_module_definition_with_version
           indent_with = '  '
 
-          lines = module_names.map { |name| "module #{name}\n" }
+          lines = module_names.map { |name| "module #{name}" }
           indent_levels = 0.upto(module_names.size - 1).to_a
 
-          lines << "VERSION = '0.1.0'\n"
+          lines << "VERSION = '0.1.0'"
           indent_levels << module_names.size
 
           (module_names.size - 1).downto(0).each do |indent_level|
-            lines << "end\n"
+            lines << 'end'
             indent_levels << indent_level
           end
 
