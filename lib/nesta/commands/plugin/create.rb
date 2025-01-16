@@ -36,7 +36,7 @@ module Nesta
 
           code = []
           lines.each_with_index do |line, i|
-            code << '  ' * (indent_levels[i] + 2) + line
+            code << indent_with * (indent_levels[i] + 2) + line
           end
           code.join("\n")
         end
