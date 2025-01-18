@@ -5,9 +5,9 @@
 * Remove support for the Maruku Markdown processor.
 
   Maruku is considered obsolete by its maintainer, and is no longer used by
-  Tilt (as of Tilt 2.5.0). As Nesta uses renders Markdown via Tilt, there's no
-  need for us to continue loading Maruku via Tilt. It's recommended that you
-  update your site to use kramdown.
+  Tilt (as of Tilt 2.5.0). As Nesta renders Markdown via Tilt, there's no need
+  for us to continue loading Maruku via Tilt. It's recommended that you update
+  your site to use kramdown.
 
   (Suggested by Brad Weslake)
 
