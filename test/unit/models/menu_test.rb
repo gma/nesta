@@ -14,7 +14,7 @@ describe Nesta::Menu do
 
   def with_hierarchy_of_pages(&block)
     with_temp_content_directory do
-      pages = (1..6).map { |i| create(:page) }
+      pages = (1..6).map { |_| create(:page) }
       text = <<-EOF
 #{pages[0].path}
   #{pages[1].path}
