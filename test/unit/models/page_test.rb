@@ -45,7 +45,7 @@ describe Nesta::Page do
       end
     end
 
-    it 'returns nil for draft pages when running in production'do
+    it 'returns nil for draft pages when running in production' do
       with_temp_content_directory do
         draft = create(:page, metadata: { 'flags' => 'draft' })
         assert Nesta::Page.find_by_path(draft.path), 'should find draft'
@@ -56,7 +56,7 @@ describe Nesta::Page do
     end
   end
 
-  describe '.find_articles 'do
+  describe '.find_articles' do
     it "doesn't return articles with a published date in the future" do
       with_temp_content_directory do
         future_date = (Time.now + 172800).strftime('%d %B %Y')
