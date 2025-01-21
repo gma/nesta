@@ -65,7 +65,7 @@ EOF
         end
       end
       options
-    rescue GetoptLong::InvalidOption => e
+    rescue GetoptLong::InvalidOption
       $stderr.puts
       usage
     end

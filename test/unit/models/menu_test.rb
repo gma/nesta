@@ -68,7 +68,7 @@ describe Nesta::Menu do
 
     it 'returns part of the tree of menu items' do
       with_hierarchy_of_pages do |pages|
-        page1, page2, page3, page4, page5, page6 = pages
+        _, page2, page3, page4 = pages
         assert_equal [page2, [page3, page4]], Nesta::Menu.for_path(page2.path)
       end
     end
