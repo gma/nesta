@@ -81,7 +81,6 @@ describe 'Site' do
   it "renders the user's list of templated assets" do
     build_dir = 'dist'
     css_path = '/css/styles.css'
-    build_config = {}
 
     in_temporary_project do
       stub_config('build' => { 'templated_assets' => [css_path] }) do
