@@ -77,7 +77,7 @@ module Nesta
     private
 
     def read_config_file(setting)
-      YAML::load(ERB.new(IO.read(Nesta::ConfigFile.path)).result)
+      YAML.safe_load(ERB.new(IO.read(Nesta::ConfigFile.path)).result)
     rescue Errno::ENOENT
       raise NotDefined, setting
     end
