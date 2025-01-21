@@ -20,14 +20,14 @@ module Nesta
     end
 
     def self.local_view_path
-      Nesta::Path.local("views")
+      Nesta::Path.local('views')
     end
 
     def self.theme_view_path
       if Nesta::Config.theme.nil?
         nil
       else
-        Nesta::Path.themes(Nesta::Config.theme, "views")
+        Nesta::Path.themes(Nesta::Config.theme, 'views')
       end
     end
 

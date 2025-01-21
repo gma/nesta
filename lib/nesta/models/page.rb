@@ -57,11 +57,11 @@ module Nesta
     end
 
     def date(format = nil)
-      @date ||= if metadata("date")
+      @date ||= if metadata('date')
         if format == :xmlschema
-          Time.parse(metadata("date")).xmlschema
+          Time.parse(metadata('date')).xmlschema
         else
-          DateTime.parse(metadata("date"))
+          DateTime.parse(metadata('date'))
         end
       end
     end
@@ -75,7 +75,7 @@ module Nesta
     end
 
     def summary
-      if summary_text = metadata("summary")
+      if summary_text = metadata('summary')
         summary_text.gsub!('\n', "\n")
         convert_to_html(@format, Object.new, summary_text)
       end

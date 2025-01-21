@@ -80,11 +80,11 @@ module Nesta
     end
 
     def self.page_path(basename = nil)
-      get_path(File.join(content_path, "pages"), basename)
+      get_path(File.join(content_path, 'pages'), basename)
     end
 
     def self.attachment_path(basename = nil)
-      get_path(File.join(content_path, "attachments"), basename)
+      get_path(File.join(content_path, 'attachments'), basename)
     end
   end
 end

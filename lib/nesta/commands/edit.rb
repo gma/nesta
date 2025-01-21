@@ -8,7 +8,7 @@ module Nesta
       def execute(process)
         editor = ENV.fetch('EDITOR')
       rescue IndexError
-        $stderr.puts "No editor: set EDITOR environment variable"
+        $stderr.puts 'No editor: set EDITOR environment variable'
       else
         process.run(editor, @filename)
       end

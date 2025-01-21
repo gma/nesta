@@ -12,7 +12,7 @@ module Nesta
 
       def copy_to(dest, context)
         FileUtils.mkdir_p(File.dirname(dest))
-        template = ERB.new(File.read(template_path), trim_mode: "-")
+        template = ERB.new(File.read(template_path), trim_mode: '-')
         File.open(dest, 'w') { |file| file.puts template.result(context) }
       end
     end

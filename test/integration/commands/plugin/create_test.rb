@@ -82,7 +82,7 @@ describe 'nesta plugin:create' do
     create_plugin { assert_exists_in_plugin('Rakefile') }
   end
 
-  it "creates default folder for Ruby files" do
+  it 'creates default folder for Ruby files' do
     create_plugin do
       code_directory = File.join(gem_name, 'lib', gem_name)
       assert File.directory?(code_directory), 'directory for code not found'
@@ -93,7 +93,7 @@ describe 'nesta plugin:create' do
     create_plugin do
       path = "#{File.join('lib', gem_name)}.rb"
       assert_exists_in_plugin(path)
-      assert_file_contains(path, %r{require "#{gem_name}/version"})
+      assert_file_contains(path, %r{require '#{gem_name}/version'})
     end
   end
 

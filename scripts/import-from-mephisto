@@ -5,11 +5,11 @@
 # - It's okay to ignore mephisto's sections and sites.
 # - Each mephisto tag should be converted to a Nesta category.
 
-require "getoptlong"
-require "time"
+require 'getoptlong'
+require 'time'
 
-require "rubygems"
-require "active_record"
+require 'rubygems'
+require 'active_record'
 
 require File.join(File.dirname(__FILE__), *%w[.. lib config])
 require File.join(File.dirname(__FILE__), *%w[.. lib models])
@@ -19,7 +19,7 @@ class Content < ActiveRecord::Base
   has_many :tags, :through => :taggings
 
   def self.inheritance_column
-    @inheritance_column = "none"
+    @inheritance_column = 'none'
   end
 
   def self.articles
@@ -69,7 +69,7 @@ class ArticleLoader
   end
 
   def categories
-    @content.tags.map { |t| t.name }.sort.join(", ")
+    @content.tags.map { |t| t.name }.sort.join(', ')
   end
 
   def summary
@@ -83,11 +83,11 @@ class ArticleLoader
 
   def metadata(domain)
     metadata = {
-      "Date" => date,
-      "Categories" => categories,
-      "Summary" => summary
+      'Date' => date,
+      'Categories' => categories,
+      'Summary' => summary
     }
-    metadata.merge!("Atom ID" => atom_id(domain)) if domain
+    metadata.merge!('Atom ID' => atom_id(domain)) if domain
     metadata_string(metadata)
   end
 
@@ -118,37 +118,37 @@ OPTIONS (defaults shown in brackets)
   def parse_command_line
     parser = GetoptLong.new
     parser.set_options(
-        ["-a", "--adapter", GetoptLong::REQUIRED_ARGUMENT],
-        ["--domain", GetoptLong::REQUIRED_ARGUMENT],
-        ["--clobber", GetoptLong::NO_ARGUMENT],
-        ["-d", "--database", GetoptLong::REQUIRED_ARGUMENT],
-        ["-h", "--host", GetoptLong::REQUIRED_ARGUMENT],
-        ["-u", "--username", GetoptLong::REQUIRED_ARGUMENT],
-        ["-p", "--password", GetoptLong::REQUIRED_ARGUMENT])
+        ['-a', '--adapter', GetoptLong::REQUIRED_ARGUMENT],
+        ['--domain', GetoptLong::REQUIRED_ARGUMENT],
+        ['--clobber', GetoptLong::NO_ARGUMENT],
+        ['-d', '--database', GetoptLong::REQUIRED_ARGUMENT],
+        ['-h', '--host', GetoptLong::REQUIRED_ARGUMENT],
+        ['-u', '--username', GetoptLong::REQUIRED_ARGUMENT],
+        ['-p', '--password', GetoptLong::REQUIRED_ARGUMENT])
     loop do
       opt, arg = parser.get
       break if not opt
       case opt
-        when "-a"
+        when '-a'
           @adapter = arg
-        when "--domain"
+        when '--domain'
           @domain = arg
-        when "--clobber"
+        when '--clobber'
           @clobber = true
-        when "-d"
+        when '-d'
           @database = arg
-        when "-h"
+        when '-h'
           @host = arg
-        when "-p"
+        when '-p'
           @password = arg
-        when "-u"
+        when '-u'
           @username = arg
       end
     end
-    @adapter ||= "mysql"
+    @adapter ||= 'mysql'
     @clobber.nil? && @clobber = false
-    @host ||= "localhost"
-    @database ||= "mephisto_production"
+    @host ||= 'localhost'
+    @database ||= 'mephisto_production'
     usage if @username.nil? || @password.nil?
   end
 
@@ -164,7 +164,7 @@ OPTIONS (defaults shown in brackets)
 
   def should_import?(item)
     if File.exist?(item.filename) && (! @clobber)
-      puts "skipping (specify --clobber to overwrite)"
+      puts 'skipping (specify --clobber to overwrite)'
       false
     else
       true
@@ -175,7 +175,7 @@ OPTIONS (defaults shown in brackets)
     Content.articles.each do |article|
       puts "Importing article: #{article.permalink}"
       if should_import?(article)
-        File.open(article.filename, "w") do |file|
+        File.open(article.filename, 'w') do |file|
           file.write [article.metadata(@domain), article.content].join("\n\n")
         end
       end
@@ -186,7 +186,7 @@ OPTIONS (defaults shown in brackets)
     Tag.find(:all).each do |tag|
       puts "Importing tag: #{tag.name}"
       if should_import?(tag)
-        File.open(tag.filename, "w") do |file|
+        File.open(tag.filename, 'w') do |file|
           file.write("# #{tag.name.capitalize}\n")
         end
       end

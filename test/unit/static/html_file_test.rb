@@ -11,20 +11,20 @@ describe 'HtmlFile' do
   end
 
   it 'determines HTML filename from build dir and page filename' do
-    build_dir = "dist"
+    build_dir = 'dist'
 
     with_temp_content_directory do
       page = create(:page)
 
       html_file = Nesta::Static::HtmlFile.new(build_dir, page)
 
-      expected = File.join(build_dir, "page-1.html")
+      expected = File.join(build_dir, 'page-1.html')
       assert_equal expected, html_file.filename
     end
   end
 
   it 'creates index.html in directory if page shares path with directory' do
-    build_dir = "dist"
+    build_dir = 'dist'
 
     with_temp_content_directory do
       page = create(:page)
@@ -34,7 +34,7 @@ describe 'HtmlFile' do
 
       html_file = Nesta::Static::HtmlFile.new(build_dir, page)
 
-      expected = File.join(build_dir, "page-1", "index.html")
+      expected = File.join(build_dir, 'page-1', 'index.html')
       assert_equal expected, html_file.filename
     end
   end

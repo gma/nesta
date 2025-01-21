@@ -7,7 +7,7 @@ set :repository, "set this to URL of your site's repo"
 #
 #set :user, "deploy"
 #set :domain, "#{user}@example.com"
-set :domain, "example.com"
+set :domain, 'example.com'
 
 set :deploy_to, "/var/apps/#{application}"
 
@@ -15,8 +15,8 @@ set :deploy_to, "/var/apps/#{application}"
 # You probably don't need to worry about anything beneath this point...
 # ============================================================================
 
-require "tempfile"
-require "vlad"
+require 'tempfile'
+require 'vlad'
 
 namespace :vlad do
   remote_task :symlink_attachments do
@@ -24,7 +24,7 @@ namespace :vlad do
   end
 
   task :update do
-    Rake::Task["vlad:symlink_attachments"].invoke
+    Rake::Task['vlad:symlink_attachments'].invoke
   end
 
   remote_task :bundle do
@@ -37,7 +37,7 @@ namespace :vlad do
   # :update. Passenger is the default app server; tell Vlad that you're
   # using a different app server in the call to Vlad.load in Rakefile.
   #
-  desc "Deploy the code and restart the server"
+  desc 'Deploy the code and restart the server'
   task deploy: [:update, :start_app]
 
   # If you use bundler to manage the installation of gems on your server

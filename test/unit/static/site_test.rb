@@ -39,7 +39,7 @@ describe 'Site' do
         html_file = File.join(build_dir, '404.html')
         markup = File.open(html_file).read
 
-        assert markup.include?("<h1>Page not found</h1>")
+        assert markup.include?('<h1>Page not found</h1>')
       end
     end
   end

@@ -1,6 +1,6 @@
 module Nesta
   class Menu
-    INDENT = " " * 2
+    INDENT = ' ' * 2
 
     def self.full_menu
       menu = []

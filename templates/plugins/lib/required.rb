@@ -1,3 +1,3 @@
-require "<%= @gem_name %>/version"
+require '<%= @gem_name %>/version'
 
 Nesta::Plugin.register(__FILE__)

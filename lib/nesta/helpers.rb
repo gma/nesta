@@ -14,7 +14,7 @@ module Nesta
       end
 
       def no_widow(text)
-        text.split[0...-1].join(" ") + "&nbsp;#{text.split[-1]}"
+        text.split[0...-1].join(' ') + "&nbsp;#{text.split[-1]}"
       end
 
       def set_common_variables
@@ -57,13 +57,13 @@ module Nesta
       end
 
       def format_date(date)
-        date.strftime("%d %B %Y")
+        date.strftime('%d %B %Y')
       end
 
       def local_stylesheet_link_tag(name)
         pattern = File.expand_path("views/#{name}.s{a,c}ss", Nesta::App.root)
         if Dir.glob(pattern).size > 0
-          haml_tag :link, href: path_to("/css/#{name}.css"), rel: "stylesheet"
+          haml_tag :link, href: path_to("/css/#{name}.css"), rel: 'stylesheet'
         end
       end
 
@@ -93,7 +93,7 @@ module Nesta
         host = []
         if options[:uri]
           host << "http#{'s' if request.ssl?}://"
-          if (request.env.include?("HTTP_X_FORWARDED_HOST") or
+          if (request.env.include?('HTTP_X_FORWARDED_HOST') or
               request.port != (request.ssl? ? 443 : 80))
             host << request.host_with_port
           else

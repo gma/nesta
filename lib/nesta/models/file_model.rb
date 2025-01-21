@@ -31,10 +31,10 @@ module Nesta
     end
 
     def self.find_all
-      file_pattern = File.join(model_path, "**", "*.{#{FORMATS.join(',')}}")
+      file_pattern = File.join(model_path, '**', "*.{#{FORMATS.join(',')}}")
       Dir.glob(file_pattern).map do |path|
-        relative = path.sub("#{model_path}/", "")
-        load(relative.sub(/\.(#{FORMATS.join('|')})/, ""))
+        relative = path.sub("#{model_path}/", '')
+        load(relative.sub(/\.(#{FORMATS.join('|')})/, ''))
       end
     end
 

@@ -31,7 +31,7 @@ describe 'Routing' do
       end
     end
 
-    it "should access helpers when rendering articles on a category page" do
+    it 'should access helpers when rendering articles on a category page' do
       with_temp_content_directory do
         category = create(:page)
         markup = "%h1 Heading\n\n%div= format_date(Date.new(2010, 11, 23))"

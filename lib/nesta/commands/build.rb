@@ -6,7 +6,7 @@ require_relative '../static/site'
 module Nesta
   module Commands
     class Build
-      DEFAULT_DESTINATION = "dist"
+      DEFAULT_DESTINATION = 'dist'
 
       attr_accessor :domain
 

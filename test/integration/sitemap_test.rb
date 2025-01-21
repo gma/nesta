@@ -44,16 +44,16 @@ describe 'XML sitemap' do
 
   it 'configures home page to be checked frequently' do
     for_site_with_page do
-      assert_has_xpath '//urlset/url/loc', text: "http://www.example.com/"
-      assert_has_xpath '//urlset/url/changefreq', text: "daily"
-      assert_has_xpath '//urlset/url/priority', text: "1.0"
+      assert_has_xpath '//urlset/url/loc', text: 'http://www.example.com/'
+      assert_has_xpath '//urlset/url/changefreq', text: 'daily'
+      assert_has_xpath '//urlset/url/priority', text: '1.0'
     end
   end
 
-  it "sets homepage lastmod from timestamp of most recently modified page" do
+  it 'sets homepage lastmod from timestamp of most recently modified page' do
     for_site_with_article do |article|
       timestamp = article.last_modified
-      assert_has_xpath '//urlset/url/loc', text: "http://www.example.com/"
+      assert_has_xpath '//urlset/url/loc', text: 'http://www.example.com/'
       assert_has_xpath '//urlset/url/lastmod', text: timestamp.xmlschema
     end
   end
