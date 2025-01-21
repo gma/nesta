@@ -98,8 +98,9 @@ end
 
 class App
   def usage
+    script = File.basename($PROGRAM_NAME)
     $stderr.write <<-EOF
-Usage: #{File.basename $0} [OPTIONS] -u <username> -p <password>
+Usage: #{script} [OPTIONS] -u <username> -p <password>
 
 OPTIONS (defaults shown in brackets)
 
