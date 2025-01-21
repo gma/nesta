@@ -62,6 +62,18 @@ module Nesta
       fetch('read_more', 'Continue reading')
     end
 
+    def self.content_path(basename = nil)
+      get_path(content, basename)
+    end
+
+    def self.page_path(basename = nil)
+      get_path(File.join(content_path, 'pages'), basename)
+    end
+
+    def self.attachment_path(basename = nil)
+      get_path(File.join(content_path, 'attachments'), basename)
+    end
+
     private
 
     def read_config_file(setting)
@@ -74,17 +86,5 @@ module Nesta
       basename.nil? ? dirname : File.join(dirname, basename)
     end
     private_class_method :get_path
-
-    def self.content_path(basename = nil)
-      get_path(content, basename)
-    end
-
-    def self.page_path(basename = nil)
-      get_path(File.join(content_path, 'pages'), basename)
-    end
-
-    def self.attachment_path(basename = nil)
-      get_path(File.join(content_path, 'attachments'), basename)
-    end
   end
 end
