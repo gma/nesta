@@ -130,11 +130,11 @@ describe 'Default theme' do
       visit category.path
 
       # Page with a summary
-      assert_has_css 'li:nth-child(1) p', text: 'Summary'
+      assert_has_css 'li:nth-child(1) p', text: summarised.metadata(:content)
       assert_has_no_css 'li:nth-child(1) p', text: 'content'
 
       # Page without a summary
-      assert_has_css 'li:nth-child(2) p', text: 'Unsummarised content'
+      assert_has_css 'li:nth-child(2) p', text: not_summarised.metadata(:content)
       assert_has_no_css 'li:nth-child(2) p', text: 'Summary'
     end
   end
