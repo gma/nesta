@@ -15,8 +15,8 @@ require File.join(File.dirname(__FILE__), *%w[.. lib config])
 require File.join(File.dirname(__FILE__), *%w[.. lib models])
 
 class Content < ActiveRecord::Base
-  has_many :taggings, :as => :taggable
-  has_many :tags, :through => :taggings
+  has_many :taggings, as: :taggable
+  has_many :tags, through: :taggings
 
   def self.inheritance_column
     @inheritance_column = 'none'
@@ -24,7 +24,7 @@ class Content < ActiveRecord::Base
 
   def self.articles
     conditions = "type = 'Article' and published_at is not NULL"
-    find(:all, :conditions => conditions).map { |c| ArticleLoader.new(c) }
+    find(:all, conditions: conditions).map { |c| ArticleLoader.new(c) }
   end
 end
 
@@ -35,7 +35,7 @@ end
 
 class Tag < ActiveRecord::Base
   has_many :taggings
-  has_many :contents, :through => :taggings
+  has_many :contents, through: :taggings
 
   def filename
     File.join(Nesta::Config.page_path, "#{name}.mdown")
@@ -154,11 +154,11 @@ OPTIONS (defaults shown in brackets)
 
   def connect_to_database
     ActiveRecord::Base.establish_connection(
-      :adapter => @adapter,
-      :host => @host,
-      :username => @username,
-      :password => @password,
-      :database => @database
+      adapter: @adapter,
+      host: @host,
+      username: @username,
+      password: @password,
+      database: @database
     )
   end
 
