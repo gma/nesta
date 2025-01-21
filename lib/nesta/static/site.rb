@@ -94,8 +94,8 @@ module Nesta
 
       def save_markup(filename, content)
         FileUtils.mkdir_p(File.dirname(filename))
-        if (! File.exist?(filename)) || (open(filename, 'r').read != content)
-          open(filename, 'w') { |output| output.write(content) }
+        if ! File.exist?(filename) || File.open(filename, 'r').read != content
+          File.open(filename, 'w') { |output| output.write(content) }
           log("Rendered #{filename}")
         end
       end

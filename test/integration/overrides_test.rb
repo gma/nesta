@@ -26,7 +26,7 @@ describe 'Overriding files in gem and themes' do
     }[type]
     path = File.join(base_path, name)
     FileUtils.mkdir_p(File.dirname(path))
-    open(path, 'w') { |file| file.write(content) }
+    File.open(path, 'w') { |file| file.write(content) }
   end
 
   def create_app_file(type)

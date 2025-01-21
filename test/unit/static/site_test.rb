@@ -21,7 +21,7 @@ describe 'Site' do
         Nesta::Static::Site.new(build_dir, domain).render_pages
 
         html_file = File.join(build_dir, page.abspath + '.html')
-        markup = open(html_file).read
+        markup = File.open(html_file).read
 
         assert markup.include?("<title>#{page.title}</title>")
       end
@@ -37,7 +37,7 @@ describe 'Site' do
         Nesta::Static::Site.new(build_dir, domain).render_not_found
 
         html_file = File.join(build_dir, '404.html')
-        markup = open(html_file).read
+        markup = File.open(html_file).read
 
         assert markup.include?("<h1>Page not found</h1>")
       end
@@ -54,7 +54,7 @@ describe 'Site' do
         Nesta::Static::Site.new(build_dir, domain).render_atom_feed
 
         xml_file = File.join(build_dir, 'articles.xml')
-        xml = open(xml_file).read
+        xml = File.open(xml_file).read
 
         assert xml.include?("<link href='https://#{domain + article.abspath}'")
       end
@@ -71,7 +71,7 @@ describe 'Site' do
         Nesta::Static::Site.new(build_dir, domain).render_sitemap
 
         xml_file = File.join(build_dir, 'sitemap.xml')
-        xml = open(xml_file).read
+        xml = File.open(xml_file).read
 
         assert xml.include?(domain + page.abspath)
       end
@@ -86,7 +86,7 @@ describe 'Site' do
       stub_config('build' => { 'templated_assets' => [css_path] }) do
         views = File.join(project_root, 'views')
         FileUtils.mkdir_p(views)
-        open(File.join(views, 'styles.sass'), 'w') do |sass|
+        File.open(File.join(views, 'styles.sass'), 'w') do |sass|
           sass.write("p\n  font-size: 1em\n")
         end
 
@@ -96,7 +96,7 @@ describe 'Site' do
         css_file = File.join(build_dir, css_path)
         assert_exists_in_project(css_file)
 
-        assert_equal open(css_file).read, "p {\n  font-size: 1em;\n}"
+        assert_equal File.open(css_file).read, "p {\n  font-size: 1em;\n}"
       end
     end
   end

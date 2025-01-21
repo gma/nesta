@@ -24,7 +24,7 @@ describe 'Assets' do
     in_temporary_project do |project_root|
       stub_config('content' => File.join(project_root, 'content')) do
         FileUtils.mkdir_p(Nesta::Config.attachment_path)
-        open(File.join(Nesta::Config.attachment_path, attachment), 'w')
+        File.open(File.join(Nesta::Config.attachment_path, attachment), 'w')
 
         Nesta::Static::Assets.new(build_dir).copy_attachments
 
@@ -46,7 +46,7 @@ describe 'Assets' do
     in_temporary_project do |project_root|
       public_path = File.join(project_root, 'public')
       FileUtils.mkdir_p(File.dirname(File.join(public_path, asset_path)))
-      open(File.join(public_path, asset_path), 'w')
+      File.open(File.join(public_path, asset_path), 'w')
 
       Nesta::Static::Assets.new(build_dir).copy_public_folder
 
