@@ -120,13 +120,14 @@ OPTIONS (defaults shown in brackets)
   def parse_command_line
     parser = GetoptLong.new
     parser.set_options(
-        ['-a', '--adapter', GetoptLong::REQUIRED_ARGUMENT],
-        ['--domain', GetoptLong::REQUIRED_ARGUMENT],
-        ['--clobber', GetoptLong::NO_ARGUMENT],
-        ['-d', '--database', GetoptLong::REQUIRED_ARGUMENT],
-        ['-h', '--host', GetoptLong::REQUIRED_ARGUMENT],
-        ['-u', '--username', GetoptLong::REQUIRED_ARGUMENT],
-        ['-p', '--password', GetoptLong::REQUIRED_ARGUMENT])
+      ['-a', '--adapter', GetoptLong::REQUIRED_ARGUMENT],
+      ['--domain', GetoptLong::REQUIRED_ARGUMENT],
+      ['--clobber', GetoptLong::NO_ARGUMENT],
+      ['-d', '--database', GetoptLong::REQUIRED_ARGUMENT],
+      ['-h', '--host', GetoptLong::REQUIRED_ARGUMENT],
+      ['-u', '--username', GetoptLong::REQUIRED_ARGUMENT],
+      ['-p', '--password', GetoptLong::REQUIRED_ARGUMENT]
+    )
     loop do
       opt, arg = parser.get
       break if not opt
