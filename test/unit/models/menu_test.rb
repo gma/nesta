@@ -15,15 +15,15 @@ describe Nesta::Menu do
   def with_hierarchy_of_pages(&block)
     with_temp_content_directory do
       pages = (1..6).map { |_| create(:page) }
-      text = <<-EOF
-#{pages[0].path}
-  #{pages[1].path}
-    #{pages[2].path}
-    #{pages[3].path}
-    "no-such-page"
-"another-missing-page"
-#{pages[4].path}
-  #{pages[5].path}
+      text = <<~EOF
+        #{pages[0].path}
+          #{pages[1].path}
+            #{pages[2].path}
+            #{pages[3].path}
+            "no-such-page"
+        "another-missing-page"
+        #{pages[4].path}
+          #{pages[5].path}
       EOF
       create_menu(text)
       block.call(pages)

@@ -101,16 +101,16 @@ describe 'nesta plugin:create' do
     create_plugin do
       version = File.join('lib', gem_name, 'version.rb')
       assert_exists_in_plugin(version)
-      assert_file_contains version, <<-EOF
-module Nesta
-  module Plugin
-    module My
-      module Feature
-        VERSION = '0.1.0'
-      end
-    end
-  end
-end
+      assert_file_contains version, <<~EOF
+        module Nesta
+          module Plugin
+            module My
+              module Feature
+                VERSION = '0.1.0'
+              end
+            end
+          end
+        end
       EOF
     end
   end
@@ -120,11 +120,11 @@ end
       init = File.join('lib', gem_name, 'init.rb')
       assert_exists_in_plugin(init)
 
-      assert_file_contains init, <<-MODULE
-module Nesta
-  module Plugin
-    module My::Feature
-        MODULE
+      assert_file_contains init, <<~EOF
+        module Nesta
+          module Plugin
+            module My::Feature
+      EOF
 
       assert_file_contains init, 'helpers Nesta::Plugin::My::Feature::Helpers'
     end

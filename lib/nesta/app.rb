@@ -44,9 +44,9 @@ module Nesta
 
     get '/robots.txt' do
       content_type 'text/plain', charset: 'utf-8'
-      <<-EOF
-# robots.txt
-# See http://en.wikipedia.org/wiki/Robots_exclusion_standard
+      <<~EOF
+        # robots.txt
+        # See http://en.wikipedia.org/wiki/Robots_exclusion_standard
       EOF
     end
 

@@ -47,10 +47,10 @@ module ModelFactory
     def write
       metadata = data[:metadata] || {}
       metatext = metadata.map { |key, value| "#{key}: #{value}" }.join("\n")
-      contents =<<-EOF
-#{metatext}
+      contents = <<~EOF
+        #{metatext}
 
-#{heading}#{data[:content]}
+        #{heading}#{data[:content]}
       EOF
       FileUtils.mkdir_p(File.dirname(filename))
       File.open(filename, 'w') { |file| file.write(contents) }
