@@ -22,7 +22,7 @@ namespace :vlad do
   remote_task :symlink_attachments do
     run "ln -s #{shared_path}/content/attachments #{current_path}/public/attachments"
   end
-  
+
   task :update do
     Rake::Task["vlad:symlink_attachments"].invoke
   end
@@ -30,7 +30,7 @@ namespace :vlad do
   remote_task :bundle do
     run "cd #{current_path} && sudo bundle install --without development test"
   end
-  
+
   # Depending on how you host Nesta, you might want to swap :start_app
   # with :start below. The :start_app task will tell your application
   # server (e.g. Passenger) to restart once your new code is deployed by

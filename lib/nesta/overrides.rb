@@ -22,7 +22,7 @@ module Nesta
     def self.local_view_path
       Nesta::Path.local("views")
     end
-  
+
     def self.theme_view_path
       if Nesta::Config.theme.nil?
         nil
@@ -35,7 +35,7 @@ module Nesta
       app_file = Nesta::Path.local('app.rb')
       require app_file if File.exist?(app_file)
     end
-    
+
     def self.load_theme_app
       if Nesta::Config.theme
         app_file = Nesta::Path.themes(Nesta::Config.theme, 'app.rb')

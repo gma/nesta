@@ -78,7 +78,7 @@ module Nesta
       def articles_heading
         @page.metadata('articles heading') || "Articles on #{@page.heading}"
       end
-      
+
       # Generates the full path to a given page, taking Rack routers and
       # reverse proxies into account.
       #
@@ -93,7 +93,7 @@ module Nesta
         host = []
         if options[:uri]
           host << "http#{'s' if request.ssl?}://"
-          if (request.env.include?("HTTP_X_FORWARDED_HOST") or 
+          if (request.env.include?("HTTP_X_FORWARDED_HOST") or
               request.port != (request.ssl? ? 443 : 80))
             host << request.host_with_port
           else

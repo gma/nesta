@@ -17,11 +17,11 @@ require File.join(File.dirname(__FILE__), *%w[.. lib models])
 class Content < ActiveRecord::Base
   has_many :taggings, :as => :taggable
   has_many :tags, :through => :taggings
-  
+
   def self.inheritance_column
     @inheritance_column = "none"
   end
-  
+
   def self.articles
     conditions = "type = 'Article' and published_at is not NULL"
     find(:all, :conditions => conditions).map { |c| ArticleLoader.new(c) }
@@ -46,20 +46,20 @@ module ContentWrapper
   def initialize(content)
     @content = content
   end
-  
+
   def permalink
     @content.permalink
   end
-  
+
   private
     def metadata_string(metadata)
       metadata.map { |key, value| "#{key}: #{value}" }.sort.join("\n")
     end
-end  
+end
 
 class ArticleLoader
   include ContentWrapper
-  
+
   def filename
     File.join(Nesta::Config.page_path, "#{permalink}.mdown")
   end
@@ -67,15 +67,15 @@ class ArticleLoader
   def date
     @content.published_at
   end
-  
+
   def categories
     @content.tags.map { |t| t.name }.sort.join(", ")
   end
-  
+
   def summary
     @content.excerpt.strip.gsub(/\r?\n/, '\n')
   end
-  
+
   def atom_id(domain)
     published = "#{@content.created_at.strftime('%Y-%m-%d')}"
     "tag:#{domain},#{published}:#{@content.id}"
@@ -90,7 +90,7 @@ class ArticleLoader
     metadata.merge!("Atom ID" => atom_id(domain)) if domain
     metadata_string(metadata)
   end
-  
+
   def content
     ["# #{@content.title}", @content.body.gsub("\r\n", "\n")].join("\n\n")
   end
@@ -114,7 +114,7 @@ OPTIONS (defaults shown in brackets)
     EOF
     exit 1
   end
-  
+
   def parse_command_line
     parser = GetoptLong.new
     parser.set_options(
@@ -151,17 +151,17 @@ OPTIONS (defaults shown in brackets)
     @database ||= "mephisto_production"
     usage if @username.nil? || @password.nil?
   end
-  
+
   def connect_to_database
-    ActiveRecord::Base.establish_connection( 
+    ActiveRecord::Base.establish_connection(
       :adapter => @adapter,
       :host => @host,
       :username => @username,
       :password => @password,
       :database => @database
-    ) 
+    )
   end
-  
+
   def should_import?(item)
     if File.exist?(item.filename) && (! @clobber)
       puts "skipping (specify --clobber to overwrite)"
@@ -170,7 +170,7 @@ OPTIONS (defaults shown in brackets)
       true
     end
   end
-  
+
   def import_articles
     Content.articles.each do |article|
       puts "Importing article: #{article.permalink}"
@@ -181,7 +181,7 @@ OPTIONS (defaults shown in brackets)
       end
     end
   end
-  
+
   def import_tags
     Tag.find(:all).each do |tag|
       puts "Importing tag: #{tag.name}"
@@ -192,7 +192,7 @@ OPTIONS (defaults shown in brackets)
       end
     end
   end
-  
+
   def main
     parse_command_line
     connect_to_database

@@ -6,7 +6,7 @@ module Nesta
         options = args.shift || {}
         path.nil? && (raise UsageError.new('path not specified'))
         if File.exist?(path)
-          raise RuntimeError.new("#{path} already exists") 
+          raise RuntimeError.new("#{path} already exists")
         end
         @path = path
         @options = options
