@@ -20,7 +20,7 @@ module Nesta
       subtitle
       theme
       title
-    ]
+    ].map(&:freeze)
 
     class << self
       extend Forwardable
