@@ -8,7 +8,7 @@ describe Nesta::Menu do
     with_temp_content_directory do
       page = create(:page)
       create_menu(page.path)
-      yield(page)
+      block.call(page)
     end
   end
 
@@ -26,7 +26,7 @@ describe Nesta::Menu do
   #{pages[5].path}
       EOF
       create_menu(text)
-      yield(pages)
+      block.call(pages)
     end
   end
 

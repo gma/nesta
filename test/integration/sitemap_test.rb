@@ -11,7 +11,7 @@ describe 'XML sitemap' do
     with_temp_content_directory do
       model = create(:page)
       visit_sitemap
-      yield(model)
+      block.call(model)
     end
   end
 
@@ -19,7 +19,7 @@ describe 'XML sitemap' do
     with_temp_content_directory do
       article = create(:article)
       visit_sitemap
-      yield(article)
+      block.call(article)
     end
   end
 

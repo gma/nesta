@@ -19,7 +19,7 @@ Nesta::App.environment = 'test'
 class Minitest::Test
   def with_app_root(path, &block)
     original, Nesta::App.root = Nesta::App.root, path
-    yield
+    block.call
   ensure
     Nesta::App.root = original
   end

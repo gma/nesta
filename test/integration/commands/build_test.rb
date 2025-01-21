@@ -7,7 +7,7 @@ describe 'nesta build' do
 
   def silencing_stdout(&block)
     stdout, $stdout = $stdout, StringIO.new
-    yield
+    block.call
   ensure
     $stdout.close
     $stdout = stdout

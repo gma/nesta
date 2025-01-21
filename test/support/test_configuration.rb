@@ -3,7 +3,7 @@ module TestConfiguration
 
   def stub_config(config, &block)
     Nesta::Config.instance.stub(:config, config) do
-      yield
+      block.call
     end
   end
 
@@ -12,6 +12,6 @@ module TestConfiguration
   end
 
   def with_temp_content_directory(&block)
-    stub_config(temp_content) { yield }
+    stub_config(temp_content) { block.call }
   end
 end

@@ -25,7 +25,7 @@ module TemporaryFiles
     FileUtils.mkdir_p(File.join(project_root, 'config'))
     FileUtils.touch(File.join(project_root, 'Gemfile'))
     FileUtils.touch(File.join(project_root, 'config', 'config.yml'))
-    Dir.chdir(project_root) { yield project_root }
+    Dir.chdir(project_root) { block.call(project_root) }
   ensure
     remove_temp_directory
   end

@@ -8,7 +8,7 @@ describe 'Overriding files in gem and themes' do
     content_config = { 'content' => File.join(app_root, 'content') }
     stub_config(content_config.merge(config)) do
       with_app_root(app_root) do
-        yield
+        block.call
       end
     end
   ensure
