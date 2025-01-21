@@ -35,7 +35,7 @@ module Nesta
       env_config = config.fetch(Nesta::App.environment.to_s, {})
       env_config.fetch(setting) do
         config.fetch(setting) do
-          raise NotDefined.new(setting)
+          raise NotDefined, setting
         end
       end
     rescue NotDefined
@@ -67,7 +67,7 @@ module Nesta
     def read_config_file(setting)
       YAML::load(ERB.new(IO.read(Nesta::ConfigFile.path)).result)
     rescue Errno::ENOENT
-      raise NotDefined.new(setting)
+      raise NotDefined, setting
     end
 
     def self.get_path(dirname, basename)

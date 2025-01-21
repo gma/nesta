@@ -4,9 +4,9 @@ module Nesta
       def initialize(*args)
         path = args.shift
         options = args.shift || {}
-        path.nil? && (raise UsageError.new('path not specified'))
+        path.nil? && (raise UsageError, 'path not specified')
         if File.exist?(path)
-          raise RuntimeError.new("#{path} already exists")
+          raise "#{path} already exists"
         end
         @path = path
         @options = options

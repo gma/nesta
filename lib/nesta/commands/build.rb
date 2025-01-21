@@ -13,7 +13,7 @@ module Nesta
       def initialize(build_dir = nil, options = {})
         @build_dir = build_dir || DEFAULT_DESTINATION
         if @build_dir == Nesta::App.settings.public_folder
-          raise RuntimeError.new("#{@build_dir} is already used, for assets")
+          raise "#{@build_dir} is already used, for assets"
         end
         @domain = options['domain'] || configured_domain_name
       end

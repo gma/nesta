@@ -4,11 +4,11 @@ module Nesta
       class Create
         def initialize(*args)
           name = args.shift
-          name.nil? && (raise UsageError.new('name not specified'))
+          name.nil? && (raise UsageError, 'name not specified')
           @name = name
           @gem_name = "nesta-plugin-#{name}"
           if File.exist?(@gem_name)
-            raise RuntimeError.new("#{@gem_name} already exists")
+            raise "#{@gem_name} already exists"
           end
         end
 

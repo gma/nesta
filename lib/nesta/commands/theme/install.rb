@@ -4,7 +4,7 @@ module Nesta
       class Install
         def initialize(*args)
           @url = args.shift
-          @url.nil? && (raise UsageError.new('URL not specified'))
+          @url.nil? && (raise UsageError, 'URL not specified')
         end
 
         def theme_name

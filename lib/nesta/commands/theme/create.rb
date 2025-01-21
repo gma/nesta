@@ -4,7 +4,7 @@ module Nesta
       class Create
         def initialize(*args)
           name = args.shift
-          name.nil? && (raise UsageError.new('name not specified'))
+          name.nil? && (raise UsageError, 'name not specified')
           @name = name
           @theme_path = Nesta::Path.themes(@name)
           if File.exist?(@theme_path)
