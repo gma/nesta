@@ -31,7 +31,7 @@ OPTIONS FOR new
     --git                 Create a new git repository for the project.
     --vlad                Include config/deploy.rb.
 
-EOF
+      EOF
       exit exitcode
     end
 

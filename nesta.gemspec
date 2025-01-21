@@ -22,7 +22,7 @@ Edit your content in a text editor and keep it under version control
 
 Implementing your site's design is easy, but Nesta also has a small
 selection of themes to choose from.
-EOF
+  EOF
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
