@@ -70,9 +70,10 @@ module Nesta
         end
 
         private
-          def module_names
-            @name.split('-').map { |name| name.capitalize }
-          end
+
+        def module_names
+          @name.split('-').map { |name| name.capitalize }
+        end
       end
     end
   end

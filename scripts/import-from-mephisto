@@ -52,9 +52,10 @@ module ContentWrapper
   end
 
   private
-    def metadata_string(metadata)
-      metadata.map { |key, value| "#{key}: #{value}" }.sort.join("\n")
-    end
+
+  def metadata_string(metadata)
+    metadata.map { |key, value| "#{key}: #{value}" }.sort.join("\n")
+  end
 end
 
 class ArticleLoader

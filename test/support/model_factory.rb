@@ -158,6 +158,7 @@ module ModelFactory
   end
 
   private
+
   def filename(directory, basename, extension = :mdown)
     File.join(directory, "#{basename}.#{extension}")
   end
