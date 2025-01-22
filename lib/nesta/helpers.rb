@@ -93,12 +93,10 @@ module Nesta
         host = []
         if options[:uri]
           host << "http#{'s' if request.ssl?}://"
-          if (request.env.include?('HTTP_X_FORWARDED_HOST') or
-              request.port != (request.ssl? ? 443 : 80))
-            host << request.host_with_port
-          else
-            host << request.host
-          end
+          default_port = request.ssl? ? 443 : 80
+          include_port = request.env.include?('HTTP_X_FORWARDED_HOST') ||
+                         request.port != default_port
+          host << (include_port ? request.host_with_port : request.host)
         end
         uri_parts = [host.join('')]
         uri_parts << request.script_name.to_s if request.script_name
