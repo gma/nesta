@@ -14,7 +14,8 @@ describe Nesta::Plugin do
 
   before do
     @plugin_lib_path = File.expand_path(
-        File.join(%w(.. fixtures nesta-plugin-test lib)), File.dirname(__FILE__))
+      File.join(%w(.. fixtures nesta-plugin-test lib)), File.dirname(__FILE__)
+    )
     $LOAD_PATH.unshift(@plugin_lib_path)
     Nesta::Plugin.loaded.clear
   end

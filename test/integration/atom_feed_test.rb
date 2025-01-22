@@ -33,7 +33,8 @@ describe 'Atom feed' do
       with_temp_content_directory do
         visit_feed
         assert_has_xpath(
-          '//feed/link[@rel="alternate"][@href="http://www.example.com/"]')
+          '//feed/link[@rel="alternate"][@href="http://www.example.com/"]'
+        )
       end
     end
 
@@ -41,7 +42,8 @@ describe 'Atom feed' do
       with_temp_content_directory do
         visit_feed
         assert_has_xpath(
-          '//feed/link[@rel="self"][@href="http://www.example.com/articles.xml"]')
+          '//feed/link[@rel="self"][@href="http://www.example.com/articles.xml"]'
+        )
       end
     end
 
@@ -121,14 +123,16 @@ describe 'Atom feed' do
       with_article do |article|
         url = "http://www.example.com/#{article.path}"
         assert_has_xpath(
-          "//entry/link[@href='#{url}'][@rel='alternate'][@type='text/html']")
+          "//entry/link[@href='#{url}'][@rel='alternate'][@type='text/html']"
+        )
       end
     end
 
     it 'defines unique ID' do
       with_article do |article|
         assert_has_xpath(
-          '//entry/id', text: "tag:www.example.com,2008-12-29:#{article.abspath}")
+          '//entry/id', text: "tag:www.example.com,2008-12-29:#{article.abspath}"
+        )
       end
     end
 
