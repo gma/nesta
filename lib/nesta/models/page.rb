@@ -32,13 +32,13 @@ module Nesta
 
     def heading
       regex = case @format
-        when :mdown, :md
-          /^#\s*(.*?)(\s*#+|$)/
-        when :haml
-          /^\s*%h1\s+(.*)/
-        when :textile
-          /^\s*h1\.\s+(.*)/
-        end
+              when :mdown, :md
+                /^#\s*(.*?)(\s*#+|$)/
+              when :haml
+                /^\s*%h1\s+(.*)/
+              when :textile
+                /^\s*h1\.\s+(.*)/
+              end
       markup =~ regex
       Regexp.last_match(1) or raise HeadingNotSet, "#{abspath} needs a heading"
     end
@@ -83,12 +83,12 @@ module Nesta
 
     def body_markup
       case @format
-        when :mdown, :md
-          markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
-        when :haml
-          markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
-        when :textile
-          markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '')
+      when :mdown, :md
+        markup.sub(/^#[^#].*$\r?\n(\r?\n)?/, '')
+      when :haml
+        markup.sub(/^\s*%h1\s+.*$\r?\n(\r?\n)?/, '')
+      when :textile
+        markup.sub(/^\s*h1\.\s+.*$\r?\n(\r?\n)?/, '')
       end
     end
 

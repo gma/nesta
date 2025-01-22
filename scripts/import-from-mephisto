@@ -132,20 +132,20 @@ OPTIONS (defaults shown in brackets)
       opt, arg = parser.get
       break if not opt
       case opt
-        when '-a'
-          @adapter = arg
-        when '--domain'
-          @domain = arg
-        when '--clobber'
-          @clobber = true
-        when '-d'
-          @database = arg
-        when '-h'
-          @host = arg
-        when '-p'
-          @password = arg
-        when '-u'
-          @username = arg
+      when '-a'
+        @adapter = arg
+      when '--domain'
+        @domain = arg
+      when '--clobber'
+        @clobber = true
+      when '-d'
+        @database = arg
+      when '-h'
+        @host = arg
+      when '-p'
+        @password = arg
+      when '-u'
+        @username = arg
       end
     end
     @adapter ||= 'mysql'
