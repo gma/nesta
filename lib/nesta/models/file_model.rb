@@ -1,6 +1,6 @@
 def register_template_handler(class_name, *extensions)
   Tilt.register Tilt.const_get(class_name), *extensions
-rescue LoadError
+rescue LoadError, NameError
   # Only one of the Markdown processors needs to be available, so we can
   # safely ignore these load errors.
 end

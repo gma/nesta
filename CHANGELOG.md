@@ -11,6 +11,15 @@
 
   (Suggested by Brad Weslake)
 
+* Handle errors raised when loading missing templating engine.
+
+  When a templating engine is removed from the Tilt library (as recently
+  happened with Maruku), Ruby was raising a `NameError` exception when Nesta
+  attempted to load it. Nesta now ignores those errors, and tries to load
+  another Markdown processor.
+
+  (Graham Ashton, reported by Curtis Cooley)
+
 * Fix whitespace in version.rb when generating new plugins. (Graham Ashton)
 
 ## 0.18.0 (19 November 2024)
