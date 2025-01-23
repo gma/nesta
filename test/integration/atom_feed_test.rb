@@ -106,9 +106,9 @@ describe 'Atom feed' do
       article_options = options.merge(metadata: {
         'categories' => category.path
       })
-      article = create(:article, article_options)
+      create(:article, article_options)
       visit_feed
-      yield(article, category)
+      yield(category)
     end
   end
 
@@ -149,7 +149,7 @@ describe 'Atom feed' do
     end
 
     it 'specifies article categories' do
-      with_article_in_category do |article, category|
+      with_article_in_category do |category|
         assert_has_xpath "//category[@term='#{category.permalink}']"
       end
     end

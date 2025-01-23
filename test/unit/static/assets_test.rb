@@ -34,7 +34,7 @@ describe 'Assets' do
   end
 
   it 'is happy if public directory not present' do
-    in_temporary_project do |project_root|
+    in_temporary_project do
       Nesta::Static::Assets.new('dist').copy_public_folder
     end
   end
