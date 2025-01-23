@@ -1,0 +1,108 @@
+AllCops:
+  Exclude:
+    - templates/plugins/Rakefile
+    - templates/plugins/plugin.gemspec
+    - test/fixtures/nesta-plugin-test/nesta-plugin-test.gemspec
+  TargetRubyVersion: 3.0
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Layout/FirstHashElementIndentation:
+  Enabled: false
+
+Layout/HeredocIndentation:
+  Enabled: false
+
+Layout/SpaceAfterNot:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+
+Lint/SuppressedException:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+Naming/HeredocDelimiterNaming:
+  Enabled: false
+
+Style/BarePercentLiterals:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: never
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/MultilineIfModifier:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/NegatedIf:
+  Enabled: false
+
+Style/Next:
+  Enabled: false
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/PercentLiteralDelimiters:
+  Enabled: false
+
+Style/RedundantParentheses:
+  Enabled: false
+
+Style/RedundantPercentQ:
+  Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/SignalException:
+  Enabled: false
+
+Style/StringConcatenation:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/SymbolProc:
+  Enabled: false
+
+Style/TernaryParentheses:
+  Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
