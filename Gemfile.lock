@@ -30,8 +30,27 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
-    ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-aarch64-linux-musl)
+    ffi (1.17.0-arm-linux-gnu)
+    ffi (1.17.0-arm-linux-musl)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0-x86_64-linux-musl)
     google-protobuf (4.28.3)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-aarch64-linux)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-arm64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-x86_64-darwin)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.28.3-x86_64-linux)
       bigdecimal
       rake (>= 13)
     haml (5.2.2)
@@ -46,8 +65,7 @@ GEM
       rb-kqueue (>= 0.2)
     logger (1.7.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
-    minitest (5.25.4)
+    minitest (5.27.0)
     minitest-reporters (1.7.1)
       ansi
       builder
@@ -60,8 +78,21 @@ GEM
       unicorn (>= 4.5)
     mustermann (3.0.4)
       ruby2_keywords (~> 0.0.1)
-    nokogiri (1.19.1)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.19.1-aarch64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.1-aarch64-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.1-arm-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.1-arm-linux-musl)
+      racc (~> 1.4)
+    nokogiri (1.19.1-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x86_64-linux-gnu)
+      racc (~> 1.4)
+    nokogiri (1.19.1-x86_64-linux-musl)
       racc (~> 1.4)
     public_suffix (6.0.1)
     racc (1.8.1)
@@ -85,9 +116,22 @@ GEM
     rdiscount (2.2.7.3)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    sass-embedded (1.80.6)
+    sass-embedded (1.80.6-aarch64-linux-gnu)
       google-protobuf (~> 4.28)
-      rake (>= 13)
+    sass-embedded (1.80.6-aarch64-linux-musl)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-arm-linux-gnueabihf)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-arm-linux-musleabihf)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-arm64-darwin)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-x86_64-darwin)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-x86_64-linux-gnu)
+      google-protobuf (~> 4.28)
+    sass-embedded (1.80.6-x86_64-linux-musl)
+      google-protobuf (~> 4.28)
     sinatra (4.2.1)
       logger (>= 1.6.0)
       mustermann (~> 3.0)
@@ -104,7 +148,17 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
-  ruby
+  aarch64-linux
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-gnueabihf
+  arm-linux-musl
+  arm-linux-musleabihf
+  arm64-darwin
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   byebug
@@ -115,4 +169,4 @@ DEPENDENCIES
   nesta!
 
 BUNDLED WITH
-   2.4.6
+  4.0.6
