@@ -2,6 +2,11 @@
 
 ## 0.19.0 (Unreleased)
 
+* Drop support for Ruby 3.1.
+
+  Multiple vulnerabilities in the Rack library required us to upgrade Rack to
+  version 3.2.1. Unfortunately Rack no longer supports Ruby 3.1.
+
 * Remove support for the Maruku Markdown processor.
 
   Maruku is considered obsolete by its maintainer, and is no longer used by
