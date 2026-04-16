@@ -16,8 +16,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     RedCloth (4.3.4)
-    addressable (2.8.7)
-      public_suffix (>= 2.0.2, < 7.0)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     ansi (1.5.0)
     base64 (0.3.0)
     bigdecimal (3.1.8)
@@ -94,7 +94,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.1-x86_64-linux-musl)
       racc (~> 1.4)
-    public_suffix (6.0.1)
+    public_suffix (7.0.5)
     racc (1.8.1)
     rack (3.2.6)
     rack-protection (4.2.1)
