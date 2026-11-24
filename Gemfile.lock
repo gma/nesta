@@ -16,7 +16,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     RedCloth (4.3.4)
-    addressable (2.9.0)
+    addressable (2.10.0)
       public_suffix (>= 2.0.2, < 8.0)
     ansi (1.5.0)
     base64 (0.3.0)
